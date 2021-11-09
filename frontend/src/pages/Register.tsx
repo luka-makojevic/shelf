@@ -1,7 +1,7 @@
-import RegisterContainer from '../containers/RegisterContainer';
+import RegisterContainer from '../containers/RegisterContainer'
 
 const Register = () => {
-  return <RegisterContainer />;
-};
+  return <RegisterContainer />
+}
 
-export default Register;
+export default Register

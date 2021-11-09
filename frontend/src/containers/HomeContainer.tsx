@@ -1,4 +1,4 @@
-import { Feature } from '../components';
+import { Feature } from '../components'
 
 const HomeContainer = () => {
   return (
@@ -10,7 +10,7 @@ const HomeContainer = () => {
         servers.
       </Feature.SubTitle>
     </Feature>
-  );
-};
+  )
+}
 
-export default HomeContainer;
+export default HomeContainer

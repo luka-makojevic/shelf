@@ -1,7 +1,7 @@
-import DashboardContainer from '../containers/DashboardContainer';
+import DashboardContainer from '../containers/DashboardContainer'
 
 const Dashboard = () => {
-  return <DashboardContainer />;
-};
+  return <DashboardContainer />
+}
 
-export default Dashboard;
+export default Dashboard

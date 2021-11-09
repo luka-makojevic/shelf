@@ -1,7 +1,7 @@
-import LoginContainer from '../containers/LoginContainer';
+import LoginContainer from '../containers/LoginContainer'
 
 const Login = () => {
-  return <LoginContainer />;
-};
+  return <LoginContainer />
+}
 
-export default Login;
+export default Login
