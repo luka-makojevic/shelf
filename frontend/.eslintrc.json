@@ -29,8 +29,11 @@
         "arrow-body-style": "off",
         "import/no-extraneous-dependencies": "off",
         "react/require-default-props": "off",
-        "react/no-unescaped-entities": "off"
-    },
+        "react/no-unescaped-entities": "off",
+        "react/no-children-prop": "off",
+        "react/no-array-index-key":"off",
+        "no-unused-vars":"warn"
+    },  
     "settings": {
         "import/resolver": {
             "typescript": {}
