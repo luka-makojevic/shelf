@@ -8,7 +8,8 @@ import {
     Error,
     Link,
     SeenIcon,
-    InputControl,  
+    InputControl,
+    Spinner  
     } from "./form-styles"
 
 
@@ -34,6 +35,10 @@ Form.Input =  function FormInput({children, ...restProps}: any) {
 Form.InputControl =  function FormInputControl({children, ...restProps}: any) {
     return <InputControl {...restProps}>{children}</InputControl>
 }
+Form.Spinner =  function FormSpinner({...restProps}: any) {
+    return <Spinner {...restProps}/>
+}
+
 
 Form.Submit = function FormSubmit({ children, ...restProps }: any) {
     return <Submit {...restProps}>{children}</Submit>
