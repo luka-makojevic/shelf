@@ -45,6 +45,6 @@ public class User {
     @Column(name = "email_verified")
     private Boolean emailVerified;
 
-    // todo: Role Entity
-    private Long roleId;
+    @OneToOne(mappedBy = "user")
+    private Role roleId;
 }
