@@ -44,6 +44,7 @@ public class User {
 
     @Column(name = "email_verified")
     private Boolean emailVerified;
-    private Long roleId;
 
+    // todo: Role Entity
+    private Long roleId;
 }
