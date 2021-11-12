@@ -21,8 +21,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
     @Column(unique = true)
+    @NotNull
     private String email;
 
     @Column(name = "first_name")
@@ -44,6 +44,7 @@ public class User {
 
     @Column(name = "email_verified")
     private Boolean emailVerified;
-    private Long roleId;
 
+    // todo: Role Entity
+    private Long roleId;
 }
