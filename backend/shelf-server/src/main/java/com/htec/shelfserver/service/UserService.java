@@ -1,6 +1,7 @@
 package com.htec.shelfserver.service;
 
 import com.htec.shelfserver.dto.UserDTO;
+import com.htec.shelfserver.entity.RoleEntity;
 import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.repository.UserRepository;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -36,6 +38,10 @@ public class UserService implements UserDetailsService {
             throw new Exception(ErrorMessages.RECORD_ALREADY_EXISTS.getErrorMessage());
 
         UserEntity userEntity = UserMapper.INSTANCE.userDtoToUser(userDTO);
+
+        userEntity.setCreatedAt(new Date());
+        userEntity.setEmailVerified(false);
+        userEntity.setRoleId(new RoleEntity(3L));
 
         String salt = utils.generateSalt(8);
         userEntity.setSalt(salt);
