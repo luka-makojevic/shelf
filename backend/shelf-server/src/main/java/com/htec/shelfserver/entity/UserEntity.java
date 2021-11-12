@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -45,6 +45,6 @@ public class UserEntity {
     @Column(name = "email_verified")
     private Boolean emailVerified;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne
     private RoleEntity roleId;
 }

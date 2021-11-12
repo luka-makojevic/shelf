@@ -1,12 +1,13 @@
 package com.htec.shelfserver.dto;
 
+import com.htec.shelfserver.entity.RoleEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -24,5 +25,5 @@ public class UserDTO implements Serializable {
     private Date updatedAt;
     private Date deletedAt;
     private Boolean emailVerified;
-    private Long roleId;
+    private RoleEntity roleId;
 }
