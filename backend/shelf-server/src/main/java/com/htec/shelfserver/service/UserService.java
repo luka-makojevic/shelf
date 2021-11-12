@@ -4,13 +4,17 @@ import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.User;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.repository.UserRepository;
+import com.htec.shelfserver.util.ErrorMessages;
 import com.htec.shelfserver.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     final private UserRepository userRepository;
     final private Utils utils;
@@ -18,16 +22,15 @@ public class UserService {
 
     @Autowired
     public UserService(UserRepository userRepository, Utils utils, BCryptPasswordEncoder bCryptPasswordEncoder) {
-
         this.userRepository = userRepository;
         this.utils = utils;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    public UserDTO createUser(UserDTO userDTO) {
+    public UserDTO createUser(UserDTO userDTO) throws Exception{
 
-        if (userRepository.findByEmail("userEmail") != null)
-            throw new RuntimeException("Record already exists!");
+        if (userRepository.findByEmail(userDTO.getEmail()) != null)
+            throw new Exception(ErrorMessages.RECORD_ALREADY_EXISTS.getErrorMessage());
 
         User userEntity = UserMapper.INSTANCE.userDtoToUser(userDTO);
 
@@ -39,9 +42,12 @@ public class UserService {
 
         User storedUser = userRepository.save(userEntity);
 
-        UserDTO returnValue = UserMapper.INSTANCE.userToUserDTO(storedUser);
+        return UserMapper.INSTANCE.userToUserDTO(storedUser);
 
-        return returnValue;
+    }
 
+    @Override
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        return null;
     }
 }

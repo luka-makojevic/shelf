@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponseModel> createUser(@RequestBody UserRequestModel userRequestModel) {
+    public ResponseEntity<UserResponseModel> createUser(@RequestBody UserRequestModel userRequestModel) throws Exception{
 
         UserDTO userDTO = UserMapper.INSTANCE.userRequestModelToUserDto(userRequestModel);
 
