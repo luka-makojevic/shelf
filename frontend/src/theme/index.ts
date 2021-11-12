@@ -19,8 +19,8 @@ export const theme = {
   colors: {
     text: '#000',
     background: '#fff',
-    primary: '#07c',
-    secondary: '#30c',
+    primary: '#006FD1',
+    secondary: '#8EA2D8',
     muted: '#F6F6F6',
   },
   text: {

@@ -31,9 +31,9 @@
         "react/require-default-props": "off",
         "react/no-unescaped-entities": "off",
         "react/no-children-prop": "off",
-        "react/no-array-index-key":"off",
-        "no-unused-vars":"warn"
-    },  
+        "react/no-array-index-key": "off",
+        "@typescript-eslint/no-unused-vars": "warn"
+    },
     "settings": {
         "import/resolver": {
             "typescript": {}
