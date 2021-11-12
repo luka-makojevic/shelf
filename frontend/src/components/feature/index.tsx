@@ -1,7 +1,7 @@
 import React from 'react'
 import { Title, Container, Logo, SubTitle } from './feature-styles'
 
-export default function Feature({ children, ...restProps }: any) {
+const  Feature = ({ children, ...restProps }: any)  =>{
   return <Container {...restProps}>{children}</Container>
 }
 
@@ -14,3 +14,5 @@ Feature.SubTitle = function FeatureSubTitle({ children, ...restProps }: any) {
 Feature.Logo = function FeatureLogo({ ...restProps }: any) {
   return <Logo {...restProps} />
 }
+
+export default Feature
