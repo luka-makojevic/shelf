@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Form, Header, Frame } from '../components'
 
 const RegisterContainer = () => {
-  const [showPassword, setShowPassword] = useState(false)
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
-  const [firstName, setFirstName] = useState<string>('')
-  const [lastName, setLastName] = useState<string>('')
+  // const [showPassword, setShowPassword] = useState(false)
+  // const [email, setEmail] = useState<string>('')
+  // const [password, setPassword] = useState<string>('')
+  // const [firstName, setFirstName] = useState<string>('')
+  // const [lastName, setLastName] = useState<string>('')
 
   return (
     <>
@@ -16,12 +16,14 @@ const RegisterContainer = () => {
           <Form>
             <Form.Title>Sign Up</Form.Title>
             <Form.Base>
-              <Form.Input 
+              {/* <Form.Input
                 type="email"
                 placeholder="email address"
                 value={password}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
-                />
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                  setPassword(event.target.value)
+                }
+              /> */}
               <Form.InputControl type="password" placeholder="password" />
               <Form.InputControl
                 type="password"

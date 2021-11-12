@@ -1,42 +1,53 @@
 {
-    "env": {
-        "browser": true,
-        "es2021": true
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "plugin:react/recommended",
+    "airbnb",
+    "airbnb-typescript",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
     },
     "extends": [
-        "plugin:react/recommended",
-        "airbnb",
-        "airbnb-typescript",
-        "prettier"
+      "plugin:react/recommended",
+      "airbnb",
+      "airbnb-typescript",
+      "prettier"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
-        "ecmaVersion": 13,
-        "sourceType": "module",
-        "project": "./tsconfig.json"
+      "ecmaFeatures": {
+        "jsx": true
+      },
+      "ecmaVersion": 13,
+      "sourceType": "module",
+      "project": "./tsconfig.json"
     },
-    "plugins": [
-        "react",
-        "@typescript-eslint"
-    ],
+    "plugins": ["react", "@typescript-eslint"],
     "rules": {
-        "react/react-in-jsx-scope": "off",
-        "react/jsx-props-no-spreading": "off",
-        "import/prefer-default-export": "off",
-        "arrow-body-style": "off",
-        "import/no-extraneous-dependencies": "off",
-        "react/require-default-props": "off",
-        "react/no-unescaped-entities": "off",
-        "react/no-children-prop": "off",
-        "react/no-array-index-key": "off",
-        "@typescript-eslint/no-unused-vars": "warn"
+      "react/react-in-jsx-scope": "off",
+      "react/jsx-props-no-spreading": "off",
+      "import/prefer-default-export": "off",
+      "arrow-body-style": "off",
+      "import/no-extraneous-dependencies": "off",
+      "react/require-default-props": "off",
+      "react/no-unescaped-entities": "off",
+      "react/no-children-prop": "off",
+      "react/no-array-index-key": "off",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "no-unused-vars": "warn",
+      "no-console": "off"
     },
     "settings": {
-        "import/resolver": {
-            "typescript": {}
-        }
+      "import/resolver": {
+        "typescript": {}
+      }
     }
+  }
 }
