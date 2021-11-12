@@ -1,9 +1,17 @@
 package com.htec.shelfserver.dto;
 
-import javax.persistence.Column;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.sql.Date;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDTO implements Serializable {
 
     private Long id;
