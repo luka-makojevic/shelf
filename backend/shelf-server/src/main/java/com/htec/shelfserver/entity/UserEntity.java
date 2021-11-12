@@ -15,7 +15,7 @@ import java.sql.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "user")
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,5 +46,5 @@ public class User {
     private Boolean emailVerified;
 
     @OneToOne(mappedBy = "user")
-    private Role roleId;
+    private RoleEntity roleId;
 }
