@@ -5,7 +5,7 @@ import com.htec.shelfserver.requestModel.UserRequestModel;
 import com.htec.shelfserver.responseModel.UserResponseModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import com.htec.shelfserver.entity.User;
+import com.htec.shelfserver.entity.UserEntity;
 
 @Mapper
 public interface UserMapper {
@@ -14,9 +14,9 @@ public interface UserMapper {
 
     UserDTO userRequestModelToUserDto(UserRequestModel userRequestModel);
 
-    User userDtoToUser(UserDTO userDTO);
+    UserEntity userDtoToUser(UserDTO userDTO);
 
-    UserDTO userToUserDTO(User user);
+    UserDTO userToUserDTO(UserEntity user);
 
     UserResponseModel userDtoToUserResponseModel(UserDTO userDTO);
 
