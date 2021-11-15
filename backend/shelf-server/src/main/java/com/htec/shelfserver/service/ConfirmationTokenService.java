@@ -2,48 +2,57 @@ package com.htec.shelfserver.service;
 
 import com.htec.shelfserver.entity.ConfirmationTokenEntity;
 import com.htec.shelfserver.repository.ConfirmationTokenRepository;
+import com.htec.shelfserver.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Date;
-import java.util.Optional;
 
 @Service
 public class ConfirmationTokenService {
     private final ConfirmationTokenRepository confirmationTokenRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ConfirmationTokenService(ConfirmationTokenRepository confirmationTokenRepository) {
+    public ConfirmationTokenService(ConfirmationTokenRepository confirmationTokenRepository,
+                                    UserRepository userRepository) {
         this.confirmationTokenRepository = confirmationTokenRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
-    public String confirmToken(String token) {
-        ConfirmationTokenEntity confirmationToken = this.getToken(token).orElseThrow(() ->
-                        new IllegalStateException("token not found"));
+    public ResponseEntity<String> confirmToken(String token) {
+        ConfirmationTokenEntity confirmationToken = this.getToken(token);
+
+        if (confirmationToken == null) {
+            return new ResponseEntity<>("Token not found", HttpStatus.NOT_FOUND);
+        }
 
         if (confirmationToken.getConfirmedAt() != null) {
-            throw new IllegalStateException("email already confirmed");
+            return new ResponseEntity<>("Email already confirmed", HttpStatus.METHOD_NOT_ALLOWED);
         }
 
         Date expiredAt = confirmationToken.getExpiresAt();
 
-//        if (expiredAt < new Date()) {
-//            throw new IllegalStateException("token expired");
-//        }
+        if (expiredAt.before(new Date())) {
+            return new ResponseEntity<>("Token expired", HttpStatus.UNAUTHORIZED);
+        }
 
         this.setConfirmedAt(token);
-//        appUserService.enableAppUser(
-//                confirmationToken.getAppUser().getEmail());
-        return "confirmed";
+
+        this.enableUser(confirmationToken.getUser().getEmail());
+
+        return new ResponseEntity<>("Email confirmed", HttpStatus.ACCEPTED);
     }
 
-    public void saveConfirmationToken(ConfirmationTokenEntity token) {
-        confirmationTokenRepository.save(token);
+    public int enableUser(String email) {
+        return userRepository.enableUser(email);
     }
 
-    public Optional<ConfirmationTokenEntity> getToken(String token) {
+    public ConfirmationTokenEntity getToken(String token) {
         return confirmationTokenRepository.findByToken(token);
     }
 

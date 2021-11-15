@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
@@ -27,16 +28,18 @@ public class UserService implements UserDetailsService {
     final private ConfirmationTokenRepository confirmationTokenRepository;
     final private Utils utils;
     final private BCryptPasswordEncoder bCryptPasswordEncoder;
+    final private  EmailService emailService;
 
     @Autowired
     public UserService(UserRepository userRepository,
                        ConfirmationTokenRepository confirmationTokenRepository,
                        Utils utils,
-                       BCryptPasswordEncoder bCryptPasswordEncoder) {
+                       BCryptPasswordEncoder bCryptPasswordEncoder, EmailService emailService) {
         this.userRepository = userRepository;
         this.confirmationTokenRepository = confirmationTokenRepository;
         this.utils = utils;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.emailService = emailService;
     }
 
     public UserDTO createUser(UserDTO userDTO) throws Exception {
@@ -51,7 +54,7 @@ public class UserService implements UserDetailsService {
 
         userEntity.setCreatedAt(new Date());
         userEntity.setEmailVerified(false);
-        userEntity.setRoleId(new RoleEntity(3L));
+        userEntity.setRole(new RoleEntity(3L));
 
         String salt = utils.generateSalt(8);
         userEntity.setSalt(salt);
@@ -65,12 +68,15 @@ public class UserService implements UserDetailsService {
 
         ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(
                 token,
-                new Date() ,
-                Date.from((new Date()).toInstant().plusSeconds(60*15)),
+                new Date(),
+                Date.from((new Date()).toInstant().plusSeconds(60 * 15)),
                 storedUser
         );
 
         confirmationTokenRepository.save(confirmationToken);
+
+        String link = "http://10.10.0.120:8080/users/register/confirm?token=" + token;
+        emailService.send(storedUser.getEmail() , emailService.buildEmail(storedUser.getFirstName() , link));
 
         return UserMapper.INSTANCE.userToUserDTO(storedUser);
 
