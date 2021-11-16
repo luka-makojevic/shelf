@@ -10,6 +10,7 @@ import com.htec.shelfserver.repository.UserRepository;
 import com.htec.shelfserver.util.ErrorMessages;
 import com.htec.shelfserver.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,8 +18,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.UUID;
 
 @Service
@@ -30,16 +31,21 @@ public class UserService implements UserDetailsService {
     final private BCryptPasswordEncoder bCryptPasswordEncoder;
     final private  EmailService emailService;
 
+    final private String server;
+
     @Autowired
     public UserService(UserRepository userRepository,
                        ConfirmationTokenRepository confirmationTokenRepository,
                        Utils utils,
-                       BCryptPasswordEncoder bCryptPasswordEncoder, EmailService emailService) {
+                       BCryptPasswordEncoder bCryptPasswordEncoder,
+                       EmailService emailService ,
+                       @Value("${shelfserver}") String server) {
         this.userRepository = userRepository;
         this.confirmationTokenRepository = confirmationTokenRepository;
         this.utils = utils;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.emailService = emailService;
+        this.server = server;
     }
 
     public UserDTO createUser(UserDTO userDTO) throws Exception {
@@ -52,7 +58,7 @@ public class UserService implements UserDetailsService {
 
         UserEntity userEntity = UserMapper.INSTANCE.userDtoToUser(userDTO);
 
-        userEntity.setCreatedAt(new Date());
+        userEntity.setCreatedAt(LocalDateTime.now());
         userEntity.setEmailVerified(false);
         userEntity.setRole(new RoleEntity(3L));
 
@@ -68,14 +74,15 @@ public class UserService implements UserDetailsService {
 
         ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(
                 token,
-                new Date(),
-                Date.from((new Date()).toInstant().plusSeconds(60 * 15)),
+                LocalDateTime.now(),
+                LocalDateTime.now().plusMinutes(15),
                 storedUser
         );
 
         confirmationTokenRepository.save(confirmationToken);
 
-        String link = "http://10.10.0.120:8080/users/register/confirm?token=" + token;
+        //String link = "http://10.10.0.120:8080/users/register/confirmation?token=" + token;
+        String link = "http://" + server + "/users/register/confirmation?token=" + token;
         emailService.send(storedUser.getEmail() , emailService.buildEmail(storedUser.getFirstName() , link));
 
         return UserMapper.INSTANCE.userToUserDTO(storedUser);

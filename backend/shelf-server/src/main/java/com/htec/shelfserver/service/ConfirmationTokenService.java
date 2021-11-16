@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Service
 public class ConfirmationTokenService {
@@ -25,7 +25,7 @@ public class ConfirmationTokenService {
 
     @Transactional
     public ResponseEntity<String> confirmToken(String token) {
-        ConfirmationTokenEntity confirmationToken = this.getToken(token);
+        ConfirmationTokenEntity confirmationToken = confirmationTokenRepository.findByToken(token);
 
         if (confirmationToken == null) {
             return new ResponseEntity<>("Token not found", HttpStatus.NOT_FOUND);
@@ -35,28 +35,18 @@ public class ConfirmationTokenService {
             return new ResponseEntity<>("Email already confirmed", HttpStatus.METHOD_NOT_ALLOWED);
         }
 
-        Date expiredAt = confirmationToken.getExpiresAt();
+        LocalDateTime expiredAt = confirmationToken.getExpiresAt();
 
-        if (expiredAt.before(new Date())) {
+        if (expiredAt.isBefore(LocalDateTime.now())) {
             return new ResponseEntity<>("Token expired", HttpStatus.UNAUTHORIZED);
         }
 
-        this.setConfirmedAt(token);
+        confirmationTokenRepository.updateConfirmedAt(token, LocalDateTime.now());
 
-        this.enableUser(confirmationToken.getUser().getEmail());
+        userRepository.enableUser(confirmationToken.getUser().getEmail());
 
         return new ResponseEntity<>("Email confirmed", HttpStatus.ACCEPTED);
     }
 
-    public int enableUser(String email) {
-        return userRepository.enableUser(email);
-    }
 
-    public ConfirmationTokenEntity getToken(String token) {
-        return confirmationTokenRepository.findByToken(token);
-    }
-
-    public int setConfirmedAt(String token) {
-        return confirmationTokenRepository.updateConfirmedAt(token, new Date());
-    }
 }

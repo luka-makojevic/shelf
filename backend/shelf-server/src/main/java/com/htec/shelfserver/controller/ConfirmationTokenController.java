@@ -16,7 +16,7 @@ public class ConfirmationTokenController {
 
     private final ConfirmationTokenService confirmationTokenService;
 
-    @GetMapping(path = "/confirm")
+    @GetMapping(path = "/confirmation")
     public ResponseEntity<String> confirm(@RequestParam("token") String token) {
         return confirmationTokenService.confirmToken(token);
     }
