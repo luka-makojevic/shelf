@@ -41,7 +41,7 @@ public class UserService implements UserDetailsService {
 
         userEntity.setCreatedAt(new Date());
         userEntity.setEmailVerified(false);
-        userEntity.setRoleId(new RoleEntity(3L));
+        userEntity.setRole(new RoleEntity(3L));
 
         String salt = utils.generateSalt(8);
         userEntity.setSalt(salt);

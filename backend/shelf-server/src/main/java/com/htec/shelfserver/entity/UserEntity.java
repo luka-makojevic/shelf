@@ -46,5 +46,5 @@ public class UserEntity {
     private Boolean emailVerified;
 
     @OneToOne
-    private RoleEntity roleId;
+    private RoleEntity role;
 }

@@ -27,6 +27,6 @@ public class RoleEntity {
 
     private String name;
 
-    @OneToMany(mappedBy = "roleId")
+    @OneToMany(mappedBy = "role")
     private Set<UserEntity> users = new HashSet<>();
 }
