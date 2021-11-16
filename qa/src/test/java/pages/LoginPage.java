@@ -13,11 +13,11 @@ public class LoginPage extends BaseHelper
         PageFactory.initElements(driver, this);
     }
 
-    private void navigateToShelPage() { driver.get("https://www.google.com/"); }
+    private void navigateToShelfPage() { driver.get("https://www.google.com/"); }
 
     public void login()
     {
-        navigateToShelPage();
+        navigateToShelfPage();
     }
 
 }

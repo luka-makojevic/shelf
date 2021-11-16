@@ -13,10 +13,10 @@ public class RegistrationPage extends BaseHelper
         PageFactory.initElements(driver, this);
     }
 
-    private void navigateToShelPage() { driver.get("http://only-testing-blog.blogspot.com/2014/05/form.html"); }
+    private void navigateToShelfPage() { driver.get("http://only-testing-blog.blogspot.com/2014/05/form.html"); }
 
     public void login()
     {
-        navigateToShelPage();
+        navigateToShelfPage();
     }
 }

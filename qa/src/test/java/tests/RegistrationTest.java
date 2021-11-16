@@ -34,13 +34,7 @@ public class RegistrationTest extends BaseTest
             driver.findElement(By.xpath("//*[@id=\"post-body-8228718889842861683\"]/div[1]/form/input[4]")).sendKeys(Mob);
             driver.findElement(By.xpath("//*[@id=\"post-body-8228718889842861683\"]/div[1]/form/input[5]")).sendKeys(company);
             driver.findElement(By.xpath("//*[@id=\"post-body-8228718889842861683\"]/div[1]/form/input[6]")).click();
-//            wdWait.until(ExpectedConditions.urlToBe(newUrl));
-//            System.out.println("fname"+Fname);
-//            wdWait.until(ExpectedConditions.urlToBe("http://only-testing-blog.blogspot.com/2014/05/form.html?FirstName="+Fname+"&"+"LastName="+Lname+"&"+"EmailID="+Email+"&"+"MobNo="+Mob+"&"+"Company="+company));
-//            String newUrl = driver.getCurrentUrl();
-//            System.out.println("new url:" + newUrl);
-//            wdWait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id=\"post-body-8228718889842861683\"]/div[1]/form/input[1]"),""));
-            Thread.sleep(3000);
+
             driver.switchTo().alert().accept();
 
         }
