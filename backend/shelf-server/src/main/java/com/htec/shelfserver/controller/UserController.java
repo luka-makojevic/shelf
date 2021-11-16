@@ -7,6 +7,7 @@ import com.htec.shelfserver.responseModel.UserResponseModel;
 import com.htec.shelfserver.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,7 +26,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseModel> createUser(@RequestBody UserRequestModel userRequestModel) throws Exception{
+    public ResponseEntity<UserResponseModel> createUser(@RequestBody UserRequestModel userRequestModel , Model model) throws Exception{
 
         UserDTO userDTO = UserMapper.INSTANCE.userRequestModelToUserDto(userRequestModel);
 

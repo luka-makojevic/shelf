@@ -14,9 +14,9 @@ public interface UserMapper {
 
     UserDTO userRequestModelToUserDto(UserRequestModel userRequestModel);
 
-    UserEntity userDtoToUser(UserDTO userDTO);
+    UserEntity userDtoToUserEntity(UserDTO userDTO);
 
-    UserDTO userToUserDTO(UserEntity user);
+    UserDTO userEntityToUserDTO(UserEntity user);
 
     UserResponseModel userDtoToUserResponseModel(UserDTO userDTO);
 

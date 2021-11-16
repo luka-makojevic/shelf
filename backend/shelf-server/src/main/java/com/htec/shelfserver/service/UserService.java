@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -29,23 +31,23 @@ public class UserService implements UserDetailsService {
     final private ConfirmationTokenRepository confirmationTokenRepository;
     final private Utils utils;
     final private BCryptPasswordEncoder bCryptPasswordEncoder;
-    final private  EmailService emailService;
+    final private EmailService emailService;
 
-    final private String server;
+    final private String serverIp;
 
     @Autowired
     public UserService(UserRepository userRepository,
                        ConfirmationTokenRepository confirmationTokenRepository,
                        Utils utils,
                        BCryptPasswordEncoder bCryptPasswordEncoder,
-                       EmailService emailService ,
-                       @Value("${shelfserver}") String server) {
+                       EmailService emailService,
+                       @Value("${shelfserver}") String serverIp) {
         this.userRepository = userRepository;
         this.confirmationTokenRepository = confirmationTokenRepository;
         this.utils = utils;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.emailService = emailService;
-        this.server = server;
+        this.serverIp = serverIp;
     }
 
     public UserDTO createUser(UserDTO userDTO) throws Exception {
@@ -56,7 +58,7 @@ public class UserService implements UserDetailsService {
         if (userRepository.findByEmail(userDTO.getEmail()) != null)
             throw new Exception(ErrorMessages.RECORD_ALREADY_EXISTS.getErrorMessage());
 
-        UserEntity userEntity = UserMapper.INSTANCE.userDtoToUser(userDTO);
+        UserEntity userEntity = UserMapper.INSTANCE.userDtoToUserEntity(userDTO);
 
         userEntity.setCreatedAt(LocalDateTime.now());
         userEntity.setEmailVerified(false);
@@ -70,23 +72,31 @@ public class UserService implements UserDetailsService {
 
         UserEntity storedUser = userRepository.save(userEntity);
 
+        createAndSendToken(storedUser);
+
+        return UserMapper.INSTANCE.userEntityToUserDTO(storedUser);
+
+    }
+
+    private void createAndSendToken(UserEntity userEntity) {
         String token = UUID.randomUUID().toString();
 
         ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(
                 token,
                 LocalDateTime.now(),
                 LocalDateTime.now().plusMinutes(15),
-                storedUser
+                userEntity
         );
 
         confirmationTokenRepository.save(confirmationToken);
 
-        //String link = "http://10.10.0.120:8080/users/register/confirmation?token=" + token;
-        String link = "http://" + server + "/users/register/confirmation?token=" + token;
-        emailService.send(storedUser.getEmail() , emailService.buildEmail(storedUser.getFirstName() , link));
+        String link = "http://" + serverIp + "/users/register/confirmation?token=" + token;
 
-        return UserMapper.INSTANCE.userToUserDTO(storedUser);
+        Map<String, Object> model = new HashMap<>();
+        model.put("firstName", userEntity.getFirstName());
+        model.put("confirmationLink", link);
 
+        emailService.sendEmail(userEntity.getEmail(), model);
     }
 
     @Override
