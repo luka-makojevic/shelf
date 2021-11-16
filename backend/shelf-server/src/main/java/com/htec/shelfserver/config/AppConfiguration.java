@@ -1,5 +1,6 @@
 package com.htec.shelfserver.config;
 
+import com.htec.shelfserver.util.UserValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,6 +45,12 @@ public class AppConfiguration {
     }
 
     @Bean
+    public UserValidator userValidator() {
+        return new UserValidator();
+    }
+
+
+    @Bean
     public JavaMailSender javaMailSender() {
 
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -63,7 +70,7 @@ public class AppConfiguration {
     @Primary
     @Bean
     public FreeMarkerConfigurationFactoryBean factoryBean() {
-        FreeMarkerConfigurationFactoryBean bean=new FreeMarkerConfigurationFactoryBean();
+        FreeMarkerConfigurationFactoryBean bean = new FreeMarkerConfigurationFactoryBean();
         bean.setTemplateLoaderPath("classpath:/templates");
         return bean;
     }

@@ -6,6 +6,7 @@ import com.htec.shelfserver.requestModel.UserRequestModel;
 import com.htec.shelfserver.responseModel.UserResponseModel;
 import com.htec.shelfserver.service.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,16 +26,12 @@ public class UserController {
         return "Get users is called.";
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<UserResponseModel> createUser(@RequestBody UserRequestModel userRequestModel , Model model) throws Exception{
+    @PostMapping(value="/register" , produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity createUser(@RequestBody UserRequestModel userRequestModel , Model model) throws Exception{
 
         UserDTO userDTO = UserMapper.INSTANCE.userRequestModelToUserDto(userRequestModel);
 
-        UserDTO createdUser = userService.createUser(userDTO);
-
-        UserResponseModel response = UserMapper.INSTANCE.userDtoToUserResponseModel(createdUser);
-
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return userService.createUser(userDTO);
 
     }
 

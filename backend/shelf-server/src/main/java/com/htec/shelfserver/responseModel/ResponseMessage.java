@@ -9,9 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserResponseModel {
-    private Long id;
-    private String firstName;
-    private String lastName;
-    private String email;
+public class ResponseMessage {
+    private String message;
 }
