@@ -1,6 +1,5 @@
 package com.htec.shelfserver.controller;
 
-import com.htec.shelfserver.responseModel.UserResponseModel;
 import com.htec.shelfserver.service.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,7 @@ public class ConfirmationTokenController {
 
     private final ConfirmationTokenService confirmationTokenService;
 
-    @GetMapping(path = "/confirm")
+    @GetMapping(path = "/confirmation")
     public ResponseEntity<String> confirm(@RequestParam("token") String token) {
         return confirmationTokenService.confirmToken(token);
     }

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,7 +18,7 @@ import java.util.Set;
 @Table(name = "role")
 public class RoleEntity {
 
-    public RoleEntity(Long id) {
+    public RoleEntity(Long id) throws SQLException {
         this.id = id;
     }
 

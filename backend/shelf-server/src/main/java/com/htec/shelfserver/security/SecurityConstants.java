@@ -9,6 +9,6 @@ public class SecurityConstants {
     public static final String TOKEN_SECRET = "ao9h8vbm52kxfd9";
 
     public static final String SIGN_UP_URL = "/users/register";
-    public static final String SIGN_UP_CONFIRM_EMAIL_URL = "/users/register/confirm";
+    public static final String SIGN_UP_CONFIRM_EMAIL_URL = "/users/register/confirmation";
 
 }
