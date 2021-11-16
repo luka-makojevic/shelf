@@ -1,16 +1,15 @@
-import {Container,Logo ,Profile} from "./header-styles"
+import { Container, Logo, Profile, Link } from './header-styles'
 
- const Header = ({ profile,...restProps}:any) => {
-    return (
-       <Container {...restProps}>
-          <Logo src="./assets/images/logo.png"/>
-          <Profile theme={profile} >PP</Profile>
-          </Container>
-    )
+const Header = ({ hideProfile, ...restProps }: any) => {
+  return (
+    <Container {...restProps}>
+      <Link to="/">
+        <Logo src="./assets/images/logo.png" />
+      </Link>
+
+      <Profile hideProfile={hideProfile}>PP</Profile>
+    </Container>
+  )
 }
-
-
-
-
 
 export default Header

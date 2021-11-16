@@ -1,4 +1,6 @@
-import { Content, Left, Right, Top } from './landing.styles'
+import { Content, Left, Right, Top } from './landing-styles'
+
+// to do (delete)
 
 const Landing = ({ children, ...restProps }: any) => {
   return <div {...restProps}>{children}</div>

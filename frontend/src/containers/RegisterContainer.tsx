@@ -1,6 +1,13 @@
-import React ,{useState} from 'react'
-import { Form, Header, Frame } from '../components'
+import React, { useState } from 'react'
+import { Form, Header } from '../components'
 import { useAuthService } from '../hooks/useAuth'
+import {
+  SubTitle,
+  Title,
+  Inner,
+  Container,
+  Feature,
+} from '../components/layout/layout.styles'
 
 const RegisterContainer = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -14,28 +21,24 @@ const RegisterContainer = () => {
   const [loading, setLoading] = useState(false)
 
   const { register } = useAuthService()
+  const data = { password, email, firstName, lastName }
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault()
-    if(email && password && password&& confirmPassword && firstName && lastName )
+    if (!email && !password && !confirmPassword && !firstName && !lastName)
+      return
     setLoading(true)
-    register(email, password, firstName, lastName)
-      .then((data: any) => {
-        setLoading(false)
-        console.log(data)
-      })
-      .catch((err: any) => {
-        setLoading(false)
-        setError(err.message)
-        console.log(err)
-      })
+    register(data).catch((err) => {
+      setLoading(false)
+      console.log(err.message)
+    })
   }
 
   return (
     <>
-      <Header profile={false} />
-      <Frame>
-        <Frame.ContainerRight>
+      <Header hideProfile={true} />
+      <Inner flexDirection={['column', 'row']}>
+        <Container width={['100%', '50%']}>
           <Form>
             <Form.Title>Sign Up</Form.Title>
             <Form.Error>{error}</Form.Error>
@@ -44,92 +47,49 @@ const RegisterContainer = () => {
                 type="email"
                 placeholder="email address"
                 value={email}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                  setEmail(event.target.value)
-                }
+                setInput={setEmail}
               />
-              <Form.InputControl>
-                <Form.Input
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="password"
-                  value={password}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                    setPassword(event.target.value)
-                  }
-                  
-                />
-                <Form.SeenIcon
-                  src={
-                    showPassword
-                      ? './assets/icons/eyeclosed.png'
-                      : './assets/icons/eyeopen.png'
-                  }
-                  onClick={() => setShowPassword(!showPassword)}
-                />
-              </Form.InputControl>
-              <Form.InputControl>
-                <Form.Input
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  placeholder="confirm password"
-                  value={confirmPassword}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                    setConfirmPassword(event.target.value)
-                  }
-                />
-                <Form.SeenIcon
-                  src={
-                    showConfirmPassword
-                      ? './assets/icons/eyeclosed.png'
-                      : './assets/icons/eyeopen.png'
-                  }
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                />
-              </Form.InputControl>
+              <Form.InputPassword
+                setPasswordVisible={setShowPassword}
+                passwordVisible={showPassword}
+                value={password}
+                setPassword={setPassword}
+                placeholder="password"
+              />
+
+              <Form.InputPassword
+                setPasswordVisible={setShowConfirmPassword}
+                passwordVisible={showConfirmPassword}
+                value={confirmPassword}
+                setPassword={setConfirmPassword}
+                placeholder="confirm password"
+              />
 
               <Form.Input
                 type="text"
                 placeholder="First Name"
                 value={firstName}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                  setFirstName(event.target.value)
-                }
+                setInput={setFirstName}
               />
               <Form.Input
                 type="text"
-                placeholder="Last Name"
+                placeholder="First Name"
                 value={lastName}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                  setLastName(event.target.value)
-                }
+                setInput={setLastName}
               />
-              <Form.InputControl>
-                <Form.Submit>
-                  {!loading ? (
-                    'Sign'
-                  ) : (
-                    <Form.Spinner
-                      src="./assets/icons/loading.png"
-                      alt="loading"
-                    />
-                  )}
-                </Form.Submit>
-              </Form.InputControl>
+
+              <Form.Submit loading={loading} />
             </Form.Base>
             <Form.AccentText>
               Have an account?
               <Form.Link to="/login"> Sign in</Form.Link>
             </Form.AccentText>
           </Form>
-        </Frame.ContainerRight>
-        <Frame.ContainerLeft>
-          <Frame.Feature>
-            <Frame.Title>Experience a new world</Frame.Title>
-            <Frame.SubTitle>
-              Enter your personal details and start your journey with us
-            </Frame.SubTitle>
-          </Frame.Feature>
-        </Frame.ContainerLeft>
-      </Frame>
+        </Container>
+        <Container bg="primary">
+          <div>Hello</div>
+        </Container>
+      </Inner>
     </>
   )
 }

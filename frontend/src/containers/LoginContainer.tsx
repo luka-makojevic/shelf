@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import Header from '../components/header'
 import Form from '../components/form'
-import Frame from '../components/authFrame'
 
 const LoginContainer = () => {
   const [email, setEmail] = useState('')
@@ -24,8 +23,8 @@ const LoginContainer = () => {
   }
 
   return (
-    <>
-      <Header profile={false} />
+    <div>
+      {/* {<Header profile={false} />
       <Frame>
         <Frame.ContainerRight>
           <Form>
@@ -61,7 +60,8 @@ const LoginContainer = () => {
           </Frame.Feature>
         </Frame.ContainerLeft>
       </Frame>
-    </>
+    </>} */}
+    </div>
   )
 }
 

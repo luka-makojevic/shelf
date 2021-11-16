@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
 import { Landing } from '../components'
-import Card from '../components/landing/card'
+import Card from '../components/card'
 
+// to do
 const HomeContainer = () => {
   const featuresInfo = [
     {
