@@ -1,5 +1,6 @@
 package com.htec.shelfserver.responseModel;
 
+import com.htec.shelfserver.entity.RoleEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,4 +16,5 @@ public class UserResponseModel {
     private String firstName;
     private String lastName;
     private String email;
+    private RoleEntity role;
 }

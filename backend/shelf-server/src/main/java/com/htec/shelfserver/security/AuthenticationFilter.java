@@ -2,6 +2,7 @@ package com.htec.shelfserver.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.htec.shelfserver.config.SpringApplicationContext;
+import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.repository.UserRepository;
 import com.htec.shelfserver.requestModel.UserLoginRequestModel;
 import com.htec.shelfserver.service.UserService;
@@ -45,14 +46,22 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                     .readValue(req.getInputStream(), UserLoginRequestModel.class);
 
             UserService userService = (UserService) SpringApplicationContext.getBean("userService");
+            UserDTO loginUser = userService.getUser(creds.getEmail());
 
-            return authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            creds.getEmail(),
-                            creds.getPassword() + userService.getUser(creds.getEmail()).getSalt(),
-                            new ArrayList<>())
-            );
+            if (loginUser.getEmailVerified()) {
 
+                return authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                creds.getEmail(),
+                                creds.getPassword() + userService.getUser(creds.getEmail()).getSalt(),
+                                new ArrayList<>())
+                );
+            }
+            else
+            {
+                throw new IOException();
+                // todo: throw exception for email verification
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
