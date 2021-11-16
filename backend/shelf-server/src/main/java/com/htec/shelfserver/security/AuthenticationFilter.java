@@ -1,8 +1,10 @@
 package com.htec.shelfserver.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.htec.shelfserver.config.SpringApplicationContext;
 import com.htec.shelfserver.repository.UserRepository;
 import com.htec.shelfserver.requestModel.UserLoginRequestModel;
+import com.htec.shelfserver.service.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +26,12 @@ import java.util.Date;
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-    final private UserRepository userRepository;
 
     private String contentType;
 
     @Autowired
-    public AuthenticationFilter(AuthenticationManager authenticationManager, UserRepository userRepository) {
+    public AuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
     }
 
     @Override
@@ -44,10 +44,12 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             UserLoginRequestModel creds = new ObjectMapper()
                     .readValue(req.getInputStream(), UserLoginRequestModel.class);
 
+            UserService userService = (UserService) SpringApplicationContext.getBean("userService");
+
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             creds.getEmail(),
-                            creds.getPassword() + userRepository.findByEmail(creds.getEmail()).getSalt(),
+                            creds.getPassword() + userService.getUser(creds.getEmail()).getSalt(),
                             new ArrayList<>())
             );
 

@@ -37,7 +37,7 @@ public class UserService implements UserDetailsService {
         if (userRepository.findByEmail(userDTO.getEmail()) != null)
             throw new Exception(ErrorMessages.RECORD_ALREADY_EXISTS.getErrorMessage());
 
-        UserEntity userEntity = UserMapper.INSTANCE.userDtoToUser(userDTO);
+        UserEntity userEntity = UserMapper.INSTANCE.userDtoToUserEntity(userDTO);
 
         userEntity.setCreatedAt(new Date());
         userEntity.setEmailVerified(false);
@@ -51,8 +51,19 @@ public class UserService implements UserDetailsService {
 
         UserEntity storedUser = userRepository.save(userEntity);
 
-        return UserMapper.INSTANCE.userToUserDTO(storedUser);
+        return UserMapper.INSTANCE.userEntityToUserDTO(storedUser);
 
+    }
+
+    public UserDTO getUser(String email) {
+
+        UserEntity userEntity = userRepository.findByEmail(email);
+        if(userEntity == null)
+            throw new UsernameNotFoundException(email);
+
+        UserDTO returnValue = new UserDTO();
+        returnValue = UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
+        return returnValue;
     }
 
     @Override

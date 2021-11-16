@@ -20,7 +20,7 @@ public class UserDTO implements Serializable {
     private String firstName;
     private String lastName;
     private String password;
-//    private String salt;
+    private String salt;
     private Date createdAt;
     private Date updatedAt;
     private Date deletedAt;
