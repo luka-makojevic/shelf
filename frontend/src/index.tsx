@@ -1,15 +1,18 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
-import { BrowserRouter as Router } from 'react-router-dom'
 import { GlobalStyles } from './global-styles'
+// import { AuthProvider } from './providers/authProvider'
 
 ReactDOM.render(
   <React.StrictMode>
     <GlobalStyles />
     <Router>
+      {/* <AuthProvider> */}
       <App />
+      {/* </AuthProvider> */}
     </Router>
   </React.StrictMode>,
   document.getElementById('root')
