@@ -4,7 +4,7 @@ import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.ConfirmationTokenEntity;
 import com.htec.shelfserver.entity.RoleEntity;
 import com.htec.shelfserver.entity.UserEntity;
-import com.htec.shelfserver.exception.BadRequestException;
+import com.htec.shelfserver.exception.ShelfException;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.repository.ConfirmationTokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
@@ -15,7 +15,6 @@ import com.htec.shelfserver.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,10 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -60,8 +56,12 @@ public class UserService implements UserDetailsService {
 
     public ResponseMessage createUser(UserDTO userDTO) {
 
-        if (userRepository.findByEmail(userDTO.getEmail()) != null)
-            throw new BadRequestException(ErrorMessages.RECORD_ALREADY_EXISTS.getErrorMessage());
+        userRepository.findByEmail(userDTO.getEmail()).ifPresent(
+                userEntity -> {
+                    throw new ShelfException(ErrorMessages.RECORD_ALREADY_EXISTS.getErrorMessage(),
+                            HttpStatus.BAD_REQUEST.value(),
+                            "", ErrorMessages.BAD_REQUEST.getErrorMessage());
+                });
 
         userValidator.isUserValid(userDTO);
 
@@ -109,22 +109,18 @@ public class UserService implements UserDetailsService {
 
     public UserDTO getUser(String email) {
 
-        UserEntity userEntity = userRepository.findByEmail(email);
-        if(userEntity == null)
-            throw new UsernameNotFoundException(email);
+        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(
+                () -> new UsernameNotFoundException(email));
 
-        UserDTO returnValue = new UserDTO();
-        returnValue = UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
-        return returnValue;
+        return UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        UserEntity userEntity = userRepository.findByEmail(email);
-
-        if (userEntity == null)
-            throw new UsernameNotFoundException(email);
+        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(
+                () -> new UsernameNotFoundException(email)
+        );
 
         return new User(userEntity.getEmail(), userEntity.getPassword(), new ArrayList<>());
     }

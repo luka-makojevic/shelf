@@ -7,6 +7,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import com.htec.shelfserver.entity.UserEntity;
 
+import java.util.Optional;
+
 @Mapper
 public interface UserMapper {
 

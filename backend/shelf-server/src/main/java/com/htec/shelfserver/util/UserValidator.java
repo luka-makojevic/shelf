@@ -1,7 +1,8 @@
 package com.htec.shelfserver.util;
 
-import com.htec.shelfserver.exception.BadRequestException;
+import com.htec.shelfserver.exception.ShelfException;
 import com.htec.shelfserver.dto.UserDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.util.ObjectUtils;
 
 import javax.mail.internet.AddressException;
@@ -16,12 +17,13 @@ public class UserValidator {
 
     private static final Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
 
-    public void isUserValid(UserDTO userDTO) throws BadRequestException {
+    public void isUserValid(UserDTO userDTO) throws ShelfException {
 
         String password = userDTO.getPassword();
         Matcher matcher = pattern.matcher(password);
         if (!matcher.matches()) {
-            throw new BadRequestException(ErrorMessages.PASSWORD_NOT_VALID.getErrorMessage());
+            throw new ShelfException(ErrorMessages.PASSWORD_NOT_VALID.getErrorMessage(), HttpStatus.BAD_REQUEST.value(),
+                    "", ErrorMessages.BAD_REQUEST.getErrorMessage());
         }
 
         String email = userDTO.getEmail();
@@ -33,19 +35,22 @@ public class UserValidator {
             result = false;
         }
         if (!result) {
-            throw new BadRequestException(ErrorMessages.EMAIL_NOT_VALID.getErrorMessage());
+            throw new ShelfException(ErrorMessages.EMAIL_NOT_VALID.getErrorMessage(), HttpStatus.BAD_REQUEST.value(),
+                    "", ErrorMessages.BAD_REQUEST.getErrorMessage());
         }
 
         String firstName = userDTO.getFirstName();
 
         if (ObjectUtils.isEmpty(firstName)) {
-            throw new BadRequestException(ErrorMessages.FIRST_NAME_NOT_VALID.getErrorMessage());
+            throw new ShelfException(ErrorMessages.FIRST_NAME_NOT_VALID.getErrorMessage(), HttpStatus.BAD_REQUEST.value(),
+                    "", ErrorMessages.BAD_REQUEST.getErrorMessage());
         }
 
         String lastName = userDTO.getLastName();
 
         if (ObjectUtils.isEmpty(lastName)) {
-            throw new BadRequestException(ErrorMessages.LAST_NAME_NOT_VALID.getErrorMessage());
+            throw new ShelfException(ErrorMessages.LAST_NAME_NOT_VALID.getErrorMessage(), HttpStatus.BAD_REQUEST.value(),
+                    "", ErrorMessages.BAD_REQUEST.getErrorMessage());
         }
     }
 }
