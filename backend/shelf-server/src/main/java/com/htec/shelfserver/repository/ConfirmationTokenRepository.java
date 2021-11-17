@@ -7,10 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public interface ConfirmationTokenRepository extends JpaRepository<ConfirmationTokenEntity, Long> {
 
-    ConfirmationTokenEntity findByToken(String token);
+    Optional<ConfirmationTokenEntity> findByToken(String token);
 
     @Transactional
     @Modifying

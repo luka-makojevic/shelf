@@ -18,7 +18,7 @@ import java.util.Set;
 @Table(name = "role")
 public class RoleEntity {
 
-    public RoleEntity(Long id) throws SQLException {
+    public RoleEntity(Long id) {
         this.id = id;
     }
 
