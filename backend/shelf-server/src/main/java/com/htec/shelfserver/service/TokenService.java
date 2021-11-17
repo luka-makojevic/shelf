@@ -1,7 +1,8 @@
 package com.htec.shelfserver.service;
 
-import com.htec.shelfserver.entity.ConfirmationTokenEntity;
-import com.htec.shelfserver.repository.ConfirmationTokenRepository;
+import com.htec.shelfserver.entity.TokenEntity;
+import com.htec.shelfserver.entity.UserEntity;
+import com.htec.shelfserver.repository.TokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -16,22 +17,26 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class ConfirmationTokenService {
-    private final ConfirmationTokenRepository confirmationTokenRepository;
+public class TokenService {
+    private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
     private final Configuration config;
+    private final UserService userService;
 
     @Autowired
-    public ConfirmationTokenService(ConfirmationTokenRepository confirmationTokenRepository,
-                                    UserRepository userRepository, Configuration config) {
-        this.confirmationTokenRepository = confirmationTokenRepository;
+    public TokenService(TokenRepository tokenRepository,
+                        UserRepository userRepository,
+                        Configuration config,
+                        UserService userService) {
+        this.tokenRepository = tokenRepository;
         this.userRepository = userRepository;
         this.config = config;
+        this.userService = userService;
     }
 
     @Transactional
     public String confirmToken(String token) {
-        Optional<ConfirmationTokenEntity> confirmationToken = confirmationTokenRepository.findByToken(token);
+        Optional<TokenEntity> confirmationToken = tokenRepository.findByToken(token);
 
         if (!confirmationToken.isPresent()) {
             return procesTemplate("Token not found");
@@ -47,7 +52,7 @@ public class ConfirmationTokenService {
             return procesTemplate("Token expired");
         }
 
-        confirmationTokenRepository.updateConfirmedAt(token, LocalDateTime.now());
+        tokenRepository.updateConfirmedAt(token, LocalDateTime.now());
 
         userRepository.enableUser(confirmationToken.get().getUser().getEmail());
 
@@ -60,7 +65,7 @@ public class ConfirmationTokenService {
 
         try {
 
-            Template template = config.getTemplate("email-confirmation.html");
+            Template template = config.getTemplate("token-confirmation.html");
             Map<String, Object> model = new HashMap<>();
 
             model.put("message", message);
@@ -74,4 +79,23 @@ public class ConfirmationTokenService {
     }
 
 
+    public String createAndSendToken(String token) {
+
+        Optional<TokenEntity> confirmationToken = tokenRepository.findByToken(token);
+
+        if (!confirmationToken.isPresent()) {
+            return procesTemplate("Token not found");
+        }
+
+        Optional<UserEntity> userEntity = userRepository.findById(confirmationToken.get().getUser().getId());
+
+        if(userEntity.get().getEmailVerified() == true){
+            return procesTemplate("Email already confirmed");
+        }
+
+        userService.createAndSendToken(userEntity.get());
+
+        return procesTemplate("Token resent");
+
+    }
 }

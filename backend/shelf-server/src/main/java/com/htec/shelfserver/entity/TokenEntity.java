@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "token")
-public class ConfirmationTokenEntity {
+public class TokenEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,10 +35,10 @@ public class ConfirmationTokenEntity {
     @JoinColumn( nullable = false )
     private UserEntity user;
 
-    public ConfirmationTokenEntity(String token,
-                                   LocalDateTime createdAt,
-                                   LocalDateTime expiresAt,
-                                   UserEntity user) {
+    public TokenEntity(String token,
+                       LocalDateTime createdAt,
+                       LocalDateTime expiresAt,
+                       UserEntity user) {
         this.token = token;
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;

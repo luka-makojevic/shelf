@@ -1,12 +1,12 @@
 package com.htec.shelfserver.service;
 
 import com.htec.shelfserver.dto.UserDTO;
-import com.htec.shelfserver.entity.ConfirmationTokenEntity;
+import com.htec.shelfserver.entity.TokenEntity;
 import com.htec.shelfserver.entity.RoleEntity;
 import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.exception.ShelfException;
 import com.htec.shelfserver.mapper.UserMapper;
-import com.htec.shelfserver.repository.ConfirmationTokenRepository;
+import com.htec.shelfserver.repository.TokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
 import com.htec.shelfserver.util.ErrorMessages;
 import com.htec.shelfserver.util.UserValidator;
@@ -30,7 +30,7 @@ import java.util.UUID;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final ConfirmationTokenRepository confirmationTokenRepository;
+    private final TokenRepository confirmationTokenRepository;
     private final Utils utils;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final EmailService emailService;
@@ -40,7 +40,7 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     public UserService(UserRepository userRepository,
-                       ConfirmationTokenRepository confirmationTokenRepository,
+                       TokenRepository confirmationTokenRepository,
                        Utils utils,
                        BCryptPasswordEncoder bCryptPasswordEncoder,
                        EmailService emailService,
@@ -83,10 +83,10 @@ public class UserService implements UserDetailsService {
         return;
     }
 
-    private void createAndSendToken(UserEntity userEntity) {
+    void createAndSendToken(UserEntity userEntity) {
         String token = UUID.randomUUID().toString();
 
-        ConfirmationTokenEntity confirmationToken = new ConfirmationTokenEntity(
+        TokenEntity confirmationToken = new TokenEntity(
                 token,
                 LocalDateTime.now(),
                 LocalDateTime.now().plusMinutes(15),
@@ -95,11 +95,12 @@ public class UserService implements UserDetailsService {
 
         confirmationTokenRepository.save(confirmationToken);
 
-        String link = "http://" + serverIp + "/users/register/confirmation?token=" + token;
-
+        String confirmationLink = "http://" + serverIp + "/users/register/confirmation?token=" + token;
+        String resendTokenLink = "http://" + serverIp + "/users/register/resend?token=" + token;
         Map<String, Object> model = new HashMap<>();
         model.put("firstName", userEntity.getFirstName());
-        model.put("confirmationLink", link);
+        model.put("confirmationLink", confirmationLink);
+        model.put("resendTokenLink", resendTokenLink);
 
         emailService.sendEmail(userEntity.getEmail(), model);
     }

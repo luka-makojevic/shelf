@@ -26,7 +26,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createUser(@RequestBody UserRequestModel userRequestModel, Model model) throws Exception {
+    public ResponseEntity createUser(@RequestBody UserRequestModel userRequestModel, Model model){
 
         UserDTO userDTO = UserMapper.INSTANCE.userRequestModelToUserDto(userRequestModel);
 
