@@ -103,7 +103,7 @@ public class UserService implements UserDetailsService {
     public UserDTO getUser(String email) {
 
         UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(
-                ExceptionSupplier.recordNotFoundWithEmail.get()
+                ExceptionSupplier.recordNotFoundWithEmail
         );
 
         return UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
@@ -113,7 +113,7 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) {
 
         UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(
-                ExceptionSupplier.recordNotFoundWithEmail.get()
+                ExceptionSupplier.recordNotFoundWithEmail
         );
 
         return new User(userEntity.getEmail(), userEntity.getPassword(), new ArrayList<>());

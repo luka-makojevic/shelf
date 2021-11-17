@@ -14,15 +14,11 @@ import java.util.function.Supplier;
 @Builder
 
 @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-public class ShelfException extends RuntimeException implements Supplier<ShelfException> {
+public class ShelfException extends RuntimeException {
 
     private String message;
     private Integer status;
     private String timestamp;
     private String errorMessage;
 
-    @Override
-    public ShelfException get() {
-        return null;
-    }
 }
