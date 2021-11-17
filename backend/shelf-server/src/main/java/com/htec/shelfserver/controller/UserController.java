@@ -3,10 +3,8 @@ package com.htec.shelfserver.controller;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.requestModel.UserRequestModel;
-import com.htec.shelfserver.responseModel.ResponseMessage;
-import com.htec.shelfserver.responseModel.UserResponseModel;
+import com.htec.shelfserver.responseModel.ErrorMessage;
 import com.htec.shelfserver.service.UserService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -32,7 +30,7 @@ public class UserController {
 
         UserDTO userDTO = UserMapper.INSTANCE.userRequestModelToUserDto(userRequestModel);
 
-        ResponseMessage returnMessage = userService.createUser(userDTO);
+        ErrorMessage returnMessage = userService.createUser(userDTO);
         return ResponseEntity.status(returnMessage.getStatus()).body(returnMessage);
     }
 

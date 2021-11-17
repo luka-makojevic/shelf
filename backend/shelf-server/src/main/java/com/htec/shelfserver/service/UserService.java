@@ -8,7 +8,7 @@ import com.htec.shelfserver.exception.ShelfException;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.repository.ConfirmationTokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
-import com.htec.shelfserver.responseModel.ResponseMessage;
+import com.htec.shelfserver.responseModel.ErrorMessage;
 import com.htec.shelfserver.util.ErrorMessages;
 import com.htec.shelfserver.util.UserValidator;
 import com.htec.shelfserver.util.Utils;
@@ -56,7 +56,7 @@ public class UserService implements UserDetailsService {
         this.serverIp = serverIp;
     }
 
-    public ResponseMessage createUser(UserDTO userDTO) {
+    public ErrorMessage createUser(UserDTO userDTO) {
 
         userRepository.findByEmail(userDTO.getEmail()).ifPresent(
                 userEntity -> {
@@ -85,7 +85,7 @@ public class UserService implements UserDetailsService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formatDateTime = LocalDateTime.now().format(formatter);
 
-        return new ResponseMessage("User registered.", HttpStatus.CREATED.value(), formatDateTime, "Created user.");
+        return new ErrorMessage("User registered.", HttpStatus.CREATED.value(), formatDateTime, "Created user.");
     }
 
     private void createAndSendToken(UserEntity userEntity) {

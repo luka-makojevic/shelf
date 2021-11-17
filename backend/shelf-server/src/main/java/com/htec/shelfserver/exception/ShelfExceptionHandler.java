@@ -1,5 +1,6 @@
 package com.htec.shelfserver.exception;
 
+import com.htec.shelfserver.responseModel.ErrorMessage;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,7 +21,9 @@ public class ShelfExceptionHandler {
 
         ex.setTimestamp(formatDateTime);
         return ResponseEntity.status(ex.getStatus())
-                .body(ex);
+                .body(new ErrorMessage(
+                        ex.getMessage(), ex.getStatus(), ex.getTimestamp(), ex.getErrorMessage()
+                ));
     }
 
 }
