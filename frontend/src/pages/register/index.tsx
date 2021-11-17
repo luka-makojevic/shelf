@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Form, Header } from '../../components'
 import { useAuthService } from '../../hooks/useAuth'
 import {
-  Inner,
+  Wrapper,
   Container,
   Feature,
 } from '../../components/layout/layout.styles'
@@ -12,6 +12,7 @@ import {
   AccentText,
   Link,
 } from '../../components/text/text-styles'
+import RegisterForm from './form'
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -41,9 +42,14 @@ const Register = () => {
   return (
     <>
       <Header hideProfile={true} />
-      <Inner flexDirection={['column', 'row']} height={['100%', '100vh']}>
-        <Container width={[1, 1 / 2]} height={['50%', '100%']}>
-          <Form>
+      <Wrapper flexDirection={['column', 'row']} height="100vh">
+        <Container
+          width={[1, 1 / 2]}
+          // marginTop={['4em', '0']}
+          // margin={['auto']}
+        >
+          <RegisterForm />
+          {/* <Form>
             <Form.Title>Sign Up</Form.Title>
             <Form.Error>{error}</Form.Error>
             <Form.Base onSubmit={handleSubmit}>
@@ -88,17 +94,17 @@ const Register = () => {
               Have an account?
               <Link to="/login"> Sign in</Link>
             </AccentText>
-          </Form>
+          </Form> */}
         </Container>
-        <Container bg="primary" width={[1, 1 / 2]} height={['50%', '100%']}>
-          <Feature>
+        <Container bg="primary" width={[1, 1 / 2]} display={['none', 'flex']}>
+          <Feature height={['550', '600']}>
             <Title fontSize={['40px', '50px']}>Explore new world</Title>
             <SubTitle fontSize={['15px', '19px']}>
               Enter your personal details and start your journey with us
             </SubTitle>
           </Feature>
         </Container>
-      </Inner>
+      </Wrapper>
     </>
   )
 }
