@@ -1,5 +1,6 @@
 package com.htec.shelfserver.exceptionSupplier;
 
+import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.exception.ShelfException;
 import com.htec.shelfserver.util.ErrorMessages;
 import org.springframework.http.HttpStatus;
