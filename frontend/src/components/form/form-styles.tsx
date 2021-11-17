@@ -11,19 +11,19 @@ import {
 } from 'styled-system'
 import { FormProps } from '../../interfaces/styles'
 
-export const Container = styled.div`
+export const Container = styled.div<FormProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 650px;
-  max-width: 450px;
-  padding: 30px 50px;
 
+  padding: 30px 50px;
   border-radius: 50px;
   border: 2px solid ${({ theme }) => theme.colors.secondary};
   width: 100%;
   height: 550px;
   margin: 30px auto 90px;
+  ${space}
+  ${layout}
 `
 
 export const Base = styled.form`
@@ -54,6 +54,10 @@ export const Input = styled.input<FormProps>`
   }
 `
 
+export const PasswordContainer = styled.div`
+  position: relative;
+  width: 100%;
+`
 export const Spinner = styled.img`
   filter: invert(1);
   width: 30px;
@@ -96,7 +100,7 @@ export const Spinner = styled.img`
     }
   }
 `
-export const InputPassword = styled.div`
+export const InputPassword = styled(Input)`
   position: relative;
   width: 100%;
 `

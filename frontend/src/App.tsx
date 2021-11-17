@@ -1,10 +1,10 @@
 import { useRoutes } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
-import Dashboard from './pages/Dashboard'
+import { Dashboard } from './pages/dashboard/index'
 import { theme } from './theme/index'
-import Home from './pages/Home'
-import Login from './pages/Login'
-import Register from './pages/Register'
+import { Landing } from './pages/landing/index'
+import { Login } from './pages/login/index'
+import { Register } from './pages/register/index'
 import { Routes } from './enums/routes'
 import { RouteProps } from './interfaces/route'
 
@@ -12,7 +12,7 @@ function App() {
   const routes: RouteProps[] = [
     {
       path: Routes.HOME,
-      element: <Home />,
+      element: <Landing />,
     },
     {
       path: Routes.REGISTER,

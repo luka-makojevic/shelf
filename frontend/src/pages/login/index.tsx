@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import Header from '../components/header'
-import Form from '../components/form'
+import Header from '../../components/header'
+import Form from '../../components/form'
 
-const LoginContainer = () => {
+const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -27,29 +27,7 @@ const LoginContainer = () => {
       {/* {<Header profile={false} />
       <Frame>
         <Frame.ContainerRight>
-          <Form>
-            <Form.Title>Login</Form.Title>
-            <Form.Base>
-              <Form.Input
-                placeholder="email"
-                type="email"
-                value={email}
-                onChange={handleChangeEmail}
-              />
-              <Form.Input
-                type="password"
-                value={password}
-                onChange={handleChangePassword}
-              />
-              <Form.Submit>Sign in</Form.Submit>
-            </Form.Base>
-            <Form.AccentText>
-              New to Shelf?
-              <Form.Link to="/register" onClick={handleSubmit}>
-                Sign Up
-              </Form.Link>
-            </Form.AccentText>
-          </Form>
+         
         </Frame.ContainerRight>
         <Frame.ContainerLeft>
           <Frame.Feature>
@@ -65,4 +43,4 @@ const LoginContainer = () => {
   )
 }
 
-export default LoginContainer
+export { Login }

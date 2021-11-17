@@ -1,6 +1,30 @@
 import styled from 'styled-components'
-import { space, layout, color } from 'styled-system'
+import { space, typography, color } from 'styled-system'
+import { Link as ReachRouterLink } from 'react-router-dom'
+import { TextProps } from '../../interfaces/styles'
 
-export const Title = styled.h1``
-export const SubTitle = styled.p``
-export const AccentText = styled.p``
+export const Title = styled.h1<TextProps>`
+    ${space}
+    ${typography}
+    ${color}
+`
+export const SubTitle = styled.p<TextProps>`
+    ${space}
+    ${typography}
+    ${color}
+`
+export const AccentText = styled.p<TextProps>`
+    ${space}
+    ${typography}
+    ${color}
+    color: ${(({theme}) => theme.colors.primary)};
+`
+export const Link = styled(ReachRouterLink)<TextProps>`
+    ${space}
+    ${typography}
+    ${color}
+    color: ${(({theme}) => theme.colors.primary)};
+    text-decoration: none;
+    font-weight: ${(({theme}) => theme.fontWeights.bold)} ;
+
+`

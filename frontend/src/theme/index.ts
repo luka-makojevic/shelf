@@ -11,6 +11,7 @@ export const theme = {
     '256px',
     '512px',
   ],
+
   fonts: {
     body: 'Source Sans Pro, sans-serif',
     heading: 'inherit',
@@ -18,6 +19,7 @@ export const theme = {
 
   // fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 96],
   fontSizes: [
+    '10px',
     '12px',
     '14px',
     '16px',

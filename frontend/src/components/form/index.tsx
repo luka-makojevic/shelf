@@ -1,4 +1,3 @@
-import { borderRadius } from 'styled-system'
 import {
   Container,
   Base,
@@ -11,10 +10,15 @@ import {
   SeenIcon,
   InputPassword,
   Spinner,
+  PasswordContainer,
 } from './form-styles'
 
 const Form = ({ children, ...restProps }: any) => {
-  return <Container {...restProps}>{children}</Container>
+  return (
+    <Container width={['300px', '400px']} padding={[3, 4, 5]} {...restProps}>
+      {children}
+    </Container>
+  )
 }
 
 Form.Base = function FormBase({ children, ...restProps }: any) {
@@ -47,8 +51,10 @@ Form.InputPassword = function FormInputPassword({
   ...restProps
 }: any) {
   return (
-    <InputPassword>
-      <Form.Input
+    <PasswordContainer>
+      <Input
+        marginY={[1, 2]}
+        padding={[1, 2]}
         type={passwordVisible ? 'text' : 'password'}
         placeholder={placeholder}
         value={value}
@@ -64,7 +70,7 @@ Form.InputPassword = function FormInputPassword({
         }
         onClick={() => setPasswordVisible(!passwordVisible)}
       />
-    </InputPassword>
+    </PasswordContainer>
   )
 }
 Form.Spinner = function FormSpinner({ ...restProps }: any) {

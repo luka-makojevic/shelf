@@ -1,15 +1,19 @@
 import React, { useState } from 'react'
-import { Form, Header } from '../components'
-import { useAuthService } from '../hooks/useAuth'
+import { Form, Header } from '../../components'
+import { useAuthService } from '../../hooks/useAuth'
 import {
-  SubTitle,
-  Title,
   Inner,
   Container,
   Feature,
-} from '../components/layout/layout.styles'
+} from '../../components/layout/layout.styles'
+import {
+  Title,
+  SubTitle,
+  AccentText,
+  Link,
+} from '../../components/text/text-styles'
 
-const RegisterContainer = () => {
+const Register = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [email, setEmail] = useState<string>('')
@@ -37,8 +41,8 @@ const RegisterContainer = () => {
   return (
     <>
       <Header hideProfile={true} />
-      <Inner flexDirection={['column', 'row']}>
-        <Container width={['100%', '50%']}>
+      <Inner flexDirection={['column', 'row']} height={['100%', '100vh']}>
+        <Container width={[1, 1 / 2]} height={['50%', '100%']}>
           <Form>
             <Form.Title>Sign Up</Form.Title>
             <Form.Error>{error}</Form.Error>
@@ -80,18 +84,23 @@ const RegisterContainer = () => {
 
               <Form.Submit loading={loading} />
             </Form.Base>
-            <Form.AccentText>
+            <AccentText fontSize={[0, 1, 2]}>
               Have an account?
-              <Form.Link to="/login"> Sign in</Form.Link>
-            </Form.AccentText>
+              <Link to="/login"> Sign in</Link>
+            </AccentText>
           </Form>
         </Container>
-        <Container bg="primary">
-          <div>Hello</div>
+        <Container bg="primary" width={[1, 1 / 2]} height={['50%', '100%']}>
+          <Feature>
+            <Title fontSize={['40px', '50px']}>Explore new world</Title>
+            <SubTitle fontSize={['15px', '19px']}>
+              Enter your personal details and start your journey with us
+            </SubTitle>
+          </Feature>
         </Container>
       </Inner>
     </>
   )
 }
 
-export { RegisterContainer }
+export { Register }

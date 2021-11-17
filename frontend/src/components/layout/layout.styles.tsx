@@ -1,24 +1,12 @@
 import styled from 'styled-components'
 import {
   layout,
-  LayoutProps,
   flexbox,
-  FlexboxProps,
   space,
-  SpaceProps,
-  typography,
-  TypographyProps,
   color,
-  ColorProps,
 } from 'styled-system'
+import { ContainerProps } from '../../interfaces/styles'
 
-interface ContainerProps
-  extends ColorProps,
-    FlexboxProps,
-    LayoutProps,
-    SpaceProps {
-  children: React.ReactNode
-}
 
 const Inner = styled.div<ContainerProps>`
   width: 100vw;
@@ -26,7 +14,6 @@ const Inner = styled.div<ContainerProps>`
   display: flex;
   align-items: center;
   justify-content: center;
-
   ${space}
   ${layout}
   ${flexbox}
@@ -40,11 +27,15 @@ const Container = styled.div<ContainerProps>`
   align-items: center;
   justify-content: center;
 
-  width: 50%;
-  height: 100%;
+  
+  
 `
 
-const Feature = styled.div`
+const Feature = styled.div <ContainerProps>`
+  ${space}
+  ${layout}
+  ${flexbox}
+  ${color} 
   color: white;
   border-color: white;
   padding: 7em 3em;
@@ -53,12 +44,4 @@ const Feature = styled.div`
   border-radius: 50px;
   text-align: center;
 `
-
-const Title = styled.h1`
-  font-size: 5rem;
-  @media (max-width: 1200px) {
-    font-size: 3rem;
-  }
-`
-const SubTitle = styled.p``
-export { SubTitle, Title, Inner, Container, Feature }
+export { Inner, Container, Feature }
