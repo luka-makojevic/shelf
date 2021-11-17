@@ -1,10 +1,16 @@
 package com.htec.shelfserver.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.htec.shelfserver.config.SpringApplicationContext;
+import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.requestModel.UserLoginRequestModel;
+import com.htec.shelfserver.responseModel.ResponseMessage;
+import com.htec.shelfserver.responseModel.UserLoginResponseModel;
 import com.htec.shelfserver.service.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,6 +32,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private String contentType;
 
+    @Autowired
     public AuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
@@ -40,13 +47,23 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             UserLoginRequestModel creds = new ObjectMapper()
                     .readValue(req.getInputStream(), UserLoginRequestModel.class);
 
-            return authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            creds.getEmail(),
-                            creds.getPassword(),
-                            new ArrayList<>())
-            );
+            UserService userService = (UserService) SpringApplicationContext.getBean("userService");
+            UserDTO loginUser = userService.getUser(creds.getEmail());
 
+            if (loginUser.getEmailVerified()) {
+
+                return authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                creds.getEmail(),
+                                creds.getPassword() + userService.getUser(creds.getEmail()).getSalt(),
+                                new ArrayList<>())
+                );
+            }
+            else
+            {
+                throw new IOException();
+                // todo: throw exception for email verification
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -67,5 +84,16 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .compact();
 
         res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
+
+        UserService userService = (UserService) SpringApplicationContext.getBean("userService");
+        UserDTO loginUser = userService.getUser(userName);
+        UserLoginResponseModel userResponse = new UserLoginResponseModel(loginUser.getId(),
+                loginUser.getFirstName(),loginUser.getLastName(), loginUser.getEmail(), loginUser.getRole().getId());
+
+        String userResponseJson = new ObjectMapper().writeValueAsString(userResponse);
+        res.setContentType("application/json");
+        res.getWriter().write(userResponseJson);
     }
+
+
 }

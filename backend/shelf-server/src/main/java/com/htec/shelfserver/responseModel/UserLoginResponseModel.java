@@ -1,5 +1,6 @@
 package com.htec.shelfserver.responseModel;
 
+import com.htec.shelfserver.entity.RoleEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,10 +10,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseMessage {
+public class UserLoginResponseModel {
 
-    private String message;
-    private Integer status;
-    private String timestamp;
-    private String errorMessage;
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private Long role;
 }

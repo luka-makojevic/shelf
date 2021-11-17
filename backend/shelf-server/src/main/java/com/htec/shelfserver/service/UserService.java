@@ -78,7 +78,6 @@ public class UserService implements UserDetailsService {
         userEntity.setPassword(encryptedPassword);
 
         UserEntity storedUser = userRepository.save(userEntity);
-
         createAndSendToken(storedUser);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -106,6 +105,17 @@ public class UserService implements UserDetailsService {
         model.put("confirmationLink", link);
 
         emailService.sendEmail(userEntity.getEmail(), model);
+    }
+
+    public UserDTO getUser(String email) {
+
+        UserEntity userEntity = userRepository.findByEmail(email);
+        if(userEntity == null)
+            throw new UsernameNotFoundException(email);
+
+        UserDTO returnValue = new UserDTO();
+        returnValue = UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
+        return returnValue;
     }
 
     @Override
