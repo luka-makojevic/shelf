@@ -65,7 +65,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 // todo: throw exception for email verification
             }
         } catch (IOException e) {
-            return new RuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 
