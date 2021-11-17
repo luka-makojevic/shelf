@@ -17,7 +17,7 @@ public class UserValidator {
 
     private static final Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
 
-    public void isUserValid(UserDTO userDTO) throws ShelfException {
+    public void isUserValid(UserDTO userDTO) {
 
         String password = userDTO.getPassword();
         Matcher matcher = pattern.matcher(password);
