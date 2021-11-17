@@ -5,6 +5,8 @@ import lombok.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.function.Supplier;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -12,10 +14,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Builder
 
 @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-public class ShelfException extends RuntimeException {
+public class ShelfException extends RuntimeException implements Supplier<ShelfException> {
 
     private String message;
     private Integer status;
     private String timestamp;
     private String errorMessage;
+
+    @Override
+    public ShelfException get() {
+        return null;
+    }
 }

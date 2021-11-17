@@ -1,8 +1,7 @@
 package com.htec.shelfserver.util;
 
-import com.htec.shelfserver.exception.ShelfException;
+import com.htec.shelfserver.exceptionSupplier.ExceptionSupplier;
 import com.htec.shelfserver.dto.UserDTO;
-import org.springframework.http.HttpStatus;
 import org.springframework.util.ObjectUtils;
 
 import javax.mail.internet.AddressException;
@@ -22,8 +21,7 @@ public class UserValidator {
         String password = userDTO.getPassword();
         Matcher matcher = pattern.matcher(password);
         if (!matcher.matches()) {
-            throw new ShelfException(ErrorMessages.PASSWORD_NOT_VALID.getErrorMessage(), HttpStatus.BAD_REQUEST.value(),
-                    "", ErrorMessages.BAD_REQUEST.getErrorMessage());
+            throw ExceptionSupplier.passwordNotValid.get();
         }
 
         String email = userDTO.getEmail();
@@ -35,22 +33,19 @@ public class UserValidator {
             result = false;
         }
         if (!result) {
-            throw new ShelfException(ErrorMessages.EMAIL_NOT_VALID.getErrorMessage(), HttpStatus.BAD_REQUEST.value(),
-                    "", ErrorMessages.BAD_REQUEST.getErrorMessage());
+            throw ExceptionSupplier.emailNotValid.get();
         }
 
         String firstName = userDTO.getFirstName();
 
         if (ObjectUtils.isEmpty(firstName)) {
-            throw new ShelfException(ErrorMessages.FIRST_NAME_NOT_VALID.getErrorMessage(), HttpStatus.BAD_REQUEST.value(),
-                    "", ErrorMessages.BAD_REQUEST.getErrorMessage());
+            throw ExceptionSupplier.firstNameNotValid.get();
         }
 
         String lastName = userDTO.getLastName();
 
         if (ObjectUtils.isEmpty(lastName)) {
-            throw new ShelfException(ErrorMessages.LAST_NAME_NOT_VALID.getErrorMessage(), HttpStatus.BAD_REQUEST.value(),
-                    "", ErrorMessages.BAD_REQUEST.getErrorMessage());
+            throw ExceptionSupplier.lastNameNotValid.get();
         }
     }
 }

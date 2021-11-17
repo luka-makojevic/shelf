@@ -1,19 +1,17 @@
 package com.htec.shelfserver.service;
 
+import com.htec.shelfserver.exceptionSupplier.ExceptionSupplier;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.TokenEntity;
 import com.htec.shelfserver.entity.RoleEntity;
 import com.htec.shelfserver.entity.UserEntity;
-import com.htec.shelfserver.exception.ShelfException;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.repository.TokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
-import com.htec.shelfserver.util.ErrorMessages;
 import com.htec.shelfserver.util.UserValidator;
 import com.htec.shelfserver.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -58,9 +56,7 @@ public class UserService implements UserDetailsService {
 
         userRepository.findByEmail(userDTO.getEmail()).ifPresent(
                 userEntity -> {
-                    throw new ShelfException(ErrorMessages.RECORD_ALREADY_EXISTS.getErrorMessage(),
-                            HttpStatus.BAD_REQUEST.value(),
-                            "", ErrorMessages.BAD_REQUEST.getErrorMessage());
+                    throw ExceptionSupplier.recordAlreadyExists.get();
                 });
 
         userValidator.isUserValid(userDTO);
@@ -80,7 +76,6 @@ public class UserService implements UserDetailsService {
         UserEntity storedUser = userRepository.save(userEntity);
         createAndSendToken(storedUser);
 
-        return;
     }
 
     void createAndSendToken(UserEntity userEntity) {
@@ -108,9 +103,7 @@ public class UserService implements UserDetailsService {
     public UserDTO getUser(String email) {
 
         UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(
-                () -> new ShelfException(ErrorMessages.NO_RECORD_FOUND_WITH_EMAIL.getErrorMessage() + email,
-                        HttpStatus.NOT_FOUND.value(),
-                        "", ErrorMessages.NOT_FOUND.getErrorMessage())
+                ExceptionSupplier.recordNotFoundWithEmail.get()
         );
 
         return UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
@@ -120,9 +113,7 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) {
 
         UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(
-                () -> new ShelfException(ErrorMessages.NO_RECORD_FOUND_WITH_EMAIL.getErrorMessage() + email,
-                        HttpStatus.NOT_FOUND.value(),
-                        "", ErrorMessages.NOT_FOUND.getErrorMessage())
+                ExceptionSupplier.recordNotFoundWithEmail.get()
         );
 
         return new User(userEntity.getEmail(), userEntity.getPassword(), new ArrayList<>());
