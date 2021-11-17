@@ -1,12 +1,12 @@
-import { CardWrapper, IconWrapper } from './card-styles'
+import { CardWrapper, IconWrapper, Image, Text } from './card-styles'
 
 const Card = ({ image, text }: { image: string; text: string }) => {
   return (
     <CardWrapper>
       <IconWrapper>
-        <img src={image} alt="" />
+        <Image src={image} alt="" />
       </IconWrapper>
-      <p>{text}</p>
+      <Text>{text}</Text>
     </CardWrapper>
   )
 }
