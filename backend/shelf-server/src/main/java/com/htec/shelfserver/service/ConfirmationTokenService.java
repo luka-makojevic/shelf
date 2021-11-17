@@ -3,50 +3,74 @@ package com.htec.shelfserver.service;
 import com.htec.shelfserver.entity.ConfirmationTokenEntity;
 import com.htec.shelfserver.repository.ConfirmationTokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class ConfirmationTokenService {
     private final ConfirmationTokenRepository confirmationTokenRepository;
     private final UserRepository userRepository;
+    private final Configuration config;
 
     @Autowired
     public ConfirmationTokenService(ConfirmationTokenRepository confirmationTokenRepository,
-                                    UserRepository userRepository) {
+                                    UserRepository userRepository, Configuration config) {
         this.confirmationTokenRepository = confirmationTokenRepository;
         this.userRepository = userRepository;
+        this.config = config;
     }
 
     @Transactional
-    public ResponseEntity<String> confirmToken(String token) {
+    public String confirmToken(String token) {
         Optional<ConfirmationTokenEntity> confirmationToken = confirmationTokenRepository.findByToken(token);
 
         if (!confirmationToken.isPresent()) {
-            return new ResponseEntity<>("Token not found", HttpStatus.NOT_FOUND);
+            return procesTemplate("Token not found");
         }
 
         if (confirmationToken.get().getConfirmedAt() != null) {
-            return new ResponseEntity<>("Email already confirmed", HttpStatus.METHOD_NOT_ALLOWED);
+            return procesTemplate("Email already confirmed");
         }
 
         LocalDateTime expiredAt = confirmationToken.get().getExpiresAt();
 
         if (expiredAt.isBefore(LocalDateTime.now())) {
-            return new ResponseEntity<>("Token expired", HttpStatus.UNAUTHORIZED);
+            return procesTemplate("Token expired");
         }
 
         confirmationTokenRepository.updateConfirmedAt(token, LocalDateTime.now());
 
         userRepository.enableUser(confirmationToken.get().getUser().getEmail());
 
-        return new ResponseEntity<>("Email confirmed", HttpStatus.ACCEPTED);
+        return procesTemplate("Email confirmed");
+    }
+
+    private String procesTemplate(String message) {
+
+        String emailContent = "";
+
+        try {
+
+            Template template = config.getTemplate("email-confirmation.html");
+            Map<String, Object> model = new HashMap<>();
+
+            model.put("message", message);
+            emailContent = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+
+        } catch (Exception e) {
+        }
+
+        return emailContent;
+
     }
 
 

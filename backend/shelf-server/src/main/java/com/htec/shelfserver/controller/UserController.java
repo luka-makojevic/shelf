@@ -3,8 +3,8 @@ package com.htec.shelfserver.controller;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.requestModel.UserRequestModel;
-import com.htec.shelfserver.responseModel.ErrorMessage;
 import com.htec.shelfserver.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -25,13 +25,14 @@ public class UserController {
         return "Get users is called.";
     }
 
-    @PostMapping(value="/register" , produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createUser(@RequestBody UserRequestModel userRequestModel , Model model) throws Exception{
+    @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity createUser(@RequestBody UserRequestModel userRequestModel, Model model) throws Exception {
 
         UserDTO userDTO = UserMapper.INSTANCE.userRequestModelToUserDto(userRequestModel);
 
-        ErrorMessage returnMessage = userService.createUser(userDTO);
-        return ResponseEntity.status(returnMessage.getStatus()).body(returnMessage);
+        userService.createUser(userDTO);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("User registered.");
     }
 
     @PutMapping

@@ -8,7 +8,6 @@ import com.htec.shelfserver.exception.ShelfException;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.repository.ConfirmationTokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
-import com.htec.shelfserver.responseModel.ErrorMessage;
 import com.htec.shelfserver.util.ErrorMessages;
 import com.htec.shelfserver.util.UserValidator;
 import com.htec.shelfserver.util.Utils;
@@ -22,7 +21,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,7 +54,7 @@ public class UserService implements UserDetailsService {
         this.serverIp = serverIp;
     }
 
-    public ErrorMessage createUser(UserDTO userDTO) {
+    public void createUser(UserDTO userDTO) {
 
         userRepository.findByEmail(userDTO.getEmail()).ifPresent(
                 userEntity -> {
@@ -82,10 +80,7 @@ public class UserService implements UserDetailsService {
         UserEntity storedUser = userRepository.save(userEntity);
         createAndSendToken(storedUser);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formatDateTime = LocalDateTime.now().format(formatter);
-
-        return new ErrorMessage("User registered.", HttpStatus.CREATED.value(), formatDateTime, "Created user.");
+        return;
     }
 
     private void createAndSendToken(UserEntity userEntity) {
