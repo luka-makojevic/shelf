@@ -48,10 +48,10 @@ public class EmailService {
             mailSender.send(mimeMessage);
 
         } catch (MessagingException | IOException | TemplateException e) {
-            {
-                LOGGER.error("Failed to send email", e);
-                throw new IllegalStateException("Failed to send email");
-            }
+
+            LOGGER.error("Failed to send email", e);
+            throw new IllegalStateException("Failed to send email");
+
         }
 
 

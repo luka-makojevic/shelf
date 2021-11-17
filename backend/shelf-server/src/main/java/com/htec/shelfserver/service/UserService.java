@@ -1,10 +1,10 @@
 package com.htec.shelfserver.service;
 
-import com.htec.exception.BadRequestException;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.ConfirmationTokenEntity;
 import com.htec.shelfserver.entity.RoleEntity;
 import com.htec.shelfserver.entity.UserEntity;
+import com.htec.shelfserver.exception.BadRequestException;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.repository.ConfirmationTokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
@@ -23,8 +23,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,44 +58,33 @@ public class UserService implements UserDetailsService {
         this.serverIp = serverIp;
     }
 
-    public ResponseEntity<ResponseMessage> createUser(UserDTO userDTO) {
+    public ResponseMessage createUser(UserDTO userDTO) {
 
-        try {
-            if (userRepository.findByEmail(userDTO.getEmail()) != null)
-                throw new BadRequestException(ErrorMessages.RECORD_ALREADY_EXISTS.getErrorMessage());
+        if (userRepository.findByEmail(userDTO.getEmail()) != null)
+            throw new BadRequestException(ErrorMessages.RECORD_ALREADY_EXISTS.getErrorMessage());
 
-            userValidator.isUserValid(userDTO);
+        userValidator.isUserValid(userDTO);
 
-            UserEntity userEntity = UserMapper.INSTANCE.userDtoToUserEntity(userDTO);
+        UserEntity userEntity = UserMapper.INSTANCE.userDtoToUserEntity(userDTO);
 
-            userEntity.setCreatedAt(LocalDateTime.now());
-            userEntity.setEmailVerified(false);
-            userEntity.setRole(new RoleEntity(3L));
+        userEntity.setCreatedAt(LocalDateTime.now());
+        userEntity.setEmailVerified(false);
+        userEntity.setRole(new RoleEntity(3L));
 
-            String salt = utils.generateSalt(8);
-            userEntity.setSalt(salt);
+        String salt = utils.generateSalt(8);
+        userEntity.setSalt(salt);
 
-            String encryptedPassword = bCryptPasswordEncoder.encode(userDTO.getPassword() + salt);
-            userEntity.setPassword(encryptedPassword);
+        String encryptedPassword = bCryptPasswordEncoder.encode(userDTO.getPassword() + salt);
+        userEntity.setPassword(encryptedPassword);
 
-            UserEntity storedUser = userRepository.save(userEntity);
+        UserEntity storedUser = userRepository.save(userEntity);
 
-            createAndSendToken(storedUser);
+        createAndSendToken(storedUser);
 
-        } catch (BadRequestException e) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formatDateTime = LocalDateTime.now().format(formatter);
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(e.getMessage()));
-
-        } catch (Exception e) {
-
-            String message;
-            message = (e instanceof SQLException) ? e.getMessage() : "SQL exception";
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(message));
-
-        }
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseMessage("User registered"));
+        return new ResponseMessage("User registered.", HttpStatus.CREATED.value(), formatDateTime, "Created user.");
     }
 
     private void createAndSendToken(UserEntity userEntity) {

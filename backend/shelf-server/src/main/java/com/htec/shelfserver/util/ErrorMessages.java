@@ -14,7 +14,8 @@ public enum ErrorMessages {
     PASSWORD_NOT_VALID("Password is not valid."),
     EMAIL_NOT_VALID("Email is not valid."),
     FIRST_NAME_NOT_VALID("First name is not valid."),
-    LAST_NAME_NOT_VALID("Last name is not valid.");
+    LAST_NAME_NOT_VALID("Last name is not valid."),
+    BAD_REQUEST("Bad request.");
 
 
     private String errorMessage;

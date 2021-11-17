@@ -1,6 +1,6 @@
 package com.htec.shelfserver.util;
 
-import com.htec.exception.BadRequestException;
+import com.htec.shelfserver.exception.BadRequestException;
 import com.htec.shelfserver.dto.UserDTO;
 import org.springframework.util.ObjectUtils;
 
