@@ -1,5 +1,6 @@
 package com.htec.shelfserver.service;
 
+import com.htec.shelfserver.exceptionSupplier.ExceptionSupplier;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -49,8 +50,7 @@ public class EmailService {
 
         } catch (MessagingException | IOException | TemplateException e) {
 
-            LOGGER.error("Failed to send email", e);
-            throw new IllegalStateException("Failed to send email");
+            throw ExceptionSupplier.emailFailedToSend.get();
 
         }
 

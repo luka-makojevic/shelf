@@ -3,6 +3,7 @@ package com.htec.shelfserver.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.htec.shelfserver.config.SpringApplicationContext;
 import com.htec.shelfserver.dto.UserDTO;
+import com.htec.shelfserver.exceptionSupplier.ExceptionSupplier;
 import com.htec.shelfserver.requestModel.UserLoginRequestModel;
 import com.htec.shelfserver.responseModel.UserLoginResponseModel;
 import com.htec.shelfserver.service.UserService;
@@ -59,8 +60,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             }
             else
             {
-                throw new IOException();
-                // todo: throw exception for email verification
+                throw ExceptionSupplier.emailNotVerified.get();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
