@@ -3,6 +3,7 @@ package com.htec.shelfserver.controller;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.requestModel.UserRequestModel;
+import com.htec.shelfserver.responseModel.ResponseMessage;
 import com.htec.shelfserver.responseModel.UserResponseModel;
 import com.htec.shelfserver.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -31,8 +32,8 @@ public class UserController {
 
         UserDTO userDTO = UserMapper.INSTANCE.userRequestModelToUserDto(userRequestModel);
 
-        return userService.createUser(userDTO);
-
+        ResponseMessage returnMessage = userService.createUser(userDTO);
+        return ResponseEntity.status(returnMessage.getStatus()).body(returnMessage);
     }
 
     @PutMapping

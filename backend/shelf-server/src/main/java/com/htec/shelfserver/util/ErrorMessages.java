@@ -15,7 +15,8 @@ public enum ErrorMessages {
     EMAIL_NOT_VALID("Email is not valid."),
     FIRST_NAME_NOT_VALID("First name is not valid."),
     LAST_NAME_NOT_VALID("Last name is not valid."),
-    BAD_REQUEST("Bad request.");
+    BAD_REQUEST("Bad request."),
+    NOT_FOUND("Not found.");
 
 
     private String errorMessage;

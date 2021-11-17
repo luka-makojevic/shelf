@@ -1,6 +1,6 @@
 package com.htec.shelfserver.util;
 
-import com.htec.shelfserver.exception.BadRequestException;
+import com.htec.shelfserver.exception.ShelfException;
 import com.htec.shelfserver.dto.UserDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,10 +29,10 @@ class UserValidatorTest {
         userDTO.setEmail(email);
         userDTO.setPassword(password);
 
-        BadRequestException badRequestException = assertThrows(BadRequestException.class,
+        ShelfException shelfException = assertThrows(ShelfException.class,
                 () -> userValidator.isUserValid(userDTO));
 
-        assertEquals("First name is not valid."  , badRequestException.getMessage());
+        assertEquals("First name is not valid."  , shelfException.getMessage());
     }
 
     @Test
@@ -48,10 +48,10 @@ class UserValidatorTest {
         userDTO.setEmail(email);
         userDTO.setPassword(password);
 
-        BadRequestException badRequestException = assertThrows(BadRequestException.class,
+        ShelfException shelfException = assertThrows(ShelfException.class,
                 () -> userValidator.isUserValid(userDTO));
 
-        assertEquals("Last name is not valid."  , badRequestException.getMessage());
+        assertEquals("Last name is not valid."  , shelfException.getMessage());
     }
 
     @Test
@@ -67,10 +67,10 @@ class UserValidatorTest {
         userDTO.setEmail(email);
         userDTO.setPassword(password);
 
-        BadRequestException badRequestException = assertThrows(BadRequestException.class,
+        ShelfException shelfException = assertThrows(ShelfException.class,
                 () -> userValidator.isUserValid(userDTO));
 
-        assertEquals("Email is not valid."  , badRequestException.getMessage());
+        assertEquals("Email is not valid."  , shelfException.getMessage());
     }
 
     @Test
@@ -86,10 +86,10 @@ class UserValidatorTest {
         userDTO.setEmail(email);
         userDTO.setPassword(password);
 
-        BadRequestException badRequestException = assertThrows(BadRequestException.class,
+        ShelfException shelfException = assertThrows(ShelfException.class,
                 () -> userValidator.isUserValid(userDTO));
 
-        assertEquals("Password is not valid."  , badRequestException.getMessage());
+        assertEquals("Password is not valid."  , shelfException.getMessage());
     }
 
 }
