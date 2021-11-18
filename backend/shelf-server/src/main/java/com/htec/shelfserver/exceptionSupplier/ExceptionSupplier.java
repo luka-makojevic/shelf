@@ -34,6 +34,13 @@ public class ExceptionSupplier {
             ErrorMessages.BAD_REQUEST.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> authenticationFailed = () -> new ShelfException(
+            ErrorMessages.AUTHENTICATION_FAILED.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> emailNotValid = () -> new ShelfException(
             ErrorMessages.EMAIL_NOT_VALID.getErrorMessage(),
             HttpStatus.BAD_REQUEST.value(),

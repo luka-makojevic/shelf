@@ -8,6 +8,7 @@ import com.htec.shelfserver.exception.ShelfException;
 import com.htec.shelfserver.exceptionSupplier.ExceptionSupplier;
 import com.htec.shelfserver.repository.UserRepository;
 import com.htec.shelfserver.requestModel.UserLoginRequestModel;
+import com.htec.shelfserver.responseModel.ErrorMessage;
 import com.htec.shelfserver.responseModel.UserLoginResponseModel;
 import com.htec.shelfserver.service.UserService;
 import com.htec.shelfserver.util.ErrorMessages;
@@ -15,6 +16,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Optional;
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -54,12 +57,14 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
             UserService userService = (UserService) SpringApplicationContext.getBean("userService");
             UserRepository userRepository = (UserRepository) SpringApplicationContext.getBean("userRepository");
+            Optional<UserEntity> userEntity = userRepository.findByEmail(creds.getEmail());
+            String salt = userEntity.isPresent() ? userEntity.get().getSalt() : "";
 
 
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             creds.getEmail(),
-                            creds.getPassword() + userService.getUser(creds.getEmail()).getSalt(),
+                            creds.getPassword() + salt,
                             new ArrayList<>())
             );
         }
@@ -110,7 +115,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                               HttpServletResponse res,
                                               AuthenticationException failed) throws IOException, ServletException {
 
-        ShelfException ex = ExceptionSupplier.passwordNotValid.get();
+        ShelfException ex = ExceptionSupplier.authenticationFailed.get();
         String userResponseJson = new ObjectMapper().writeValueAsString(ex);
         res.setStatus(HttpStatus.BAD_REQUEST.value());
         res.setContentType("application/json");
