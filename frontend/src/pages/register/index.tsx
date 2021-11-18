@@ -1,100 +1,30 @@
 import React, { useState } from 'react'
-import { Form, Header } from '../../components'
-import { useAuthService } from '../../hooks/useAuth'
+import { Header } from '../../components'
 import {
   Wrapper,
   Container,
   Feature,
 } from '../../components/layout/layout.styles'
-import {
-  Title,
-  SubTitle,
-  AccentText,
-  Link,
-} from '../../components/text/text-styles'
+import { Title, SubTitle } from '../../components/text/text-styles'
 import RegisterForm from './form'
 
 const Register = () => {
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
-  const [confirmPassword, setConfirmPassword] = useState<string>('')
-  const [firstName, setFirstName] = useState<string>('')
-  const [lastName, setLastName] = useState<string>('')
-  const [error, setError] = useState()
+  const [error, setError] = useState<string>('')
   const [loading, setLoading] = useState(false)
+  const [formData, setFormData] = useState()
 
-  const { register } = useAuthService()
-  const data = { password, email, firstName, lastName }
+  console.log('formData - index', formData)
 
-  const handleSubmit = (e: React.SyntheticEvent) => {
-    e.preventDefault()
-    if (!email && !password && !confirmPassword && !firstName && !lastName)
-      return
-    setLoading(true)
-    register(data).catch((err) => {
-      setLoading(false)
-      console.log(err.message)
-    })
+  const handleSubmit = () => {
+    // poziva register
   }
 
   return (
     <>
       <Header hideProfile={true} />
       <Wrapper flexDirection={['column', 'row']} height="100vh">
-        <Container
-          width={[1, 1 / 2]}
-          // marginTop={['4em', '0']}
-          // margin={['auto']}
-        >
-          <RegisterForm />
-          {/* <Form>
-            <Form.Title>Sign Up</Form.Title>
-            <Form.Error>{error}</Form.Error>
-            <Form.Base onSubmit={handleSubmit}>
-              <Form.Input
-                type="email"
-                placeholder="email address"
-                value={email}
-                setInput={setEmail}
-              />
-              <Form.InputPassword
-                setPasswordVisible={setShowPassword}
-                passwordVisible={showPassword}
-                value={password}
-                setPassword={setPassword}
-                placeholder="password"
-              />
-
-              <Form.InputPassword
-                setPasswordVisible={setShowConfirmPassword}
-                passwordVisible={showConfirmPassword}
-                value={confirmPassword}
-                setPassword={setConfirmPassword}
-                placeholder="confirm password"
-              />
-
-              <Form.Input
-                type="text"
-                placeholder="First Name"
-                value={firstName}
-                setInput={setFirstName}
-              />
-              <Form.Input
-                type="text"
-                placeholder="First Name"
-                value={lastName}
-                setInput={setLastName}
-              />
-
-              <Form.Submit loading={loading} />
-            </Form.Base>
-            <AccentText fontSize={[0, 1, 2]}>
-              Have an account?
-              <Link to="/login"> Sign in</Link>
-            </AccentText>
-          </Form> */}
+        <Container width={[1, 1 / 2]}>
+          <RegisterForm loading={loading} setFormData={setFormData} />
         </Container>
         <Container bg="primary" width={[1, 1 / 2]} display={['none', 'flex']}>
           <Feature height={['550', '600']}>

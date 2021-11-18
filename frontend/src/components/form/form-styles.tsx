@@ -35,11 +35,9 @@ export const Base = styled.form`
 
 export const Title = styled.h1``
 
-export const Error = styled.div`
+export const Error = styled.p`
   color: ${({ theme }) => theme.colors.danger};
-  border-radius: 15px;
-  padding: 5px 10px;
-  font-size: 12px;
+  font-size: x-small;
 `
 
 export const Input = styled.input<FormProps>`

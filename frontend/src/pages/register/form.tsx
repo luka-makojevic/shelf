@@ -1,76 +1,130 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
+import { useForm, FormProvider, useFormContext } from 'react-hook-form'
 import { Form } from '../../components'
+import {
+  Error,
+  Input,
+  InputPassword,
+  PasswordContainer,
+  SeenIcon,
+} from '../../components/form/form-styles'
 import { Title } from '../../components/text/text-styles'
 
-const RegisterForm = () => {
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
-  const [confirmPassword, setConfirmPassword] = useState<string>('')
-  const [firstName, setFirstName] = useState<string>('')
-  const [lastName, setLastName] = useState<string>('')
+type Props = {
+  email: string
+  password: string
+  confirmPassword: string
+  firstName: string
+  lastName: string
+}
 
-  const emailChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
-    setEmail(event.currentTarget.value)
-    console.log(event.currentTarget.value)
-  }
+const RegisterForm = ({ loading, setFormData }: any) => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Props>({})
 
-  const firstNameChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
-    setFirstName(event.currentTarget.value)
-    console.log(event.currentTarget.value)
-  }
+  const password = useRef({})
+  // password.current(watch('password', ''))
+  const [passwordVisible, setPasswordVisible] = useState<boolean>(false)
+  const [confirmPasswordVisible, setConfirmPasswordVisible] =
+    useState<boolean>(false)
 
-  const lastNameChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
-    setLastName(event.currentTarget.value)
-    console.log(event.currentTarget.value)
-  }
-
-  const passwordChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
-    setPassword(event.currentTarget.value)
-    console.log(event.currentTarget.value)
-  }
-
-  const confirmPasswordChangeHandler = (
-    event: React.FormEvent<HTMLInputElement>
-  ) => {
-    setConfirmPassword(event.currentTarget.value)
-    console.log(event.currentTarget.value)
+  const onSubmit = (data: any) => {
+    setFormData(data)
   }
 
   return (
     <>
       <Form>
         <Title fontSize={[4, 5, 6]}>Register</Title>
-        <Form.Error>Error</Form.Error>
-        <Form.Base>
-          <Form.Input
-            type="email"
+        <Form.Base onSubmit={handleSubmit(onSubmit)}>
+          <Input
+            {...register('email', {
+              required: 'This field is required',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'invalid email address',
+              },
+            })}
+            type="text"
             placeholder="Email"
-            value={email}
-            handleInputChange={emailChangeHandler}
           />
-          <Form.InputPassword
-            placeholder="Password"
-            value={password}
-            setPassword={passwordChangeHandler}
-          />
-          <Form.InputPassword
-            placeholder="Confirm password"
-            value={confirmPassword}
-            setPassword={confirmPasswordChangeHandler}
-          />
-          <Form.Input
-            type="email"
+          {errors.email ? (
+            <Error>{errors.email.message}</Error>
+          ) : (
+            <Error>*</Error>
+          )}
+          <PasswordContainer>
+            <Input
+              {...register('password', {
+                required: 'This field is required',
+                minLength: {
+                  value: 8,
+                  message: 'Password must have at least 8 characters',
+                },
+                pattern: {
+                  value:
+                    /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&.()–[{}\]:;',?/*~$^+=<>])([^\s]){8,}$/i,
+                  message: 'Invalid password format',
+                },
+              })}
+              type={passwordVisible ? 'text' : 'password'}
+              placeholder="Password"
+            />
+            <SeenIcon
+              src={
+                passwordVisible
+                  ? './assets/icons/eyeclosed.png'
+                  : './assets/icons/eyeopen.png'
+              }
+              onClick={() => setPasswordVisible(!passwordVisible)}
+            />
+          </PasswordContainer>
+          {errors.password && (
+            <Form.Error>{errors.password.message}</Form.Error>
+          )}
+          <PasswordContainer>
+            <Input
+              {...register('confirmPassword', {
+                required: 'This field is required',
+                validate: (value) =>
+                  value === watch('password') || 'Passwords must match',
+              })}
+              type={passwordVisible ? 'text' : 'password'}
+              placeholder="Confirm password"
+            />
+            <SeenIcon
+              src={
+                passwordVisible
+                  ? './assets/icons/eyeclosed.png'
+                  : './assets/icons/eyeopen.png'
+              }
+              onClick={() => setPasswordVisible(!confirmPasswordVisible)}
+            />
+          </PasswordContainer>
+          {errors.confirmPassword && (
+            <Form.Error>{errors.confirmPassword.message}</Form.Error>
+          )}
+          <Input
+            {...register('firstName', { required: 'This field is required' })}
+            type="text"
             placeholder="First name"
-            value={firstName}
-            handleInputChange={firstNameChangeHandler}
           />
-          <Form.Input
-            type="email"
+          {errors.firstName && (
+            <Form.Error>{errors.firstName.message}</Form.Error>
+          )}
+          <Input
+            {...register('lastName', { required: 'This field is required' })}
+            type="text"
             placeholder="Last name"
-            value={lastName}
-            handleInputChange={lastNameChangeHandler}
           />
-          <Form.Submit>Sign up</Form.Submit>
+          {errors.lastName && (
+            <Form.Error>{errors.lastName.message}</Form.Error>
+          )}
+          <Form.Submit loading={loading}>Sign up</Form.Submit>
         </Form.Base>
       </Form>
     </>
