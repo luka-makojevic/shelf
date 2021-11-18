@@ -24,8 +24,9 @@ public class UserController {
         return "Get users is called.";
     }
 
-    @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE , consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createUser(@RequestBody UserRequestModel userRequestModel){
+
+    @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity createUser(@RequestBody UserRequestModel userRequestModel) {
 
         UserDTO userDTO = UserMapper.INSTANCE.userRequestModelToUserDto(userRequestModel);
 

@@ -8,6 +8,7 @@ import com.htec.shelfserver.exception.ShelfException;
 import com.htec.shelfserver.exceptionSupplier.ExceptionSupplier;
 import com.htec.shelfserver.repository.UserRepository;
 import com.htec.shelfserver.requestModel.UserLoginRequestModel;
+import com.htec.shelfserver.responseModel.ErrorMessage;
 import com.htec.shelfserver.responseModel.UserLoginResponseModel;
 import com.htec.shelfserver.service.UserService;
 import io.jsonwebtoken.Jwts;
@@ -100,7 +101,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         }
         else {
             ShelfException ex = ExceptionSupplier.emailNotVerified.get();
-            String userResponseJson = new ObjectMapper().writeValueAsString(ex);
+            ErrorMessage jsonResponse = new ErrorMessage(ex.getMessage(), ex.getStatus(), ex.getTimestamp(), ex.getErrorMessage());
+            String userResponseJson = new ObjectMapper().writeValueAsString(jsonResponse);
             res.setStatus(HttpStatus.BAD_REQUEST.value());
             res.setContentType("application/json");
             res.getWriter().write(userResponseJson);
@@ -113,9 +115,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                               AuthenticationException failed) throws IOException, ServletException {
 
         ShelfException ex = ExceptionSupplier.authenticationFailed.get();
-        String userResponseJson = new ObjectMapper().writeValueAsString(ex);
+        ErrorMessage jsonResponse = new ErrorMessage(ex.getMessage(), ex.getStatus(), ex.getTimestamp(), ex.getErrorMessage());
+        String userResponseJson = new ObjectMapper().writeValueAsString(jsonResponse);
         res.setStatus(HttpStatus.BAD_REQUEST.value());
-        res.setContentType("application/json");
+        res.setContentType("application/json;");
         res.getWriter().write(userResponseJson);
     }
 }
