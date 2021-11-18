@@ -1,48 +1,34 @@
-import React, { useState } from 'react'
 import Header from '../../components/header'
-import Form from '../../components/form'
-import { AuthContext } from '../../providers/authProvider'
+import {
+  Wrapper,
+  Container,
+  Feature,
+} from '../../components/layout/layout.styles'
+import { Title, SubTitle } from '../../components/text/text-styles'
+import LoginForm from './form'
 
 const Login = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-
-  // const handleChangeEmail = (event: React.FormEvent<HTMLInputElement>) => {
-  //   const newValue = event.currentTarget.value
-  //   setEmail(newValue)
-  //   console.log(email)
-  // }
-
-  // const handleChangePassword = (event: React.FormEvent<HTMLInputElement>) => {
-  //   const newValue = event.currentTarget.value
-  //   setPassword(newValue)
-  //   console.log(password)
-  // }
-
-  // const handleSubmit = (event: React.MouseEvent) => {
-  //   event.preventDefault()
-  //   login(data,(succes)=>{},(err:string)=>{setError(err)})
-  // }
-
   return (
-    <div>
-      {/* {<Header profile={false} />
-      <Frame>
-        <Frame.ContainerRight>
-         <Form/>
-        </Frame.ContainerRight>
-        <Frame.ContainerLeft>
-          <Frame.Feature>
-            <Frame.Title>Welcome back</Frame.Title>
-            <Frame.SubTitle>
+    <>
+      <Header hideProfile={true} />
+      <Wrapper
+        flexDirection={['column', 'row']}
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Container width={[1, 1 / 2]}>
+          <LoginForm />
+        </Container>
+        <Container bg="primary" width={[1, 1 / 2]} display={['none', 'flex']}>
+          <Feature height={['550', '600']}>
+            <Title fontSize={['40px', '50px']}> Welcome back</Title>
+            <SubTitle fontSize={['15px', '19px']}>
               To keep connected with us, please sign in with your personal info
-            </Frame.SubTitle>
-          </Frame.Feature>
-        </Frame.ContainerLeft>
-      </Frame>
-    </>} */}
-    </div>
+            </SubTitle>
+          </Feature>
+        </Container>
+      </Wrapper>
+    </>
   )
 }
 

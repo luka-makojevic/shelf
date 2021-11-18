@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react'
+import { Routes } from '../../enums/routes'
 import { Form } from '../../components'
-import { Title } from '../../components/text/text-styles'
+import { Title, AccentText, Link } from '../../components/text/text-styles'
 import { AuthContext } from '../../providers/authProvider'
 
 const RegisterForm = () => {
@@ -19,22 +20,18 @@ const RegisterForm = () => {
 
   const emailChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
     setEmail(event.currentTarget.value)
-    console.log(event.currentTarget.value)
   }
 
   const firstNameChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
     setFirstName(event.currentTarget.value)
-    console.log(event.currentTarget.value)
   }
 
   const lastNameChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
     setLastName(event.currentTarget.value)
-    console.log(event.currentTarget.value)
   }
 
   const handlePasswordChange = (event: React.FormEvent<HTMLInputElement>) => {
     setPassword(event.currentTarget.value)
-    console.log(event.currentTarget.value)
   }
 
   const handleConfirmPasswordChange = (
@@ -43,10 +40,10 @@ const RegisterForm = () => {
     setConfirmPassword(event.currentTarget.value)
     console.log(event.currentTarget.value)
   }
-  const handlePassVisible = (event: React.MouseEvent) => {
+  const handlePassVisible = () => {
     setPasswordVisible(!passwordVisible)
   }
-  const handleConfPassVisible = (event: React.MouseEvent) => {
+  const handleConfPassVisible = () => {
     setConfirmPasswordVisible(!confirmPasswordVisible)
   }
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -84,19 +81,23 @@ const RegisterForm = () => {
             onClick={handleConfPassVisible}
           />
           <Form.Input
-            type="email"
+            type="text"
             placeholder="First name"
             value={firstName}
             handleInputChange={firstNameChangeHandler}
           />
           <Form.Input
-            type="email"
+            type="text"
             placeholder="Last name"
             value={lastName}
             handleInputChange={lastNameChangeHandler}
           />
           <Form.Submit loading={loading}>Sign up</Form.Submit>
         </Form.Base>
+        <AccentText>
+          Have an account?
+          <Link to={Routes.LOGIN}> Sign in</Link>
+        </AccentText>
       </Form>
     </>
   )

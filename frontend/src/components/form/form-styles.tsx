@@ -15,15 +15,12 @@ export const Container = styled.div<FormProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  margin: auto 1em;
-  padding: 1em;
+  margin: auto 16px;
+  padding: 20px;
   width: 100%;
   max-height: 550px;
-
   border-radius: 50px;
   border: 2px solid ${({ theme }) => theme.colors.secondary};
-
   ${space}
   ${layout}
 `
@@ -32,8 +29,6 @@ export const Base = styled.form`
   display: flex;
   flex-wrap: wrap;
 `
-
-export const Title = styled.h1``
 
 export const Error = styled.div`
   color: ${({ theme }) => theme.colors.danger};
@@ -127,8 +122,8 @@ export const Link = styled(ReachRouterLink)`
 `
 
 export const Submit = styled.button`
-  margin: 1em 0 2em 0;
-  padding: 0px 20px;
+  margin-top: 10px;
+  padding-top: 0px 20px;
   width: 100%;
   min-height: 45px;
   font-size: 17px;

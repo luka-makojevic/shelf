@@ -1,5 +1,18 @@
-import { Link } from 'react-router-dom'
 import Card from '../../components/card'
+import { Logo } from '../../components/header/header-styles'
+import {
+  Wrapper,
+  Container,
+  Feature,
+  Holder,
+} from '../../components/layout/layout.styles'
+import {
+  Title,
+  SubTitle,
+  AccentText,
+  Link,
+} from '../../components/text/text-styles'
+import { Routes } from '../../enums/routes'
 
 const featuresInfo = [
   {
@@ -21,7 +34,51 @@ const featuresInfo = [
 ]
 // to do
 const Landing = () => {
-  return <div>Landing page</div>
+  return (
+    <Wrapper flexDirection="column">
+      <Container
+        width="100%"
+        height="100px"
+        justifyContent="flex-end"
+        px="50px"
+      >
+        <Link padding="30px" to={Routes.LOGIN}>
+          Sign in
+        </Link>
+        <Link
+          bg="primary"
+          color="white"
+          padding="10px 15px"
+          borderRadius="10px"
+          to={Routes.REGISTER}
+        >
+          Sign up
+        </Link>
+      </Container>
+      <Holder height="100%">
+        <Container
+          flexDirection="column"
+          width="50%"
+          padding="50px 80px"
+          marginBottom="50px"
+        >
+          <Logo width="200px" src="./assets/images/logo.png" />
+          <Title textAlign="center" fontSize="50px">
+            Welcome to Shelf Storage Service
+          </Title>
+          <SubTitle textAlign="center" marginBottom="150px">
+            Event-driven compute service that lets you run code for virtually
+            any type of application or backend service without provisioning or
+            managing servers
+          </SubTitle>
+          <AccentText>
+            Start working more efficiently today,
+            <Link to={Routes.REGISTER}> Sign up to get started</Link>
+          </AccentText>
+        </Container>
+      </Holder>
+    </Wrapper>
+  )
 }
 
 export { Landing }

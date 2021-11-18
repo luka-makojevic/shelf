@@ -1,7 +1,6 @@
 import {
   Container,
   Base,
-  Title,
   Input,
   Submit,
   AccentText,
@@ -29,10 +28,6 @@ Form.Base = function FormBase({ children, ...restProps }: any) {
   return <Base {...restProps}>{children}</Base>
 }
 
-Form.Title = function FormTitle({ children, ...restProps }: any) {
-  return <Title {...restProps}>{children}</Title>
-}
-
 Form.Input = function FormInput({ handleInputChange, ...restProps }: any) {
   return (
     <Input
@@ -40,7 +35,6 @@ Form.Input = function FormInput({ handleInputChange, ...restProps }: any) {
       padding={[1, 2]}
       {...restProps}
       onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(event.target.value)
         handleInputChange(event)
       }}
     />

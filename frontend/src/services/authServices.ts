@@ -1,17 +1,14 @@
 import axios from 'axios'
 
-const API_URL = 'http://localhost:8080/users/'
+const API_URL = 'http://10.10.0.120:8080/users/'
 
 const register = (data: any) => {
-  return axios.post(`${API_URL}register`, {
-    data,
-  })
+  console.log(data)
+  return axios.post(`${API_URL}register`, data)
 }
 
 const login = (data: any) => {
-  return axios.post(`${API_URL}signin`, {
-    data,
-  })
+  return axios.post(`${API_URL}login`, data)
 }
 
 const logout = (setUser: any) => {

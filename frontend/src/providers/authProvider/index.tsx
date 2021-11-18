@@ -34,9 +34,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setLoading(true)
     AuthService.login(data)
       .then((res) => {
+        setUser(res)
         if (res.data.accessToken) {
-          localStorage.setItem('user', JSON.stringify(res.data))
-          setUser(res.data)
+          localStorage.setItem('user', JSON.stringify(res))
+          setUser(res)
           onSuccess()
         }
       })
@@ -53,6 +54,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       .then((res: any) => {
         localStorage.setItem('user', JSON.stringify(res.data))
         setUser(res.data)
+
         onSuccess()
       })
       .catch((err) => onError(err.message))

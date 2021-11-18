@@ -4,7 +4,7 @@ const Header = ({ hideProfile, ...restProps }: any) => {
   return (
     <Container {...restProps}>
       <Link to="/">
-        <Logo src="./assets/images/logo.png" />
+        <Logo width="70px" src="./assets/images/logo.png" />
       </Link>
 
       <Profile hideProfile={hideProfile}>PP</Profile>
