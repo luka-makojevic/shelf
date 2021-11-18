@@ -32,7 +32,7 @@ public class UserController {
 
         userService.createUser(userDTO);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("User registered.");
+        return ResponseEntity.status(HttpStatus.CREATED).body("User registered");
     }
 
     @PutMapping
