@@ -35,11 +35,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST , SecurityConstants.SIGN_UP_URL)
+                .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
                 .permitAll()
-                .antMatchers(HttpMethod.GET , SecurityConstants.SIGN_UP_CONFIRM_EMAIL_URL)
+                .antMatchers(HttpMethod.GET, SecurityConstants.SIGN_UP_CONFIRM_EMAIL_URL)
                 .permitAll()
-                .antMatchers(HttpMethod.GET , SecurityConstants.SIGN_UP_RESEND_TOKEN_URL)
+                .antMatchers(HttpMethod.GET, SecurityConstants.SIGN_UP_RESEND_TOKEN_URL)
                 .permitAll()
                 .anyRequest()
                 .authenticated().and()
@@ -55,3 +55,4 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         return filter;
     }
 }
+
