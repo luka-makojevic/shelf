@@ -27,6 +27,7 @@ function App() {
       element: <Dashboard />,
     },
   ]
+
   const routing = useRoutes(routes)
 
   return <ThemeProvider theme={theme}>{routing}</ThemeProvider>

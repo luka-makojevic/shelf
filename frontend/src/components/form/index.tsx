@@ -15,7 +15,11 @@ import {
 
 const Form = ({ children, ...restProps }: any) => {
   return (
-    <Container width={['300px', '400px']} padding={[3, 4, 5]} {...restProps}>
+    <Container
+      width={['300px', '400px']}
+      height={['550', '600']}
+      {...restProps}
+    >
       {children}
     </Container>
   )
@@ -29,24 +33,25 @@ Form.Title = function FormTitle({ children, ...restProps }: any) {
   return <Title {...restProps}>{children}</Title>
 }
 
-Form.Input = function FormInput({ setInput, ...restProps }: any) {
+Form.Input = function FormInput({ handleInputChange, ...restProps }: any) {
   return (
     <Input
       marginY={[1, 2]}
       padding={[1, 2]}
       {...restProps}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-        setInput(event.target.value)
-      }
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+        console.log(event.target.value)
+        handleInputChange(event)
+      }}
     />
   )
 }
 
 Form.InputPassword = function FormInputPassword({
-  setPasswordVisible,
+  onClick,
   passwordVisible,
   value,
-  setPassword,
+  onChange,
   placeholder,
   ...restProps
 }: any) {
@@ -58,17 +63,15 @@ Form.InputPassword = function FormInputPassword({
         type={passwordVisible ? 'text' : 'password'}
         placeholder={placeholder}
         value={value}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-          setPassword(event.target.value)
-        }
+        onChange={onChange}
       />
       <SeenIcon
         src={
           passwordVisible
-            ? './assets/icons/eyeclosed.png'
-            : './assets/icons/eyeopen.png'
+            ? './assets/icons/eyeopen.png'
+            : './assets/icons/eyeclosed.png'
         }
-        onClick={() => setPasswordVisible(!passwordVisible)}
+        onClick={onClick}
       />
     </PasswordContainer>
   )
@@ -77,11 +80,11 @@ Form.Spinner = function FormSpinner({ ...restProps }: any) {
   return <Spinner {...restProps} />
 }
 
-Form.Submit = function FormSubmit({ loading }: any) {
+Form.Submit = function FormSubmit({ loading, children }: any) {
   return (
     <Submit>
       {!loading ? (
-        'Sign'
+        children
       ) : (
         <Spinner src="./assets/icons/loading.png" alt="loading" />
       )}

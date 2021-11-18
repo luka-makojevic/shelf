@@ -16,12 +16,14 @@ export const Container = styled.div<FormProps>`
   flex-direction: column;
   align-items: center;
 
-  padding: 30px 50px;
+  margin: auto 1em;
+  padding: 1em;
+  width: 100%;
+  max-height: 550px;
+
   border-radius: 50px;
   border: 2px solid ${({ theme }) => theme.colors.secondary};
-  width: 100%;
-  height: 550px;
-  margin: 30px auto 90px;
+
   ${space}
   ${layout}
 `
@@ -44,7 +46,8 @@ export const Input = styled.input<FormProps>`
   width: 100%;
   min-height: 45px;
   border: 1px solid ${({ theme }) => theme.colors.secondary};
-  border-radius: 15px;
+  border-radius: 30px;
+  text-indent: 10px;
   ${space}
   ${border}
 
@@ -124,14 +127,14 @@ export const Link = styled(ReachRouterLink)`
 `
 
 export const Submit = styled.button`
-  width: 100%;
-  margin: 10px 0;
-  min-height: 45px;
-  border: none;
-  font-size: 17px;
-  background: #006fd1;
+  margin: 1em 0 2em 0;
   padding: 0px 20px;
+  width: 100%;
+  min-height: 45px;
+  font-size: 17px;
   font-weight: 700;
   color: ${({ theme }) => theme.colors.white};
-  border-radius: 15px;
+  background: #006fd1;
+  border: none;
+  border-radius: 30px;
 `

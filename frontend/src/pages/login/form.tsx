@@ -3,7 +3,6 @@
 // export default function form(onSubmit) {
 //   const [email, setEmail] = useState('')
 //   const [password, setPassword] = useState('')
-
 //   const handleChangeEmail = (event: React.FormEvent<HTMLInputElement>) => {
 //     const newValue = event.currentTarget.value
 //     setEmail(newValue)

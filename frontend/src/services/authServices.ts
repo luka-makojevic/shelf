@@ -1,19 +1,26 @@
-import axios from "axios"
+import axios from 'axios'
 
-const API_URL = ""
+const API_URL = 'http://localhost:8080/users/'
 
-
-export const httpLogin = (data:any) => {
-    return axios
-      .post(`${API_URL}register`, {
-        data,
-      })
-      .then((res) => res)
+const register = (data: any) => {
+  return axios.post(`${API_URL}register`, {
+    data,
+  })
 }
-export const httpRegister = (data:any) => {
-    return axios
-      .post(`${API_URL}register`, {
-        data,
-      })
-      .then((res) => res)
+
+const login = (data: any) => {
+  return axios.post(`${API_URL}signin`, {
+    data,
+  })
+}
+
+const logout = (setUser: any) => {
+  localStorage.removeItem('user')
+  setUser(null)
+}
+
+export default {
+  register,
+  login,
+  logout,
 }

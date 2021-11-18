@@ -4,7 +4,7 @@ import {
   SpaceProps,
   LayoutProps,
   BorderProps,
-  FlexboxProps
+  FlexboxProps,
 } from 'styled-system'
 
 export interface ProfileProps {
@@ -19,13 +19,13 @@ export interface FormProps
     LayoutProps {
   children?: React.ReactNode
 }
-export interface TextProps extends ColorProps,TypographyProps,SpaceProps {
+export interface TextProps extends ColorProps, TypographyProps, SpaceProps {
   children?: React.ReactNode
 }
 export interface ContainerProps
-extends ColorProps,
-  FlexboxProps,
-  LayoutProps,
-  SpaceProps {
-children: React.ReactNode
+  extends ColorProps,
+    FlexboxProps,
+    LayoutProps,
+    SpaceProps {
+  children: React.ReactNode
 }

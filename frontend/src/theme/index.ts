@@ -1,5 +1,5 @@
 export const theme = {
-  breakpoints: ['400px', '700px', '1000px'],
+  breakpoints: ['620px', '800px', '1200px'],
   space: [
     '0px',
     '4px',
