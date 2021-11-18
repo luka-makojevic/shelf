@@ -93,7 +93,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
 
             UserLoginResponseModel userResponse = new UserLoginResponseModel(loginUser.getId(),
-                    loginUser.getFirstName(), loginUser.getLastName(), loginUser.getEmail(), loginUser.getRole().getId());
+                    loginUser.getFirstName(), loginUser.getLastName(), loginUser.getEmail(), token, loginUser.getRole().getId());
 
             String userResponseJson = new ObjectMapper().writeValueAsString(userResponse);
             res.setContentType("application/json");
