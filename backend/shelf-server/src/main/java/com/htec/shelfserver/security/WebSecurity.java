@@ -41,6 +41,13 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers(HttpMethod.GET, SecurityConstants.SIGN_UP_RESEND_TOKEN_URL)
                 .permitAll()
+                .antMatchers(
+                        "/v2/api-docs",
+                        "/swagger-resources/**",
+                        "/swagger-ui.html",
+                        "/webjars/**",
+                        "/swagger.json")
+                .permitAll()
                 .anyRequest()
                 .authenticated().and()
                 .addFilter(getAuthenticationFilter())
