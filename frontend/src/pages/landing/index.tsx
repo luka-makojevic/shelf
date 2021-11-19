@@ -32,6 +32,7 @@ const featuresInfo = [
     text: 'Event-driven compute service that lets you run code for virtually any type of application or backend service without provisioning or managing servers',
   },
 ]
+<<<<<<< HEAD
 // to do
 const Landing = () => {
   return (
@@ -67,10 +68,28 @@ const Landing = () => {
             Welcome to Shelf Storage Service
           </Title>
           <SubTitle textAlign="center" marginBottom="150px">
+=======
+
+const Landing = () => {
+  return (
+    <LandingComponent>
+      <LandingComponent.Top>
+        <LandingComponent.NavLink to="/login">Sign in</LandingComponent.NavLink>
+        <LandingComponent.NavLink to="/register">
+          Sign up
+        </LandingComponent.NavLink>
+      </LandingComponent.Top>
+      <LandingComponent.Content>
+        <LandingComponent.Left>
+          <LandingComponent.Logo />
+          <Title>Welcome to Shelf Storage Service</Title>
+          <SubTitle>
+>>>>>>> master
             Event-driven compute service that lets you run code for virtually
             any type of application or backend service without provisioning or
             managing servers
           </SubTitle>
+<<<<<<< HEAD
           <AccentText>
             Start working more efficiently today,
             <Link to={Routes.REGISTER}> Sign up to get started</Link>
@@ -78,6 +97,20 @@ const Landing = () => {
         </Container>
       </Holder>
     </Wrapper>
+=======
+          <LandingComponent.CallToAction>
+            Start working more efficiently today,{' '}
+            <Link to="/register">Sign up to get started</Link>
+          </LandingComponent.CallToAction>
+        </LandingComponent.Left>
+        <LandingComponent.Right>
+          {featuresInfo.map((feature) => (
+            <Card image={feature.img} text={feature.text} />
+          ))}
+        </LandingComponent.Right>
+      </LandingComponent.Content>
+    </LandingComponent>
+>>>>>>> master
   )
 }
 
