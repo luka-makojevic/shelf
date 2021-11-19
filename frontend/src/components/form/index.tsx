@@ -13,7 +13,7 @@ import {
   PasswordContainer,
 } from './form-styles'
 
-const Form = ({ children, ...restProps }: any) => {
+export const Form = ({ children, ...restProps }: any) => {
   return (
     <Container
       width={['300px', '400px']}
@@ -44,6 +44,74 @@ Form.Input = function FormInput({ handleInputChange, ...restProps }: any) {
         handleInputChange(event)
       }}
     />
+  )
+}
+
+export const InputField = ({
+  validation,
+  name,
+  register,
+  errors,
+  ...restProps
+}: any) => {
+  const error = errors[name] ? (
+    <Error>{errors[name].message}</Error>
+  ) : (
+    <Error>*</Error>
+  )
+  return (
+    <>
+      <Input
+        marginY={[1, 2]}
+        padding={[1, 2]}
+        name={name}
+        type={validation.type}
+        {...register(name, validation)}
+        {...restProps}
+      />
+      {error}
+    </>
+  )
+}
+
+export const PasswordField = ({
+  validation,
+  name,
+  register,
+  placeholder,
+  errors,
+  passwordVisible,
+  onChange,
+  ...restProps
+}: any) => {
+  const error = errors[name] ? (
+    <Error>{errors[name].message}</Error>
+  ) : (
+    <Error>*</Error>
+  )
+  return (
+    <>
+      <PasswordContainer>
+        <Input
+          marginY={[1, 2]}
+          padding={[1, 2]}
+          name={name}
+          type={passwordVisible ? 'text' : 'password'}
+          placeholder={placeholder}
+          {...register(name, validation)}
+          {...restProps}
+        />
+        <SeenIcon
+          src={
+            passwordVisible
+              ? './assets/icons/eyeclosed.png'
+              : './assets/icons/eyeopen.png'
+          }
+          onClick={() => onChange(!passwordVisible)}
+        />
+        {error}
+      </PasswordContainer>
+    </>
   )
 }
 
@@ -78,6 +146,7 @@ Form.InputPassword = function FormInputPassword({
     </PasswordContainer>
   )
 }
+
 Form.Spinner = function FormSpinner({ ...restProps }: any) {
   return <Spinner {...restProps} />
 }
@@ -123,5 +192,3 @@ Form.SeenIcon = function FormSeenIcon({
     />
   )
 }
-
-export default Form

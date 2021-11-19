@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Header from '../../components/header'
-import Form from '../../components/form'
+import { Form } from '../../components/form'
 
 const Login = () => {
   const [email, setEmail] = useState('')

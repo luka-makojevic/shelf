@@ -19,7 +19,7 @@ export const Container = styled.div<FormProps>`
   margin: auto 1em;
   padding: 1em;
   width: 100%;
-  max-height: 550px;
+  max-height: 700px;
 
   border-radius: 50px;
   border: 2px solid ${({ theme }) => theme.colors.secondary};
@@ -35,9 +35,10 @@ export const Base = styled.form`
 
 export const Title = styled.h1``
 
-export const Error = styled.p`
+export const Error = styled.div`
+  margin-left: 1em;
   color: ${({ theme }) => theme.colors.danger};
-  font-size: x-small;
+  font-size: 10px;
 `
 
 export const Input = styled.input<FormProps>`
@@ -135,4 +136,11 @@ export const Submit = styled.button`
   background: #006fd1;
   border: none;
   border-radius: 30px;
+`
+
+export const InputFieldWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
 `
