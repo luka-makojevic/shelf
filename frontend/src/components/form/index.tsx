@@ -1,6 +1,7 @@
 import {
   Container,
   Base,
+  Title,
   Input,
   Submit,
   AccentText,
@@ -14,11 +15,7 @@ import {
 
 const Form = ({ children, ...restProps }: any) => {
   return (
-    <Container
-      width={['300px', '400px']}
-      height={['550', '600']}
-      {...restProps}
-    >
+    <Container width={['300px', '400px']} padding={[3, 4, 5]} {...restProps}>
       {children}
     </Container>
   )
@@ -28,24 +25,28 @@ Form.Base = function FormBase({ children, ...restProps }: any) {
   return <Base {...restProps}>{children}</Base>
 }
 
-Form.Input = function FormInput({ handleInputChange, ...restProps }: any) {
+Form.Title = function FormTitle({ children, ...restProps }: any) {
+  return <Title {...restProps}>{children}</Title>
+}
+
+Form.Input = function FormInput({ setInput, ...restProps }: any) {
   return (
     <Input
       marginY={[1, 2]}
       padding={[1, 2]}
       {...restProps}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-        handleInputChange(event)
-      }}
+      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        setInput(event.target.value)
+      }
     />
   )
 }
 
 Form.InputPassword = function FormInputPassword({
-  onClick,
+  setPasswordVisible,
   passwordVisible,
   value,
-  onChange,
+  setPassword,
   placeholder,
   ...restProps
 }: any) {
@@ -57,15 +58,17 @@ Form.InputPassword = function FormInputPassword({
         type={passwordVisible ? 'text' : 'password'}
         placeholder={placeholder}
         value={value}
-        onChange={onChange}
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          setPassword(event.target.value)
+        }
       />
       <SeenIcon
         src={
           passwordVisible
-            ? './assets/icons/eyeopen.png'
-            : './assets/icons/eyeclosed.png'
+            ? './assets/icons/eyeclosed.png'
+            : './assets/icons/eyeopen.png'
         }
-        onClick={onClick}
+        onClick={() => setPasswordVisible(!passwordVisible)}
       />
     </PasswordContainer>
   )
@@ -74,11 +77,11 @@ Form.Spinner = function FormSpinner({ ...restProps }: any) {
   return <Spinner {...restProps} />
 }
 
-Form.Submit = function FormSubmit({ loading, children }: any) {
+Form.Submit = function FormSubmit({ loading }: any) {
   return (
     <Submit>
       {!loading ? (
-        children
+        'Sign'
       ) : (
         <Spinner src="./assets/icons/loading.png" alt="loading" />
       )}

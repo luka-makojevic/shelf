@@ -1,0 +1,16 @@
+
+<div style="font-family:Helvetica,Arial,sans-serif;font-size:large;max-width: 560px;width: 100%;margin: 20px ;">
+    <h1>Confirm your email</h1>
+    <p>Hi, ${firstName}</p>
+    <p>Thank you for registering. Please click on the link below to activate your account:</p>
+    <br>
+    <a href="${confirmationLink}"
+       style="text-decoration: none; padding: 10px 20px; background-color: #006FD1; color: white; border-radius: 5px;">Activate
+        Now</a>
+    <p style="font-size: small;">Link will expire in 15 minutes.</p>
+    <br>
+    <div style="font-size: small;">
+        <p>If your token is expired click the link below to resend:</p>
+        <a href="${resendTokenLink}">Resend token</a>
+    </div>
+</div>
