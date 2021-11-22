@@ -1,25 +1,22 @@
-import React, { useState } from 'react';
-import { Header } from '../../components';
+import React from 'react'
+import { Header } from '../../components'
 import {
   Wrapper,
   Container,
   Feature,
-} from '../../components/layout/layout.styles';
-import { Title, SubTitle } from '../../components/text/text-styles';
-import RegisterForm from './form';
+} from '../../components/layout/layout.styles'
+import { Title, SubTitle } from '../../components/text/text-styles'
+import RegisterForm from './form'
 
 const Register = () => {
-  const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState<any>({});
-
-  console.log('formData - index', formData);
+  const profile = true
 
   return (
     <>
-      <Header hideProfile={true} />
+      <Header hideProfile={profile} />
       <Wrapper flexDirection={['column', 'row']} height="100vh">
         <Container width={[1, 1 / 2]}>
-          <RegisterForm loading={loading} onSubmit={setFormData} />
+          <RegisterForm />
         </Container>
         <Container bg="primary" width={[1, 1 / 2]} display={['none', 'flex']}>
           <Feature height={['550', '600']}>
@@ -31,7 +28,7 @@ const Register = () => {
         </Container>
       </Wrapper>
     </>
-  );
-};
+  )
+}
 
-export { Register };
+export default Register

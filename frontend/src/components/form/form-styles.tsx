@@ -1,14 +1,6 @@
 import styled from 'styled-components'
 import { Link as ReachRouterLink } from 'react-router-dom'
-import {
-  variant,
-  VariantArgs,
-  space,
-  layout,
-  color,
-  typography,
-  border,
-} from 'styled-system'
+import { space, layout, border } from 'styled-system'
 import { FormProps } from '../../interfaces/styles'
 
 export const Container = styled.div<FormProps>`
@@ -34,12 +26,6 @@ export const Base = styled.form`
 `
 
 export const Title = styled.h1``
-
-export const Error = styled.div`
-  margin-left: 1em;
-  color: ${({ theme }) => theme.colors.danger};
-  font-size: 10px;
-`
 
 export const Input = styled.input<FormProps>`
   width: 100%;
@@ -105,14 +91,6 @@ export const Spinner = styled.img`
 export const InputPassword = styled(Input)`
   position: relative;
   width: 100%;
-`
-
-export const SeenIcon = styled.img`
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  right: 10px;
-  top: 22px;
 `
 
 export const AccentText = styled.p`

@@ -1,21 +1,18 @@
-import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { flexDirection } from 'styled-system'
-import { Form, InputField, PasswordField } from '../../components/form'
+import Form from '../../components/form'
 import { InputFieldWrapper } from '../../components/form/form-styles'
+import InputField from '../../components/input/InputField'
 import CheckBox from './checkBox'
 
 import { FormData } from './interfaces'
 
-const FormValidation = ({ loading, onSubmit }: any) => {
+const FormValidation = ({ loading }: any) => {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm<FormData>({})
-
-  const [passwordVisible, setPasswordVisible] = useState<boolean>(false)
 
   const validationRules = [
     {
@@ -66,39 +63,29 @@ const FormValidation = ({ loading, onSubmit }: any) => {
     },
   ]
 
-  return (
-    <>
-      <Form.Base onSubmit={handleSubmit(onSubmit)}>
-        <InputFieldWrapper>
-          {validationRules.map((validationRule) =>
-            validationRule.type === 'text' ? (
-              <InputField
-                key={validationRule.name}
-                name={validationRule.name}
-                register={register}
-                validation={validationRule}
-                placeholder={validationRule.placeholder}
-                errors={errors}
-              />
-            ) : (
-              <PasswordField
-                key={validationRule.name}
-                name={validationRule.name}
-                register={register}
-                validation={validationRule}
-                placeholder={validationRule.placeholder}
-                errors={errors}
-                passwordVisible={passwordVisible}
-                onChange={setPasswordVisible}
-              />
-            )
-          )}
-          <CheckBox register={register} error={errors.terms?.message} />
-        </InputFieldWrapper>
+  const onSubmit = (data: any) => {
+    console.log(data)
+  }
 
-        <Form.Submit loading={loading}>Sign up</Form.Submit>
-      </Form.Base>
-    </>
+  return (
+    <Form.Base onSubmit={handleSubmit(onSubmit)}>
+      <InputFieldWrapper>
+        {validationRules.map((validationRule) => (
+          <InputField
+            key={validationRule.name}
+            name={validationRule.name}
+            placeholder={validationRule.placeholder}
+            validationRule={validationRule}
+            register={register}
+            errors={errors}
+            type={validationRule.type}
+          />
+        ))}
+        <CheckBox register={register} error={errors.terms?.message} />
+      </InputFieldWrapper>
+
+      <Form.Submit loading={loading}>Sign up</Form.Submit>
+    </Form.Base>
   )
 }
 
