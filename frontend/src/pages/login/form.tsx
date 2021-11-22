@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react'
+import { NavigateFunction } from 'react-router-dom'
 import { Form } from '../../components'
 import { Title, AccentText, Link } from '../../components/text/text-styles'
 import { AuthContext } from '../../providers/authProvider'
@@ -10,8 +11,8 @@ const LoginForm = () => {
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
 
-  const { login, loading, user } = useContext(AuthContext)
-  console.log(user)
+  const { login, loading } = useContext(AuthContext)
+
   const data = { email, password }
 
   const emailChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
@@ -26,10 +27,13 @@ const LoginForm = () => {
   }
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+
     login(
       data,
-      () => {},
-      (err: any) => setError(err.message)
+      (navigation: NavigateFunction) => {
+        navigation('/dashboard')
+      },
+      (err: string) => setError(err)
     )
   }
   return (

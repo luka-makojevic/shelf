@@ -38,7 +38,6 @@ const RegisterForm = () => {
     event: React.FormEvent<HTMLInputElement>
   ) => {
     setConfirmPassword(event.currentTarget.value)
-    console.log(event.currentTarget.value)
   }
   const handlePassVisible = () => {
     setPasswordVisible(!passwordVisible)
@@ -51,55 +50,55 @@ const RegisterForm = () => {
     register(
       data,
       () => {},
-      (err: any) => setError(err.message)
+      (err: string) => {
+        setError(err)
+      }
     )
   }
   return (
-    <>
-      <Form>
-        <Title fontSize={[4, 5, 6]}>Register</Title>
-        <Form.Error>{error}</Form.Error>
-        <Form.Base onSubmit={handleSubmit}>
-          <Form.Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            handleInputChange={emailChangeHandler}
-          />
-          <Form.InputPassword
-            placeholder="Password"
-            value={password}
-            onChange={handlePasswordChange}
-            passwordVisible={passwordVisible}
-            onClick={handlePassVisible}
-          />
-          <Form.InputPassword
-            placeholder="Confirm password"
-            value={confirmPassword}
-            onChange={handleConfirmPasswordChange}
-            passwordVisible={confirmPasswordVisible}
-            onClick={handleConfPassVisible}
-          />
-          <Form.Input
-            type="text"
-            placeholder="First name"
-            value={firstName}
-            handleInputChange={firstNameChangeHandler}
-          />
-          <Form.Input
-            type="text"
-            placeholder="Last name"
-            value={lastName}
-            handleInputChange={lastNameChangeHandler}
-          />
-          <Form.Submit loading={loading}>Sign up</Form.Submit>
-        </Form.Base>
-        <AccentText>
-          Have an account?
-          <Link to={Routes.LOGIN}> Sign in</Link>
-        </AccentText>
-      </Form>
-    </>
+    <Form>
+      <Title fontSize={[4, 5, 6]}>Register</Title>
+      <Form.Error>{error}</Form.Error>
+      <Form.Base onSubmit={handleSubmit}>
+        <Form.Input
+          type="email"
+          placeholder="Email"
+          value={email}
+          handleInputChange={emailChangeHandler}
+        />
+        <Form.InputPassword
+          placeholder="Password"
+          value={password}
+          onChange={handlePasswordChange}
+          passwordVisible={passwordVisible}
+          onClick={handlePassVisible}
+        />
+        <Form.InputPassword
+          placeholder="Confirm password"
+          value={confirmPassword}
+          onChange={handleConfirmPasswordChange}
+          passwordVisible={confirmPasswordVisible}
+          onClick={handleConfPassVisible}
+        />
+        <Form.Input
+          type="text"
+          placeholder="First name"
+          value={firstName}
+          handleInputChange={firstNameChangeHandler}
+        />
+        <Form.Input
+          type="text"
+          placeholder="Last name"
+          value={lastName}
+          handleInputChange={lastNameChangeHandler}
+        />
+        <Form.Submit loading={loading}>Sign up</Form.Submit>
+      </Form.Base>
+      <AccentText>
+        Have an account?
+        <Link to={Routes.LOGIN}> Sign in</Link>
+      </AccentText>
+    </Form>
   )
 }
 

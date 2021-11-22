@@ -1,25 +1,28 @@
+import { AxiosResponse } from 'axios'
 import React, { useState, createContext, useEffect } from 'react'
+import { useNavigate, NavigateFunction } from 'react-router-dom'
 import AuthService from '../../services/authServices'
+import {
+  RegisterData,
+  LoginData,
+  ContextTypes,
+  UserType,
+} from '../../interfaces/types'
 
-interface ContextProps {
-  user: {}
-  login: (data: any, onSuccess: any, onError: any) => void
-  register: (data: any, onSuccess: any, onError: any) => void
-  loading: boolean
-}
-
-const defaultValue: ContextProps = {
+const defaultValue: ContextTypes = {
   user: {},
   login: async () => {},
   register: async () => {},
   loading: false,
+  accessToken: '',
 }
 
 const AuthContext = createContext(defaultValue)
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<any>()
-  const [loading, setLoading] = useState(false)
+  const [user, setUser] = useState<UserType | null | AxiosResponse>()
+  const [loading, setLoading] = useState<boolean>(false)
+  const [accessToken, setAccesToken] = useState<string>('')
 
   useEffect(() => {
     const userLocalStorage = localStorage.getItem('user')
@@ -30,38 +33,50 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [])
 
-  const login = (data: any, onSuccess: any, onError: any) => {
+  const navigation = useNavigate()
+  const login = (
+    data: LoginData,
+    onSuccess: (navigation: NavigateFunction) => void,
+    onError: (error: string) => void
+  ) => {
     setLoading(true)
     AuthService.login(data)
       .then((res) => {
-        setUser(res)
-        if (res.data.accessToken) {
+        if (res.data.jwtToken) {
           localStorage.setItem('user', JSON.stringify(res))
           setUser(res)
-          onSuccess()
+          setAccesToken(res.data.jwtToken)
+          onSuccess(navigation)
         }
       })
       .catch((err) => {
         setUser(null)
-        onError(err.message)
+        onError(err.response.data.message)
       })
       .finally(() => setLoading(false))
   }
 
-  const register = (data: any, onSuccess: any, onError: any) => {
+  const register = (
+    data: RegisterData,
+    onSuccess: () => void,
+    onError: (error: string) => void
+  ) => {
     setLoading(true)
     AuthService.register(data)
-      .then((res: any) => {
+      .then((res) => {
         localStorage.setItem('user', JSON.stringify(res.data))
-        setUser(res.data)
-
+        setUser(res)
         onSuccess()
       })
-      .catch((err) => onError(err.message))
+      .catch((err) => {
+        onError(err.response.data.message)
+      })
       .finally(() => setLoading(false))
   }
   return (
-    <AuthContext.Provider value={{ user, login, register, loading }}>
+    <AuthContext.Provider
+      value={{ user, login, register, loading, accessToken }}
+    >
       {children}
     </AuthContext.Provider>
   )

@@ -1,17 +1,14 @@
 import axios from 'axios'
+import { RegisterData, LoginData } from '../interfaces/types'
 
-const API_URL = 'http://10.10.0.120:8080/users/'
+const API_URL = 'http://10.10.0.117:8080/users/'
 
-const register = (data: any) => {
-  console.log(data)
-  return axios.post(`${API_URL}register`, data)
-}
+const register = (data: RegisterData) => axios.post(`${API_URL}register`, data)
 
-const login = (data: any) => {
-  return axios.post(`${API_URL}login`, data)
-}
+const login = (data: LoginData) => axios.post(`${API_URL}login`, data)
 
-const logout = (setUser: any) => {
+const logout = (setUser: (arg: null) => void) => {
+  // missing features from backend
   localStorage.removeItem('user')
   setUser(null)
 }
