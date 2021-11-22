@@ -24,6 +24,7 @@ const InputField = ({
         padding={[1, 2]}
         name={name}
         placeholder={placeholder}
+        type={passwordShown ? 'password' : 'text'}
         {...register(name, validationRule)}
       />
       {type === 'password' && (
