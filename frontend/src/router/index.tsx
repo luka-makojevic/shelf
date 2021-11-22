@@ -1,13 +1,14 @@
-import { useRoutes } from 'react-router'
-import { Role } from '../enums/roles'
-import { Routes } from '../enums/routes'
-import { RouteProps } from '../interfaces/route'
-import { Dashboard } from '../pages/dashboard/index'
-import { Landing } from '../pages/landing/index'
-import { Login } from '../pages/login/index'
-import { Register } from '../pages/register/index'
-import ProtectedRoute from './protectedRoute'
-import PublicOnlyRoute from './publicOnlyRoute'
+import React from 'react';
+import { useRoutes } from 'react-router-dom';
+import Role from '../enums/roles';
+import { Routes } from '../enums/routes';
+import { RouteProps } from '../interfaces/route';
+import { Dashboard } from '../pages/dashboard/index';
+import { Landing } from '../pages/landing/index';
+import { Login } from '../pages/login/index';
+import { Register } from '../pages/register/index';
+import ProtectedRoute from './protectedRoute';
+import PublicOnlyRoute from './publicOnlyRoute';
 
 function Router() {
   const routes: RouteProps[] = [
@@ -43,11 +44,11 @@ function Router() {
         </ProtectedRoute>
       ),
     },
-  ]
+  ];
 
-  const routing = useRoutes(routes)
+  const routing = useRoutes(routes);
 
-  return <>{routing}</>
+  return <>{routing}</>;
 }
 
-export default Router
+export default Router;
