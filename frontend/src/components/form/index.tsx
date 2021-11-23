@@ -1,14 +1,12 @@
 import {
   Container,
   Base,
-  Title,
   Input,
   Submit,
   AccentText,
   Error,
   Link,
   SeenIcon,
-  InputPassword,
   Spinner,
   PasswordContainer,
 } from './form-styles'
@@ -25,30 +23,28 @@ Form.Base = function FormBase({ children, ...restProps }: any) {
   return <Base {...restProps}>{children}</Base>
 }
 
-Form.Title = function FormTitle({ children, ...restProps }: any) {
-  return <Title {...restProps}>{children}</Title>
-}
-
-Form.Input = function FormInput({ setInput, ...restProps }: any) {
+Form.Input = function FormInput({
+  handleInputChange,
+  placeholder,
+  value,
+}: any) {
   return (
     <Input
       marginY={[1, 2]}
       padding={[1, 2]}
-      {...restProps}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-        setInput(event.target.value)
-      }
+      placeholder={placeholder}
+      value={value}
+      onChange={handleInputChange}
     />
   )
 }
 
 Form.InputPassword = function FormInputPassword({
-  setPasswordVisible,
   passwordVisible,
   value,
-  setPassword,
   placeholder,
-  ...restProps
+  onChange,
+  onClick,
 }: any) {
   return (
     <PasswordContainer>
@@ -58,9 +54,7 @@ Form.InputPassword = function FormInputPassword({
         type={passwordVisible ? 'text' : 'password'}
         placeholder={placeholder}
         value={value}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-          setPassword(event.target.value)
-        }
+        onChange={onChange}
       />
       <SeenIcon
         src={
@@ -68,7 +62,7 @@ Form.InputPassword = function FormInputPassword({
             ? './assets/icons/eyeclosed.png'
             : './assets/icons/eyeopen.png'
         }
-        onClick={() => setPasswordVisible(!passwordVisible)}
+        onClick={onClick}
       />
     </PasswordContainer>
   )
