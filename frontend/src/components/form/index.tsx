@@ -1,122 +1,45 @@
+import React from 'react';
 import {
   Container,
   Base,
-  Title,
-  Input,
   Submit,
   AccentText,
-  Error,
   Link,
-  SeenIcon,
-  InputPassword,
   Spinner,
-  PasswordContainer,
-} from './form-styles'
+} from './form-styles';
 
-const Form = ({ children, ...restProps }: any) => {
+const Form = ({ children }: any) => (
+  <Container width={['300px', '400px']} height={['550', '600']}>
+    {children}
+  </Container>
+);
+
+export default Form;
+
+Form.Base = function FormBase({ children, onSubmit }: any) {
+  return <Base onSubmit={onSubmit}>{children}</Base>;
+};
+
+Form.Spinner = function FormSpinner() {
+  return <Spinner />;
+};
+
+Form.Submit = function FormSubmit({ loading, children, onClick }: any) {
   return (
-    <Container width={['300px', '400px']} padding={[3, 4, 5]} {...restProps}>
-      {children}
-    </Container>
-  )
-}
-
-Form.Base = function FormBase({ children, ...restProps }: any) {
-  return <Base {...restProps}>{children}</Base>
-}
-
-Form.Title = function FormTitle({ children, ...restProps }: any) {
-  return <Title {...restProps}>{children}</Title>
-}
-
-Form.Input = function FormInput({ setInput, ...restProps }: any) {
-  return (
-    <Input
-      marginY={[1, 2]}
-      padding={[1, 2]}
-      {...restProps}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-        setInput(event.target.value)
-      }
-    />
-  )
-}
-
-Form.InputPassword = function FormInputPassword({
-  setPasswordVisible,
-  passwordVisible,
-  value,
-  setPassword,
-  placeholder,
-  ...restProps
-}: any) {
-  return (
-    <PasswordContainer>
-      <Input
-        marginY={[1, 2]}
-        padding={[1, 2]}
-        type={passwordVisible ? 'text' : 'password'}
-        placeholder={placeholder}
-        value={value}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-          setPassword(event.target.value)
-        }
-      />
-      <SeenIcon
-        src={
-          passwordVisible
-            ? './assets/icons/eyeclosed.png'
-            : './assets/icons/eyeopen.png'
-        }
-        onClick={() => setPasswordVisible(!passwordVisible)}
-      />
-    </PasswordContainer>
-  )
-}
-Form.Spinner = function FormSpinner({ ...restProps }: any) {
-  return <Spinner {...restProps} />
-}
-
-Form.Submit = function FormSubmit({ loading }: any) {
-  return (
-    <Submit>
-      {!loading ? (
-        'Sign'
-      ) : (
+    <Submit onClick={onClick}>
+      {loading ? (
         <Spinner src="./assets/icons/loading.png" alt="loading" />
+      ) : (
+        children
       )}
     </Submit>
-  )
-}
+  );
+};
 
-Form.AccentText = function FormAccentText({ children, ...restProps }: any) {
-  return <AccentText {...restProps}>{children}</AccentText>
-}
+Form.AccentText = function FormAccentText({ children }: any) {
+  return <AccentText>{children}</AccentText>;
+};
 
-Form.Error = function FormError({ children, ...restProps }: any) {
-  return <Error {...restProps}>{children}</Error>
-}
-
-Form.Link = function FormLink({ children, ...restProps }: any) {
-  return <Link {...restProps}>{children}</Link>
-}
-
-Form.SeenIcon = function FormSeenIcon({
-  setPasswordVisible,
-  passwordVisible,
-  ...restProps
-}: any) {
-  return (
-    <SeenIcon
-      src={
-        passwordVisible
-          ? './assets/icons/eyeclosed.png'
-          : './assets/icons/eyeopen.png'
-      }
-      onClick={() => setPasswordVisible(!passwordVisible)}
-      {...restProps}
-    />
-  )
-}
-
-export default Form
+Form.Link = function FormLink({ children, to }: any) {
+  return <Link to={to}>{children}</Link>;
+};
