@@ -2,6 +2,7 @@ package com.htec.shelfserver.util;
 
 import com.htec.shelfserver.exceptionSupplier.ExceptionSupplier;
 import com.htec.shelfserver.dto.UserDTO;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.util.ObjectUtils;
 
 import javax.mail.internet.AddressException;
@@ -25,14 +26,7 @@ public class UserValidator {
         }
 
         String email = userDTO.getEmail();
-        boolean result = true;
-        try {
-            InternetAddress emailAddr = new InternetAddress(email);
-            emailAddr.validate();
-        } catch (AddressException ex) {
-            result = false;
-        }
-        if (!result) {
+        if (!EmailValidator.getInstance().isValid(email)) {
             throw ExceptionSupplier.emailNotValid.get();
         }
 

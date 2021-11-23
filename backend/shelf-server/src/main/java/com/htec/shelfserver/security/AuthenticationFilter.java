@@ -85,9 +85,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         if (loginUser.getEmailVerified()) {
 
             String token = Jwts.builder()
+                    .setId(loginUser.getId().toString())
                     .setSubject(userName)
                     .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
                     .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET)
+                    .claim("role_id", loginUser.getRole().getId())
                     .compact();
 
             res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
