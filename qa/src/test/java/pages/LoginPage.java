@@ -1,10 +1,10 @@
 package pages;
 
-import helpers.BaseHelper;
+import helpers.BaseWebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
-public class LoginPage extends BaseHelper
+public class LoginPage extends BaseWebDriverManager
 {
     WebDriver driver;
 
