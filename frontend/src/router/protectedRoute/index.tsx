@@ -1,19 +1,18 @@
+import { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
-import { Role } from '../../enums/roles';
 import { Routes } from '../../enums/routes';
+import { AuthContext } from '../../providers/authProvider';
 
-function ProtectedRoute({
-  children,
-  roles,
-}: {
+type ProtectedRouteProps = {
   children: JSX.Element;
   roles: number[];
-}) {
-  // from AuthProvider
-  const isLoggedIn = false;
-  const user = { role: Role.USER };
+};
 
-  const userHasRequiredRole = user && roles.includes(user.role);
+const ProtectedRoute = ({ children, roles }: ProtectedRouteProps) => {
+  const { accessToken, user } = useContext(AuthContext);
+  const isLoggedIn = accessToken !== '';
+
+  const userHasRequiredRole = user && roles.includes(user?.role);
 
   if (!isLoggedIn) {
     return <Navigate to={Routes.LOGIN} />;
@@ -24,6 +23,6 @@ function ProtectedRoute({
   }
 
   return children;
-}
+};
 
 export default ProtectedRoute;

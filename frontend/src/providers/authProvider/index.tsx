@@ -1,4 +1,3 @@
-import { AxiosResponse } from 'axios';
 import React, { useState, createContext, useEffect } from 'react';
 import { useNavigate, NavigateFunction } from 'react-router-dom';
 import AuthService from '../../services/authServices';
@@ -10,7 +9,7 @@ import {
 } from '../../interfaces/types';
 
 const defaultValue: ContextTypes = {
-  user: {},
+  user: {} as UserType,
   login: async () => {},
   register: async () => {},
   loading: false,
@@ -20,7 +19,7 @@ const defaultValue: ContextTypes = {
 const AuthContext = createContext(defaultValue);
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<UserType | null | AxiosResponse>();
+  const [user, setUser] = useState<UserType | null>();
   const [loading, setLoading] = useState<boolean>(false);
   const [accessToken, setAccesToken] = useState<string>('');
 
@@ -44,7 +43,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       .then((res) => {
         if (res.data.jwtToken) {
           localStorage.setItem('user', JSON.stringify(res));
-          setUser(res);
+          setUser(res.data);
           setAccesToken(res.data.jwtToken);
           onSuccess(navigation);
         }
@@ -65,7 +64,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     AuthService.register(data)
       .then((res) => {
         localStorage.setItem('user', JSON.stringify(res.data));
-        setUser(res);
+        setUser(res.data);
         onSuccess();
       })
       .catch((err) => {
