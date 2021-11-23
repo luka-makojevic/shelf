@@ -4,11 +4,23 @@ import {
   SpaceProps,
   LayoutProps,
   BorderProps,
-  FlexboxProps
-} from 'styled-system'
+  GridProps,
+  FlexboxProps,
+} from 'styled-system';
 
 export interface ProfileProps {
-  hideProfile: boolean
+  hideProfile: boolean;
+}
+export interface HeaderProps extends ColorProps, SpaceProps {
+  children?: React.ReactNode;
+}
+export interface CardProps
+  extends BorderProps,
+    SpaceProps,
+    TypographyProps,
+    ColorProps,
+    LayoutProps {
+  children: React.ReactNode;
 }
 
 export interface FormProps
@@ -17,15 +29,20 @@ export interface FormProps
     TypographyProps,
     ColorProps,
     LayoutProps {
-  children?: React.ReactNode
+  children?: React.ReactNode;
 }
-export interface TextProps extends ColorProps,TypographyProps,SpaceProps {
-  children?: React.ReactNode
+export interface TextProps
+  extends ColorProps,
+    TypographyProps,
+    SpaceProps,
+    BorderProps {
+  children?: React.ReactNode;
 }
 export interface ContainerProps
-extends ColorProps,
-  FlexboxProps,
-  LayoutProps,
-  SpaceProps {
-children: React.ReactNode
+  extends ColorProps,
+    FlexboxProps,
+    LayoutProps,
+    SpaceProps,
+    GridProps {
+  children: React.ReactNode;
 }
