@@ -1,6 +1,6 @@
-import styled from 'styled-components'
-import { layout, flexbox, space, color } from 'styled-system'
-import { ContainerProps } from '../../interfaces/styles'
+import styled from 'styled-components';
+import { layout, flexbox, space, color } from 'styled-system';
+import { ContainerProps } from '../../interfaces/styles';
 
 const Wrapper = styled.div<ContainerProps>`
   display: flex;
@@ -13,7 +13,7 @@ const Wrapper = styled.div<ContainerProps>`
   ${space}
   ${layout}
   ${flexbox}
-`
+`;
 const Container = styled.div<ContainerProps>`
   display: flex;
   align-items: center;
@@ -24,7 +24,7 @@ const Container = styled.div<ContainerProps>`
   ${layout}
   ${flexbox}
   ${color}
-`
+`;
 
 const Feature = styled.div<ContainerProps>`
   display: flex;
@@ -48,5 +48,5 @@ const Feature = styled.div<ContainerProps>`
   ${layout}
   ${flexbox}
   ${color}
-`
-export { Wrapper, Container, Feature }
+`;
+export { Wrapper, Container, Feature };

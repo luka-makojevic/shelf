@@ -1,4 +1,4 @@
 export interface RouteProps {
-  path: string
-  element: React.ReactNode
+  path: string;
+  element: React.ReactNode;
 }

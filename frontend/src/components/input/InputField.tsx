@@ -1,21 +1,28 @@
-import { useState } from 'react'
-import { Error, Input, InputContainer, SeenIcon } from './input-styles'
+import { ChangeEventHandler, useState } from 'react';
+import { FieldError } from 'react-hook-form';
+import { Error, Input, InputContainer, SeenIcon } from './input-styles';
 
-const InputField = ({
-  name,
-  placeholder,
-  register,
-  validationRule,
-  errors,
-  type,
-}: any) => {
-  const error = errors[name] && <Error>{errors[name]?.message}</Error>
+export type InputFieldType = 'text' | 'password' | 'email';
 
-  const [passwordShown, setPasswordShown] = useState(false)
+export type InputFieldProps = {
+  name?: string;
+  placeholder?: string;
+  onChange?: ChangeEventHandler;
+  error?: FieldError;
+  type?: InputFieldType;
+  value?: string;
+};
 
-  const togglePasswordVisiblity = () => {
-    setPasswordShown(!passwordShown)
-  }
+export const InputField = ({
+  error,
+  type = 'text',
+  ...restProps
+}: InputFieldProps) => {
+  const [passwordShown, setPasswordShown] = useState(false);
+
+  const handlePasswordVisibilityClick = () => {
+    setPasswordShown(!passwordShown);
+  };
 
   // console.log({ ...register(name, validationRule) })
 
@@ -24,10 +31,8 @@ const InputField = ({
       <Input
         marginY={[1, 2]}
         padding={[1, 2]}
-        name={name}
-        placeholder={placeholder}
-        type={passwordShown ? 'password' : 'text'}
-        {...register(name, validationRule)}
+        type={!passwordShown ? type : 'text'}
+        {...restProps}
       />
       {type === 'password' && (
         <SeenIcon
@@ -36,14 +41,13 @@ const InputField = ({
               ? './assets/icons/eyeclosed.png'
               : './assets/icons/eyeopen.png'
           }
-          onClick={togglePasswordVisiblity}
+          onClick={handlePasswordVisibilityClick}
         />
       )}
-      {error}
+      {error && <Error>{error.message}</Error>}
     </InputContainer>
-  )
-}
-export default InputField
+  );
+};
 
 // export const PasswordField = ({
 //   name,

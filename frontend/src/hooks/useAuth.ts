@@ -1,7 +1,7 @@
-import axios from 'axios'
+import axios from 'axios';
 // import { useState } from 'react'
 
-const API_URL = 'http://10.10.0.120:8080/users/'
+const API_URL = 'http://10.10.0.120:8080/users/';
 
 export const useAuthService = () => {
   // const [user, setUser] = useState<string>(
@@ -15,11 +15,11 @@ export const useAuthService = () => {
       })
       .then((res) => {
         if (res) {
-          localStorage.setItem('user', JSON.stringify(res.data))
+          localStorage.setItem('user', JSON.stringify(res.data));
           // setUser(res.data)
         }
-      })
-  }
+      });
+  };
 
   const login = (data: {}) => {
     return axios
@@ -28,11 +28,11 @@ export const useAuthService = () => {
       })
       .then((res) => {
         if (res.data.accessToken) {
-          localStorage.setItem('user', JSON.stringify(res.data))
+          localStorage.setItem('user', JSON.stringify(res.data));
           // setUser(res.data)
         }
-      })
-  }
+      });
+  };
 
-  return { register, login }
-}
+  return { register, login };
+};

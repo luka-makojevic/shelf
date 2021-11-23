@@ -1,7 +1,7 @@
-import styled from 'styled-components'
-import { Link as ReachRouterLink } from 'react-router-dom'
-import { space, layout, border } from 'styled-system'
-import { FormProps } from '../../interfaces/styles'
+import styled from 'styled-components';
+import { Link as ReachRouterLink } from 'react-router-dom';
+import { space, layout, border } from 'styled-system';
+import { FormProps } from '../../interfaces/styles';
 
 export const Container = styled.div<FormProps>`
   display: flex;
@@ -18,12 +18,12 @@ export const Container = styled.div<FormProps>`
 
   ${space}
   ${layout}
-`
+`;
 
 export const Base = styled.form`
   display: flex;
   flex-wrap: wrap;
-`
+`;
 
 export const Input = styled.input<FormProps>`
   width: 100%;
@@ -38,12 +38,12 @@ export const Input = styled.input<FormProps>`
     outline: none;
     box-shadow: 0 0 6px 0 ${({ theme }) => theme.colors.secondary};
   }
-`
+`;
 
 export const PasswordContainer = styled.div`
   position: relative;
   width: 100%;
-`
+`;
 export const Spinner = styled.img`
   filter: invert(1);
   width: 30px;
@@ -85,17 +85,17 @@ export const Spinner = styled.img`
       transform: rotate(360deg);
     }
   }
-`
+`;
 
 export const AccentText = styled.p`
   color: ${({ theme }) => theme.colors.primary};
-`
+`;
 
 export const Link = styled(ReachRouterLink)`
   text-decoration: none;
   color: inherit;
   font-weight: ${({ theme }) => theme.fontWeights.bold};
-`
+`;
 
 export const Submit = styled.button`
   margin-top: 1em;
@@ -108,11 +108,11 @@ export const Submit = styled.button`
   background: #006fd1;
   border: none;
   border-radius: 30px;
-`
+`;
 
 export const InputFieldWrapper = styled.div`
   display: flex;
   flex-direction: column;
 
   width: 100%;
-`
+`;

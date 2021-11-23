@@ -1,15 +1,15 @@
-import React from 'react'
-import { Header } from '../../components'
+import React from 'react';
+import { Header } from '../../components';
 import {
   Wrapper,
   Container,
   Feature,
-} from '../../components/layout/layout.styles'
-import { Title, SubTitle } from '../../components/text/text-styles'
-import RegisterForm from './form'
+} from '../../components/layout/layout.styles';
+import { Title, SubTitle } from '../../components/text/text-styles';
+import RegisterForm from './form';
 
 const Register = () => {
-  const profile = true
+  const profile = true;
 
   return (
     <>
@@ -28,7 +28,7 @@ const Register = () => {
         </Container>
       </Wrapper>
     </>
-  )
-}
+  );
+};
 
-export default Register
+export default Register;

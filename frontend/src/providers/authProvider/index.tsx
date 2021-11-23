@@ -23,4 +23,4 @@
 
 // export { AuthProvider, AuthContext }
 
-export {}
+export {};

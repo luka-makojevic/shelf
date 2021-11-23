@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
   Container,
   Base,
@@ -6,22 +6,23 @@ import {
   AccentText,
   Link,
   Spinner,
-} from './form-styles'
+} from './form-styles';
 
 const Form = ({ children }: any) => (
   <Container width={['300px', '400px']} height={['550', '600']}>
     {children}
   </Container>
-)
-export default Form
+);
+
+export default Form;
 
 Form.Base = function FormBase({ children, onSubmit }: any) {
-  return <Base onSubmit={onSubmit}>{children}</Base>
-}
+  return <Base onSubmit={onSubmit}>{children}</Base>;
+};
 
 Form.Spinner = function FormSpinner() {
-  return <Spinner />
-}
+  return <Spinner />;
+};
 
 Form.Submit = function FormSubmit({ loading, children, onClick }: any) {
   return (
@@ -32,13 +33,13 @@ Form.Submit = function FormSubmit({ loading, children, onClick }: any) {
         children
       )}
     </Submit>
-  )
-}
+  );
+};
 
 Form.AccentText = function FormAccentText({ children }: any) {
-  return <AccentText>{children}</AccentText>
-}
+  return <AccentText>{children}</AccentText>;
+};
 
 Form.Link = function FormLink({ children, to }: any) {
-  return <Link to={to}>{children}</Link>
-}
+  return <Link to={to}>{children}</Link>;
+};

@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom'
-import { Error } from '../../components/input/input-styles'
-import { Routes } from '../../enums/routes'
+import { Link } from 'react-router-dom';
+import { Error } from '../../components/input/input-styles';
+import { Routes } from '../../enums/routes';
 
 const CheckBox = ({ register, error }: any) => (
   <div style={{ marginTop: '1em' }}>
@@ -19,6 +19,6 @@ const CheckBox = ({ register, error }: any) => (
     />
     <Error>{error}</Error>
   </div>
-)
+);
 
-export default CheckBox
+export default CheckBox;

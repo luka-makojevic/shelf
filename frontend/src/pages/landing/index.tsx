@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom'
-import { Landing as LandingComponent } from '../../components'
-import Card from '../../components/card'
-import { Title, SubTitle } from '../../components/text/text-styles'
+import { Link } from 'react-router-dom';
+import { Landing as LandingComponent } from '../../components';
+import Card from '../../components/card';
+import { Title, SubTitle } from '../../components/text/text-styles';
 
 const featuresInfo = [
   {
@@ -20,7 +20,7 @@ const featuresInfo = [
     img: './assets/images/f.png',
     text: 'Event-driven compute service that lets you run code for virtually any type of application or backend service without provisioning or managing servers',
   },
-]
+];
 
 const Landing = () => {
   return (
@@ -52,7 +52,7 @@ const Landing = () => {
         </LandingComponent.Right>
       </LandingComponent.Content>
     </LandingComponent>
-  )
-}
+  );
+};
 
-export { Landing }
+export { Landing };

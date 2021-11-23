@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom'
-import styled from 'styled-components'
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
-export const Container = styled.div``
+export const Container = styled.div``;
 
 export const Top = styled.div`
   display: flex;
@@ -9,7 +9,7 @@ export const Top = styled.div`
   align-items: center;
   padding: 0 40px;
   height: 80px;
-`
+`;
 
 export const NavLink = styled(Link)`
   text-decoration: none;
@@ -24,7 +24,7 @@ export const NavLink = styled(Link)`
     color: ${({ theme }) => theme.colors.primary};
     background-color: transparent;
   }
-`
+`;
 
 export const Content = styled.div`
   display: flex;
@@ -33,11 +33,11 @@ export const Content = styled.div`
   @media screen and (max-width: 768px) {
     flex-direction: column;
   }
-`
+`;
 
 export const Logo = styled.img`
   width: 200px;
-`
+`;
 
 export const Title = styled.h1`
   font-size: 80px;
@@ -45,9 +45,9 @@ export const Title = styled.h1`
   @media screen and (max-width: 768px) {
     font-size: 48px;
   }
-`
+`;
 
-export const Text = styled.p``
+export const Text = styled.p``;
 
 export const CallToAction = styled.p`
   margin-top: 80px;
@@ -58,7 +58,7 @@ export const CallToAction = styled.p`
     color: inherit;
     font-weight: bold;
   }
-`
+`;
 
 export const Left = styled.div`
   width: 50%;
@@ -74,7 +74,7 @@ export const Left = styled.div`
     padding: 0 20px;
     margin-bottom: 80px;
   }
-`
+`;
 
 export const Right = styled.div`
   max-width: 600px;
@@ -91,4 +91,4 @@ export const Right = styled.div`
   @media screen and (max-width: 425px) {
     grid-template-columns: 1fr;
   }
-`
+`;

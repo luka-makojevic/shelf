@@ -9,49 +9,51 @@ import {
   Text,
   CallToAction,
   NavLink,
-} from './landing-styles'
+} from './landing-styles';
 
 const Landing = ({ children, ...restProps }: any) => {
-  return <Container {...restProps}>{children}</Container>
-}
+  return <Container {...restProps}>{children}</Container>;
+};
 
 Landing.Top = function LandingTop({ children, ...restProps }: any) {
-  return <Top {...restProps}>{children}</Top>
-}
+  return <Top {...restProps}>{children}</Top>;
+};
 
 Landing.NavLink = function LandingNavLink({ children, ...restProps }: any) {
-  return <NavLink {...restProps}>{children}</NavLink>
-}
+  return <NavLink {...restProps}>{children}</NavLink>;
+};
 
 Landing.Content = function LandingContent({ children, ...restProps }: any) {
-  return <Content {...restProps}>{children}</Content>
-}
+  return <Content {...restProps}>{children}</Content>;
+};
 
 Landing.Logo = function LandingContent({ ...restProps }: any) {
-  return <Logo src="./assets/images/logo.png" alt="Shelf Logo" {...restProps} />
-}
+  return (
+    <Logo src="./assets/images/logo.png" alt="Shelf Logo" {...restProps} />
+  );
+};
 
 Landing.Title = function LandingTitle({ children, ...restProps }: any) {
-  return <Title {...restProps}>{children}</Title>
-}
+  return <Title {...restProps}>{children}</Title>;
+};
 
 Landing.Text = function LandingText({ children, ...restProps }: any) {
-  return <Text {...restProps}>{children}</Text>
-}
+  return <Text {...restProps}>{children}</Text>;
+};
 
 Landing.CallToAction = function LandingCallToAction({
   children,
   ...restProps
 }: any) {
-  return <CallToAction {...restProps}>{children}</CallToAction>
-}
+  return <CallToAction {...restProps}>{children}</CallToAction>;
+};
 
 Landing.Left = function LandingLeft({ children, ...restProps }: any) {
-  return <Left {...restProps}>{children}</Left>
-}
+  return <Left {...restProps}>{children}</Left>;
+};
 
 Landing.Right = function LandingRight({ children, ...restProps }: any) {
-  return <Right {...restProps}>{children}</Right>
-}
+  return <Right {...restProps}>{children}</Right>;
+};
 
-export default Landing
+export default Landing;

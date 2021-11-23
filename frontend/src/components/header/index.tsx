@@ -1,4 +1,4 @@
-import { Container, Logo, Profile, Link } from './header-styles'
+import { Container, Logo, Profile, Link } from './header-styles';
 
 const Header = ({ hideProfile, ...restProps }: any) => {
   return (
@@ -9,7 +9,7 @@ const Header = ({ hideProfile, ...restProps }: any) => {
 
       <Profile hideProfile={hideProfile}>PP</Profile>
     </Container>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

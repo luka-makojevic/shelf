@@ -1,6 +1,6 @@
-import styled from 'styled-components'
-import { Link as ReachRouterLink } from 'react-router-dom'
-import { ProfileProps } from '../../interfaces/styles'
+import styled from 'styled-components';
+import { Link as ReachRouterLink } from 'react-router-dom';
+import { ProfileProps } from '../../interfaces/styles';
 
 export const Container = styled.div`
   display: flex;
@@ -10,13 +10,13 @@ export const Container = styled.div`
   position: absolute;
 
   padding: 20px 15px 0 15px;
-`
-export const Link = styled(ReachRouterLink)``
+`;
+export const Link = styled(ReachRouterLink)``;
 export const Logo = styled.img`
   width: 70px;
   height: auto;
   object-fit: contain;
-`
+`;
 
 export const Profile = styled.div<ProfileProps>`
   width: 50px;
@@ -31,6 +31,6 @@ export const Profile = styled.div<ProfileProps>`
   cursor: pointer;
   user-select: none;
   ${({ hideProfile }) => hideProfile && 'display:none;'}
-`
+`;
 
-export const Top = styled.div``
+export const Top = styled.div``;
