@@ -1,8 +1,9 @@
 import { useForm, RegisterOptions } from 'react-hook-form';
+import CheckBox from '../../components/checkbox/checkBox';
 import Form from '../../components/form';
 import { InputFieldWrapper } from '../../components/form/form-styles';
+import { Error } from '../../components/input/input-styles';
 import { InputField, InputFieldType } from '../../components/input/InputField';
-import CheckBox from './checkBox';
 
 import { FormData } from './interfaces';
 
@@ -102,7 +103,13 @@ const FormValidation = () => {
             {...register(fieldConfig.name, fieldConfig.validations)}
           />
         ))}
-        <CheckBox register={register} error={errors.terms?.message} />
+        <CheckBox
+          type="checkbox"
+          label="I accept "
+          link="Terms and conditions"
+          {...register('terms', { required: 'This is required' })}
+          error={errors.terms}
+        />
       </InputFieldWrapper>
 
       <Form.Submit>Sign up</Form.Submit>
