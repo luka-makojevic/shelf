@@ -8,6 +8,7 @@ import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.repository.TokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
+import com.htec.shelfserver.responseModel.UserResponseModel;
 import com.htec.shelfserver.util.UserValidator;
 import com.htec.shelfserver.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -117,5 +116,10 @@ public class UserService implements UserDetailsService {
         );
 
         return new User(userEntity.getEmail(), userEntity.getPassword(), new ArrayList<>());
+    }
+
+    public List<UserResponseModel> getUsers() {
+
+        return userRepository.findAll().stream().map(UserMapper.INSTANCE::userEntityToUserResponseModel).collect(Collectors.toList());
     }
 }
