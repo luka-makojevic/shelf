@@ -1,47 +1,51 @@
-import styled from 'styled-components'
-import {
-  layout,
-  flexbox,
-  space,
-  color,
-} from 'styled-system'
-import { ContainerProps } from '../../interfaces/styles'
+import styled from 'styled-components';
+import { layout, flexbox, space, color } from 'styled-system';
+import { ContainerProps } from '../../interfaces/styles';
 
-
-const Inner = styled.div<ContainerProps>`
-  width: 100vw;
-  height: 100vh;
+const Wrapper = styled.div<ContainerProps>`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  width: 100vw;
+  height: 100vh;
+
   ${space}
   ${layout}
   ${flexbox}
-`
+`;
 const Container = styled.div<ContainerProps>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 100%;
   ${space}
   ${layout}
   ${flexbox}
   ${color}
+`;
+
+const Feature = styled.div<ContainerProps>`
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 
-  
-  
-`
+  margin: 0 1em;
+  padding: 1em;
+  height: 550px;
+  max-width: 400px;
+  max-height: 550px;
 
-const Feature = styled.div <ContainerProps>`
+  text-align: center;
+  color: white;
+  border: 1px solid white;
+  border-radius: 50px;
+
   ${space}
   ${layout}
   ${flexbox}
-  ${color} 
-  color: white;
-  border-color: white;
-  padding: 7em 3em;
-  max-width: 600px;
-  border: 1px solid white;
-  border-radius: 50px;
-  text-align: center;
-`
-export { Inner, Container, Feature }
+  ${color}
+`;
+export { Wrapper, Container, Feature };
