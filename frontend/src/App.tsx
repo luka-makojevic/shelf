@@ -1,12 +1,12 @@
-import { useRoutes } from 'react-router-dom'
-import { ThemeProvider } from 'styled-components'
-import { Dashboard } from './pages/dashboard/index'
-import { theme } from './theme/index'
-import { Landing } from './pages/landing/index'
-import { Login } from './pages/login/index'
-import { Register } from './pages/register/index'
-import { Routes } from './enums/routes'
-import { RouteProps } from './interfaces/route'
+import { useRoutes } from 'react-router-dom';
+import { ThemeProvider } from 'styled-components';
+import { Dashboard } from './pages/dashboard';
+import { theme } from './theme';
+import { Landing } from './pages/landing';
+import Login from './pages/login';
+import Register from './pages/register';
+import { Routes } from './enums/routes';
+import { RouteProps } from './interfaces/route';
 
 function App() {
   const routes: RouteProps[] = [
@@ -26,10 +26,10 @@ function App() {
       path: Routes.DASHBOARD,
       element: <Dashboard />,
     },
-  ]
-  const routing = useRoutes(routes)
+  ];
+  const routing = useRoutes(routes);
 
-  return <ThemeProvider theme={theme}>{routing}</ThemeProvider>
+  return <ThemeProvider theme={theme}>{routing}</ThemeProvider>;
 }
 
-export default App
+export default App;
