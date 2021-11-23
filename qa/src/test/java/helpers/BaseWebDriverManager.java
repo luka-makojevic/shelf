@@ -18,10 +18,7 @@ public class BaseWebDriverManager
 
         // Create global property file
         prop = new Properties();
-        FileInputStream fis = new FileInputStream
-//                ("//Users/rad/WebTest/src/main/resources/data.properties");
-//        C:\Users\Srdjan\IdeaProjects\shelf\qa\src\main\resources
-                ("C:\\Users\\Srdjan\\IdeaProjects\\shelf\\qa\\src\\main\\resources\\data.properties");
+        FileInputStream fis = new FileInputStream (".\\datafiles\\data.properties");
         prop.load(fis);
         String browserName = prop.getProperty("browser");
         System.out.println(browserName);

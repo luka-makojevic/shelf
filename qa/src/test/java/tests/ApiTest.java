@@ -81,37 +81,17 @@ public class ApiTest {
     @Test
     public void apiPOST()
     {
-        RestAssured.baseURI = "https://jsonplaceholder.typicode.com/";
+        RestAssured.baseURI = "http://10.10.0.120:8080/users";
 
 //        ArrayList<String> data = new ArrayList<String>();
 
         JSONObject requestParams = new JSONObject();
-//        requestParams.put("id", "14");
-        requestParams.put("name", "asd dsada");
-        requestParams.put("username", "asdad");
-        requestParams.put("email", "example@april.biz");
+        requestParams.put("email", "stefan.gajic@htecgroup.com");
+        requestParams.put("password", "Qwertysha1@");
+        requestParams.put("firstName",  "Srdjan");
+        requestParams.put("lastName",  "Rados");
 
-        JSONObject requestParamsForAddress = new JSONObject();
-        requestParamsForAddress.put("street","dsad sda");
-        requestParamsForAddress.put("suite","asd. dsa");
-        requestParamsForAddress.put("city","sad");
-        requestParamsForAddress.put("zipcode","123321");
 
-        JSONObject requestParamsForGeo = new JSONObject();
-        requestParamsForGeo.put("lat","-38.5454");
-        requestParamsForGeo.put("lng","54.2345");
-        requestParamsForAddress.put("geo", requestParamsForGeo);
-
-        requestParams.put("address",requestParamsForAddress);
-
-        requestParams.put("phone", "2-881-845-9245 x65223");
-        requestParams.put("website", "xxx.org");
-
-        JSONObject requestParamsForCompany = new JSONObject();
-        requestParamsForCompany.put("name","sdad-sda");
-        requestParamsForCompany.put("catchPhrase","asdsad");
-        requestParamsForCompany.put("bs","asdads");
-        requestParams.put("company",requestParamsForCompany);
 
 //        data.add(String.valueOf(requestParams));
 //        System.out.println(data.toString());
