@@ -5,7 +5,7 @@ public enum ErrorMessages {
     MISSING_REQUIRED_FIELD("Missing required field. Please check documentation for required fields."),
     RECORD_ALREADY_EXISTS("Record already exists."),
     INTERNAL_SERVER_ERROR("Internal server error."),
-    NO_RECORD_FOUND("Record with provided id is not found."),
+    NO_RECORD_FOUND_WITH_ID("Record with provided id is not found."),
     NO_RECORD_FOUND_WITH_EMAIL("Record with provided email is not found."),
     AUTHENTICATION_CREDENTIALS_NOT_VALID("Authentication credentials not valid."),
     COULD_NOT_UPDATE_RECORD("Could not update record."),

@@ -26,6 +26,13 @@ public class ExceptionSupplier {
             ErrorMessages.NOT_FOUND.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> recordNotFoundWithId = () -> new ShelfException(
+            ErrorMessages.NO_RECORD_FOUND_WITH_ID.getErrorMessage(),
+            HttpStatus.NOT_FOUND.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.NOT_FOUND.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> passwordNotValid = () -> new ShelfException(
             ErrorMessages.PASSWORD_NOT_VALID.getErrorMessage(),
             HttpStatus.BAD_REQUEST.value(),
