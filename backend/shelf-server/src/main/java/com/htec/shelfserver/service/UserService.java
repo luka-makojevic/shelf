@@ -1,10 +1,11 @@
 package com.htec.shelfserver.service;
 
-import com.htec.shelfserver.exceptionSupplier.ExceptionSupplier;
+import com.htec.shelfserver.dto.AuthUser;
 import com.htec.shelfserver.dto.UserDTO;
-import com.htec.shelfserver.entity.TokenEntity;
 import com.htec.shelfserver.entity.RoleEntity;
+import com.htec.shelfserver.entity.TokenEntity;
 import com.htec.shelfserver.entity.UserEntity;
+import com.htec.shelfserver.exceptionSupplier.ExceptionSupplier;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.repository.TokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
@@ -111,15 +112,13 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) {
 
-        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(
-                ExceptionSupplier.recordNotFoundWithEmail
-        );
+        UserEntity userEntity = userRepository.findByEmail(email).
+                orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
 
         return new User(userEntity.getEmail(), userEntity.getPassword(), new ArrayList<>());
     }
 
     public List<UserResponseModel> getUsers() {
-
-        return userRepository.findAll().stream().map(UserMapper.INSTANCE::userEntityToUserResponseModel).collect(Collectors.toList());
+        return UserMapper.INSTANCE.userEntityToUserResponseModels(userRepository.findAll());
     }
 }

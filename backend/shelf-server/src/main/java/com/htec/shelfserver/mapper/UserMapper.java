@@ -7,6 +7,8 @@ import com.htec.shelfserver.responseModel.UserResponseModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper
 public interface UserMapper {
 
@@ -21,5 +23,6 @@ public interface UserMapper {
     UserResponseModel userDtoToUserResponseModel(UserDTO userDTO);
 
     UserResponseModel userEntityToUserResponseModel(UserEntity userEntity);
+    List<UserResponseModel> userEntityToUserResponseModels(List<UserEntity> userEntities);
 
 }

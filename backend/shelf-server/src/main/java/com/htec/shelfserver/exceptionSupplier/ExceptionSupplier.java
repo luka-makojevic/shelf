@@ -1,6 +1,5 @@
 package com.htec.shelfserver.exceptionSupplier;
 
-import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.exception.ShelfException;
 import com.htec.shelfserver.util.ErrorMessages;
 import org.springframework.http.HttpStatus;
@@ -34,8 +33,8 @@ public class ExceptionSupplier {
             ErrorMessages.BAD_REQUEST.getErrorMessage()
     );
 
-    public static final Supplier<ShelfException> authenticationFailed = () -> new ShelfException(
-            ErrorMessages.AUTHENTICATION_FAILED.getErrorMessage(),
+    public static final Supplier<ShelfException> authenticationCredentialsNotValid = () -> new ShelfException(
+            ErrorMessages.AUTHENTICATION_CREDENTIALS_NOT_VALID.getErrorMessage(),
             HttpStatus.BAD_REQUEST.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.BAD_REQUEST.getErrorMessage()
@@ -71,6 +70,13 @@ public class ExceptionSupplier {
 
     public static final Supplier<ShelfException> emailNotVerified = () -> new ShelfException(
             ErrorMessages.EMAIL_ADDRESS_NOT_VERIFIED.getErrorMessage(),
+            HttpStatus.FORBIDDEN.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.FORBIDDEN.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> userNotValid = () -> new ShelfException(
+            ErrorMessages.USER_NOT_VALID.getErrorMessage(),
             HttpStatus.FORBIDDEN.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.FORBIDDEN.getErrorMessage()
