@@ -2,20 +2,14 @@ import { useForm, RegisterOptions } from 'react-hook-form';
 import Form from '../../components/form';
 import { InputFieldWrapper } from '../../components/form/form-styles';
 import { InputField, InputFieldType } from '../../components/input/InputField';
-import CheckBox from './checkBox';
 
-import { RegisterFormData } from '../../interfaces/types';
+import { LoginData } from '../../interfaces/types';
 
 interface FieldConfig {
   type: InputFieldType;
   placeholder: string;
-  name:
-    | 'terms'
-    | 'email'
-    | 'password'
-    | 'confirmPassword'
-    | 'firstName'
-    | 'lastName';
+  name: 'email' | 'password';
+
   validations: RegisterOptions;
 }
 
@@ -23,9 +17,8 @@ const FormValidation = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
-  } = useForm<RegisterFormData>({});
+  } = useForm<LoginData>({});
 
   const fieldConfigs: FieldConfig[] = [
     {
@@ -58,32 +51,6 @@ const FormValidation = () => {
         },
       },
     },
-    {
-      type: 'password',
-      placeholder: 'Confirm Password',
-      name: 'confirmPassword',
-      validations: {
-        required: 'This field is required',
-        validate: (value: string) =>
-          value === watch('password') || 'Passwords must match',
-      },
-    },
-    {
-      type: 'text',
-      placeholder: 'First Name',
-      name: 'firstName',
-      validations: {
-        required: 'This field is required',
-      },
-    },
-    {
-      type: 'text',
-      placeholder: 'Last name',
-      name: 'lastName',
-      validations: {
-        required: 'This field is required',
-      },
-    },
   ];
 
   const submitForm = (/* data: any */) => {
@@ -102,10 +69,9 @@ const FormValidation = () => {
             {...register(fieldConfig.name, fieldConfig.validations)}
           />
         ))}
-        <CheckBox register={register} error={errors.terms?.message} />
       </InputFieldWrapper>
 
-      <Form.Submit>Sign up</Form.Submit>
+      <Form.Submit>Sign in</Form.Submit>
     </Form.Base>
   );
 };
