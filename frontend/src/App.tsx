@@ -1,8 +1,9 @@
+import React from 'react';
 import { useRoutes } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { Dashboard } from './pages/dashboard';
 import { theme } from './theme';
-import { Landing } from './pages/landing';
+import Landing from './pages/landing';
 import Login from './pages/login';
 import Register from './pages/register';
 import { Routes } from './enums/routes';
