@@ -1,4 +1,3 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 import { Error } from '../../components/input/input-styles'
 import { Routes } from '../../enums/routes'
@@ -13,6 +12,7 @@ const CheckBox = ({ register, error }: any) => (
     </p>
     <input
       {...register('terms', { required: 'This is required' })}
+      // ref={register}
       type="checkbox"
       name="terms"
       id="termsID"

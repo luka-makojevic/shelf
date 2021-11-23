@@ -25,8 +25,6 @@ export const Base = styled.form`
   flex-wrap: wrap;
 `
 
-export const Title = styled.h1``
-
 export const Input = styled.input<FormProps>`
   width: 100%;
   min-height: 45px;
@@ -88,10 +86,6 @@ export const Spinner = styled.img`
     }
   }
 `
-export const InputPassword = styled(Input)`
-  position: relative;
-  width: 100%;
-`
 
 export const AccentText = styled.p`
   color: ${({ theme }) => theme.colors.primary};
@@ -104,7 +98,7 @@ export const Link = styled(ReachRouterLink)`
 `
 
 export const Submit = styled.button`
-  margin: 1em 0 2em 0;
+  margin-top: 1em;
   padding: 0px 20px;
   width: 100%;
   min-height: 45px;

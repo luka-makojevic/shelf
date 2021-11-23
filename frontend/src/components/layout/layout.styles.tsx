@@ -22,14 +22,15 @@ const Container = styled.div<ContainerProps>`
   height: 100%;
   ${space}
   ${layout}
-${flexbox}
-${color}
+  ${flexbox}
+  ${color}
 `
 
 const Feature = styled.div<ContainerProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 
   margin: 0 1em;
   padding: 1em;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Error, Input, InputContainer, SeenIcon } from './input-styles'
 
 const InputField = ({
@@ -9,13 +9,15 @@ const InputField = ({
   errors,
   type,
 }: any) => {
-  const error = errors[name] && <Error>{errors[name].message}</Error>
+  const error = errors[name] && <Error>{errors[name]?.message}</Error>
 
   const [passwordShown, setPasswordShown] = useState(false)
 
   const togglePasswordVisiblity = () => {
     setPasswordShown(!passwordShown)
   }
+
+  // console.log({ ...register(name, validationRule) })
 
   return (
     <InputContainer>

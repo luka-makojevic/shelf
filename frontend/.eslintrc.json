@@ -19,9 +19,7 @@
     "project": "./tsconfig.json"
   },
   "plugins": ["react", "@typescript-eslint"],
-  "rules": {
-    "import/prefer-default-export": "off"
-  },
+  "rules": { "react/react-in-jsx-scope": "off" },
   "settings": {
     "import/resolver": {
       "typescript": {}

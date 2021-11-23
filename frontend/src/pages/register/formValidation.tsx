@@ -6,7 +6,7 @@ import CheckBox from './checkBox'
 
 import { FormData } from './interfaces'
 
-const FormValidation = ({ loading }: any) => {
+const FormValidation = () => {
   const {
     register,
     handleSubmit,
@@ -63,12 +63,12 @@ const FormValidation = ({ loading }: any) => {
     },
   ]
 
-  const onSubmit = (data: any) => {
+  const submitForm = (data: any) => {
     console.log(data)
   }
 
   return (
-    <Form.Base onSubmit={handleSubmit(onSubmit)}>
+    <Form.Base onSubmit={handleSubmit(submitForm)}>
       <InputFieldWrapper>
         {validationRules.map((validationRule) => (
           <InputField
@@ -84,7 +84,7 @@ const FormValidation = ({ loading }: any) => {
         <CheckBox register={register} error={errors.terms?.message} />
       </InputFieldWrapper>
 
-      <Form.Submit loading={loading}>Sign up</Form.Submit>
+      <Form.Submit>Sign up</Form.Submit>
     </Form.Base>
   )
 }
