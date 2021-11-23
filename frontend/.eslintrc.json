@@ -14,7 +14,7 @@
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": 13,
+    "ecmaVersion": 8,
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
@@ -24,7 +24,11 @@
   ],
   "rules": {
     "import/prefer-default-export": "off",
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "semi": [
+      2,
+      "always"
+    ]
   },
   "settings": {
     "import/resolver": {
