@@ -1,6 +1,5 @@
-import React from 'react';
 import { Navigate } from 'react-router-dom';
-import Role from '../../enums/roles';
+import { Role } from '../../enums/roles';
 import { Routes } from '../../enums/routes';
 
 function ProtectedRoute({

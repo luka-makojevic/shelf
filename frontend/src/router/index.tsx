@@ -1,12 +1,11 @@
-import React from 'react';
 import { useRoutes } from 'react-router-dom';
-import Role from '../enums/roles';
+import { Role } from '../enums/roles';
 import { Routes } from '../enums/routes';
 import { RouteProps } from '../interfaces/route';
-import { Dashboard } from '../pages/dashboard/index';
-import { Landing } from '../pages/landing/index';
-import { Login } from '../pages/login/index';
-import { Register } from '../pages/register/index';
+import { Dashboard } from '../pages/dashboard';
+import { Landing } from '../pages/landing';
+import { Login } from '../pages/login';
+import { Register } from '../pages/register';
 import ProtectedRoute from './protectedRoute';
 import PublicOnlyRoute from './publicOnlyRoute';
 
