@@ -14,12 +14,15 @@
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": 13,
+    "ecmaVersion": 8,
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
   "plugins": ["react", "@typescript-eslint"],
-  "rules": { "react/react-in-jsx-scope": "off" },
+  "rules": {
+    "semi": [2, "always"],
+    "react/react-in-jsx-scope": "off"
+  },
   "settings": {
     "import/resolver": {
       "typescript": {}
