@@ -125,13 +125,4 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         res.setContentType("application/json;");
         res.getWriter().write(userResponseJson);
     }
-
-    public void decodeTokenParts(String token) {
-        String[] parts = token.split("\\.", 0);
-
-        for (String part : parts) {
-            byte[] bytes = Base64.getUrlDecoder().decode(part);
-            String decodedString = new String(bytes, StandardCharsets.UTF_8);
-        }
-    }
 }
