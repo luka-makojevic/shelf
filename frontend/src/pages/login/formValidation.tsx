@@ -1,9 +1,12 @@
+import { useContext, useState } from 'react';
 import { useForm, RegisterOptions } from 'react-hook-form';
 import Form from '../../components/form';
 import { InputFieldWrapper } from '../../components/form/form-styles';
 import { InputField, InputFieldType } from '../../components/input/InputField';
+import { Error } from '../../components/text/text-styles';
 
 import { LoginData } from '../../interfaces/types';
+import { AuthContext } from '../../providers/authProvider';
 
 interface FieldConfig {
   type: InputFieldType;
@@ -19,6 +22,7 @@ const FormValidation = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginData>({});
+  const [error, setError] = useState<string>();
 
   const fieldConfigs: FieldConfig[] = [
     {
@@ -52,13 +56,23 @@ const FormValidation = () => {
       },
     },
   ];
+  const { login, loading } = useContext(AuthContext);
 
-  const submitForm = (/* data: any */) => {
-    // console.log(data);
+  const submitForm = (data: LoginData) => {
+    login(
+      data,
+      (navigation) => {
+        navigation('/dashboard');
+      },
+      (err: string) => {
+        setError(err);
+      }
+    );
   };
 
   return (
     <Form.Base onSubmit={handleSubmit(submitForm)}>
+      <Error>{error}</Error>
       <InputFieldWrapper>
         {fieldConfigs.map((fieldConfig: FieldConfig) => (
           <InputField
@@ -71,7 +85,7 @@ const FormValidation = () => {
         ))}
       </InputFieldWrapper>
 
-      <Form.Submit>Sign in</Form.Submit>
+      <Form.Submit loading={loading}>Sign in</Form.Submit>
     </Form.Base>
   );
 };

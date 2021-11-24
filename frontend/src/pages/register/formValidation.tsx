@@ -1,10 +1,12 @@
+import { useContext, useState } from 'react';
 import { useForm, RegisterOptions } from 'react-hook-form';
 import Form from '../../components/form';
 import { InputFieldWrapper } from '../../components/form/form-styles';
 import { InputField, InputFieldType } from '../../components/input/InputField';
 import CheckBox from './checkBox';
-
-import { RegisterFormData } from '../../interfaces/types';
+import { RegisterData, RegisterFormData } from '../../interfaces/types';
+import { AuthContext } from '../../providers/authProvider';
+import { Error } from '../../components/text/text-styles';
 
 interface FieldConfig {
   type: InputFieldType;
@@ -26,6 +28,7 @@ const FormValidation = () => {
     watch,
     formState: { errors },
   } = useForm<RegisterFormData>({});
+  const [error, setError] = useState<string>();
 
   const fieldConfigs: FieldConfig[] = [
     {
@@ -85,13 +88,21 @@ const FormValidation = () => {
       },
     },
   ];
+  const { register: httpRegister, loading } = useContext(AuthContext);
 
-  const submitForm = (/* data: any */) => {
-    // console.log(data);
+  const submitForm = (data: RegisterData) => {
+    httpRegister(
+      data,
+      () => {},
+      (err) => {
+        setError(err);
+      }
+    );
   };
 
   return (
     <Form.Base onSubmit={handleSubmit(submitForm)}>
+      <Error>{error}</Error>
       <InputFieldWrapper>
         {fieldConfigs.map((fieldConfig: FieldConfig) => (
           <InputField
@@ -105,7 +116,7 @@ const FormValidation = () => {
         <CheckBox register={register} error={errors.terms?.message} />
       </InputFieldWrapper>
 
-      <Form.Submit>Sign up</Form.Submit>
+      <Form.Submit loading={loading}>Sign up</Form.Submit>
     </Form.Base>
   );
 };
