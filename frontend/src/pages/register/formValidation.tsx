@@ -12,7 +12,7 @@ interface FieldConfig {
   type: InputFieldType;
   placeholder: string;
   name:
-    | 'terms'
+    | 'areTermsRead'
     | 'email'
     | 'password'
     | 'confirmPassword'
@@ -27,7 +27,7 @@ const FormValidation = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<RegisterFormData>({});
+  } = useForm<RegisterFormData>();
   const [error, setError] = useState<string>();
 
   const fieldConfigs: FieldConfig[] = [
@@ -113,7 +113,7 @@ const FormValidation = () => {
             {...register(fieldConfig.name, fieldConfig.validations)}
           />
         ))}
-        <CheckBox register={register} error={errors.terms?.message} />
+        <CheckBox register={register} error={errors.areTermsRead?.message} />
       </InputFieldWrapper>
 
       <Form.Submit loading={loading}>Sign up</Form.Submit>

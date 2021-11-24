@@ -35,7 +35,7 @@ export interface UserType {
   role: number
 }
 export interface RegisterFormData {
-  terms: boolean;
+  areTermsRead: boolean;
   email: string;
   password: string;
   confirmPassword: string;
