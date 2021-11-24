@@ -1,19 +1,17 @@
 package com.htec.shelfserver.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.htec.shelfserver.config.SpringApplicationContext;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.UserEntity;
-import com.htec.shelfserver.exception.ShelfException;
 import com.htec.shelfserver.exception.ExceptionSupplier;
-import com.htec.shelfserver.repository.UserRepository;
+import com.htec.shelfserver.exception.ShelfException;
 import com.htec.shelfserver.model.request.UserLoginRequestModel;
 import com.htec.shelfserver.model.response.ErrorMessage;
 import com.htec.shelfserver.model.response.UserLoginResponseModel;
+import com.htec.shelfserver.repository.UserRepository;
 import com.htec.shelfserver.service.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,13 +32,13 @@ import java.util.Optional;
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
+    private final UserService userService;
+    private final UserRepository userRepository;
 
-    private String contentType;
-    private String token;
-
-    @Autowired
-    public AuthenticationFilter(AuthenticationManager authenticationManager) {
+    public AuthenticationFilter(AuthenticationManager authenticationManager, UserService userService, UserRepository userRepository) {
         this.authenticationManager = authenticationManager;
+        this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -48,14 +46,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         try {
 
-            contentType = req.getHeader("Accept");
+            String contentType = req.getHeader("Accept");
 
             UserLoginRequestModel creds = new ObjectMapper()
                     .readValue(req.getInputStream(), UserLoginRequestModel.class);
 
-
-            UserService userService = (UserService) SpringApplicationContext.getBean("userService");
-            UserRepository userRepository = (UserRepository) SpringApplicationContext.getBean("userRepository");
             Optional<UserEntity> userEntity = userRepository.findByEmail(creds.getEmail());
             String salt = userEntity.isPresent() ? userEntity.get().getSalt() : "";
 
@@ -79,12 +74,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         String userName = ((User) auth.getPrincipal()).getUsername();
 
-        UserService userService = (UserService) SpringApplicationContext.getBean("userService");
         UserDTO loginUser = userService.getUser(userName);
 
         if (loginUser.getEmailVerified()) {
 
-            token = Jwts.builder()
+            String token = Jwts.builder()
                     .setId(loginUser.getId().toString())
                     .setSubject(userName)
                     .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))

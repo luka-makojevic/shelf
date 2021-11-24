@@ -22,7 +22,7 @@ public class TokenController {
 
         String response = tokenService.confirmToken(token);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(response , HttpStatus.OK.value()));
+        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(response, HttpStatus.OK.value()));
     }
 
     @GetMapping(path = "/resend")
@@ -30,7 +30,7 @@ public class TokenController {
 
         String response = tokenService.createAndSendToken(token);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(response , HttpStatus.OK.value()));
+        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(response, HttpStatus.OK.value()));
 
     }
 }
