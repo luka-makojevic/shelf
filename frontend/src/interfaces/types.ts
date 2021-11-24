@@ -34,3 +34,11 @@ export interface UserType {
   jwtToken: string
   role: number
 }
+export interface RegisterFormData {
+  areTermsRead: boolean;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  firstName: string;
+  lastName: string;
+}
