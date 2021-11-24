@@ -24,10 +24,10 @@ Form.Spinner = function FormSpinner() {
   return <Spinner />;
 };
 
-Form.Submit = function FormSubmit({ loading, children, onClick }: any) {
+Form.Submit = function FormSubmit({ isLoading, children, onClick }: any) {
   return (
     <Submit onClick={onClick}>
-      {loading ? (
+      {isLoading ? (
         <Spinner src="./assets/icons/loading.png" alt="loading" />
       ) : (
         children
