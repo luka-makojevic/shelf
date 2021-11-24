@@ -1,15 +1,17 @@
+import { Routes } from '../../enums/routes';
 import { Container, Logo, Profile, Link } from './header-styles';
 
-const Header = ({ hideProfile, ...restProps }: any) => {
-  return (
-    <Container {...restProps}>
-      <Link to="/">
-        <Logo width="70px" src="./assets/images/logo.png" />
-      </Link>
-
-      <Profile hideProfile={hideProfile}>PP</Profile>
-    </Container>
-  );
+type HeaderProps = {
+  hideProfile: boolean;
 };
+
+const Header = ({ hideProfile }: HeaderProps) => (
+  <Container>
+    <Link to={Routes.HOME}>
+      <Logo src="./assets/images/logo.png" />
+    </Link>
+    <Profile hideProfile={hideProfile}>PP</Profile>
+  </Container>
+);
 
 export default Header;
