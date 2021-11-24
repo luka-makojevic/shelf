@@ -2,21 +2,17 @@ package com.htec.shelfserver.service;
 
 import com.htec.shelfserver.entity.TokenEntity;
 import com.htec.shelfserver.entity.UserEntity;
-import com.htec.shelfserver.exceptionSupplier.ExceptionSupplier;
+import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.repository.TokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
 import com.htec.shelfserver.security.SecurityConstants;
 import freemarker.template.Configuration;
-import freemarker.template.Template;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Service

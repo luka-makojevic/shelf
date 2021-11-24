@@ -1,9 +1,11 @@
 package com.htec.shelfserver.controller;
 
+import com.htec.shelfserver.annotation.AuthenticationUser;
+import com.htec.shelfserver.dto.AuthUser;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.mapper.UserMapper;
-import com.htec.shelfserver.requestModel.UserRequestModel;
-import com.htec.shelfserver.responseModel.TextResponseMessage;
+import com.htec.shelfserver.model.requestModel.UserRequestModel;
+import com.htec.shelfserver.model.responseModel.TextResponseMessage;
 import com.htec.shelfserver.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,6 +27,13 @@ public class UserController {
         return "Get users is called.";
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity getUserById(@AuthenticationUser AuthUser user, @PathVariable Long id) {
+
+        userService.checkUserId(user, id);
+
+        return ResponseEntity.ok(userService.getUserById(id));
+    }
 
     @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TextResponseMessage> createUser(@RequestBody UserRequestModel userRequestModel) {
@@ -33,7 +42,7 @@ public class UserController {
 
         userService.createUser(userDTO);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new TextResponseMessage("User registered" , HttpStatus.CREATED.value()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new TextResponseMessage("User registered", HttpStatus.CREATED.value()));
     }
 
     @PutMapping

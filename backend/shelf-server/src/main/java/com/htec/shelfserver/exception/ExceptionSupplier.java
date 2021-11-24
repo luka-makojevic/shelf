@@ -1,4 +1,4 @@
-package com.htec.shelfserver.exceptionSupplier;
+package com.htec.shelfserver.exception;
 
 import com.htec.shelfserver.exception.ShelfException;
 import com.htec.shelfserver.util.ErrorMessages;

@@ -1,15 +1,16 @@
 package com.htec.shelfserver.service;
 
+import com.htec.shelfserver.dto.AuthUser;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.RoleEntity;
 import com.htec.shelfserver.entity.TokenEntity;
 import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.enumes.Roles;
-import com.htec.shelfserver.exceptionSupplier.ExceptionSupplier;
+import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.repository.TokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
-import com.htec.shelfserver.responseModel.UserResponseModel;
+import com.htec.shelfserver.model.responseModel.UserResponseModel;
 import com.htec.shelfserver.util.UserValidator;
 import com.htec.shelfserver.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,9 +110,8 @@ public class UserService implements UserDetailsService {
 
     public UserDTO getUser(String email) {
 
-        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(
-                ExceptionSupplier.recordNotFoundWithEmail
-        );
+        UserEntity userEntity = userRepository.findByEmail(email).
+                orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
 
         return UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
     }
@@ -143,8 +143,13 @@ public class UserService implements UserDetailsService {
                 userRepository.delete(user);
             }
         } else {
-            ExceptionSupplier.userNotValid.get();
+            throw ExceptionSupplier.userNotValid.get();
         }
+    }
 
+    public void checkUserId(AuthUser user, Long id) {
+        if (!(user.getId().equals(id))) {
+            throw ExceptionSupplier.userNotValid.get();
+        }
     }
 }

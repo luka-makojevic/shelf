@@ -1,12 +1,10 @@
 package com.htec.shelfserver.util;
 
-import com.htec.shelfserver.exceptionSupplier.ExceptionSupplier;
+import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.dto.UserDTO;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.util.ObjectUtils;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
