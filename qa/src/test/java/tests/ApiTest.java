@@ -15,7 +15,7 @@ import org.junit.Test;
 import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
 
-public class ApiTest extends BaseHelperPropertieManager {
+public class ApiTest {
 
     private static String apiKey = "f399f648-e6ca-49b2-8cbd-0f657b3db451"; // ovde upises svoj APIkey
 
