@@ -11,7 +11,7 @@ import java.io.IOException;
 public class RegistrationTest extends BaseTest
 {
     @Test
-    public void RegistrationPage() throws InterruptedException, IOException {
+    public void registrationPage() throws IOException {
         RegistrationPage regPage = new RegistrationPage(driver);
         regPage.login();
 

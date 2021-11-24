@@ -21,7 +21,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -33,7 +36,8 @@ public class UserService implements UserDetailsService {
     private final EmailService emailService;
     private final UserValidator userValidator;
 
-    private final String serverIp;
+    private final String emailVerificationLink;
+    private final String emailResendTokenLink;
 
     @Autowired
     public UserService(UserRepository userRepository,
@@ -41,14 +45,17 @@ public class UserService implements UserDetailsService {
                        Utils utils,
                        BCryptPasswordEncoder bCryptPasswordEncoder,
                        EmailService emailService,
-                       UserValidator userValidator, @Value("${shelfserver}") String serverIp) {
+                       UserValidator userValidator,
+                       @Value("${emailVerificationLink}") String emailVerificationLink,
+                       @Value("${emailResendTokenLink}")String emailResendTokenLink) {
         this.userRepository = userRepository;
         this.confirmationTokenRepository = confirmationTokenRepository;
         this.utils = utils;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.emailService = emailService;
         this.userValidator = userValidator;
-        this.serverIp = serverIp;
+        this.emailVerificationLink = emailVerificationLink;
+        this.emailResendTokenLink = emailResendTokenLink;
     }
 
     public void createUser(UserDTO userDTO) {
@@ -78,7 +85,7 @@ public class UserService implements UserDetailsService {
     }
 
     void createAndSendToken(UserEntity userEntity) {
-        String token = UUID.randomUUID().toString();
+        String token = utils.generateConfirmationToken(userEntity.getId());
 
         TokenEntity confirmationToken = new TokenEntity(
                 token,
@@ -89,14 +96,15 @@ public class UserService implements UserDetailsService {
 
         confirmationTokenRepository.save(confirmationToken);
 
-        String confirmationLink = "http://" + serverIp + "/users/register/confirmation?token=" + token;
-        String resendTokenLink = "http://" + serverIp + "/users/register/resend?token=" + token;
+        String confirmationLink = emailVerificationLink + token;
+        String resendTokenLink = emailResendTokenLink + token;
+
         Map<String, Object> model = new HashMap<>();
         model.put("firstName", userEntity.getFirstName());
         model.put("confirmationLink", confirmationLink);
         model.put("resendTokenLink", resendTokenLink);
 
-        emailService.sendEmail(userEntity.getEmail(), model);
+        emailService.sendEmail(userEntity.getEmail(), model, "email-confirmation.html", "Confirm your email");
     }
 
     public UserDTO getUser(String email) {
