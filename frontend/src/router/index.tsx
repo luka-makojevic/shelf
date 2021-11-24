@@ -3,6 +3,7 @@ import { Role } from '../enums/roles';
 import { Routes } from '../enums/routes';
 import { RouteProps } from '../interfaces/route';
 import Dashboard from '../pages/dashboard';
+import ForgotPassword from '../pages/forgotPassword';
 import Landing from '../pages/landing';
 import Login from '../pages/login';
 import Register from '../pages/register';
@@ -42,6 +43,10 @@ const Router = () => {
           <Dashboard />
         </ProtectedRoute>
       ),
+    },
+    {
+      path: Routes.FORGOT_PASSWORD,
+      element: <ForgotPassword />,
     },
   ];
 

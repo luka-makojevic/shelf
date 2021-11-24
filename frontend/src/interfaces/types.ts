@@ -12,6 +12,7 @@ export interface LoginData {
   email: string;
   password: string;
 }
+
 export interface ContextTypes {
   user?: UserType | null;
   login: (

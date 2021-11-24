@@ -12,6 +12,10 @@ const LoginForm = () => (
       {`New to the shelf?  `}
       <Form.Link to={Routes.REGISTER}>Sign in</Form.Link>
     </Form.AccentText>
+    <Form.AccentText>
+      {`Forgot password?  `}
+      <Form.Link to={Routes.FORGOT_PASSWORD}>Reset password</Form.Link>
+    </Form.AccentText>
   </Form>
 );
 
