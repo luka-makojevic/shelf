@@ -44,7 +44,7 @@ public class TokenService {
     public String confirmToken(String token) {
 
         String userId = Jwts.parser()
-                .setSigningKey(SecurityConstants.TOKEN_SECRET)
+                .setSigningKey(SecurityConstants.CONFIRMATION_TOKEN_SECRET)
                 .parseClaimsJws(token)
                 .getBody()
                 .getId();
@@ -82,7 +82,7 @@ public class TokenService {
     public String createAndSendToken(String token) {
 
         String userId = Jwts.parser()
-                .setSigningKey(SecurityConstants.TOKEN_SECRET)
+                .setSigningKey(SecurityConstants.CONFIRMATION_TOKEN_SECRET)
                 .parseClaimsJws(token)
                 .getBody()
                 .getId();
