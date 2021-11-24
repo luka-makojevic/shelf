@@ -2,7 +2,6 @@ import React from 'react';
 import { useForm, RegisterOptions } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import CheckBox from '../../components/checkbox/checkBox';
-import { CheckboxWrapper } from '../../components/checkbox/checkbox-styles';
 import Form from '../../components/form';
 import { InputFieldWrapper } from '../../components/form/form-styles';
 import { Error } from '../../components/input/input-styles';
@@ -96,6 +95,15 @@ const FormValidation = () => {
     // console.log(data);
   };
 
+  const tos = (
+    <PlainText>
+      I accept {` `}
+      <Link to={Routes.TERMS} target="_blank">
+        Terms of Service
+      </Link>
+    </PlainText>
+  );
+
   return (
     <Form.Base onSubmit={handleSubmit(submitForm)}>
       <InputFieldWrapper>
@@ -108,15 +116,11 @@ const FormValidation = () => {
             {...register(fieldConfig.name, fieldConfig.validations)}
           />
         ))}
-        <CheckboxWrapper>
-          <CheckBox {...register('terms', { required: 'This is required' })} />
-          <PlainText>
-            I accept {` `}
-            <Link to={Routes.TERMS} target="_blank">
-              Terms of Service
-            </Link>
-          </PlainText>
-        </CheckboxWrapper>
+        <CheckBox
+          label={tos}
+          {...register('terms', { required: 'This is required' })}
+        />
+
         <Error>{errors.terms?.message}</Error>
       </InputFieldWrapper>
 

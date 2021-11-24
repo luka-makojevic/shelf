@@ -9,3 +9,7 @@ export const CheckboxWrapper = styled.div`
 export const Checkbox = styled.input`
   cursor: pointer;
 `;
+
+export const Label = styled.div`
+  font-size: 15px;
+`;
