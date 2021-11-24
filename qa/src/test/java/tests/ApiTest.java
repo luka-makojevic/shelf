@@ -1,5 +1,7 @@
 package tests;
 
+import back_end.UrlConstants;
+import helpers.BaseHelperRESTApi;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.http.Method;
@@ -13,7 +15,8 @@ import org.junit.Test;
 import java.util.*;
 
 import static io.restassured.RestAssured.given;
-public class ApiTest {
+
+public class ApiTest extends UrlConstants {
 
     private static String apiKey = "f399f648-e6ca-49b2-8cbd-0f657b3db451"; // ovde upises svoj APIkey
 
@@ -81,52 +84,24 @@ public class ApiTest {
     @Test
     public void apiPOST()
     {
-        RestAssured.baseURI = "http://10.10.0.120:8080/users";
-
-//        ArrayList<String> data = new ArrayList<String>();
+        RestAssured.baseURI = posturl;
 
         JSONObject requestParams = new JSONObject();
-        requestParams.put("email", "stefan.gajic@htecgroup.com");
+        requestParams.put("email", "dsadasdasd.rados@htecgroup.com");
         requestParams.put("password", "Qwertysha1@");
         requestParams.put("firstName",  "Srdjan");
         requestParams.put("lastName",  "Rados");
 
-
-
-//        data.add(String.valueOf(requestParams));
-//        System.out.println(data.toString());
-
-        System.out.println("sta je ovo:"+requestParams.toString());
-
-//        RequestSpecification request = RestAssured.given();
-//
-//        request.body(request.toString());
-//        request.contentType("application/json");
-//
-//        try
-//        {
-//            Response response = request.post("/users");
-//
-//            int statusCode = response.getStatusCode();
-//            System.out.println("status code:"+statusCode);
-//            Assert.assertEquals(201,statusCode);
-//            Assert.assertTrue("Post is not ok", response.asString().contains("Successfully! Record has been added."));
-////
-//            System.out.println(response.asString());
-//        }
-//
-//        catch (Exception e)
-//        {
-//            System.out.println(e.getMessage());
-//        }
         Response postResponse = given()
-//                .auth().none()
-//                .header("Content-Type","application/json")
                 .contentType(ContentType.JSON)
-//                .when()
                 .body(requestParams.toString()).log().all()
-//                .body(data.toString()).log().all()
-                .post("https://jsonplaceholder.typicode.com/users/");
+                .post("/register");
+
+        System.out.println("----------------");
+        System.out.println("Post response is "+postResponse.asString());
+        System.out.println("----------------");
+        System.out.println("Post response status is "+postResponse.statusCode());
+
 
         System.out.println("----------------");
         System.out.println("Post response is "+postResponse.asString());
