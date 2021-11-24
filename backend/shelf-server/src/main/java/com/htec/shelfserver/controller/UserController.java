@@ -4,8 +4,8 @@ import com.htec.shelfserver.annotation.AuthenticationUser;
 import com.htec.shelfserver.dto.AuthUser;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.mapper.UserMapper;
-import com.htec.shelfserver.model.requestModel.UserRequestModel;
-import com.htec.shelfserver.model.responseModel.TextResponseMessage;
+import com.htec.shelfserver.model.request.UserRequestModel;
+import com.htec.shelfserver.model.response.TextResponseMessage;
 import com.htec.shelfserver.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,15 +22,9 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public String getUsers() {
-        return "Get users is called.";
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity getUserById(@AuthenticationUser AuthUser user, @PathVariable Long id) {
-
-        userService.checkUserId(user, id);
 
         return ResponseEntity.ok(userService.getUserById(id));
     }

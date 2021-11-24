@@ -1,6 +1,6 @@
 package com.htec.shelfserver.exception;
 
-import com.htec.shelfserver.model.responseModel.ErrorMessage;
+import com.htec.shelfserver.model.response.ErrorMessage;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

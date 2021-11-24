@@ -1,4 +1,4 @@
-package com.htec.shelfserver.model.requestModel;
+package com.htec.shelfserver.model.request;
 
 import lombok.Getter;
 import lombok.Setter;

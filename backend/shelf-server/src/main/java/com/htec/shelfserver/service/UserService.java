@@ -10,7 +10,7 @@ import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.repository.TokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
-import com.htec.shelfserver.model.responseModel.UserResponseModel;
+import com.htec.shelfserver.model.response.UserResponseModel;
 import com.htec.shelfserver.util.UserValidator;
 import com.htec.shelfserver.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,12 +143,6 @@ public class UserService implements UserDetailsService {
                 userRepository.delete(user);
             }
         } else {
-            throw ExceptionSupplier.userNotValid.get();
-        }
-    }
-
-    public void checkUserId(AuthUser user, Long id) {
-        if (!(user.getId().equals(id))) {
             throw ExceptionSupplier.userNotValid.get();
         }
     }

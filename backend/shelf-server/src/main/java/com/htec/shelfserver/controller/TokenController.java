@@ -1,6 +1,6 @@
 package com.htec.shelfserver.controller;
 
-import com.htec.shelfserver.model.responseModel.TextResponseMessage;
+import com.htec.shelfserver.model.response.TextResponseMessage;
 import com.htec.shelfserver.service.TokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

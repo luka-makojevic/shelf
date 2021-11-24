@@ -4,7 +4,7 @@ import com.htec.shelfserver.annotation.AuthenticationUser;
 import com.htec.shelfserver.annotation.ValidateRoles;
 import com.htec.shelfserver.dto.AuthUser;
 import com.htec.shelfserver.enumes.Roles;
-import com.htec.shelfserver.model.responseModel.TextResponseMessage;
+import com.htec.shelfserver.model.response.TextResponseMessage;
 import com.htec.shelfserver.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
