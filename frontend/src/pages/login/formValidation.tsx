@@ -3,21 +3,16 @@ import { useForm, RegisterOptions } from 'react-hook-form';
 import Form from '../../components/form';
 import { InputFieldWrapper } from '../../components/form/form-styles';
 import { InputField, InputFieldType } from '../../components/input/InputField';
-import CheckBox from './checkBox';
-import { RegisterData, RegisterFormData } from '../../interfaces/types';
-import { AuthContext } from '../../providers/authProvider';
 import { Error } from '../../components/text/text-styles';
+
+import { LoginData } from '../../interfaces/types';
+import { AuthContext } from '../../providers/authProvider';
 
 interface FieldConfig {
   type: InputFieldType;
   placeholder: string;
-  name:
-    | 'areTermsRead'
-    | 'email'
-    | 'password'
-    | 'confirmPassword'
-    | 'firstName'
-    | 'lastName';
+  name: 'email' | 'password';
+
   validations: RegisterOptions;
 }
 
@@ -25,9 +20,8 @@ const FormValidation = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
-  } = useForm<RegisterFormData>();
+  } = useForm<LoginData>({});
   const [error, setError] = useState<string>();
 
   const fieldConfigs: FieldConfig[] = [
@@ -61,40 +55,16 @@ const FormValidation = () => {
         },
       },
     },
-    {
-      type: 'password',
-      placeholder: 'Confirm Password',
-      name: 'confirmPassword',
-      validations: {
-        required: 'This field is required',
-        validate: (value: string) =>
-          value === watch('password') || 'Passwords must match',
-      },
-    },
-    {
-      type: 'text',
-      placeholder: 'First Name',
-      name: 'firstName',
-      validations: {
-        required: 'This field is required',
-      },
-    },
-    {
-      type: 'text',
-      placeholder: 'Last name',
-      name: 'lastName',
-      validations: {
-        required: 'This field is required',
-      },
-    },
   ];
-  const { register: httpRegister, loading } = useContext(AuthContext);
+  const { login, loading } = useContext(AuthContext);
 
-  const submitForm = (data: RegisterData) => {
-    httpRegister(
+  const submitForm = (data: LoginData) => {
+    login(
       data,
-      () => {},
-      (err) => {
+      (navigation) => {
+        navigation('/dashboard');
+      },
+      (err: string) => {
         setError(err);
       }
     );
@@ -113,10 +83,9 @@ const FormValidation = () => {
             {...register(fieldConfig.name, fieldConfig.validations)}
           />
         ))}
-        <CheckBox register={register} error={errors.areTermsRead?.message} />
       </InputFieldWrapper>
 
-      <Form.Submit loading={loading}>Sign up</Form.Submit>
+      <Form.Submit loading={loading}>Sign in</Form.Submit>
     </Form.Base>
   );
 };

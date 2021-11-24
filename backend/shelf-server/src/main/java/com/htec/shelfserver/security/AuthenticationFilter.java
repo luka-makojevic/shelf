@@ -27,7 +27,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Optional;
 
@@ -36,6 +38,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
 
     private String contentType;
+    private String token;
 
     @Autowired
     public AuthenticationFilter(AuthenticationManager authenticationManager) {
@@ -65,8 +68,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                             creds.getPassword() + salt,
                             new ArrayList<>())
             );
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -84,13 +86,14 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         if (loginUser.getEmailVerified()) {
 
-            String token = Jwts.builder()
+            token = Jwts.builder()
                     .setId(loginUser.getId().toString())
                     .setSubject(userName)
                     .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
                     .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET)
                     .claim("role_id", loginUser.getRole().getId())
                     .compact();
+
 
             res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
 
@@ -100,8 +103,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             String userResponseJson = new ObjectMapper().writeValueAsString(userResponse);
             res.setContentType("application/json");
             res.getWriter().write(userResponseJson);
-        }
-        else {
+        } else {
             ShelfException ex = ExceptionSupplier.emailNotVerified.get();
             ErrorMessage jsonResponse = new ErrorMessage(ex.getMessage(), ex.getStatus(), ex.getTimestamp(), ex.getErrorMessage());
             String userResponseJson = new ObjectMapper().writeValueAsString(jsonResponse);
@@ -116,7 +118,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                               HttpServletResponse res,
                                               AuthenticationException failed) throws IOException, ServletException {
 
-        ShelfException ex = ExceptionSupplier.authenticationFailed.get();
+        ShelfException ex = ExceptionSupplier.authenticationCredentialsNotValid.get();
         ErrorMessage jsonResponse = new ErrorMessage(ex.getMessage(), ex.getStatus(), ex.getTimestamp(), ex.getErrorMessage());
         String userResponseJson = new ObjectMapper().writeValueAsString(jsonResponse);
         res.setStatus(HttpStatus.BAD_REQUEST.value());

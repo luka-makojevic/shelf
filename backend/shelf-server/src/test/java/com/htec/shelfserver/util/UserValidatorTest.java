@@ -58,7 +58,7 @@ class UserValidatorTest {
     void isUserEmailValid() {
         String firstName = "Jhon";
         String lastName = "Hardy";
-        String email = "jhongmail@";
+        String email = "jhongm@com";
         String password = "123.Adsf";
 
         UserDTO userDTO = new UserDTO();

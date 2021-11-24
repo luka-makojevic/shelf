@@ -1,69 +1,18 @@
-import React, { useContext, useState } from 'react';
-import { NavigateFunction } from 'react-router-dom';
-import { Form } from '../../components';
-import { Title, AccentText, Link } from '../../components/text/text-styles';
-import { AuthContext } from '../../providers/authProvider';
+import React from 'react';
+import Form from '../../components/form';
+import { Title } from '../../components/text/text-styles';
 import { Routes } from '../../enums/routes';
+import FormValidation from './formValidation';
 
-const LoginForm = () => {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
-
-  const { login, loading } = useContext(AuthContext);
-
-  const data = { email, password };
-
-  const emailChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
-    setEmail(event.currentTarget.value);
-  };
-
-  const handlePasswordChange = (event: React.FormEvent<HTMLInputElement>) => {
-    setPassword(event.currentTarget.value);
-  };
-  const handlePassVisible = () => {
-    setPasswordVisible(!passwordVisible);
-  };
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    login(
-      data,
-      (navigation: NavigateFunction) => {
-        navigation('/dashboard');
-      },
-      (err: string) => setError(err)
-    );
-  };
-  return (
-    <>
-      <Form>
-        <Title fontSize={[4, 5, 6]}>Login</Title>
-        {/*<Form.Error>{error}</Form.Error>*/}
-        {/*<Form.Base onSubmit={handleSubmit}>*/}
-        {/*  <Form.Input*/}
-        {/*    type="email"*/}
-        {/*    placeholder="Email"*/}
-        {/*    value={email}*/}
-        {/*    handleInputChange={emailChangeHandler}*/}
-        {/*  />*/}
-        {/*  <Form.InputPassword*/}
-        {/*    placeholder="Password"*/}
-        {/*    value={password}*/}
-        {/*    onChange={handlePasswordChange}*/}
-        {/*    passwordVisible={passwordVisible}*/}
-        {/*    onClick={handlePassVisible}*/}
-        {/*  />*/}
-        {/*  <Form.Submit loading={loading}>Sign in</Form.Submit>*/}
-        {/*</Form.Base>*/}
-        <AccentText>
-          New to shelf?
-          <Link to={Routes.REGISTER}> Register</Link>
-        </AccentText>
-      </Form>
-    </>
-  );
-};
+const LoginForm = () => (
+  <Form>
+    <Title fontSize={[4, 5, 6]}>Log in</Title>
+    <FormValidation />
+    <Form.AccentText>
+      {`New to the shelf?  `}
+      <Form.Link to={Routes.REGISTER}>Sign in</Form.Link>
+    </Form.AccentText>
+  </Form>
+);
 
 export default LoginForm;

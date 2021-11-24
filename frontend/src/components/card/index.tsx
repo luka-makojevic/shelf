@@ -1,14 +1,14 @@
-import { CardWrapper, IconWrapper, Image, Text } from './card-styles'
+import { CardWrapper, IconWrapper, Image, Text } from './card-styles';
 
-const Card = ({ image, text }: { image: string; text: string }) => {
-  return (
-    <CardWrapper>
-      <IconWrapper>
-        <Image src={image} alt="" />
-      </IconWrapper>
-      <Text>{text}</Text>
-    </CardWrapper>
-  )
-}
+type CardProps = { image: string; text: string };
 
-export default Card
+const Card = ({ image, text }: CardProps) => (
+  <CardWrapper>
+    <IconWrapper>
+      <Image src={image} alt="" />
+    </IconWrapper>
+    <Text>{text}</Text>
+  </CardWrapper>
+);
+
+export default Card;
