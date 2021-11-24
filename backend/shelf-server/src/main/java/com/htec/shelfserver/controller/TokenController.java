@@ -1,5 +1,6 @@
 package com.htec.shelfserver.controller;
 
+import com.htec.shelfserver.model.response.TextResponseMessage;
 import com.htec.shelfserver.service.TokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,19 +18,19 @@ public class TokenController {
     private final TokenService tokenService;
 
     @GetMapping(path = "/confirmation")
-    public ResponseEntity<String> confirm(@RequestParam("token") String token) {
+    public ResponseEntity<TextResponseMessage> confirm(@RequestParam("token") String token) {
 
-        String htmlBody = tokenService.confirmToken(token);
+        String response = tokenService.confirmToken(token);
 
-        return ResponseEntity.status(HttpStatus.OK).body(htmlBody);
+        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(response, HttpStatus.OK.value()));
     }
 
     @GetMapping(path = "/resend")
-    public ResponseEntity<String> resend(@RequestParam("token") String token) {
+    public ResponseEntity<TextResponseMessage> resend(@RequestParam("token") String token) {
 
-        String htmlResponse = tokenService.createAndSendToken(token);
+        String response = tokenService.createAndSendToken(token);
 
-        return ResponseEntity.status(HttpStatus.OK).body(htmlResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(response, HttpStatus.OK.value()));
 
     }
 }

@@ -1,4 +1,3 @@
-import { AxiosResponse } from 'axios';
 import React, { useState, createContext, useEffect } from 'react';
 import { useNavigate, NavigateFunction } from 'react-router-dom';
 import AuthService from '../../services/authServices';
@@ -10,18 +9,18 @@ import {
 } from '../../interfaces/types';
 
 const defaultValue: ContextTypes = {
-  user: {},
+  user: null,
   login: async () => {},
   register: async () => {},
-  loading: false,
+  isLoading: false,
   accessToken: '',
 };
 
 const AuthContext = createContext(defaultValue);
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<UserType | null | AxiosResponse>();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [user, setUser] = useState<UserType | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [accessToken, setAccesToken] = useState<string>('');
 
   useEffect(() => {
@@ -39,12 +38,12 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     onSuccess: (navigation: NavigateFunction) => void,
     onError: (error: string) => void
   ) => {
-    setLoading(true);
+    setIsLoading(true);
     AuthService.login(data)
       .then((res) => {
         if (res.data.jwtToken) {
-          localStorage.setItem('user', JSON.stringify(res));
-          setUser(res);
+          localStorage.setItem('user', JSON.stringify(res.data));
+          setUser(res.data);
           setAccesToken(res.data.jwtToken);
           onSuccess(navigation);
         }
@@ -53,7 +52,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(null);
         onError(err.response.data.message);
       })
-      .finally(() => setLoading(false));
+      .finally(() => setIsLoading(false));
   };
 
   const register = (
@@ -61,21 +60,21 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     onSuccess: () => void,
     onError: (error: string) => void
   ) => {
-    setLoading(true);
+    setIsLoading(true);
     AuthService.register(data)
       .then((res) => {
         localStorage.setItem('user', JSON.stringify(res.data));
-        setUser(res);
+        setUser(res.data);
         onSuccess();
       })
       .catch((err) => {
         onError(err.response.data.message);
       })
-      .finally(() => setLoading(false));
+      .finally(() => setIsLoading(false));
   };
   return (
     <AuthContext.Provider
-      value={{ user, login, register, loading, accessToken }}
+      value={{ user, login, register, isLoading, accessToken }}
     >
       {children}
     </AuthContext.Provider>

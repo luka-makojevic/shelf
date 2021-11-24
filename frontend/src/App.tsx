@@ -1,8 +1,6 @@
-import React from 'react';
-import { useRoutes } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import { Dashboard } from './pages/dashboard';
 import { theme } from './theme';
+<<<<<<< HEAD
 import Landing from './pages/landing';
 import Login from './pages/login';
 import Register from './pages/register';
@@ -37,5 +35,14 @@ function App() {
 
   return <ThemeProvider theme={theme}>{routing}</ThemeProvider>;
 }
+=======
+import Router from './router';
+
+const App = () => (
+  <ThemeProvider theme={theme}>
+    <Router />
+  </ThemeProvider>
+);
+>>>>>>> master
 
 export default App;

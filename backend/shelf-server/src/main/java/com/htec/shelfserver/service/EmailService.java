@@ -1,11 +1,9 @@
 package com.htec.shelfserver.service;
 
-import com.htec.shelfserver.exceptionSupplier.ExceptionSupplier;
+import com.htec.shelfserver.exception.ExceptionSupplier;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -21,7 +19,6 @@ import java.util.Map;
 
 @Service
 public class EmailService {
-    private final static Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
     private final JavaMailSender mailSender;
     private final Configuration config;
 
@@ -32,20 +29,20 @@ public class EmailService {
     }
 
     @Async
-    public void sendEmail(String to, Map<String, Object> model) {
+    public void sendEmail(String to, Map<String, Object> model, String htmlTemplate, String subject) {
 
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, StandardCharsets.UTF_8.name());
 
 
-            Template template = config.getTemplate("email-confirmation.html");
+            Template template = config.getTemplate(htmlTemplate);
             String emailContent = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
 
             helper.setText(emailContent, true);
             helper.setTo(to);
-            helper.setSubject("Confirm your email");
-            helper.setFrom("shelf.bot.mailer@gmail.com");
+            helper.setSubject(subject);
+
             mailSender.send(mimeMessage);
 
         } catch (MessagingException | IOException | TemplateException e) {

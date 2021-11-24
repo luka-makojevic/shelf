@@ -1,5 +1,6 @@
 package tests;
 
+import helpers.BaseHelperPropertieManager;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.http.Method;
@@ -10,9 +11,10 @@ import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.*;
 
+import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
+
 public class ApiTest {
 
     private static String apiKey = "f399f648-e6ca-49b2-8cbd-0f657b3db451"; // ovde upises svoj APIkey
@@ -81,76 +83,24 @@ public class ApiTest {
     @Test
     public void apiPOST()
     {
-        RestAssured.baseURI = "https://jsonplaceholder.typicode.com/";
-
-//        ArrayList<String> data = new ArrayList<String>();
+        String baseuri = BaseHelperPropertieManager.getInstance().getURI("/users");
+        baseURI = baseuri;
 
         JSONObject requestParams = new JSONObject();
-//        requestParams.put("id", "14");
-        requestParams.put("name", "asd dsada");
-        requestParams.put("username", "asdad");
-        requestParams.put("email", "example@april.biz");
+        requestParams.put("email", "srdjan.rados@htecgroup.com");
+        requestParams.put("password", "Qwertysha1@");
+        requestParams.put("firstName",  "Srdjan");
+        requestParams.put("lastName",  "Rados");
 
-        JSONObject requestParamsForAddress = new JSONObject();
-        requestParamsForAddress.put("street","dsad sda");
-        requestParamsForAddress.put("suite","asd. dsa");
-        requestParamsForAddress.put("city","sad");
-        requestParamsForAddress.put("zipcode","123321");
-
-        JSONObject requestParamsForGeo = new JSONObject();
-        requestParamsForGeo.put("lat","-38.5454");
-        requestParamsForGeo.put("lng","54.2345");
-        requestParamsForAddress.put("geo", requestParamsForGeo);
-
-        requestParams.put("address",requestParamsForAddress);
-
-        requestParams.put("phone", "2-881-845-9245 x65223");
-        requestParams.put("website", "xxx.org");
-
-        JSONObject requestParamsForCompany = new JSONObject();
-        requestParamsForCompany.put("name","sdad-sda");
-        requestParamsForCompany.put("catchPhrase","asdsad");
-        requestParamsForCompany.put("bs","asdads");
-        requestParams.put("company",requestParamsForCompany);
-
-//        data.add(String.valueOf(requestParams));
-//        System.out.println(data.toString());
-
-        System.out.println("sta je ovo:"+requestParams.toString());
-
-//        RequestSpecification request = RestAssured.given();
-//
-//        request.body(request.toString());
-//        request.contentType("application/json");
-//
-//        try
-//        {
-//            Response response = request.post("/users");
-//
-//            int statusCode = response.getStatusCode();
-//            System.out.println("status code:"+statusCode);
-//            Assert.assertEquals(201,statusCode);
-//            Assert.assertTrue("Post is not ok", response.asString().contains("Successfully! Record has been added."));
-////
-//            System.out.println(response.asString());
-//        }
-//
-//        catch (Exception e)
-//        {
-//            System.out.println(e.getMessage());
-//        }
         Response postResponse = given()
-//                .auth().none()
-//                .header("Content-Type","application/json")
                 .contentType(ContentType.JSON)
-//                .when()
                 .body(requestParams.toString()).log().all()
-//                .body(data.toString()).log().all()
-                .post("https://jsonplaceholder.typicode.com/users/");
+                .post("/register");
 
         System.out.println("----------------");
         System.out.println("Post response is "+postResponse.asString());
         System.out.println("----------------");
         System.out.println("Post response status is "+postResponse.statusCode());
+
     }
 }

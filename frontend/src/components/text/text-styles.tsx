@@ -35,3 +35,10 @@ export const PlainText = styled.p<TextProps>`
   ${typography}
   ${color}
 `;
+
+export const Error = styled.p`
+  color: red;
+  width: 100%;
+  text-align: center;
+  font-size: 10px;
+`;

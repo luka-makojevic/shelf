@@ -29,8 +29,6 @@ public class TokenEntity {
     @Column(nullable = false)
     private LocalDateTime expiresAt;
 
-    private LocalDateTime confirmedAt;
-
     @ManyToOne
     @JoinColumn( nullable = false )
     private UserEntity user;

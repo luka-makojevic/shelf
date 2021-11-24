@@ -6,12 +6,9 @@ import pages.LoginPage;
 public class LoginTest extends BaseTest
 {
     @Test
-    public void LoginPage() throws InterruptedException
+    public void loginPage()
     {
         LoginPage loginPage = new LoginPage(driver);
         loginPage.login();
-
-        // Visualisation accpetance
-        Thread.sleep(3000);
     }
 }
