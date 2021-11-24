@@ -121,4 +121,10 @@ public class UserService implements UserDetailsService {
     public List<UserResponseModel> getUsers() {
         return UserMapper.INSTANCE.userEntityToUserResponseModels(userRepository.findAll());
     }
+
+    public UserResponseModel getUserById(Long id) {
+        UserEntity user = userRepository.findById(id).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+
+        return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
+    }
 }
