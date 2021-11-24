@@ -26,6 +26,9 @@ public class TokenService {
     private final Configuration config;
     private final UserService userService;
 
+    public final String EMAIL_ALREADY_CONFIRMED = "Email already confirmed";
+    public final String EMAIL_CONFIRMED = "Email confirmed";
+
     @Autowired
     public TokenService(TokenRepository tokenRepository,
                         UserRepository userRepository,
@@ -48,8 +51,12 @@ public class TokenService {
 
         Optional<UserEntity> userEntityOptional = userRepository.findById(Long.parseLong(userId));
 
+        if (!userEntityOptional.isPresent()) {
+            throw ExceptionSupplier.userNotFound.get();
+        }
+
         if (userEntityOptional.get().getEmailVerified()) {
-            return "Email already confirmed";
+            return EMAIL_ALREADY_CONFIRMED;
         }
 
         Optional<TokenEntity> confirmationToken = tokenRepository.findByToken(token);
@@ -64,13 +71,11 @@ public class TokenService {
             throw ExceptionSupplier.tokenExpired.get();
         }
 
-        //tokenRepository.updateConfirmedAt(token, LocalDateTime.now());
-
         userRepository.enableUser(confirmationToken.get().getUser().getEmail());
 
         tokenRepository.delete(confirmationToken.get());
 
-        return "Email confirmed";
+        return EMAIL_CONFIRMED;
     }
 
 

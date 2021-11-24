@@ -21,7 +21,8 @@ public enum ErrorMessages {
     FORBIDDEN("Forbidden."),
     TOKEN_NOT_FOUND("Token not found."),
     EMAIL_ALREADY_CONFIRMED("Email already confirmed."),
-    TOKEN_EXPIRED("Token expired.");
+    TOKEN_EXPIRED("Token expired."),
+    USER_NOT_FOUND("User not found.");
 
     private String errorMessage;
 

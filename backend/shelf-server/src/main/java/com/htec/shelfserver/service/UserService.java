@@ -37,6 +37,7 @@ public class UserService implements UserDetailsService {
     private final UserValidator userValidator;
 
     private final String emailVerificationLink;
+    private final String emailResendTokenLink;
 
     @Autowired
     public UserService(UserRepository userRepository,
@@ -44,7 +45,9 @@ public class UserService implements UserDetailsService {
                        Utils utils,
                        BCryptPasswordEncoder bCryptPasswordEncoder,
                        EmailService emailService,
-                       UserValidator userValidator, @Value("${emailVerificationLink}") String emailVerificationLink) {
+                       UserValidator userValidator,
+                       @Value("${emailVerificationLink}") String emailVerificationLink,
+                       @Value("${emailResendTokenLink}")String emailResendTokenLink) {
         this.userRepository = userRepository;
         this.confirmationTokenRepository = confirmationTokenRepository;
         this.utils = utils;
@@ -52,6 +55,7 @@ public class UserService implements UserDetailsService {
         this.emailService = emailService;
         this.userValidator = userValidator;
         this.emailVerificationLink = emailVerificationLink;
+        this.emailResendTokenLink = emailResendTokenLink;
     }
 
     public void createUser(UserDTO userDTO) {
@@ -92,11 +96,8 @@ public class UserService implements UserDetailsService {
 
         confirmationTokenRepository.save(confirmationToken);
 
-        String confirmationLink = "http://" + "localhost:8080" + "/users/register/confirmation?token=" + token;
-        String resendTokenLink = "http://" + "localhost:8080" + "/users/register/resend?token=" + token;
-
-//        String confirmationLink = "http://" + emailVerificationLink + "/token/" + token;
-//        String resendTokenLink = "http://" + emailVerificationLink + "/token/" + token;
+        String confirmationLink = emailVerificationLink + token;
+        String resendTokenLink = emailResendTokenLink + token;
 
         Map<String, Object> model = new HashMap<>();
         model.put("firstName", userEntity.getFirstName());

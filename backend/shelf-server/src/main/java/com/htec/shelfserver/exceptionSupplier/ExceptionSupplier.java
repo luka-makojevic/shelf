@@ -102,4 +102,11 @@ public class ExceptionSupplier {
             LocalDateTime.now().format(formatter),
             ErrorMessages.BAD_REQUEST.getErrorMessage()
     );
+
+    public static final Supplier<ShelfException> userNotFound = () -> new ShelfException(
+            ErrorMessages.USER_NOT_FOUND.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
 }
