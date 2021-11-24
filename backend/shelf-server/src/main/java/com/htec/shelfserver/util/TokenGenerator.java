@@ -9,9 +9,8 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 @Component
-public class Utils {
+public class TokenGenerator {
     private final Random RANDOM = new SecureRandom();
-    private final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
     public String generateSalt(int length) {
         return generateRandomString(length);
@@ -21,6 +20,7 @@ public class Utils {
         StringBuilder returnValue = new StringBuilder(length);
 
         for (int i = 0; i < length; i++) {
+            String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
             returnValue.append(ALPHABET.charAt(RANDOM.nextInt(ALPHABET.length())));
         }
 
@@ -28,11 +28,10 @@ public class Utils {
     }
 
     public String generateConfirmationToken(Long userId) {
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .setId(userId.toString())
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.CONFIRMATION_TOKEN_SECRET)
                 .compact();
-        return token;
     }
 
 }

@@ -1,6 +1,5 @@
 package com.htec.shelfserver.service;
 
-import com.htec.shelfserver.dto.AuthUser;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.RoleEntity;
 import com.htec.shelfserver.entity.TokenEntity;
@@ -8,11 +7,11 @@ import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.enumes.Roles;
 import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.mapper.UserMapper;
+import com.htec.shelfserver.model.response.UserResponseModel;
 import com.htec.shelfserver.repository.TokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
-import com.htec.shelfserver.model.response.UserResponseModel;
+import com.htec.shelfserver.util.TokenGenerator;
 import com.htec.shelfserver.util.UserValidator;
-import com.htec.shelfserver.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.User;
@@ -32,7 +31,7 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final TokenRepository confirmationTokenRepository;
-    private final Utils utils;
+    private final TokenGenerator tokenGenerator;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final EmailService emailService;
     private final UserValidator userValidator;
@@ -43,15 +42,15 @@ public class UserService implements UserDetailsService {
     @Autowired
     public UserService(UserRepository userRepository,
                        TokenRepository confirmationTokenRepository,
-                       Utils utils,
+                       TokenGenerator tokenGenerator,
                        BCryptPasswordEncoder bCryptPasswordEncoder,
                        EmailService emailService,
                        UserValidator userValidator,
                        @Value("${emailVerificationLink}") String emailVerificationLink,
-                       @Value("${emailResendTokenLink}")String emailResendTokenLink) {
+                       @Value("${emailResendTokenLink}") String emailResendTokenLink) {
         this.userRepository = userRepository;
         this.confirmationTokenRepository = confirmationTokenRepository;
-        this.utils = utils;
+        this.tokenGenerator = tokenGenerator;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.emailService = emailService;
         this.userValidator = userValidator;
@@ -74,7 +73,7 @@ public class UserService implements UserDetailsService {
         userEntity.setEmailVerified(false);
         userEntity.setRole(new RoleEntity(3L));
 
-        String salt = utils.generateSalt(8);
+        String salt = tokenGenerator.generateSalt(8);
         userEntity.setSalt(salt);
 
         String encryptedPassword = bCryptPasswordEncoder.encode(userDTO.getPassword() + salt);
@@ -86,7 +85,7 @@ public class UserService implements UserDetailsService {
     }
 
     void createAndSendToken(UserEntity userEntity) {
-        String token = utils.generateConfirmationToken(userEntity.getId());
+        String token = tokenGenerator.generateConfirmationToken(userEntity.getId());
 
         TokenEntity confirmationToken = new TokenEntity(
                 token,

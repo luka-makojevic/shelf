@@ -2,7 +2,6 @@ package com.htec.shelfserver.security;
 
 import com.htec.shelfserver.repository.UserRepository;
 import com.htec.shelfserver.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,7 +18,6 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
 
-    @Autowired
     public WebSecurity(UserService userService,
                        BCryptPasswordEncoder bCryptPasswordEncoder,
                        UserRepository userRepository
@@ -57,7 +55,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     }
 
     protected AuthenticationFilter getAuthenticationFilter() throws Exception {
-        final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager());
+        final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager(), userService, userRepository);
         filter.setFilterProcessesUrl(SecurityConstants.SIGN_IN_URL);
         return filter;
     }

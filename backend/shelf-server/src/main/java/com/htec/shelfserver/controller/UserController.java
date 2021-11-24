@@ -22,7 +22,6 @@ public class UserController {
         this.userService = userService;
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity getUserById(@AuthenticationUser AuthUser user, @PathVariable Long id) {
 
@@ -44,8 +43,4 @@ public class UserController {
         return "Update user is called.";
     }
 
-    @DeleteMapping
-    public String deleteUser() {
-        return "Delete user is called.";
-    }
 }

@@ -19,7 +19,6 @@ import java.util.Optional;
 public class TokenService {
     private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
-    private final Configuration config;
     private final UserService userService;
 
     public final String EMAIL_ALREADY_CONFIRMED = "Email already confirmed";
@@ -28,11 +27,9 @@ public class TokenService {
     @Autowired
     public TokenService(TokenRepository tokenRepository,
                         UserRepository userRepository,
-                        Configuration config,
                         UserService userService) {
         this.tokenRepository = tokenRepository;
         this.userRepository = userRepository;
-        this.config = config;
         this.userService = userService;
     }
 
