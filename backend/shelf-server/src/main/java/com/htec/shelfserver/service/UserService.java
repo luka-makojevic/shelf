@@ -37,7 +37,6 @@ public class UserService implements UserDetailsService {
     private final UserValidator userValidator;
 
     private final String emailVerificationLink;
-    private final String emailResendTokenLink;
 
     @Autowired
     public UserService(UserRepository userRepository,
@@ -46,8 +45,8 @@ public class UserService implements UserDetailsService {
                        BCryptPasswordEncoder bCryptPasswordEncoder,
                        EmailService emailService,
                        UserValidator userValidator,
-                       @Value("${emailVerificationLink}") String emailVerificationLink,
-                       @Value("${emailResendTokenLink}") String emailResendTokenLink) {
+                       @Value("${emailVerificationLink}") String emailVerificationLink) {
+
         this.userRepository = userRepository;
         this.confirmationTokenRepository = confirmationTokenRepository;
         this.tokenGenerator = tokenGenerator;
@@ -55,7 +54,6 @@ public class UserService implements UserDetailsService {
         this.emailService = emailService;
         this.userValidator = userValidator;
         this.emailVerificationLink = emailVerificationLink;
-        this.emailResendTokenLink = emailResendTokenLink;
     }
 
     public void createUser(UserDTO userDTO) {
@@ -97,12 +95,10 @@ public class UserService implements UserDetailsService {
         confirmationTokenRepository.save(confirmationToken);
 
         String confirmationLink = emailVerificationLink + token;
-        String resendTokenLink = emailResendTokenLink + token;
 
         Map<String, Object> model = new HashMap<>();
         model.put("firstName", userEntity.getFirstName());
         model.put("confirmationLink", confirmationLink);
-        model.put("resendTokenLink", resendTokenLink);
 
         emailService.sendEmail(userEntity.getEmail(), model, "email-confirmation.html", "Confirm your email");
     }
