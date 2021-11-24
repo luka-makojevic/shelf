@@ -3,6 +3,7 @@ package com.htec.shelfserver.controller;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.requestModel.UserRequestModel;
+import com.htec.shelfserver.responseModel.TextResponseMessage;
 import com.htec.shelfserver.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,13 +27,13 @@ public class UserController {
 
 
     @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createUser(@RequestBody UserRequestModel userRequestModel) {
+    public ResponseEntity<TextResponseMessage> createUser(@RequestBody UserRequestModel userRequestModel) {
 
         UserDTO userDTO = UserMapper.INSTANCE.userRequestModelToUserDto(userRequestModel);
 
         userService.createUser(userDTO);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("User registered");
+        return ResponseEntity.status(HttpStatus.CREATED).body(new TextResponseMessage("User registered" , HttpStatus.CREATED.value()));
     }
 
     @PutMapping
