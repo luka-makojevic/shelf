@@ -1,15 +1,17 @@
 package tests;
 
-import helpers.BaseHelper;
+import helpers.BaseWebDriverManager;
 import org.junit.After;
 import org.junit.Before;
 
+import java.io.IOException;
 
-public class BaseTest extends BaseHelper
+public class BaseTest extends BaseWebDriverManager
 {
     @Before
-    public void testInit()
+    public void initialize() throws IOException
     {
+        driver = initializeDriver();
         driver.manage().window().maximize();
     }
 
@@ -18,5 +20,4 @@ public class BaseTest extends BaseHelper
         driver.close();
         driver.quit();
     }
-
 }
