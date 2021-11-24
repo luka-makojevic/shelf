@@ -1,9 +1,14 @@
+import React from 'react';
 import { useForm, RegisterOptions } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 import CheckBox from '../../components/checkbox/checkBox';
+import { CheckboxWrapper } from '../../components/checkbox/checkbox-styles';
 import Form from '../../components/form';
 import { InputFieldWrapper } from '../../components/form/form-styles';
 import { Error } from '../../components/input/input-styles';
 import { InputField, InputFieldType } from '../../components/input/InputField';
+import { PlainText } from '../../components/text/text-styles';
+import { Routes } from '../../enums/routes';
 
 import { FormData } from './interfaces';
 
@@ -103,13 +108,16 @@ const FormValidation = () => {
             {...register(fieldConfig.name, fieldConfig.validations)}
           />
         ))}
-        <CheckBox
-          type="checkbox"
-          label="I accept "
-          link="Terms and conditions"
-          {...register('terms', { required: 'This is required' })}
-          error={errors.terms}
-        />
+        <CheckboxWrapper>
+          <CheckBox {...register('terms', { required: 'This is required' })} />
+          <PlainText>
+            I accept {` `}
+            <Link to={Routes.TERMS} target="_blank">
+              Terms of Service
+            </Link>
+          </PlainText>
+        </CheckboxWrapper>
+        <Error>{errors.terms?.message}</Error>
       </InputFieldWrapper>
 
       <Form.Submit>Sign up</Form.Submit>

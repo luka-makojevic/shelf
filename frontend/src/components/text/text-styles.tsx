@@ -29,3 +29,7 @@ export const Link = styled(ReachRouterLink)<TextProps>`
   ${color}
   ${border}
 `;
+
+export const PlainText = styled.p<TextProps>`
+  font-size: 13px;
+`;

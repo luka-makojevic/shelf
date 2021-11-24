@@ -6,10 +6,6 @@ export const CheckboxWrapper = styled.div`
   align-items: center;
 `;
 
-export const CheckboxText = styled.p`
-  font-size: 10px;
-`;
-
 export const Checkbox = styled.input`
-  font-size: 10px;
+  cursor: pointer;
 `;
