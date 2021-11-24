@@ -88,7 +88,7 @@ const FormValidation = () => {
       },
     },
   ];
-  const { register: httpRegister, loading } = useContext(AuthContext);
+  const { register: httpRegister, isLoading } = useContext(AuthContext);
 
   const submitForm = (data: RegisterData) => {
     httpRegister(
@@ -116,7 +116,7 @@ const FormValidation = () => {
         <CheckBox register={register} error={errors.areTermsRead?.message} />
       </InputFieldWrapper>
 
-      <Form.Submit loading={loading}>Sign up</Form.Submit>
+      <Form.Submit isLoading={isLoading}>Sign up</Form.Submit>
     </Form.Base>
   );
 };

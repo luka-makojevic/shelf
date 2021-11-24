@@ -56,7 +56,7 @@ const FormValidation = () => {
       },
     },
   ];
-  const { login, loading } = useContext(AuthContext);
+  const { login, isLoading } = useContext(AuthContext);
 
   const submitForm = (data: LoginData) => {
     login(
@@ -85,7 +85,7 @@ const FormValidation = () => {
         ))}
       </InputFieldWrapper>
 
-      <Form.Submit loading={loading}>Sign in</Form.Submit>
+      <Form.Submit isLoading={isLoading}>Sign in</Form.Submit>
     </Form.Base>
   );
 };
