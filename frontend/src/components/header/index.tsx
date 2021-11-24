@@ -8,7 +8,7 @@ type HeaderProps = {
 const Header = ({ hideProfile }: HeaderProps) => (
   <Container>
     <Link to={Routes.HOME}>
-      <Logo width="70px" src="./assets/images/logo.png" />
+      <Logo src="./assets/images/logo.png" />
     </Link>
     <Profile hideProfile={hideProfile}>PP</Profile>
   </Container>
