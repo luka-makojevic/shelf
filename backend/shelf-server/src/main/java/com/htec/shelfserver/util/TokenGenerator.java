@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
 import java.util.Random;
+import java.util.UUID;
 
 @Component
 public class TokenGenerator {
@@ -30,6 +31,7 @@ public class TokenGenerator {
     public String generateConfirmationToken(Long userId) {
         return Jwts.builder()
                 .setId(userId.toString())
+                .setSubject(UUID.randomUUID().toString())
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.CONFIRMATION_TOKEN_SECRET)
                 .compact();
     }

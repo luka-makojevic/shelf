@@ -92,9 +92,9 @@ public class TokenService {
             throw ExceptionSupplier.tokenNotFound.get();
         }
 
-        userService.createAndSendToken(userEntityOptional.get());
-
         tokenRepository.delete(oldConfirmationTokenOptional.get());
+
+        userService.createAndSendToken(userEntityOptional.get());
 
         return "Token resent";
 

@@ -9,9 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserLoginRequestModel {
-
-    private String email;
-    private String password;
-    private String salt;
+public class ConfirmTokenRequestModel {
+    private String token;
 }

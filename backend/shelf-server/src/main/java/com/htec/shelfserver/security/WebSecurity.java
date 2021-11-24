@@ -35,9 +35,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
                 .permitAll()
-                .antMatchers(HttpMethod.GET, SecurityConstants.SIGN_UP_CONFIRM_EMAIL_URL)
+                .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_CONFIRM_EMAIL_URL)
                 .permitAll()
-                .antMatchers(HttpMethod.GET, SecurityConstants.SIGN_UP_RESEND_TOKEN_URL)
+                .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_RESEND_TOKEN_URL)
                 .permitAll()
                 .antMatchers(
                         "/v2/api-docs",
