@@ -1,7 +1,6 @@
 package tests;
 
-import back_end.UrlConstants;
-import helpers.BaseHelperRESTApi;
+import helpers.BaseHelperPropertieManager;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.http.Method;
@@ -12,11 +11,11 @@ import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.*;
 
+import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
 
-public class ApiTest extends UrlConstants {
+public class ApiTest extends BaseHelperPropertieManager {
 
     private static String apiKey = "f399f648-e6ca-49b2-8cbd-0f657b3db451"; // ovde upises svoj APIkey
 
@@ -84,10 +83,11 @@ public class ApiTest extends UrlConstants {
     @Test
     public void apiPOST()
     {
-        RestAssured.baseURI = posturl;
+        String baseuri = BaseHelperPropertieManager.getInstance().getURI("/users");
+        baseURI = baseuri;
 
         JSONObject requestParams = new JSONObject();
-        requestParams.put("email", "dsadasdasd.rados@htecgroup.com");
+        requestParams.put("email", "srdjan.rados@htecgroup.com");
         requestParams.put("password", "Qwertysha1@");
         requestParams.put("firstName",  "Srdjan");
         requestParams.put("lastName",  "Rados");
@@ -102,10 +102,5 @@ public class ApiTest extends UrlConstants {
         System.out.println("----------------");
         System.out.println("Post response status is "+postResponse.statusCode());
 
-
-        System.out.println("----------------");
-        System.out.println("Post response is "+postResponse.asString());
-        System.out.println("----------------");
-        System.out.println("Post response status is "+postResponse.statusCode());
     }
 }
