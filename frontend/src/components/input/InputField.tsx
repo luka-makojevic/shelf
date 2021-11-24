@@ -14,6 +14,7 @@ export type InputFieldProps = {
   value?: string;
 };
 
+
 export const InputField = React.forwardRef(
   (
     { error, type = 'text', ...restProps }: InputFieldProps,

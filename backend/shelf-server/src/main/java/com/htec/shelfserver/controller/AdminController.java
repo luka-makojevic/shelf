@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.management.relation.Role;
-import javax.websocket.server.PathParam;
-
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -38,5 +35,4 @@ public class AdminController {
 
         return ResponseEntity.ok(userService.getUserById(id));
     }
-
 }
