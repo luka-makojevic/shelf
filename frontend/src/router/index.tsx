@@ -3,6 +3,7 @@ import { Role } from '../enums/roles';
 import { Routes } from '../enums/routes';
 import { RouteProps } from '../interfaces/route';
 import Dashboard from '../pages/dashboard';
+import ForgotPassword from '../pages/forgotPassword';
 import Landing from '../pages/landing';
 import EmailVerification from '../pages/emailVerification';
 import Login from '../pages/login';
@@ -56,6 +57,10 @@ const Router = () => {
     {
       path: Routes.TERMS_AND_CONDITIONS,
       element: <TermsAndConditions />,
+    },
+    {
+      path: Routes.FORGOT_PASSWORD,
+      element: <ForgotPassword />,
     },
   ];
 

@@ -19,6 +19,7 @@ export interface LoginData {
 export interface MicrosoftLoginData {
   bearerToken: string;
 }
+
 export interface ContextTypes {
   user?: UserType | null;
   login: (

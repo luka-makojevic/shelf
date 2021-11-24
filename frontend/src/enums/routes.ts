@@ -4,5 +4,6 @@ export enum Routes {
   LOGIN = '/login',
   DASHBOARD = '/dashboard',
   TERMS_AND_CONDITIONS = '/shelf-terms-and-conditions',
-  VERIFICATION = '/verification/:token'
+  VERIFICATION = '/verification/:token',
+  FORGOT_PASSWORD = '/forgot-password',
 }
