@@ -1,4 +1,5 @@
 import { NavigateFunction } from 'react-router-dom';
+import { Role } from '../enums/roles';
 
 export interface RegisterData {
   email: string;
@@ -12,7 +13,7 @@ export interface LoginData {
   password: string;
 }
 export interface ContextTypes {
-  user: UserType | null | undefined;
+  user?: UserType | null;
   login: (
     data: LoginData,
     onSuccess: (nav: NavigateFunction) => void,
@@ -23,7 +24,7 @@ export interface ContextTypes {
     onSuccess: () => void,
     onError: (error: string) => void
   ) => void;
-  loading: boolean;
+  isLoading: boolean;
   accessToken: string;
 }
 export interface UserType {
@@ -32,7 +33,7 @@ export interface UserType {
   lastName: string;
   email: string;
   jwtToken: string;
-  role: number;
+  role: Role;
 }
 export interface RegisterFormData {
   areTermsRead: boolean;
