@@ -8,6 +8,7 @@ import Login from './pages/login';
 import Register from './pages/register';
 import { Routes } from './enums/routes';
 import { RouteProps } from './interfaces/route';
+import TermsAndConditions from './pages/termsAndConditions';
 
 function App() {
   const routes: RouteProps[] = [
@@ -26,6 +27,10 @@ function App() {
     {
       path: Routes.DASHBOARD,
       element: <Dashboard />,
+    },
+    {
+      path: Routes.TERMS,
+      element: <TermsAndConditions />,
     },
   ];
   const routing = useRoutes(routes);

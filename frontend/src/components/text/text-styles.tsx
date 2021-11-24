@@ -32,4 +32,6 @@ export const Link = styled(ReachRouterLink)<TextProps>`
 
 export const PlainText = styled.p<TextProps>`
   font-size: 13px;
+  ${typography}
+  ${color}
 `;
