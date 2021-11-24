@@ -1,10 +1,10 @@
 package com.htec.shelfserver.service;
 
-import com.htec.shelfserver.dto.AuthUser;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.RoleEntity;
 import com.htec.shelfserver.entity.TokenEntity;
 import com.htec.shelfserver.entity.UserEntity;
+import com.htec.shelfserver.enumes.Roles;
 import com.htec.shelfserver.exceptionSupplier.ExceptionSupplier;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.repository.TokenRepository;
@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -126,5 +125,18 @@ public class UserService implements UserDetailsService {
         UserEntity user = userRepository.findById(id).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
+    }
+
+    public void deleteUserById(Long id) {
+        UserEntity user = userRepository.findById(id).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+
+        if (user.getRole() != null) {
+            if (user.getRole().getId().toString().equals(Roles.USER)) {
+                userRepository.delete(user);
+            }
+        } else {
+            ExceptionSupplier.userNotValid.get();
+        }
+
     }
 }
