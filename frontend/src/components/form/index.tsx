@@ -1,14 +1,12 @@
 import React from 'react';
+import { Container, Base, Submit, Spinner } from './form-styles';
 import {
-  Container,
-  Base,
-  Submit,
-  AccentText,
-  Link,
-  Spinner,
-} from './form-styles';
+  FormProps,
+  FormBaseProps,
+  FormSubmitProps,
+} from '../../interfaces/types';
 
-const Form = ({ children }: any) => (
+const Form = ({ children }: FormProps) => (
   <Container width={['300px', '400px']} height={['550', '600']}>
     {children}
   </Container>
@@ -16,17 +14,13 @@ const Form = ({ children }: any) => (
 
 export default Form;
 
-Form.Base = function FormBase({ children, onSubmit }: any) {
+Form.Base = function FormBase({ children, onSubmit }: FormBaseProps) {
   return <Base onSubmit={onSubmit}>{children}</Base>;
 };
 
-Form.Spinner = function FormSpinner() {
-  return <Spinner />;
-};
-
-Form.Submit = function FormSubmit({ isLoading, children, onClick }: any) {
+Form.Submit = function FormSubmit({ isLoading, children }: FormSubmitProps) {
   return (
-    <Submit onClick={onClick}>
+    <Submit>
       {isLoading ? (
         <Spinner src="./assets/icons/loading.png" alt="loading" />
       ) : (
@@ -34,12 +28,4 @@ Form.Submit = function FormSubmit({ isLoading, children, onClick }: any) {
       )}
     </Submit>
   );
-};
-
-Form.AccentText = function FormAccentText({ children }: any) {
-  return <AccentText>{children}</AccentText>;
-};
-
-Form.Link = function FormLink({ children, to }: any) {
-  return <Link to={to}>{children}</Link>;
 };

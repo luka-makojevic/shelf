@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Link as ReachRouterLink } from 'react-router-dom';
 import { space, layout, border } from 'styled-system';
 import { FormProps } from '../../interfaces/styles';
 
@@ -86,16 +85,6 @@ export const Spinner = styled.img`
       transform: rotate(360deg);
     }
   }
-`;
-
-export const AccentText = styled.p`
-  color: ${({ theme }) => theme.colors.primary};
-`;
-
-export const Link = styled(ReachRouterLink)`
-  text-decoration: none;
-  color: inherit;
-  font-weight: ${({ theme }) => theme.fontWeights.bold};
 `;
 
 export const Submit = styled.button`
