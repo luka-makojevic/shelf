@@ -1,6 +1,5 @@
 package com.htec.shelfserver.responseModel;
 
-import com.htec.shelfserver.entity.RoleEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
