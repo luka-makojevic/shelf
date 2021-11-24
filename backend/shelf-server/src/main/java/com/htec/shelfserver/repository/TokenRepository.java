@@ -13,10 +13,4 @@ public interface TokenRepository extends JpaRepository<TokenEntity, Long> {
 
     Optional<TokenEntity> findByToken(String token);
 
-    @Transactional
-    @Modifying
-    @Query("UPDATE TokenEntity c " +
-            "SET c.confirmedAt = ?2 " +
-            "WHERE c.token = ?1")
-    int updateConfirmedAt(String token, LocalDateTime confirmedAt);
 }

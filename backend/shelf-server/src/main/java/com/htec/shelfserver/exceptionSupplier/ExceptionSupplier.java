@@ -88,4 +88,18 @@ public class ExceptionSupplier {
             LocalDateTime.now().format(formatter),
             ErrorMessages.FORBIDDEN.getErrorMessage()
     );
+
+    public static final Supplier<ShelfException> tokenNotFound = () -> new ShelfException(
+            ErrorMessages.TOKEN_NOT_FOUND.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> tokenExpired = () -> new ShelfException(
+            ErrorMessages.TOKEN_EXPIRED.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
 }

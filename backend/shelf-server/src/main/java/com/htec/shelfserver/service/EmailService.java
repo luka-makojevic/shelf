@@ -32,20 +32,20 @@ public class EmailService {
     }
 
     @Async
-    public void sendEmail(String to, Map<String, Object> model) {
+    public void sendEmail(String to, Map<String, Object> model , String htmlTemplate , String subject) {
 
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, StandardCharsets.UTF_8.name());
 
 
-            Template template = config.getTemplate("email-confirmation.html");
+            Template template = config.getTemplate(htmlTemplate);
             String emailContent = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
 
             helper.setText(emailContent, true);
             helper.setTo(to);
-            helper.setSubject("Confirm your email");
-            helper.setFrom("shelf.bot.mailer@gmail.com");
+            helper.setSubject(subject);
+
             mailSender.send(mimeMessage);
 
         } catch (MessagingException | IOException | TemplateException e) {
