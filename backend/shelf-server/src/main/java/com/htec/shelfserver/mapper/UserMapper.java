@@ -2,8 +2,8 @@ package com.htec.shelfserver.mapper;
 
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.UserEntity;
-import com.htec.shelfserver.requestModel.UserRequestModel;
-import com.htec.shelfserver.responseModel.UserResponseModel;
+import com.htec.shelfserver.model.request.UserRequestModel;
+import com.htec.shelfserver.model.response.UserResponseModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

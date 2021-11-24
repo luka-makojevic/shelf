@@ -1,7 +1,7 @@
 package com.htec.shelfserver.annotation;
 
 import com.htec.shelfserver.dto.AuthUser;
-import com.htec.shelfserver.exceptionSupplier.ExceptionSupplier;
+import com.htec.shelfserver.exception.ExceptionSupplier;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
