@@ -2,7 +2,7 @@ package com.htec.shelfserver.mapper;
 
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.UserEntity;
-import com.htec.shelfserver.model.request.UserRequestModel;
+import com.htec.shelfserver.model.request.UserRegisterRequestModel;
 import com.htec.shelfserver.model.response.UserResponseModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -14,7 +14,7 @@ public interface UserMapper {
 
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-    UserDTO userRequestModelToUserDto(UserRequestModel userRequestModel);
+    UserDTO userRequestModelToUserDto(UserRegisterRequestModel userRegisterRequestModel);
 
     UserEntity userDtoToUserEntity(UserDTO userDTO);
 

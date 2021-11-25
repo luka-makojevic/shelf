@@ -56,7 +56,7 @@ public class UserService implements UserDetailsService {
         this.emailVerificationLink = emailVerificationLink;
     }
 
-    public void createUser(UserDTO userDTO) {
+    public void registerUser(UserDTO userDTO) {
 
         userRepository.findByEmail(userDTO.getEmail()).ifPresent(
                 userEntity -> {
@@ -103,6 +103,10 @@ public class UserService implements UserDetailsService {
         emailService.sendEmail(userEntity.getEmail(), model, "email-confirmation.html", "Confirm your email");
     }
 
+    public void registerUserMicrosoft(UserDTO userDTO) {
+        //todo: implement
+    }
+
     public UserDTO getUser(String email) {
 
         UserEntity userEntity = userRepository.findByEmail(email).
@@ -141,4 +145,5 @@ public class UserService implements UserDetailsService {
             throw ExceptionSupplier.userNotValid.get();
         }
     }
+
 }

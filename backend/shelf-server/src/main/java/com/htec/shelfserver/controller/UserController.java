@@ -4,7 +4,7 @@ import com.htec.shelfserver.annotation.AuthenticationUser;
 import com.htec.shelfserver.dto.AuthUser;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.mapper.UserMapper;
-import com.htec.shelfserver.model.request.UserRequestModel;
+import com.htec.shelfserver.model.request.UserRegisterRequestModel;
 import com.htec.shelfserver.model.response.TextResponseMessage;
 import com.htec.shelfserver.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -29,11 +29,21 @@ public class UserController {
     }
 
     @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TextResponseMessage> createUser(@RequestBody UserRequestModel userRequestModel) {
+    public ResponseEntity<TextResponseMessage> registerUser(@RequestBody UserRegisterRequestModel userRegisterRequestModel) {
 
-        UserDTO userDTO = UserMapper.INSTANCE.userRequestModelToUserDto(userRequestModel);
+        UserDTO userDTO = UserMapper.INSTANCE.userRequestModelToUserDto(userRegisterRequestModel);
 
-        userService.createUser(userDTO);
+        userService.registerUser(userDTO);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(new TextResponseMessage("User registered", HttpStatus.CREATED.value()));
+    }
+
+    @PostMapping(value = "/register/microsoft", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<TextResponseMessage> registerUserMicrosoft(@RequestBody UserRegisterRequestModel userRegisterRequestModel) {
+
+        UserDTO userDTO = UserMapper.INSTANCE.userRequestModelToUserDto(userRegisterRequestModel);
+
+        userService.registerUserMicrosoft(userDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new TextResponseMessage("User registered", HttpStatus.CREATED.value()));
     }
