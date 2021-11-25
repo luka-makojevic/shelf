@@ -2,6 +2,7 @@ package com.htec.shelfserver.mapper;
 
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.UserEntity;
+import com.htec.shelfserver.model.request.UserRegisterMicrosoftRequestModel;
 import com.htec.shelfserver.model.request.UserRegisterRequestModel;
 import com.htec.shelfserver.model.response.UserResponseModel;
 import org.mapstruct.Mapper;
@@ -15,6 +16,11 @@ public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     UserDTO userRegisterRequestModelToUserDto(UserRegisterRequestModel userRegisterRequestModel);
+<<<<<<< HEAD
+=======
+
+    UserDTO userRegisterMicrosoftRequestModelToUserDto(UserRegisterMicrosoftRequestModel userRegisterRequestModel);
+>>>>>>> CU-1rb0ck7 - Third party registration , new request-model added
 
     UserEntity userDtoToUserEntity(UserDTO userDTO);
 
