@@ -1,22 +1,18 @@
-// import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Form from '../../components/form';
 import { InputFieldWrapper } from '../../components/form/form-styles';
 import { InputField } from '../../components/input/InputField';
-// import { Error } from '../../components/text/text-styles';
-
-interface EmailFormData {
-  email: string;
-}
+import { ResetPasswordData } from '../../interfaces/types';
+import { AuthContext } from '../../providers/authProvider';
+import { Error } from '../../components/text/text-styles';
 
 const EmailFormValidation = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<EmailFormData>();
-
-  // const [error, setError] = useState<string>();
+  } = useForm<ResetPasswordData>();
 
   const validation = {
     required: 'This field is required',
@@ -27,16 +23,27 @@ const EmailFormValidation = () => {
     },
   };
 
-  const isLoading = false;
+  const { resetPass, isLoading } = useContext(AuthContext);
+  const [error, setError] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
 
-  const submitData = (/* data: EmailFormData */) => {
-    // TODO: sending data to BE
+  const submitData = (data: ResetPasswordData) => {
     // console.log(data);
+    resetPass(
+      data,
+      (res: string) => {
+        setSuccessMessage(res);
+      },
+      (err: string) => {
+        setError(err);
+        // console.log(err);
+      }
+    );
   };
 
   return (
     <Form.Base onSubmit={handleSubmit(submitData)}>
-      {/* <Error>{error}</Error> */}
+      <Error>{error}</Error>
       <InputFieldWrapper>
         <InputField
           placeholder="Enter your email"

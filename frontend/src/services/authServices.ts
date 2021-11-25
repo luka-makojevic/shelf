@@ -4,6 +4,7 @@ import {
   LoginData,
   MicrosoftRegisterData,
   MicrosoftLoginData,
+  ResetPasswordData,
 } from '../interfaces/types';
 
 const API_URL = 'http://10.10.0.117:8080/';
@@ -24,10 +25,14 @@ const logout = (setUser: (arg: null) => void) => {
   setUser(null);
 };
 
+const resetPass = (data: ResetPasswordData) =>
+  axios.post(`${API_URL}password-reset-request`, data);
+
 export default {
   register,
   microsoftRegister,
   login,
   microsoftLogin,
   logout,
+  resetPass,
 };

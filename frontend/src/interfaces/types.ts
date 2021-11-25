@@ -20,6 +20,10 @@ export interface MicrosoftLoginData {
   bearerToken: string;
 }
 
+export interface ResetPasswordData {
+  email: string;
+}
+
 export interface ContextTypes {
   user?: UserType | null;
   login: (
@@ -40,6 +44,11 @@ export interface ContextTypes {
   microsoftRegister: (
     data: MicrosoftRegisterData,
     onSuccess: () => void,
+    onError: (error: string) => void
+  ) => void;
+  resetPass: (
+    data: ResetPasswordData,
+    onSuccess: (success: string) => void,
     onError: (error: string) => void
   ) => void;
   isLoading: boolean;
