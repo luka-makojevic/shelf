@@ -2,10 +2,12 @@ package com.htec.shelfserver.mapper;
 
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.UserEntity;
-import com.htec.shelfserver.requestModel.UserRequestModel;
-import com.htec.shelfserver.responseModel.UserResponseModel;
+import com.htec.shelfserver.model.request.UserRequestModel;
+import com.htec.shelfserver.model.response.UserResponseModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
+
+import java.util.List;
 
 @Mapper
 public interface UserMapper {
@@ -19,5 +21,8 @@ public interface UserMapper {
     UserDTO userEntityToUserDTO(UserEntity user);
 
     UserResponseModel userDtoToUserResponseModel(UserDTO userDTO);
+
+    UserResponseModel userEntityToUserResponseModel(UserEntity userEntity);
+    List<UserResponseModel> userEntityToUserResponseModels(List<UserEntity> userEntities);
 
 }

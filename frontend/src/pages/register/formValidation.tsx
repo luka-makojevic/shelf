@@ -1,21 +1,20 @@
-import React from 'react';
+import { useContext, useState } from 'react';
 import { useForm, RegisterOptions } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import CheckBox from '../../components/checkbox/checkBox';
 import Form from '../../components/form';
 import { InputFieldWrapper } from '../../components/form/form-styles';
-import { Error } from '../../components/input/input-styles';
 import { InputField, InputFieldType } from '../../components/input/InputField';
-import { PlainText } from '../../components/text/text-styles';
+import { RegisterData, RegisterFormData } from '../../interfaces/types';
+import { AuthContext } from '../../providers/authProvider';
+import { Error, PlainText } from '../../components/text/text-styles';
 import { Routes } from '../../enums/routes';
-
-import { FormData } from './interfaces';
+import CheckBox from '../../components/checkbox/checkBox';
 
 interface FieldConfig {
   type: InputFieldType;
   placeholder: string;
   name:
-    | 'terms'
+    | 'areTermsRead'
     | 'email'
     | 'password'
     | 'confirmPassword'
@@ -30,7 +29,8 @@ const FormValidation = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<FormData>({});
+  } = useForm<RegisterFormData>();
+  const [error, setError] = useState<string>();
 
   const fieldConfigs: FieldConfig[] = [
     {
@@ -90,9 +90,16 @@ const FormValidation = () => {
       },
     },
   ];
+  const { register: httpRegister, isLoading } = useContext(AuthContext);
 
-  const submitForm = (/* data: any */) => {
-    // console.log(data);
+  const submitForm = (data: RegisterData) => {
+    httpRegister(
+      data,
+      () => {},
+      (err) => {
+        setError(err);
+      }
+    );
   };
 
   const tos = (
@@ -106,6 +113,7 @@ const FormValidation = () => {
 
   return (
     <Form.Base onSubmit={handleSubmit(submitForm)}>
+      <Error>{error}</Error>
       <InputFieldWrapper>
         {fieldConfigs.map((fieldConfig: FieldConfig) => (
           <InputField
@@ -118,13 +126,13 @@ const FormValidation = () => {
         ))}
         <CheckBox
           label={tos}
-          {...register('terms', { required: 'This is required' })}
+          {...register('areTermsRead', { required: 'This is required' })}
         />
 
-        <Error>{errors.terms?.message}</Error>
+        <Error>{errors.areTermsRead?.message}</Error>
       </InputFieldWrapper>
 
-      <Form.Submit>Sign up</Form.Submit>
+      <Form.Submit isLoading={isLoading}>Sign up</Form.Submit>
     </Form.Base>
   );
 };
