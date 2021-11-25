@@ -4,7 +4,7 @@ import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.RoleEntity;
 import com.htec.shelfserver.entity.TokenEntity;
 import com.htec.shelfserver.entity.UserEntity;
-import com.htec.shelfserver.enumes.Roles;
+import com.htec.shelfserver.util.Roles;
 import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.model.response.UserResponseModel;
