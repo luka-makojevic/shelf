@@ -7,6 +7,7 @@ import com.htec.shelfserver.repository.TokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
 import com.htec.shelfserver.security.SecurityConstants;
 import freemarker.template.Configuration;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,11 +37,16 @@ public class TokenService {
     @Transactional
     public String confirmToken(String token) {
 
-        String userId = Jwts.parser()
-                .setSigningKey(SecurityConstants.CONFIRMATION_TOKEN_SECRET)
-                .parseClaimsJws(token)
-                .getBody()
-                .getId();
+        String userId;
+        try {
+            userId = Jwts.parser()
+                    .setSigningKey(SecurityConstants.CONFIRMATION_TOKEN_SECRET)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getId();
+        }catch(JwtException ex){
+            throw ExceptionSupplier.tokenNotValid.get();
+        }
 
         Optional<UserEntity> userEntityOptional = userRepository.findById(Long.parseLong(userId));
 
@@ -71,7 +77,7 @@ public class TokenService {
         return EMAIL_CONFIRMED;
     }
 
-
+    @Transactional
     public String createAndSendToken(String token) {
 
         String userId = Jwts.parser()
