@@ -4,7 +4,10 @@ import com.htec.shelfserver.annotation.AuthenticationUser;
 import com.htec.shelfserver.dto.AuthUser;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.mapper.UserMapper;
+<<<<<<< HEAD
 import com.htec.shelfserver.model.request.UserRegisterMicrosoftRequestModel;
+=======
+>>>>>>> CU-1rb0ck7 - Third party registration, endpoint created, request model refactored
 import com.htec.shelfserver.model.request.UserRegisterRequestModel;
 import com.htec.shelfserver.model.response.TextResponseMessage;
 import com.htec.shelfserver.service.UserService;
