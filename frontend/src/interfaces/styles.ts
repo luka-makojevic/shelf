@@ -43,6 +43,7 @@ export interface ContainerProps
     FlexboxProps,
     LayoutProps,
     SpaceProps,
+    BorderProps,
     GridProps {
   children: React.ReactNode;
 }

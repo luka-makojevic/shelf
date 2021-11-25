@@ -4,6 +4,7 @@ import { Routes } from '../enums/routes';
 import { RouteProps } from '../interfaces/route';
 import Dashboard from '../pages/dashboard';
 import Landing from '../pages/landing';
+import EmailVerification from '../pages/emailVerification';
 import Login from '../pages/login';
 import Register from '../pages/register';
 import ProtectedRoute from './protectedRoute';
@@ -16,6 +17,14 @@ const Router = () => {
       element: (
         <PublicOnlyRoute>
           <Landing />
+        </PublicOnlyRoute>
+      ),
+    },
+    {
+      path: Routes.VERIFICATION,
+      element: (
+        <PublicOnlyRoute>
+          <EmailVerification />
         </PublicOnlyRoute>
       ),
     },
