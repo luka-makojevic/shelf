@@ -46,3 +46,11 @@ export interface ContainerProps
     GridProps {
   children: React.ReactNode;
 }
+export interface ButtonProps
+  extends LayoutProps,
+    SpaceProps,
+    TypographyProps,
+    BorderProps,
+    ColorProps {
+  children: React.ReactNode;
+}

@@ -6,4 +6,15 @@ export const parameters = {
       date: /Date$/,
     },
   },
-}
+};
+import React from 'react';
+
+import { theme } from '../src/theme';
+import { ThemeProvider } from 'styled-components';
+export const decorators = [
+  (Story) => (
+    <ThemeProvider theme={theme}>
+      <Story />
+    </ThemeProvider>
+  ),
+];
