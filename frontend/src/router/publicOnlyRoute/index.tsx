@@ -9,7 +9,7 @@ const PublicOnlyRoute = ({ children }: PublicOnlyRouteProps) => {
   const { accessToken } = useContext(AuthContext);
   const isLoggedIn = accessToken !== '';
 
-  return isLoggedIn ? <Navigate to={Routes.LOGIN} /> : children;
+  return isLoggedIn ? <Navigate to={Routes.DASHBOARD} /> : children;
 };
 
 export default PublicOnlyRoute;
