@@ -4,4 +4,5 @@ export enum Routes {
   LOGIN = '/login',
   DASHBOARD = '/dashboard',
   TERMS = '/shelf-terms-and-conditions',
+  VERIFICATION = '/verification/:token',
 }
