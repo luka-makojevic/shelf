@@ -3,7 +3,8 @@ package com.htec.shelfserver.controller;
 import com.htec.shelfserver.annotation.AuthenticationUser;
 import com.htec.shelfserver.annotation.ValidateRoles;
 import com.htec.shelfserver.dto.AuthUser;
-import com.htec.shelfserver.enumes.Roles;
+import com.htec.shelfserver.util.Roles;
+import com.htec.shelfserver.model.response.TextResponseMessage;
 import com.htec.shelfserver.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,9 +36,9 @@ public class AdminController {
 
     @DeleteMapping("/{id}")
     @ValidateRoles(roles = {Roles.USER})
-    public ResponseEntity deleteUserById(@AuthenticationUser AuthUser user, @PathVariable Long id) {
+    public ResponseEntity<TextResponseMessage> deleteUserById(@AuthenticationUser AuthUser user, @PathVariable Long id) {
 
         userService.deleteUserById(id);
-        return ResponseEntity.ok().body("User deleted");
+        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("User deleted", HttpStatus.OK.value()));
     }
 }

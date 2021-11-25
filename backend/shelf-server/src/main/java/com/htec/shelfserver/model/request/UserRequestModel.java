@@ -1,4 +1,4 @@
-package com.htec.shelfserver.responseModel;
+package com.htec.shelfserver.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,12 +9,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserLoginResponseModel {
+public class UserRequestModel {
 
-    private Long id;
     private String firstName;
     private String lastName;
     private String email;
-    private String jwtToken;
-    private Long role;
+    private String password;
 }

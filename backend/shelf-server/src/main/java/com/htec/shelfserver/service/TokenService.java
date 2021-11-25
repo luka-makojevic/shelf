@@ -2,28 +2,23 @@ package com.htec.shelfserver.service;
 
 import com.htec.shelfserver.entity.TokenEntity;
 import com.htec.shelfserver.entity.UserEntity;
-import com.htec.shelfserver.exceptionSupplier.ExceptionSupplier;
+import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.repository.TokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
 import com.htec.shelfserver.security.SecurityConstants;
 import freemarker.template.Configuration;
-import freemarker.template.Template;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class TokenService {
     private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
-    private final Configuration config;
     private final UserService userService;
 
     public final String EMAIL_ALREADY_CONFIRMED = "Email already confirmed";
@@ -32,11 +27,9 @@ public class TokenService {
     @Autowired
     public TokenService(TokenRepository tokenRepository,
                         UserRepository userRepository,
-                        Configuration config,
                         UserService userService) {
         this.tokenRepository = tokenRepository;
         this.userRepository = userRepository;
-        this.config = config;
         this.userService = userService;
     }
 
@@ -99,9 +92,9 @@ public class TokenService {
             throw ExceptionSupplier.tokenNotFound.get();
         }
 
-        userService.createAndSendToken(userEntityOptional.get());
-
         tokenRepository.delete(oldConfirmationTokenOptional.get());
+
+        userService.createAndSendToken(userEntityOptional.get());
 
         return "Token resent";
 

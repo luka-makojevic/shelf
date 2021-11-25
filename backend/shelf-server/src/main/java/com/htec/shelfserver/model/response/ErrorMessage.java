@@ -1,4 +1,4 @@
-package com.htec.shelfserver.responseModel;
+package com.htec.shelfserver.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,9 +9,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TextResponseMessage {
+public class ErrorMessage {
+
     private String message;
     private Integer status;
+    private String timestamp;
+    private String errorMessage;
 }
-
-

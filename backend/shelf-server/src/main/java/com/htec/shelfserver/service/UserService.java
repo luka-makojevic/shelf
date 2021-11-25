@@ -4,14 +4,14 @@ import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.RoleEntity;
 import com.htec.shelfserver.entity.TokenEntity;
 import com.htec.shelfserver.entity.UserEntity;
-import com.htec.shelfserver.enumes.Roles;
-import com.htec.shelfserver.exceptionSupplier.ExceptionSupplier;
+import com.htec.shelfserver.util.Roles;
+import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.mapper.UserMapper;
+import com.htec.shelfserver.model.response.UserResponseModel;
 import com.htec.shelfserver.repository.TokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
-import com.htec.shelfserver.responseModel.UserResponseModel;
+import com.htec.shelfserver.util.TokenGenerator;
 import com.htec.shelfserver.util.UserValidator;
-import com.htec.shelfserver.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.User;
@@ -31,31 +31,29 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final TokenRepository confirmationTokenRepository;
-    private final Utils utils;
+    private final TokenGenerator tokenGenerator;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final EmailService emailService;
     private final UserValidator userValidator;
 
     private final String emailVerificationLink;
-    private final String emailResendTokenLink;
 
     @Autowired
     public UserService(UserRepository userRepository,
                        TokenRepository confirmationTokenRepository,
-                       Utils utils,
+                       TokenGenerator tokenGenerator,
                        BCryptPasswordEncoder bCryptPasswordEncoder,
                        EmailService emailService,
                        UserValidator userValidator,
-                       @Value("${emailVerificationLink}") String emailVerificationLink,
-                       @Value("${emailResendTokenLink}")String emailResendTokenLink) {
+                       @Value("${emailVerificationLink}") String emailVerificationLink) {
+
         this.userRepository = userRepository;
         this.confirmationTokenRepository = confirmationTokenRepository;
-        this.utils = utils;
+        this.tokenGenerator = tokenGenerator;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.emailService = emailService;
         this.userValidator = userValidator;
         this.emailVerificationLink = emailVerificationLink;
-        this.emailResendTokenLink = emailResendTokenLink;
     }
 
     public void createUser(UserDTO userDTO) {
@@ -73,7 +71,7 @@ public class UserService implements UserDetailsService {
         userEntity.setEmailVerified(false);
         userEntity.setRole(new RoleEntity(3L));
 
-        String salt = utils.generateSalt(8);
+        String salt = tokenGenerator.generateSalt(8);
         userEntity.setSalt(salt);
 
         String encryptedPassword = bCryptPasswordEncoder.encode(userDTO.getPassword() + salt);
@@ -85,7 +83,7 @@ public class UserService implements UserDetailsService {
     }
 
     void createAndSendToken(UserEntity userEntity) {
-        String token = utils.generateConfirmationToken(userEntity.getId());
+        String token = tokenGenerator.generateConfirmationToken(userEntity.getId());
 
         TokenEntity confirmationToken = new TokenEntity(
                 token,
@@ -97,21 +95,18 @@ public class UserService implements UserDetailsService {
         confirmationTokenRepository.save(confirmationToken);
 
         String confirmationLink = emailVerificationLink + token;
-        String resendTokenLink = emailResendTokenLink + token;
 
         Map<String, Object> model = new HashMap<>();
         model.put("firstName", userEntity.getFirstName());
         model.put("confirmationLink", confirmationLink);
-        model.put("resendTokenLink", resendTokenLink);
 
         emailService.sendEmail(userEntity.getEmail(), model, "email-confirmation.html", "Confirm your email");
     }
 
     public UserDTO getUser(String email) {
 
-        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(
-                ExceptionSupplier.recordNotFoundWithEmail
-        );
+        UserEntity userEntity = userRepository.findByEmail(email).
+                orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
 
         return UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
     }
@@ -143,8 +138,7 @@ public class UserService implements UserDetailsService {
                 userRepository.delete(user);
             }
         } else {
-            ExceptionSupplier.userNotValid.get();
+            throw ExceptionSupplier.userNotValid.get();
         }
-
     }
 }
