@@ -4,6 +4,7 @@ import com.htec.shelfserver.annotation.AuthenticationUser;
 import com.htec.shelfserver.dto.AuthUser;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.mapper.UserMapper;
+import com.htec.shelfserver.model.request.UserRegisterMicrosoftRequestModel;
 import com.htec.shelfserver.model.request.UserRegisterRequestModel;
 import com.htec.shelfserver.model.response.TextResponseMessage;
 import com.htec.shelfserver.service.UserService;
@@ -31,7 +32,7 @@ public class UserController {
     @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TextResponseMessage> registerUser(@RequestBody UserRegisterRequestModel userRegisterRequestModel) {
 
-        UserDTO userDTO = UserMapper.INSTANCE.userRequestModelToUserDto(userRegisterRequestModel);
+        UserDTO userDTO = UserMapper.INSTANCE.userRegisterRequestModelToUserDto(userRegisterRequestModel);
 
         userService.registerUser(userDTO);
 
@@ -39,9 +40,9 @@ public class UserController {
     }
 
     @PostMapping(value = "/register/microsoft", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TextResponseMessage> registerUserMicrosoft(@RequestBody UserRegisterRequestModel userRegisterRequestModel) {
+    public ResponseEntity<TextResponseMessage> registerUserMicrosoft(@RequestBody UserRegisterMicrosoftRequestModel userRegisterMicrosoftRequestModel) {
 
-        UserDTO userDTO = UserMapper.INSTANCE.userRequestModelToUserDto(userRegisterRequestModel);
+        UserDTO userDTO = UserMapper.INSTANCE.userRegisterMicrosoftRequestModelToUserDto(userRegisterMicrosoftRequestModel);
 
         userService.registerUserMicrosoft(userDTO);
 

@@ -9,10 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRegisterRequestModel {
+public class UserRegisterMicrosoftRequestModel {
 
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String password;
+    private String bearerToken;
 }
