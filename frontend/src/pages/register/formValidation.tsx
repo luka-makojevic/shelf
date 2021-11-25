@@ -102,15 +102,6 @@ const FormValidation = () => {
     );
   };
 
-  const tos = (
-    <PlainText>
-      I accept {` `}
-      <Link to={Routes.TERMS} target="_blank">
-        Terms of Service
-      </Link>
-    </PlainText>
-  );
-
   return (
     <Form.Base onSubmit={handleSubmit(submitForm)}>
       <Error>{error}</Error>
@@ -125,9 +116,16 @@ const FormValidation = () => {
           />
         ))}
         <CheckBox
-          label={tos}
-          {...register('areTermsRead', { required: 'This is required' })}
-        />
+          id="id"
+          {...register('areTermsRead', { required: 'This field is required' })}
+        >
+          <PlainText>
+            I accept {` `}
+            <Link to={Routes.TERMS} target="_blank">
+              Terms of Service
+            </Link>
+          </PlainText>
+        </CheckBox>
 
         <Error>{errors.areTermsRead?.message}</Error>
       </InputFieldWrapper>

@@ -5,19 +5,18 @@ import { Checkbox, CheckboxWrapper, Label } from './checkbox-styles';
 type CheckBoxProps = {
   onChange?: ChangeEventHandler;
   name?: string;
-  id?: string;
-  label: string | ReactNode; // it must have a label, but it can either be a simple strign, or some type of element, like we needed for the link and text
+  id: string;
+  children: ReactNode;
 };
 
 const CheckBox = React.forwardRef(
   (
-    { label, ...restProps }: CheckBoxProps,
+    { children, id, ...restProps }: CheckBoxProps,
     ref: ForwardedRef<HTMLInputElement>
   ) => (
     <CheckboxWrapper>
-      <Checkbox type="checkbox" ref={ref} {...restProps} />
-
-      <Label>{label}</Label>
+      <Checkbox id={id} type="checkbox" ref={ref} {...restProps} />
+      <Label htmlFor={id}>{children}</Label>
     </CheckboxWrapper>
   )
 );
