@@ -1,5 +1,4 @@
 import React, { ChangeEventHandler, ForwardedRef, ReactNode } from 'react';
-// import { PlainText } from '../text/text-styles';
 import { Checkbox, CheckboxWrapper, Label } from './checkbox-styles';
 
 type CheckBoxProps = {
