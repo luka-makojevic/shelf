@@ -1,4 +1,4 @@
-package com.htec.shelfserver.enumes;
+package com.htec.shelfserver.util;
 
 public class Roles {
 

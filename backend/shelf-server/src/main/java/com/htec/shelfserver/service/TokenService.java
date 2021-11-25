@@ -6,14 +6,13 @@ import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.repository.TokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
 import com.htec.shelfserver.security.SecurityConstants;
-import freemarker.template.Configuration;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class TokenService {
@@ -23,6 +22,7 @@ public class TokenService {
 
     public final String EMAIL_ALREADY_CONFIRMED = "Email already confirmed";
     public final String EMAIL_CONFIRMED = "Email confirmed";
+    public final String TOKEN_RESENT = "Token resent";
 
     @Autowired
     public TokenService(TokenRepository tokenRepository,
@@ -36,42 +36,41 @@ public class TokenService {
     @Transactional
     public String confirmToken(String token) {
 
-        String userId = Jwts.parser()
-                .setSigningKey(SecurityConstants.CONFIRMATION_TOKEN_SECRET)
-                .parseClaimsJws(token)
-                .getBody()
-                .getId();
-
-        Optional<UserEntity> userEntityOptional = userRepository.findById(Long.parseLong(userId));
-
-        if (!userEntityOptional.isPresent()) {
-            throw ExceptionSupplier.userNotFound.get();
+        String userId;
+        try {
+            userId = Jwts.parser()
+                    .setSigningKey(SecurityConstants.CONFIRMATION_TOKEN_SECRET)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getId();
+        } catch (JwtException ex) {
+            throw ExceptionSupplier.tokenNotValid.get();
         }
 
-        if (userEntityOptional.get().getEmailVerified()) {
+        UserEntity userEntity = userRepository.findById(Long.parseLong(userId))
+                .orElseThrow(ExceptionSupplier.userNotFound);
+
+        if (userEntity.getEmailVerified()) {
             return EMAIL_ALREADY_CONFIRMED;
         }
 
-        Optional<TokenEntity> confirmationToken = tokenRepository.findByToken(token);
+        TokenEntity confirmationToken = tokenRepository.findByToken(token)
+                .orElseThrow(ExceptionSupplier.tokenNotFound);
 
-        if (!confirmationToken.isPresent()) {
-            throw ExceptionSupplier.tokenNotFound.get();
-        }
-
-        LocalDateTime expiredAt = confirmationToken.get().getExpiresAt();
+        LocalDateTime expiredAt = confirmationToken.getExpiresAt();
 
         if (expiredAt.isBefore(LocalDateTime.now())) {
             throw ExceptionSupplier.tokenExpired.get();
         }
 
-        userRepository.enableUser(confirmationToken.get().getUser().getEmail());
+        userRepository.enableUser(confirmationToken.getUser().getEmail());
 
-        tokenRepository.delete(confirmationToken.get());
+        tokenRepository.delete(confirmationToken);
 
         return EMAIL_CONFIRMED;
     }
 
-
+    @Transactional
     public String createAndSendToken(String token) {
 
         String userId = Jwts.parser()
@@ -80,23 +79,20 @@ public class TokenService {
                 .getBody()
                 .getId();
 
-        Optional<UserEntity> userEntityOptional = userRepository.findById(Long.parseLong(userId));
+        UserEntity userEntity = userRepository.findById(Long.parseLong(userId))
+                .orElseThrow(ExceptionSupplier.userNotFound);
 
-        if (userEntityOptional.get().getEmailVerified()) {
-            return "Email already confirmed";
+        if (userEntity.getEmailVerified()) {
+            return EMAIL_ALREADY_CONFIRMED;
         }
 
-        Optional<TokenEntity> oldConfirmationTokenOptional = tokenRepository.findByToken(token);
+        TokenEntity oldConfirmationToken = tokenRepository.findByToken(token)
+                .orElseThrow(ExceptionSupplier.tokenNotFound);
 
-        if (!oldConfirmationTokenOptional.isPresent()) {
-            throw ExceptionSupplier.tokenNotFound.get();
-        }
+        tokenRepository.delete(oldConfirmationToken);
 
-        tokenRepository.delete(oldConfirmationTokenOptional.get());
+        userService.createAndSendToken(userEntity);
 
-        userService.createAndSendToken(userEntityOptional.get());
-
-        return "Token resent";
-
+        return TOKEN_RESENT;
     }
 }
