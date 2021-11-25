@@ -3,5 +3,5 @@ export enum Routes {
   REGISTER = '/register',
   LOGIN = '/login',
   DASHBOARD = '/dashboard',
-  TERMS = '/shelf-terms-and-conditions',
+  TERMS_AND_CONDITIONS = '/shelf-terms-and-conditions',
 }
