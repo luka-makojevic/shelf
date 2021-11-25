@@ -87,6 +87,10 @@ public class TokenService {
 
         Optional<UserEntity> userEntityOptional = userRepository.findById(Long.parseLong(userId));
 
+        if (!userEntityOptional.isPresent()) {
+            throw ExceptionSupplier.userNotFound.get();
+        }
+
         if (userEntityOptional.get().getEmailVerified()) {
             return "Email already confirmed";
         }
