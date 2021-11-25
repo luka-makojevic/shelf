@@ -43,3 +43,16 @@ export interface RegisterFormData {
   firstName: string;
   lastName: string;
 }
+export interface FormProps {
+  children: React.ReactNode;
+}
+
+export interface FormBaseProps {
+  children: React.ReactNode;
+  onSubmit: React.FormEventHandler<HTMLFormElement>;
+}
+
+export interface FormSubmitProps {
+  children: React.ReactNode;
+  isLoading: boolean;
+}
