@@ -6,7 +6,7 @@ const CheckBox = ({ register, error }: any) => (
   <div style={{ marginTop: '1em' }}>
     <p style={{ fontSize: '0.7em' }}>
       I accept{' '}
-      <Link to={Routes.TERMS} target="_blank">
+      <Link to={Routes.TERMS_AND_CONDITIONS} target="_blank">
         Terms and Conditions
       </Link>
     </p>

@@ -35,3 +35,9 @@ export const Error = styled.p`
   text-align: center;
   font-size: 10px;
 `;
+
+export const PlainText = styled.p<TextProps>`
+  font-size: 13px;
+  ${typography}
+  ${color}
+`;

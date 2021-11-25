@@ -6,6 +6,7 @@ import Dashboard from '../pages/dashboard';
 import Landing from '../pages/landing';
 import Login from '../pages/login';
 import Register from '../pages/register';
+import TermsAndConditions from '../pages/termsOfService';
 import ProtectedRoute from './protectedRoute';
 import PublicOnlyRoute from './publicOnlyRoute';
 
@@ -42,6 +43,10 @@ const Router = () => {
           <Dashboard />
         </ProtectedRoute>
       ),
+    },
+    {
+      path: Routes.TERMS_AND_CONDITIONS,
+      element: <TermsAndConditions />,
     },
   ];
 
