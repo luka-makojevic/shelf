@@ -9,9 +9,6 @@ export default {
   title: 'Example/Button',
   component: Button,
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
-  argTypes: {
-    backgroundColor: { control: 'red' },
-  },
 } as ComponentMeta<typeof Button>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
@@ -22,7 +19,6 @@ export const Primary = Template.bind({});
 Primary.args = {
   bg: 'primary',
   children: 'Button',
-  borderRadius: '',
 };
 
 export const Secondary = Template.bind({});
