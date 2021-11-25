@@ -6,7 +6,6 @@ import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.repository.TokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
 import com.htec.shelfserver.security.SecurityConstants;
-import freemarker.template.Configuration;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +43,7 @@ public class TokenService {
                     .parseClaimsJws(token)
                     .getBody()
                     .getId();
-        }catch(JwtException ex){
+        } catch (JwtException ex) {
             throw ExceptionSupplier.tokenNotValid.get();
         }
 
