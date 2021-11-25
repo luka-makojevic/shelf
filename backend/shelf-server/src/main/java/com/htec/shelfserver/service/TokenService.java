@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class TokenService {
@@ -23,6 +22,7 @@ public class TokenService {
 
     public final String EMAIL_ALREADY_CONFIRMED = "Email already confirmed";
     public final String EMAIL_CONFIRMED = "Email confirmed";
+    public final String TOKEN_RESENT = "Token resent";
 
     @Autowired
     public TokenService(TokenRepository tokenRepository,
@@ -47,31 +47,25 @@ public class TokenService {
             throw ExceptionSupplier.tokenNotValid.get();
         }
 
-        Optional<UserEntity> userEntityOptional = userRepository.findById(Long.parseLong(userId));
+        UserEntity userEntity = userRepository.findById(Long.parseLong(userId))
+                .orElseThrow(ExceptionSupplier.userNotFound);
 
-        if (!userEntityOptional.isPresent()) {
-            throw ExceptionSupplier.userNotFound.get();
-        }
-
-        if (userEntityOptional.get().getEmailVerified()) {
+        if (userEntity.getEmailVerified()) {
             return EMAIL_ALREADY_CONFIRMED;
         }
 
-        Optional<TokenEntity> confirmationToken = tokenRepository.findByToken(token);
+        TokenEntity confirmationToken = tokenRepository.findByToken(token)
+                .orElseThrow(ExceptionSupplier.tokenNotFound);
 
-        if (!confirmationToken.isPresent()) {
-            throw ExceptionSupplier.tokenNotFound.get();
-        }
-
-        LocalDateTime expiredAt = confirmationToken.get().getExpiresAt();
+        LocalDateTime expiredAt = confirmationToken.getExpiresAt();
 
         if (expiredAt.isBefore(LocalDateTime.now())) {
             throw ExceptionSupplier.tokenExpired.get();
         }
 
-        userRepository.enableUser(confirmationToken.get().getUser().getEmail());
+        userRepository.enableUser(confirmationToken.getUser().getEmail());
 
-        tokenRepository.delete(confirmationToken.get());
+        tokenRepository.delete(confirmationToken);
 
         return EMAIL_CONFIRMED;
     }
@@ -85,27 +79,20 @@ public class TokenService {
                 .getBody()
                 .getId();
 
-        Optional<UserEntity> userEntityOptional = userRepository.findById(Long.parseLong(userId));
+        UserEntity userEntity = userRepository.findById(Long.parseLong(userId))
+                .orElseThrow(ExceptionSupplier.userNotFound);
 
-        if (!userEntityOptional.isPresent()) {
-            throw ExceptionSupplier.userNotFound.get();
+        if (userEntity.getEmailVerified()) {
+            return EMAIL_ALREADY_CONFIRMED;
         }
 
-        if (userEntityOptional.get().getEmailVerified()) {
-            return "Email already confirmed";
-        }
+        TokenEntity oldConfirmationToken = tokenRepository.findByToken(token)
+                .orElseThrow(ExceptionSupplier.tokenNotFound);
 
-        Optional<TokenEntity> oldConfirmationTokenOptional = tokenRepository.findByToken(token);
+        tokenRepository.delete(oldConfirmationToken);
 
-        if (!oldConfirmationTokenOptional.isPresent()) {
-            throw ExceptionSupplier.tokenNotFound.get();
-        }
+        userService.createAndSendToken(userEntity);
 
-        tokenRepository.delete(oldConfirmationTokenOptional.get());
-
-        userService.createAndSendToken(userEntityOptional.get());
-
-        return "Token resent";
-
+        return TOKEN_RESENT;
     }
 }
