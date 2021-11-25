@@ -11,7 +11,7 @@ export const CardWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.primary};
   color: white;
   border-radius: 30px;
-  box-shadow: 1px 1px 6px ${({ theme }) => theme.colors.primary}; ;
+  box-shadow: 0px 0px 13px 1px ${({ theme }) => theme.colors.secondary};
 `;
 
 export const Header = styled.div`
@@ -25,6 +25,7 @@ export const Body = styled.div`
   width: 100%;
   height: 100%;
   overflow-y: scroll;
+  font-size: 13px;
 `;
 
 export const Footer = styled.div`

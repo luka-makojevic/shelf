@@ -1,12 +1,11 @@
 import { Wrapper } from '../../components/layout/layout.styles';
-
+import { tos, TOStitle, TOSsubTitle } from '../../fixtures/termsOfService';
 import TextCard from '../../components/textCard';
-import TosText from '../../fixtures/data';
 
 const TermsAndConditions = () => {
-  const title = 'Terms of Service';
-  const subtitle = 'Last eddited on';
-  const text = TosText;
+  const title = TOStitle;
+  const subtitle = TOSsubTitle;
+  const text = tos;
   return (
     <Wrapper justifyContent="center">
       <TextCard title={title} text={text} subtitle={subtitle} />

@@ -1,11 +1,11 @@
-import { Logo } from '../header/header-styles';
+import ReactMarkdown from 'react-markdown';
 import { PlainText, Title } from '../text/text-styles';
 import { Body, CardWrapper, Footer, Header } from './textcard-styles';
 
 interface TextCardProps {
   title?: string;
   subtitle?: string;
-  text?: string;
+  text: string;
 }
 
 const TextCard = ({ title, text, subtitle }: TextCardProps) => (
@@ -15,7 +15,7 @@ const TextCard = ({ title, text, subtitle }: TextCardProps) => (
       <PlainText>{subtitle}</PlainText>
     </Header>
     <Body>
-      <PlainText>{text}</PlainText>
+      <ReactMarkdown>{text}</ReactMarkdown>,
     </Body>
     <Footer>
       <PlainText>Than you for reading</PlainText>
