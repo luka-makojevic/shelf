@@ -7,6 +7,7 @@ export const CheckboxWrapper = styled.div`
 
 export const Checkbox = styled.input`
   cursor: pointer;
+  background-color: red;
 `;
 
 export const Label = styled.label`

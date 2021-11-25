@@ -120,7 +120,7 @@ const FormValidation = () => {
           {...register('areTermsRead', { required: 'This field is required' })}
         >
           <PlainText>
-            I accept {` `}
+            I accept{` `}
             <Link to={Routes.TERMS} target="_blank">
               Terms of Service
             </Link>
