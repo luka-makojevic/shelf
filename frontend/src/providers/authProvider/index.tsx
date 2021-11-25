@@ -6,12 +6,14 @@ import {
   LoginData,
   ContextTypes,
   UserType,
+  ResetPasswordData,
 } from '../../interfaces/types';
 
 const defaultValue: ContextTypes = {
   user: null,
   login: async () => {},
   register: async () => {},
+  resetPass: async () => {},
   isLoading: false,
   accessToken: '',
 };
@@ -22,6 +24,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<UserType | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [accessToken, setAccesToken] = useState<string>('');
+  const [resetToken, setResetToken] = useState<string>('');
 
   useEffect(() => {
     const userLocalStorage = localStorage.getItem('user')
@@ -72,9 +75,29 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       })
       .finally(() => setIsLoading(false));
   };
+
+  const resetPass = (
+    data: ResetPasswordData,
+    onSuccess: (success: string) => void,
+    onError: (error: string) => void
+  ) => {
+    setIsLoading(true);
+    AuthService.resetPass(data)
+      .then((res) => {
+        if (res.data.passwordResetToken) {
+          setResetToken(res.data?.passwordResetToken);
+          onSuccess(res.data?.message);
+        }
+      })
+      .catch((err) => {
+        onError(err.data?.message);
+      })
+      .finally(() => setIsLoading(false));
+  };
+
   return (
     <AuthContext.Provider
-      value={{ user, login, register, isLoading, accessToken }}
+      value={{ user, login, register, resetPass, isLoading, accessToken }}
     >
       {children}
     </AuthContext.Provider>

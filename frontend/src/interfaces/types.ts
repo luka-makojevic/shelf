@@ -13,6 +13,10 @@ export interface LoginData {
   password: string;
 }
 
+export interface ResetPasswordData {
+  email: string;
+}
+
 export interface ContextTypes {
   user?: UserType | null;
   login: (
@@ -23,6 +27,11 @@ export interface ContextTypes {
   register: (
     data: RegisterData,
     onSuccess: () => void,
+    onError: (error: string) => void
+  ) => void;
+  resetPass: (
+    data: ResetPasswordData,
+    onSuccess: (success: string) => void,
     onError: (error: string) => void
   ) => void;
   isLoading: boolean;
