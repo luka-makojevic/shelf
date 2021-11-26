@@ -26,5 +26,4 @@ public class UserDTO implements Serializable {
     private Date deletedAt;
     private Boolean emailVerified;
     private RoleEntity role;
-    private String bearerToken;
 }
