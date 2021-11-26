@@ -4,12 +4,12 @@ import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.RoleEntity;
 import com.htec.shelfserver.entity.TokenEntity;
 import com.htec.shelfserver.entity.UserEntity;
-import com.htec.shelfserver.util.Roles;
 import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.model.response.UserResponseModel;
 import com.htec.shelfserver.repository.TokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
+import com.htec.shelfserver.util.Roles;
 import com.htec.shelfserver.util.TokenGenerator;
 import com.htec.shelfserver.util.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +103,7 @@ public class UserService implements UserDetailsService {
         emailService.sendEmail(userEntity.getEmail(), model, "email-confirmation.html", "Confirm your email");
     }
 
-    public void registerUserMicrosoft(UserDTO userDTO) {
+    public void registerUserMicrosoft(String bearerToken) {
         //todo: implement
     }
 

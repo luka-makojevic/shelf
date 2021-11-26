@@ -42,9 +42,7 @@ public class UserController {
     @PostMapping(value = "/register/microsoft", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TextResponseMessage> registerUserMicrosoft(@RequestBody UserRegisterMicrosoftRequestModel userRegisterMicrosoftRequestModel) {
 
-        UserDTO userDTO = UserMapper.INSTANCE.userRegisterMicrosoftRequestModelToUserDto(userRegisterMicrosoftRequestModel);
-
-        userService.registerUserMicrosoft(userDTO);
+        userService.registerUserMicrosoft(userRegisterMicrosoftRequestModel.getBearerToken());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new TextResponseMessage("User registered", HttpStatus.CREATED.value()));
     }
