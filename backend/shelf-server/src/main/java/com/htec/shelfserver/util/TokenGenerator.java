@@ -18,9 +18,9 @@ import java.util.UUID;
 public class TokenGenerator {
     private final Random RANDOM = new SecureRandom();
     private final UserRepository userRepository;
+    private String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
     TokenGenerator(UserRepository userRepository) {
-
         this.userRepository = userRepository;
     }
 
@@ -32,7 +32,6 @@ public class TokenGenerator {
         StringBuilder returnValue = new StringBuilder(length);
 
         for (int i = 0; i < length; i++) {
-            String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
             returnValue.append(ALPHABET.charAt(RANDOM.nextInt(ALPHABET.length())));
         }
 
