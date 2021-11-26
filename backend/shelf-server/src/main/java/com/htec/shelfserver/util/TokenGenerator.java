@@ -18,7 +18,6 @@ import java.util.UUID;
 public class TokenGenerator {
     private final Random RANDOM = new SecureRandom();
     private final UserRepository userRepository;
-    private final String ROLE_ID = "role_id";
 
     TokenGenerator(UserRepository userRepository) {
 
