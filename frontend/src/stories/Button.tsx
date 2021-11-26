@@ -20,7 +20,7 @@ export const Button = ({
     ? 'storybook-button--primary'
     : 'storybook-button--secondary';
   return (
-    <StyledButton
+    <button
       type="button"
       className={['storybook-button', `storybook-button--${size}`, mode].join(
         ' '
@@ -29,6 +29,6 @@ export const Button = ({
       {...props}
     >
       {label}
-    </StyledButton>
+    </button>
   );
 };

@@ -5,6 +5,7 @@ import userServices from '../../services/userServices';
 import { Spinner } from '../../components/form/form-styles';
 import { Link, Title } from '../../components/text/text-styles';
 import { Routes } from '../../enums/routes';
+import { StyledButton } from '../../components/UI/button/button-styles';
 
 const EmailVerification = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -19,7 +20,7 @@ const EmailVerification = () => {
       .then(() => {
         setResendMessage('Email was sent check, your inbox');
       })
-      .catch((err) => setError(err.response.data?.message));
+      .catch((err) => setError(err.response?.data?.message));
   };
 
   useEffect(() => {
@@ -30,7 +31,7 @@ const EmailVerification = () => {
         setConfirmMessage(res.data.message);
       })
       .catch((err) => {
-        setError(err.response.data?.message);
+        setError(err.response?.data?.message);
       })
       .finally(() => setIsLoading(false));
   }, []);
@@ -51,9 +52,12 @@ const EmailVerification = () => {
 
           <Link
             to={Routes.LOGIN}
-            p="5px 10px"
-            bg="white"
+            p="10px 16px"
+            bg="primary"
+            color="white"
+            border="2px solid white"
             mb="20px"
+            fontSize="17px"
             borderRadius="30px"
           >
             Procced to login
@@ -64,8 +68,18 @@ const EmailVerification = () => {
     if (error) {
       return (
         <>
-          <Title fontSize="20px">{error}</Title>
-          <button onClick={resendEmailVerification}>Reset token</button>
+          <Title fontSize="25px">{error}</Title>
+          <StyledButton
+            padding="10px 20px"
+            fontSize="18px"
+            bg="primary"
+            color="white"
+            fontWeight="bold"
+            border="2px solid white"
+            onClick={resendEmailVerification}
+          >
+            Reset token
+          </StyledButton>
         </>
       );
     }
