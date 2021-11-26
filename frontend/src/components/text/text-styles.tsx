@@ -29,9 +29,20 @@ export const Link = styled(ReachRouterLink)<TextProps>`
   ${color}
   ${border}
 `;
+
+export const PlainText = styled.p<TextProps>`
+  font-size: 13px;
+`;
+
 export const Error = styled.p`
   color: red;
   width: 100%;
   text-align: center;
   font-size: 10px;
+`;
+
+export const PlainText = styled.p<TextProps>`
+  font-size: 13px;
+  ${typography}
+  ${color}
 `;
