@@ -4,6 +4,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.util.Properties;
 
 public class BaseWebDriverManager
 {
+
     public WebDriver driver;
     public Properties prop;
 
@@ -30,6 +32,10 @@ public class BaseWebDriverManager
             WebDriverManager.firefoxdriver().setup();
             driver = new FirefoxDriver();
         }
+         else if (browserName.equals("ie")) {
+        WebDriverManager.iedriver().setup();
+        driver = new InternetExplorerDriver();
+}
         return driver;
     }
 }
