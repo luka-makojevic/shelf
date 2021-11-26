@@ -18,6 +18,7 @@ import java.util.UUID;
 public class TokenGenerator {
     private final Random RANDOM = new SecureRandom();
     private final UserRepository userRepository;
+    private final String ROLE_ID = "role_id";
 
     TokenGenerator(UserRepository userRepository) {
 
@@ -42,12 +43,12 @@ public class TokenGenerator {
     public String generateConfirmationToken(Long userId) {
         return Jwts.builder()
                 .setId(userId.toString())
-                .setSubject(UUID.randomUUID().toString())
+                .claim(JwtFieldConstants.TOKEN_ID, UUID.randomUUID().toString())
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.CONFIRMATION_TOKEN_SECRET)
                 .compact();
     }
-    public String generatePasswordResetToken(String userId)
-    {
+
+    public String generatePasswordResetToken(String userId) {
         String token = Jwts.builder()
                 .setSubject(userId)
                 .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.PASSWORD_RESET_EXPIRATION_TIME))
@@ -64,7 +65,7 @@ public class TokenGenerator {
                 .setSubject(userEntity.getEmail())
                 .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET)
-                .claim("role_id", userEntity.getRole().getId())
+                .claim(JwtFieldConstants.ROLE_ID, userEntity.getRole().getId())
                 .compact();
         return token;
     }

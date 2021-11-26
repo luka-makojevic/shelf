@@ -43,8 +43,7 @@ public class AuthenticationService implements UserDetailsService {
         return new User(userEntity.getEmail(), userEntity.getPassword(), new ArrayList<>());
     }
 
-    public UserDTO authenticateUser(UserDTO userDTO)
-    {
+    public UserDTO authenticateUser(UserDTO userDTO) {
         UserDTO returnValue = new UserDTO();
         Optional<UserEntity> userEntity = userRepository.findByEmail(userDTO.getEmail());
 
@@ -54,15 +53,15 @@ public class AuthenticationService implements UserDetailsService {
                 = new UsernamePasswordAuthenticationToken(userDTO.getEmail(),
                 userDTO.getPassword() + salt);
         Authentication auth = null;
-        try{
+        try {
             auth = authenticationManager.authenticate(authReq);
             SecurityContext sc = SecurityContextHolder.getContext();
             sc.setAuthentication(auth);
-        }catch (AuthenticationException ex){
+        } catch (AuthenticationException ex) {
             throw ExceptionSupplier.userNotValid.get();
         }
 
-        if(!userEntity.get().getEmailVerified())
+        if (!userEntity.get().getEmailVerified())
             throw ExceptionSupplier.emailNotVerified.get();
 
         returnValue = UserMapper.INSTANCE.userEntityToUserDTO(userEntity.get());
