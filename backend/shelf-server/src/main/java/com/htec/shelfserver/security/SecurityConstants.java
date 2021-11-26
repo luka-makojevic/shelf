@@ -12,6 +12,7 @@ public class SecurityConstants {
 
     public static final String SIGN_IN_URL = "/users/login";
     public static final String SIGN_UP_URL = "/register";
+    public static final String SIGN_UP_MICROSOFT_URL = "/register/microsoft";
     public static final String SIGN_UP_CONFIRM_EMAIL_URL = "/tokens/confirmation";
     public static final String SIGN_UP_RESEND_TOKEN_URL = "/tokens/resend";
 

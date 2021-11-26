@@ -35,7 +35,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
                 .permitAll()
-                .antMatchers(HttpMethod.POST, "/users/register/microsoft")
+                .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_MICROSOFT_URL)
                 .permitAll()
                 .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_CONFIRM_EMAIL_URL)
                 .permitAll()
