@@ -1,7 +1,7 @@
-
 import React, { ChangeEventHandler, ForwardedRef, useState } from 'react';
 import { Ref, FieldError } from 'react-hook-form';
-import { Error, Input, InputContainer, SeenIcon } from './input-styles';
+import { Input, InputContainer, SeenIcon } from './input-styles';
+import { Error } from '../text/text-styles';
 
 export type InputFieldType = 'text' | 'password' | 'email';
 
@@ -13,7 +13,6 @@ export type InputFieldProps = {
   type?: InputFieldType;
   value?: string;
 };
-
 
 export const InputField = React.forwardRef(
   (
@@ -31,7 +30,7 @@ export const InputField = React.forwardRef(
     return (
       <InputContainer>
         <Input
-          marginY={[1, 2]}
+          my="5px"
           padding={[1, 2]}
           type={!passwordShown ? type : 'text'}
           ref={ref}
@@ -52,4 +51,3 @@ export const InputField = React.forwardRef(
     );
   }
 );
-

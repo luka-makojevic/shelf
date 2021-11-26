@@ -19,7 +19,9 @@ export const Input = styled.input<FormProps>`
 
 export const InputContainer = styled.div`
   position: relative;
-  width: 100%;
+  height: 70px;
+  
+ 
 `;
 
 export const PasswordContainer = styled.div`
@@ -27,16 +29,10 @@ export const PasswordContainer = styled.div`
   width: 100%;
 `;
 
-export const Error = styled.div`
-  margin-left: 1em;
-  color: ${({ theme }) => theme.colors.danger};
-  font-size: 10px;
-`;
-
 export const SeenIcon = styled.img`
   position: absolute;
   width: 20px;
   height: 20px;
-  right: 10px;
-  top: 22px;
+  right: 12px;
+  top: 18px;
 `;

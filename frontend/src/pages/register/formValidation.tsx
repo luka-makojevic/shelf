@@ -9,6 +9,7 @@ import { AuthContext } from '../../providers/authProvider';
 import { Error, PlainText } from '../../components/text/text-styles';
 import { Routes } from '../../enums/routes';
 import CheckBox from '../../components/checkbox/checkBox';
+import { Holder } from '../../components/layout/layout.styles';
 
 interface FieldConfig {
   type: InputFieldType;
@@ -104,7 +105,9 @@ const FormValidation = () => {
 
   return (
     <Form.Base onSubmit={handleSubmit(submitForm)}>
-      <Error>{error}</Error>
+      <Holder m="0 auto" maxWidth="200px" minHeight="15px">
+        <Error>{error}</Error>
+      </Holder>
       <InputFieldWrapper>
         {fieldConfigs.map((fieldConfig: FieldConfig) => (
           <InputField
@@ -115,19 +118,23 @@ const FormValidation = () => {
             {...register(fieldConfig.name, fieldConfig.validations)}
           />
         ))}
-        <CheckBox
-          id="id"
-          {...register('areTermsRead', { required: 'This field is required' })}
-        >
-          <PlainText>
-            I accept{` `}
-            <Link to={Routes.TERMS} target="_blank">
-              Terms of Service
-            </Link>
-          </PlainText>
-        </CheckBox>
+        <Holder flexDirection="column" height="36px">
+          <CheckBox
+            id="id"
+            {...register('areTermsRead', {
+              required: 'This field is required',
+            })}
+          >
+            <PlainText>
+              I accept{` `}
+              <Link to={Routes.TERMS_AND_CONDITIONS} target="_blank">
+                Terms of Service
+              </Link>
+            </PlainText>
+          </CheckBox>
 
-        <Error>{errors.areTermsRead?.message}</Error>
+          <Error>{errors.areTermsRead?.message}</Error>
+        </Holder>
       </InputFieldWrapper>
 
       <Form.Submit isLoading={isLoading}>Sign up</Form.Submit>

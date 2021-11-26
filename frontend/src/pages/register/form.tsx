@@ -6,7 +6,7 @@ import FormValidation from './formValidation';
 
 const RegisterForm = () => (
   <Form>
-    <Title fontSize={[4, 5, 6]}>Register</Title>
+    <Title fontSize={[4, 5, 6]} my="10px">Register</Title>
     <FormValidation />
     <AccentText>
       {`Already have an account?  `}
