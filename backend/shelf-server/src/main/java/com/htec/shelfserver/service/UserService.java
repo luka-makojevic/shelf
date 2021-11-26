@@ -1,12 +1,14 @@
 package com.htec.shelfserver.service;
 
 import com.htec.shelfserver.dto.UserDTO;
+import com.htec.shelfserver.entity.PasswordResetTokenEntity;
 import com.htec.shelfserver.entity.RoleEntity;
 import com.htec.shelfserver.entity.TokenEntity;
 import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.model.response.UserResponseModel;
+import com.htec.shelfserver.repository.PasswordResetTokenRepository;
 import com.htec.shelfserver.repository.TokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
 import com.htec.shelfserver.util.Roles;
@@ -14,20 +16,16 @@ import com.htec.shelfserver.util.TokenGenerator;
 import com.htec.shelfserver.util.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
 
     private final UserRepository userRepository;
     private final TokenRepository confirmationTokenRepository;
@@ -35,18 +33,23 @@ public class UserService implements UserDetailsService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final EmailService emailService;
     private final UserValidator userValidator;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
 
     private final String emailVerificationLink;
 
+    private final String emailPasswordResetTokenLink;
+
     @Autowired
-    public UserService(UserRepository userRepository,
+    public UserService(PasswordResetTokenRepository passwordResetTokenRepository,
+                       UserRepository userRepository,
                        TokenRepository confirmationTokenRepository,
                        TokenGenerator tokenGenerator,
                        BCryptPasswordEncoder bCryptPasswordEncoder,
                        EmailService emailService,
                        UserValidator userValidator,
-                       @Value("${emailVerificationLink}") String emailVerificationLink) {
-
+                       @Value("${emailVerificationLink}") String emailVerificationLink,
+                       @Value("${emailPasswordResetTokenLink}") String emailPasswordResetTokenLink) {
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.userRepository = userRepository;
         this.confirmationTokenRepository = confirmationTokenRepository;
         this.tokenGenerator = tokenGenerator;
@@ -54,6 +57,7 @@ public class UserService implements UserDetailsService {
         this.emailService = emailService;
         this.userValidator = userValidator;
         this.emailVerificationLink = emailVerificationLink;
+        this.emailPasswordResetTokenLink = emailPasswordResetTokenLink;
     }
 
     public void registerUser(UserDTO userDTO) {
@@ -115,15 +119,6 @@ public class UserService implements UserDetailsService {
         return UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String email) {
-
-        UserEntity userEntity = userRepository.findByEmail(email).
-                orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
-
-        return new User(userEntity.getEmail(), userEntity.getPassword(), new ArrayList<>());
-    }
-
     public List<UserResponseModel> getUsers() {
         return UserMapper.INSTANCE.userEntityToUserResponseModels(userRepository.findAll());
     }
@@ -144,6 +139,29 @@ public class UserService implements UserDetailsService {
         } else {
             throw ExceptionSupplier.userNotValid.get();
         }
+    }
+
+    public void requestPasswordReset(String email) {
+
+        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(ExceptionSupplier.userNotValid);
+
+        sendPasswordResetMail(userEntity);
+    }
+
+    void sendPasswordResetMail(UserEntity userEntity) {
+        String token = tokenGenerator.generatePasswordResetToken(userEntity.getId().toString());
+
+        PasswordResetTokenEntity passwordResetToken = new PasswordResetTokenEntity(token, userEntity);
+
+        passwordResetTokenRepository.save(passwordResetToken);
+
+        String passwordResetTokenLink = emailPasswordResetTokenLink + token;
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("firstName", userEntity.getFirstName());
+        model.put("passwordResetTokenLink", passwordResetTokenLink);
+
+        emailService.sendEmail(userEntity.getEmail(), model, "password-reset.html", "Reset your password");
     }
 
 }
