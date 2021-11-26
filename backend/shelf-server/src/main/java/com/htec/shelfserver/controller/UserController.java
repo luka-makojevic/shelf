@@ -7,6 +7,7 @@ import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.model.request.UserRegisterMicrosoftRequestModel;
 import com.htec.shelfserver.model.request.UserRegisterRequestModel;
 import com.htec.shelfserver.model.response.TextResponseMessage;
+import com.htec.shelfserver.requestModel.PasswordResetRequestModel;
 import com.htec.shelfserver.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -52,4 +53,11 @@ public class UserController {
         return "Update user is called.";
     }
 
+    @PostMapping(value = "/password-reset-request", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity requestReset(@RequestBody PasswordResetRequestModel passwordResetRequestModel) {
+
+        userService.requestPasswordReset(passwordResetRequestModel.getEmail());
+
+        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("Email sent" , HttpStatus.OK.value()));
+    }
 }
