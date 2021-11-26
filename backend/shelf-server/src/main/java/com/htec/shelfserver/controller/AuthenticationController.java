@@ -33,14 +33,11 @@ public class AuthenticationController {
         UserDTO userDTO = UserMapper.INSTANCE.userLoginRequestModelToUserDto(userLoginRequestModel);
 
         UserDTO loggedInUser = authenticationService.authenticateUser(userDTO);
+
         String jwtToken =  tokenGenerator.generateJwtToken(userDTO);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new UserLoginResponseModel(loggedInUser.getId(),
-                loggedInUser.getFirstName(),
-                loggedInUser.getLastName(),
-                loggedInUser.getEmail(),
-                jwtToken,
-                loggedInUser.getRole().getId()
-        ));
+        UserLoginResponseModel userLoginResponse = UserMapper.INSTANCE.userDtoToUserLoginResponseModel(userDTO, jwtToken);
+
+        return ResponseEntity.status(HttpStatus.OK).body(userLoginResponse);
     }
 }
