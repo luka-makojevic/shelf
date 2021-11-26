@@ -1,30 +1,47 @@
 package com.htec.shelfserver.service;
 
+
 import com.htec.shelfserver.dto.UserDTO;
+import com.htec.shelfserver.entity.PasswordResetTokenEntity;
 import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.model.response.UserResponseModel;
+import com.htec.shelfserver.repository.PasswordResetTokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
 import com.htec.shelfserver.util.Roles;
+import com.htec.shelfserver.util.TokenGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final TokenGenerator tokenGenerator;
+    private final EmailService emailService;
+    private final String emailPasswordResetTokenLink;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(PasswordResetTokenRepository passwordResetTokenRepository,
+                       UserRepository userRepository,
+                       TokenGenerator tokenGenerator,
+                       EmailService emailService,
+                       @Value("${emailPasswordResetTokenLink}") String emailPasswordResetTokenLink) {
+
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.userRepository = userRepository;
+        this.tokenGenerator = tokenGenerator;
+        this.emailService = emailService;
+        this.emailPasswordResetTokenLink = emailPasswordResetTokenLink;
     }
+
 
     public UserDTO getUser(String email) {
 
@@ -56,13 +73,28 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String email) {
+    public void requestPasswordReset(String email) {
 
-        UserEntity userEntity = userRepository.findByEmail(email).
-                orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
+        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(ExceptionSupplier.userNotValid);
 
-        return new User(userEntity.getEmail(), userEntity.getPassword(), new ArrayList<>());
+        sendPasswordResetMail(userEntity);
+    }
+
+    void sendPasswordResetMail(UserEntity userEntity) {
+        String token = tokenGenerator.generatePasswordResetToken(userEntity.getId().toString());
+
+        PasswordResetTokenEntity passwordResetToken = new PasswordResetTokenEntity(token, userEntity);
+
+        passwordResetTokenRepository.save(passwordResetToken);
+
+        String passwordResetTokenLink = emailPasswordResetTokenLink + token;
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("firstName", userEntity.getFirstName());
+        model.put("passwordResetTokenLink", passwordResetTokenLink);
+
+        emailService.sendEmail(userEntity.getEmail(), model, "password-reset.html", "Reset your password");
+
     }
 
 }

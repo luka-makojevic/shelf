@@ -8,9 +8,10 @@ public class SecurityConstants {
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String TOKEN_SECRET = "ao9h8vbm52kxfd9d6lw0yq";
     public static final String CONFIRMATION_TOKEN_SECRET = "mjfjhj347892ikdo545234sA_+(57%&*^%";
+    public static final String AUTHORIZATION_HEADER_STRING = "Authorization";
+    public static final String SIGN_IN_URL = "/auth/login";
+    public static final String PASSWORD_RESET_REQUEST_URL = "/users/password-reset-request";
     public static final String HEADER_STRING = "Authorization";
-
-    public static final String SIGN_IN_URL = "/users/login";
     public static final String SIGN_UP_URL = "/register";
     public static final String SIGN_UP_MICROSOFT_URL = "/register/microsoft";
     public static final String SIGN_UP_CONFIRM_EMAIL_URL = "/tokens/confirmation";
