@@ -29,24 +29,6 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TextResponseMessage> registerUser(@RequestBody UserRegisterRequestModel userRegisterRequestModel) {
-
-        UserDTO userDTO = UserMapper.INSTANCE.userRegisterRequestModelToUserDto(userRegisterRequestModel);
-
-        userService.registerUser(userDTO);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(new TextResponseMessage("User registered", HttpStatus.CREATED.value()));
-    }
-
-    @PostMapping(value = "/register/microsoft", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TextResponseMessage> registerUserMicrosoft(@RequestBody UserRegisterMicrosoftRequestModel userRegisterMicrosoftRequestModel) {
-
-        userService.registerUserMicrosoft(userRegisterMicrosoftRequestModel.getBearerToken());
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(new TextResponseMessage("User registered", HttpStatus.CREATED.value()));
-    }
-
     @PutMapping
     public String updateUser() {
         return "Update user is called.";

@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class TokenService {
     private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
-    private final UserService userService;
+    private final RegisterService regsterService;
 
     public final String EMAIL_ALREADY_CONFIRMED = "Email already confirmed";
     public final String EMAIL_CONFIRMED = "Email confirmed";
@@ -27,10 +27,10 @@ public class TokenService {
     @Autowired
     public TokenService(TokenRepository tokenRepository,
                         UserRepository userRepository,
-                        UserService userService) {
+                        RegisterService regsterService) {
         this.tokenRepository = tokenRepository;
         this.userRepository = userRepository;
-        this.userService = userService;
+        this.regsterService = regsterService;
     }
 
     @Transactional
@@ -91,7 +91,7 @@ public class TokenService {
 
         tokenRepository.delete(oldConfirmationToken);
 
-        userService.createAndSendToken(userEntity);
+        regsterService.createAndSendToken(userEntity);
 
         return TOKEN_RESENT;
     }

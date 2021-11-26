@@ -12,6 +12,7 @@ import java.util.UUID;
 @Component
 public class TokenGenerator {
     private final Random RANDOM = new SecureRandom();
+    private String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
     public String generateSalt(int length) {
         return generateRandomString(length);
@@ -21,7 +22,6 @@ public class TokenGenerator {
         StringBuilder returnValue = new StringBuilder(length);
 
         for (int i = 0; i < length; i++) {
-            String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
             returnValue.append(ALPHABET.charAt(RANDOM.nextInt(ALPHABET.length())));
         }
 

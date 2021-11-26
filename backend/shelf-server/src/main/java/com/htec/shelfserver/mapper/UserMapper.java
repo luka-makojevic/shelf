@@ -15,15 +15,7 @@ public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     UserDTO userRegisterRequestModelToUserDto(UserRegisterRequestModel userRegisterRequestModel);
-<<<<<<< HEAD
-=======
 
-<<<<<<< HEAD
-    UserDTO userRegisterMicrosoftRequestModelToUserDto(UserRegisterMicrosoftRequestModel userRegisterRequestModel);
->>>>>>> CU-1rb0ck7 - Third party registration , new request-model added
-
-=======
->>>>>>> CU-1rb0ck7 - Third party registration , refactored UserDTO
     UserEntity userDtoToUserEntity(UserDTO userDTO);
 
     UserDTO userEntityToUserDTO(UserEntity user);

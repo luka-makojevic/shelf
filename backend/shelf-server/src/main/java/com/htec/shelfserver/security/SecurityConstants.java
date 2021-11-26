@@ -11,8 +11,8 @@ public class SecurityConstants {
     public static final String HEADER_STRING = "Authorization";
 
     public static final String SIGN_IN_URL = "/users/login";
-    public static final String SIGN_UP_URL = "/users/register";
-    public static final String SIGN_UP_CONFIRM_EMAIL_URL = "/users/register/confirmation";
-    public static final String SIGN_UP_RESEND_TOKEN_URL = "/users/register/resend";
+    public static final String SIGN_UP_URL = "/register";
+    public static final String SIGN_UP_CONFIRM_EMAIL_URL = "/tokens/confirmation";
+    public static final String SIGN_UP_RESEND_TOKEN_URL = "/tokens/resend";
 
 }
