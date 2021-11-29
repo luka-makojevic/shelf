@@ -2,6 +2,9 @@ package com.htec.shelfserver.controller;
 
 import com.htec.shelfserver.annotation.AuthenticationUser;
 import com.htec.shelfserver.dto.AuthUser;
+import com.htec.shelfserver.dto.UserDTO;
+import com.htec.shelfserver.mapper.UserMapper;
+import com.htec.shelfserver.model.request.UserUpdateRequestModel;
 import com.htec.shelfserver.model.response.TextResponseMessage;
 import com.htec.shelfserver.requestModel.PasswordResetRequestModel;
 import com.htec.shelfserver.service.UserService;
@@ -26,9 +29,16 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    @PutMapping
-    public String updateUser() {
-        return "Update user is called.";
+    @PutMapping("/{id}")
+    public ResponseEntity updateUser(@PathVariable Long id,
+                                                          @RequestBody UserUpdateRequestModel userUpdateRequestModel) {
+
+        UserDTO userDTO = UserMapper.INSTANCE.userUpdateRequestModelToUserDto(userUpdateRequestModel);
+        userDTO.setId(id);
+
+        userService.updateUser(userDTO);
+
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @PostMapping(value = "/password-reset-request", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -36,6 +46,6 @@ public class UserController {
 
         userService.requestPasswordReset(passwordResetRequestModel.getEmail());
 
-        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("Email sent" , HttpStatus.OK.value()));
+        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("Email sent", HttpStatus.OK.value()));
     }
 }
