@@ -58,7 +58,7 @@ public class AuthenticationService implements UserDetailsService {
             SecurityContext sc = SecurityContextHolder.getContext();
             sc.setAuthentication(auth);
         } catch (AuthenticationException ex) {
-            throw ExceptionSupplier.userNotValid.get();
+            throw ExceptionSupplier.userDoesNotHavePermission.get();
         }
 
         if (!userEntity.get().getEmailVerified())

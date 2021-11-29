@@ -81,8 +81,8 @@ public class ExceptionSupplier {
             ErrorMessages.FORBIDDEN.getErrorMessage()
     );
 
-    public static final Supplier<ShelfException> userNotValid = () -> new ShelfException(
-            ErrorMessages.USER_NOT_VALID.getErrorMessage(),
+    public static final Supplier<ShelfException> userDoesNotHavePermission = () -> new ShelfException(
+            ErrorMessages.USER_DOES_NOT_HAVE_PERMISSION.getErrorMessage(),
             HttpStatus.FORBIDDEN.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.FORBIDDEN.getErrorMessage()

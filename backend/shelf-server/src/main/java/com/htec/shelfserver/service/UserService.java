@@ -75,7 +75,8 @@ public class UserService {
 
         Pageable pageable = PageRequest.of(page - 1, size);
 
-        Page<UserEntity> users = userRepository.findAll(pageable);;
+        Page<UserEntity> users = userRepository.findAll(pageable);
+        ;
 
         List<UserResponseModel> allUsers = UserMapper.INSTANCE.userEntityToUserResponseModels(users.getContent());
 
@@ -96,13 +97,13 @@ public class UserService {
                 userRepository.delete(user);
             }
         } else {
-            throw ExceptionSupplier.userNotValid.get();
+            throw ExceptionSupplier.userDoesNotHavePermission.get();
         }
     }
 
     public void requestPasswordReset(String email) {
 
-        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(ExceptionSupplier.userNotValid);
+        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
 
         sendPasswordResetMail(userEntity);
     }
