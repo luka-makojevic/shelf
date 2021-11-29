@@ -61,7 +61,20 @@ public class TokenGenerator {
         String token = Jwts.builder()
                 .setId(userEntity.getId().toString())
                 .setSubject(userEntity.getEmail())
-                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.JWT_EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET)
+                .claim(JwtFieldConstants.ROLE_ID, userEntity.getRole().getId())
+                .compact();
+        return token;
+    }
+
+    public String generateJwtRefreshToken(UserDTO userDTO) {
+
+        UserEntity userEntity = userRepository.findByEmail(userDTO.getEmail()).orElseThrow(ExceptionSupplier.userNotValid);
+        String token = Jwts.builder()
+                .setId(userEntity.getId().toString())
+                .setSubject(userEntity.getEmail())
+                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.REFRESH_JWT_EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET)
                 .claim(JwtFieldConstants.ROLE_ID, userEntity.getRole().getId())
                 .compact();
