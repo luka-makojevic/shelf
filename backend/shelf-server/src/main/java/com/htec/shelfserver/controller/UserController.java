@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TextResponseMessage> updateUser(@PathVariable Long id,
+    public ResponseEntity updateUser(@PathVariable Long id,
                                                           @RequestBody UserUpdateRequestModel userUpdateRequestModel) {
 
         UserDTO userDTO = UserMapper.INSTANCE.userUpdateRequestModelToUserDto(userUpdateRequestModel);
@@ -38,7 +38,7 @@ public class UserController {
 
         userService.updateUser(userDTO);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("User updated", HttpStatus.OK.value()));
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @PostMapping(value = "/password-reset-request", produces = MediaType.APPLICATION_JSON_VALUE)

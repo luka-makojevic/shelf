@@ -106,23 +106,30 @@ public class UserService {
 
     }
 
-    public void updateUser(UserDTO userDTO) {
+    public UserResponseModel updateUser(UserDTO userDTO) {
         UserEntity user = userRepository.findById(userDTO.getId()).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
-
-        userValidator.isUserUpdateValid(userDTO);
 
         if (userDTO.getFirstName() != null) {
             user.setFirstName(userDTO.getFirstName());
+        } else {
+            user.setFirstName(user.getFirstName());
         }
 
         if (userDTO.getLastName() != null) {
             user.setLastName(userDTO.getLastName());
+        } else {
+            user.setLastName(user.getLastName());
         }
 
         if (userDTO.getPassword() != null) {
+            userValidator.isUserUpdateValid(userDTO);
             user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
+        } else {
+            user.setPassword(user.getPassword());
         }
 
         userRepository.save(user);
+
+        return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
     }
 }
