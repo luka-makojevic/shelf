@@ -6,6 +6,7 @@ import {
   BorderProps,
   GridProps,
   FlexboxProps,
+  VariantArgs,
 } from 'styled-system';
 
 export interface ProfileProps {
@@ -28,6 +29,14 @@ export interface FormProps
     SpaceProps,
     TypographyProps,
     ColorProps,
+    LayoutProps {
+  children?: React.ReactNode;
+}
+
+export interface InputProps
+  extends VariantArgs,
+    BorderProps,
+    SpaceProps,
     LayoutProps {
   children?: React.ReactNode;
 }

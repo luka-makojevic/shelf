@@ -121,7 +121,7 @@ const FormValidation = () => {
         >
           <PlainText>
             I accept{` `}
-            <Link to={Routes.TERMS} target="_blank">
+            <Link to={Routes.TERMS_AND_CONDITIONS} target="_blank">
               Terms of Service
             </Link>
           </PlainText>
