@@ -88,14 +88,16 @@ public class UserService {
 
     public UserResponseModel getUserById(Long id) {
 
-        UserEntity user = userRepository.findById(id).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
     }
 
     public void deleteUserById(Long id) {
 
-        UserEntity user = userRepository.findById(id).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         if (user.getRole() != null) {
             if (user.getRole().getId().equals(Long.valueOf(Roles.SUPER_ADMIN))) {
@@ -108,7 +110,8 @@ public class UserService {
 
     public void requestPasswordReset(String email) {
 
-        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
+        UserEntity userEntity = userRepository.findByEmail(email)
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
 
         sendPasswordResetMail(userEntity);
     }
@@ -132,7 +135,8 @@ public class UserService {
 
     public UserResponseModel updateUser(UserDTO userDTO) {
 
-        UserEntity user = userRepository.findById(userDTO.getId()).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+        UserEntity user = userRepository.findById(userDTO.getId())
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         if (userDTO.getFirstName() != null) {
             user.setFirstName(userDTO.getFirstName());
