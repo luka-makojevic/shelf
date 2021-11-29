@@ -9,6 +9,7 @@ import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.model.response.UserRegisterMicrosoftResponseModel;
 import com.htec.shelfserver.repository.TokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
+import com.htec.shelfserver.security.SecurityConstants;
 import com.htec.shelfserver.util.TokenGenerator;
 import com.htec.shelfserver.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Value;
@@ -85,7 +86,7 @@ public class RegisterService {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + bearerToken);
+        headers.add(SecurityConstants.AUTHORIZATION_HEADER_STRING, SecurityConstants.BEARER_TOKEN_PREFIX + bearerToken);
 
         ResponseEntity<UserRegisterMicrosoftResponseModel> response;
 

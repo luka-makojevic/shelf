@@ -2,6 +2,7 @@ package com.htec.shelfserver.controller;
 
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.mapper.UserMapper;
+import com.htec.shelfserver.model.request.UserLoginMicrosoftRequestModel;
 import com.htec.shelfserver.model.request.UserLoginRequestModel;
 import com.htec.shelfserver.model.response.UserLoginResponseModel;
 import com.htec.shelfserver.service.LoginService;
@@ -34,11 +35,25 @@ public class LoginController {
 
         UserDTO loggedInUser = loginService.authenticateUser(userDTO);
 
-        String jwtToken = tokenGenerator.generateJwtToken(userDTO);
+        String jwtToken = tokenGenerator.generateJwtToken(loggedInUser);
 
-        String jwtRefreshToken = tokenGenerator.generateJwtRefreshToken(userDTO);
+        String jwtRefreshToken = tokenGenerator.generateJwtRefreshToken(loggedInUser);
 
-        UserLoginResponseModel userLoginResponse = UserMapper.INSTANCE.userDtoToUserLoginResponseModel(userDTO, jwtToken, jwtRefreshToken);
+        UserLoginResponseModel userLoginResponse = UserMapper.INSTANCE.userDtoToUserLoginResponseModel(loggedInUser, jwtToken, jwtRefreshToken);
+
+        return ResponseEntity.status(HttpStatus.OK).body(userLoginResponse);
+    }
+
+    @PostMapping(value = "/microsoft", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserLoginResponseModel> createUser(@RequestBody UserLoginMicrosoftRequestModel userLoginRequestModel) {
+
+        UserDTO loggedInUser = loginService.authenticateUserMicrosoft(userLoginRequestModel.getBearerToken());
+
+        String jwtToken = tokenGenerator.generateJwtToken(loggedInUser);
+
+        String jwtRefreshToken = tokenGenerator.generateJwtRefreshToken(loggedInUser);
+
+        UserLoginResponseModel userLoginResponse = UserMapper.INSTANCE.userDtoToUserLoginResponseModel(loggedInUser, jwtToken, jwtRefreshToken);
 
         return ResponseEntity.status(HttpStatus.OK).body(userLoginResponse);
     }
