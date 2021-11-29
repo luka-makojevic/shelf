@@ -9,9 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErrorMessage {
-    private String message;
-    private Integer status;
-    private String timestamp;
-    private String errorMessage;
+public class UserRegisterMicrosoftResponseModel {
+    private String givenName;
+    private String surname;
+    private String mail;
 }
