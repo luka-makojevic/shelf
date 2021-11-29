@@ -3,12 +3,14 @@ package com.htec.shelfserver.service;
 
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.PasswordResetTokenEntity;
+import com.htec.shelfserver.entity.RoleEntity;
 import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.model.response.UserPageResponseModel;
 import com.htec.shelfserver.model.response.UserResponseModel;
 import com.htec.shelfserver.repository.PasswordResetTokenRepository;
+import com.htec.shelfserver.repository.RoleRepository;
 import com.htec.shelfserver.repository.UserRepository;
 import com.htec.shelfserver.util.Roles;
 import com.htec.shelfserver.util.TokenGenerator;
@@ -35,6 +37,7 @@ public class UserService {
     private final UserValidator userValidator;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final String emailPasswordResetTokenLink;
+    private final RoleRepository roleRepository;
 
     @Autowired
     public UserService(PasswordResetTokenRepository passwordResetTokenRepository,
@@ -43,7 +46,7 @@ public class UserService {
                        EmailService emailService,
                        UserValidator userValidator,
                        BCryptPasswordEncoder bCryptPasswordEncoder,
-                       @Value("${emailPasswordResetTokenLink}") String emailPasswordResetTokenLink) {
+                       @Value("${emailPasswordResetTokenLink}") String emailPasswordResetTokenLink, RoleRepository roleRepository) {
 
         this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.userRepository = userRepository;
@@ -52,6 +55,7 @@ public class UserService {
         this.userValidator = userValidator;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.emailPasswordResetTokenLink = emailPasswordResetTokenLink;
+        this.roleRepository = roleRepository;
     }
 
 
@@ -148,6 +152,23 @@ public class UserService {
         } else {
             user.setPassword(user.getPassword());
         }
+
+        userRepository.save(user);
+
+        return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
+    }
+
+    public UserResponseModel updateUserRole(Long id, Long roleId) {
+
+        UserEntity user = userRepository.findById(id).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+
+        if (user.getRole().getId().equals(roleId)) {
+            throw ExceptionSupplier.wrongRoleUpdate.get();
+        }
+
+        RoleEntity role = roleRepository.findById(roleId).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+
+        user.setRole(new RoleEntity(role.getId(), role.getName()));
 
         userRepository.save(user);
 
