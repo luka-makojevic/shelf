@@ -1,5 +1,5 @@
 import React, { ChangeEventHandler, ForwardedRef, useState } from 'react';
-import { Ref, FieldError } from 'react-hook-form';
+import { FieldError } from 'react-hook-form';
 import { Input, InputContainer, SeenIcon } from './input-styles';
 import { Error } from '../text/text-styles';
 
@@ -25,17 +25,9 @@ export const InputField = React.forwardRef(
       setPasswordShown(!passwordShown);
     };
 
-    // console.log({ ...register(name, validationRule) })
-
     return (
       <InputContainer>
-        <Input
-          my="5px"
-          padding={[1, 2]}
-          type={!passwordShown ? type : 'text'}
-          ref={ref}
-          {...restProps}
-        />
+        <Input type={!passwordShown ? type : 'text'} ref={ref} {...restProps} />
         {type === 'password' && (
           <SeenIcon
             src={

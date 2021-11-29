@@ -5,9 +5,11 @@ import { FormProps } from '../../interfaces/styles';
 export const Input = styled.input<FormProps>`
   width: 100%;
   min-height: 45px;
+  padding: 5px;
   border: 1px solid ${({ theme }) => theme.colors.secondary};
   border-radius: 30px;
   text-indent: 10px;
+  margin: 5px 0;
   ${space}
   ${border}
 
@@ -20,8 +22,6 @@ export const Input = styled.input<FormProps>`
 export const InputContainer = styled.div`
   position: relative;
   height: 70px;
-  
- 
 `;
 
 export const PasswordContainer = styled.div`
