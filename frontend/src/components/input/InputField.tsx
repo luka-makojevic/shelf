@@ -38,7 +38,7 @@ export const InputField = React.forwardRef(
             onClick={handlePasswordVisibilityClick}
           />
         )}
-        {error && <Error>{error.message}</Error>}
+        {error && <Error role="alert">{error.message}</Error>}
       </InputContainer>
     );
   }

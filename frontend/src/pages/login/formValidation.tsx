@@ -1,65 +1,51 @@
 import { useContext, useState } from 'react';
-import { useForm, RegisterOptions } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import Form from '../../components/form';
 import { InputFieldWrapper } from '../../components/form/form-styles';
-import { InputField, InputFieldType } from '../../components/input/InputField';
+import { InputField } from '../../components/input/InputField';
 import { Error } from '../../components/text/text-styles';
 import { Button } from '../../components/UI/button';
 import { Holder } from "../../components/layout/layout.styles"
-import { LoginData } from '../../interfaces/types';
+import { loginFieldConfig } from '../../validation/config/loginValidationConfig';
+import {
+  LoginData,
+  LoginFieldConfig,
+  LoginValidationProps,
+} from '../../interfaces/types';
 import { AuthContext } from '../../providers/authProvider';
+import { Routes } from '../../enums/routes';
 
-interface FieldConfig {
-  type: InputFieldType;
-  placeholder: string;
-  name: 'email' | 'password';
-
-  validations: RegisterOptions;
-}
-
-const FormValidation = () => {
+const FormValidation = ({ login }: LoginValidationProps) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<LoginData>({});
   const [error, setError] = useState<string>();
 
-  const fieldConfigs: FieldConfig[] = [
-    {
-      type: 'email',
-      placeholder: 'Email',
-      name: 'email',
-      validations: {
-        required: 'This field is required',
-        pattern: {
-          value:
-            /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i,
-          message: 'Invalid email format',
-        },
-      },
-    },
-    {
-      type: 'password',
-      placeholder: 'Password',
-      name: 'password',
-      validations: {
-        required: 'This field is required',
-      },
-    },
-  ];
-  const { login, isLoading } = useContext(AuthContext);
+  const { login: HttpLogin, isLoading } = useContext(AuthContext);
 
-  const submitForm = (data: LoginData) => {
-    login(
+  const submitForm = async (data: LoginData) => {
+    HttpLogin(
       data,
       (navigation) => {
-        navigation('/dashboard');
+        navigation(Routes.DASHBOARD);
       },
       (err: string) => {
         setError(err);
       }
     );
+    if (login) {
+      try {
+        await login(data.email, data.password);
+        throw 'error';
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    reset();
   };
 
   return (
@@ -68,7 +54,7 @@ const FormValidation = () => {
         <Error>{error}</Error>
       </Holder>
       <InputFieldWrapper>
-        {fieldConfigs.map((fieldConfig: FieldConfig) => (
+        {loginFieldConfig.map((fieldConfig: LoginFieldConfig) => (
           <InputField
             key={fieldConfig.name}
             placeholder={fieldConfig.placeholder}
