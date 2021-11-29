@@ -16,7 +16,7 @@ const defaultValue: ContextTypes = {
   microsoftLogin: async () => {},
   register: async () => {},
   microsoftRegister: async () => {},
-  resetPass: async () => {},
+  resetPassword: async () => {},
   isLoading: false,
   accessToken: '',
 };
@@ -27,7 +27,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<UserType | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [accessToken, setAccessToken] = useState<string>('');
-  const [resetToken, setResetToken] = useState<string>('');
 
   useEffect(() => {
     const userLocalStorage = localStorage.getItem('user')
@@ -124,21 +123,20 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       .finally(() => setIsLoading(false));
   };
 
-  const resetPass = (
+  const resetPassword = (
     data: ResetPasswordData,
-    onSuccess: (success: string) => void,
-    onError: (error: string) => void
+    onSuccess: () => void,
+    onError: (err: string) => void
   ) => {
     setIsLoading(true);
-    AuthService.resetPass(data)
+    AuthService.resetPassword(data)
       .then((res) => {
-        if (res.data.passwordResetToken) {
-          setResetToken(res.data?.passwordResetToken);
-          onSuccess(res.data?.message);
+        if (res.data.resetToken) {
+          onSuccess();
         }
       })
       .catch((err) => {
-        onError(err.data?.message);
+        onError(err.response?.data?.message);
       })
       .finally(() => setIsLoading(false));
   };
@@ -150,7 +148,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         login,
         microsoftLogin,
         register,
-        resetPass,
+        resetPassword,
         microsoftRegister,
         isLoading,
         accessToken,

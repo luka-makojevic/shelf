@@ -46,9 +46,9 @@ export interface ContextTypes {
     onSuccess: () => void,
     onError: (error: string) => void
   ) => void;
-  resetPass: (
+  resetPassword: (
     data: ResetPasswordData,
-    onSuccess: (success: string) => void,
+    onSuccess: () => void,
     onError: (error: string) => void
   ) => void;
   isLoading: boolean;
