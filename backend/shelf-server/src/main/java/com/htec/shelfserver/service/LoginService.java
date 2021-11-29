@@ -68,7 +68,7 @@ public class LoginService implements UserDetailsService {
             SecurityContext sc = SecurityContextHolder.getContext();
             sc.setAuthentication(auth);
         } catch (AuthenticationException ex) {
-            throw ExceptionSupplier.userDoesNotHavePermission.get();
+            throw ExceptionSupplier.authenticationCredentialsNotValid.get();
         }
 
         if (!userEntity.getEmailVerified())
