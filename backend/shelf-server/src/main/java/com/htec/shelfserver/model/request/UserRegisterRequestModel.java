@@ -10,7 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRegisterRequestModel {
-
     private String firstName;
     private String lastName;
     private String email;

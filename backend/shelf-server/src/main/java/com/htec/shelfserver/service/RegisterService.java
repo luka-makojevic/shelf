@@ -91,7 +91,6 @@ public class RegisterService {
                 HttpMethod.GET, new HttpEntity<>(headers),
                 UserRegisterMicrosoftResponseModel.class);
 
-        System.out.println();
         UserEntity userEntity = UserMapper.INSTANCE.userRegisterMicrosoftResponseModelToUserEntity(response.getBody());
 
         userEntity.setCreatedAt(LocalDateTime.now());
