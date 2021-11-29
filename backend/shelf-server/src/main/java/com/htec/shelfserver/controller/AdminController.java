@@ -3,6 +3,7 @@ package com.htec.shelfserver.controller;
 import com.htec.shelfserver.annotation.AuthenticationUser;
 import com.htec.shelfserver.annotation.ValidateRoles;
 import com.htec.shelfserver.dto.AuthUser;
+import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.model.response.TextResponseMessage;
 import com.htec.shelfserver.service.UserService;
 import com.htec.shelfserver.util.Roles;
@@ -21,10 +22,11 @@ public class AdminController {
     }
 
     @GetMapping
-    @ValidateRoles(roles = {Roles.SUPER_ADMIN})
-    public ResponseEntity getUsers(@AuthenticationUser AuthUser user) {
-
-        return ResponseEntity.ok(userService.getUsers());
+    @ValidateRoles(roles = {Roles.USER})
+    public ResponseEntity getUsers(@AuthenticationUser AuthUser user,
+                                   @RequestParam(defaultValue = "1") Integer page,
+                                   @RequestParam(defaultValue = "5") Integer size) {
+        return ResponseEntity.ok(userService.getUsers(page, size));
     }
 
     @GetMapping("/{id}")

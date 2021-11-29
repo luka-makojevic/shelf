@@ -6,6 +6,7 @@ import com.htec.shelfserver.entity.PasswordResetTokenEntity;
 import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.mapper.UserMapper;
+import com.htec.shelfserver.model.response.UserPageResponseModel;
 import com.htec.shelfserver.model.response.UserResponseModel;
 import com.htec.shelfserver.repository.PasswordResetTokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
@@ -14,6 +15,9 @@ import com.htec.shelfserver.util.TokenGenerator;
 import com.htec.shelfserver.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -59,9 +63,23 @@ public class UserService {
         return UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
     }
 
-    public List<UserResponseModel> getUsers() {
+    public UserPageResponseModel<UserResponseModel> getUsers(Integer page, Integer size) {
 
-        return UserMapper.INSTANCE.userEntityToUserResponseModels(userRepository.findAll());
+        if (page <= 0) {
+            throw ExceptionSupplier.pageWrong.get();
+        }
+
+        if (size < 1) {
+            throw ExceptionSupplier.sizeWrong.get();
+        }
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        Page<UserEntity> users = userRepository.findAll(pageable);;
+
+        List<UserResponseModel> allUsers = UserMapper.INSTANCE.userEntityToUserResponseModels(users.getContent());
+
+        return new UserPageResponseModel<>(allUsers, users.getTotalPages(), users.getNumber() + 1);
     }
 
     public UserResponseModel getUserById(Long id) {

@@ -7,10 +7,12 @@ import com.htec.shelfserver.model.request.UserRegisterRequestModel;
 import com.htec.shelfserver.model.response.UserLoginResponseModel;
 import com.htec.shelfserver.model.response.UserRegisterMicrosoftResponseModel;
 import com.htec.shelfserver.model.request.UserUpdateRequestModel;
+import com.htec.shelfserver.model.response.UserPageResponseModel;
 import com.htec.shelfserver.model.response.UserResponseModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
