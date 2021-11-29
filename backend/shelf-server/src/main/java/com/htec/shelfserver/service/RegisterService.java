@@ -6,6 +6,7 @@ import com.htec.shelfserver.entity.TokenEntity;
 import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.mapper.UserMapper;
+import com.htec.shelfserver.model.response.UserRegisterMicrosoftResponseModel;
 import com.htec.shelfserver.repository.TokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
 import com.htec.shelfserver.util.TokenGenerator;
@@ -87,10 +88,18 @@ public class RegisterService {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + bearerToken);
 
-        ResponseEntity<String> response = restTemplate.exchange(MICROSOFT_GRAPH_URL, HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        ResponseEntity<UserRegisterMicrosoftResponseModel> response = restTemplate.exchange(MICROSOFT_GRAPH_URL,
+                HttpMethod.GET, new HttpEntity<>(headers),
+                UserRegisterMicrosoftResponseModel.class);
 
-        // todo: Add new user.
+        System.out.println();
+        UserEntity userEntity = UserMapper.INSTANCE.userRegisterMicrosoftResponseModelToUserEntity(response.getBody());
 
+        userEntity.setCreatedAt(LocalDateTime.now());
+        userEntity.setEmailVerified(true);
+        userEntity.setRole(new RoleEntity(3L));
+
+        userRepository.save(userEntity);
     }
 
     void createAndSendToken(UserEntity userEntity) {
