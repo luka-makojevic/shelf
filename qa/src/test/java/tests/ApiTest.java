@@ -24,7 +24,7 @@ public class ApiTest {
 
         // Sending Post request
         RequestSpecBuilder builder = new RequestSpecBuilder();
-        builder.setBaseUri(BaseHelperPropertieManager.getInstance().getURI("/users"));
+        builder.setBaseUri(BaseHelperPropertieManager.getInstance().getURI(""));
         builder.setBasePath("/register");
         builder.setContentType("application/json");
         builder.setBody(parsedJson);
@@ -34,5 +34,36 @@ public class ApiTest {
         //Assertions
         Assert.assertEquals("User registered",response.jsonPath().get("message").toString());
         Assert.assertEquals("201",response.jsonPath().get("status").toString());
+    }
+
+    @Test
+    public void apiPostNTCUserRegisteredCheck() throws IOException
+    {
+        User user = new User();
+        user.setValuesForInvalidUser(user.email, user.password, user.firstName, user.lastName);
+        Gson gson = new Gson();
+        String parsedJson = gson.toJson(user);
+
+        // Sending Post request
+        RequestSpecBuilder builder = new RequestSpecBuilder();
+        builder.setBaseUri(BaseHelperPropertieManager.getInstance().getURI(""));
+        builder.setBasePath("/register");
+        builder.setContentType("application/json");
+        builder.setBody(parsedJson);
+        RequestSpecification rSpec = builder.build();
+        Response response = RestHelpers.sendPostRequest(rSpec);
+
+
+        //Assertions
+        try {
+            Assert.assertEquals("Email is not valid.",response.jsonPath().get("message").toString());
+            Assert.assertEquals("400",response.jsonPath().get("status").toString());
+        } catch (AssertionError e) {
+            Assert.assertEquals("Password is not valid.",response.jsonPath().get("message").toString());
+            Assert.assertEquals("400",response.jsonPath().get("status").toString());
+        }
+
+
+
     }
 }
