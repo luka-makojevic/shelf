@@ -9,7 +9,7 @@ import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.repository.TokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
 import com.htec.shelfserver.util.TokenGenerator;
-import com.htec.shelfserver.util.UserValidator;
+import com.htec.shelfserver.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -52,7 +52,6 @@ public class RegisterService {
         this.emailVerificationLink = emailVerificationLink;
 
     }
-
 
     public void registerUser(UserDTO userDTO) {
 

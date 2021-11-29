@@ -11,8 +11,10 @@ import com.htec.shelfserver.repository.PasswordResetTokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
 import com.htec.shelfserver.util.Roles;
 import com.htec.shelfserver.util.TokenGenerator;
+import com.htec.shelfserver.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -26,6 +28,8 @@ public class UserService {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final TokenGenerator tokenGenerator;
     private final EmailService emailService;
+    private final UserValidator userValidator;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final String emailPasswordResetTokenLink;
 
     @Autowired
@@ -33,12 +37,16 @@ public class UserService {
                        UserRepository userRepository,
                        TokenGenerator tokenGenerator,
                        EmailService emailService,
+                       UserValidator userValidator,
+                       BCryptPasswordEncoder bCryptPasswordEncoder,
                        @Value("${emailPasswordResetTokenLink}") String emailPasswordResetTokenLink) {
 
         this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.userRepository = userRepository;
         this.tokenGenerator = tokenGenerator;
         this.emailService = emailService;
+        this.userValidator = userValidator;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.emailPasswordResetTokenLink = emailPasswordResetTokenLink;
     }
 
@@ -52,6 +60,7 @@ public class UserService {
     }
 
     public List<UserResponseModel> getUsers() {
+
         return UserMapper.INSTANCE.userEntityToUserResponseModels(userRepository.findAll());
     }
 
@@ -97,4 +106,30 @@ public class UserService {
 
     }
 
+    public UserResponseModel updateUser(UserDTO userDTO) {
+        UserEntity user = userRepository.findById(userDTO.getId()).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+
+        if (userDTO.getFirstName() != null) {
+            user.setFirstName(userDTO.getFirstName());
+        } else {
+            user.setFirstName(user.getFirstName());
+        }
+
+        if (userDTO.getLastName() != null) {
+            user.setLastName(userDTO.getLastName());
+        } else {
+            user.setLastName(user.getLastName());
+        }
+
+        if (userDTO.getPassword() != null) {
+            userValidator.isUserUpdateValid(userDTO);
+            user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
+        } else {
+            user.setPassword(user.getPassword());
+        }
+
+        userRepository.save(user);
+
+        return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
+    }
 }
