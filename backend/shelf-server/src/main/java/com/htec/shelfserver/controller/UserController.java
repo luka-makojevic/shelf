@@ -31,7 +31,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity updateUser(@PathVariable Long id,
-                                                          @RequestBody UserUpdateRequestModel userUpdateRequestModel) {
+                                     @RequestBody UserUpdateRequestModel userUpdateRequestModel) {
 
         UserDTO userDTO = UserMapper.INSTANCE.userUpdateRequestModelToUserDto(userUpdateRequestModel);
         userDTO.setId(id);

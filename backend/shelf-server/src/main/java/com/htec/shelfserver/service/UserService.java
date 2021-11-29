@@ -83,12 +83,14 @@ public class UserService {
     }
 
     public UserResponseModel getUserById(Long id) {
+
         UserEntity user = userRepository.findById(id).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
     }
 
     public void deleteUserById(Long id) {
+
         UserEntity user = userRepository.findById(id).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         if (user.getRole() != null) {
@@ -108,6 +110,7 @@ public class UserService {
     }
 
     void sendPasswordResetMail(UserEntity userEntity) {
+
         String token = tokenGenerator.generatePasswordResetToken(userEntity.getId().toString());
 
         PasswordResetTokenEntity passwordResetToken = new PasswordResetTokenEntity(token, userEntity);
@@ -121,10 +124,10 @@ public class UserService {
         model.put("passwordResetTokenLink", passwordResetTokenLink);
 
         emailService.sendEmail(userEntity.getEmail(), model, "password-reset.html", "Reset your password");
-
     }
 
     public UserResponseModel updateUser(UserDTO userDTO) {
+
         UserEntity user = userRepository.findById(userDTO.getId()).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         if (userDTO.getFirstName() != null) {

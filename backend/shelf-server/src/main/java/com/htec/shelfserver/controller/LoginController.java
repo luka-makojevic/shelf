@@ -34,9 +34,9 @@ public class LoginController {
 
         UserDTO loggedInUser = loginService.authenticateUser(userDTO);
 
-        String jwtToken =  tokenGenerator.generateJwtToken(userDTO);
+        String jwtToken = tokenGenerator.generateJwtToken(userDTO);
 
-        String jwtRefreshToken =  tokenGenerator.generateJwtRefreshToken(userDTO);
+        String jwtRefreshToken = tokenGenerator.generateJwtRefreshToken(userDTO);
 
         UserLoginResponseModel userLoginResponse = UserMapper.INSTANCE.userDtoToUserLoginResponseModel(userDTO, jwtToken, jwtRefreshToken);
 

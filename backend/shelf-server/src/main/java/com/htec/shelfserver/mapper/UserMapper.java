@@ -50,5 +50,7 @@ public interface UserMapper {
     UserEntity userRegisterMicrosoftResponseModelToUserEntity(UserRegisterMicrosoftResponseModel body);
   
     UserDTO userUpdateRequestModelToUserDto(UserUpdateRequestModel userUpdateRequestModel);
+
+    @Mapping(target = "role", source = "userDTO.role.id")
     UserLoginResponseModel userDtoToUserLoginResponseModel(UserDTO userDTO, String jwtToken, String jwtRefreshToken);
 }

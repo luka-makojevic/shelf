@@ -70,7 +70,7 @@ public class TokenGenerator {
 
     public String generateJwtRefreshToken(UserDTO userDTO) {
 
-        UserEntity userEntity = userRepository.findByEmail(userDTO.getEmail()).orElseThrow(ExceptionSupplier.userNotValid);
+        UserEntity userEntity = userRepository.findByEmail(userDTO.getEmail()).orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
         String token = Jwts.builder()
                 .setId(userEntity.getId().toString())
                 .setSubject(userEntity.getEmail())
