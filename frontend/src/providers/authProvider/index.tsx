@@ -125,14 +125,14 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const resetPassword = (
     data: ResetPasswordData,
-    onSuccess: () => void,
+    onSuccess: (success: string) => void,
     onError: (err: string) => void
   ) => {
     setIsLoading(true);
     AuthService.resetPassword(data)
       .then((res) => {
         if (res.data.resetToken) {
-          onSuccess();
+          onSuccess('A reset token has been sent to your email');
         }
       })
       .catch((err) => {

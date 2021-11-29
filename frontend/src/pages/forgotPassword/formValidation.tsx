@@ -6,7 +6,6 @@ import { InputField } from '../../components/input/InputField';
 import { ResetPasswordData } from '../../interfaces/types';
 import { AuthContext } from '../../providers/authProvider';
 import { Error } from '../../components/text/text-styles';
-import { Routes } from '../../enums/routes';
 import { emailFormValidation } from '../../validation/config/EmailFormValidation';
 
 const EmailFormValidation = () => {
@@ -20,12 +19,13 @@ const EmailFormValidation = () => {
 
   const { resetPassword, isLoading } = useContext(AuthContext);
   const [error, setError] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
 
   const submitData = (data: ResetPasswordData) => {
     resetPassword(
       data,
-      (navigation) => {
-        navigation(Routes.RESET_PASSWORD);
+      (success: string) => {
+        setSuccessMessage(success);
       },
       (err: string) => {
         setError(err);
@@ -36,6 +36,7 @@ const EmailFormValidation = () => {
   return (
     <Form.Base onSubmit={handleSubmit(submitData)}>
       <Error>{error}</Error>
+      <p>{successMessage}</p>
       <InputFieldWrapper>
         <InputField
           placeholder="Enter your email"
