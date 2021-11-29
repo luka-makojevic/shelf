@@ -1,6 +1,5 @@
-
 import React, { ChangeEventHandler, ForwardedRef, useState } from 'react';
-import { Ref, FieldError } from 'react-hook-form';
+import { FieldError } from 'react-hook-form';
 import { Error, Input, InputContainer, SeenIcon } from './input-styles';
 
 export type InputFieldType = 'text' | 'password' | 'email';
@@ -13,7 +12,6 @@ export type InputFieldProps = {
   type?: InputFieldType;
   value?: string;
 };
-
 
 export const InputField = React.forwardRef(
   (
@@ -47,9 +45,8 @@ export const InputField = React.forwardRef(
             onClick={handlePasswordVisibilityClick}
           />
         )}
-        {error && <Error>{error.message}</Error>}
+        {error && <Error role="alert">{error.message}</Error>}
       </InputContainer>
     );
   }
 );
-

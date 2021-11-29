@@ -57,7 +57,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       })
       .catch((err) => {
         setUser(null);
-        onError(err.response.data.message);
+        onError(err.response?.data.message);
       })
       .finally(() => setIsLoading(false));
   };
@@ -69,13 +69,11 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   ) => {
     setIsLoading(true);
     AuthService.register(data)
-      .then((res) => {
-        localStorage.setItem('user', JSON.stringify(res.data));
-        setUser(res.data);
+      .then(() => {
         onSuccess();
       })
       .catch((err) => {
-        onError(err.response.data.message);
+        onError(err.response?.data.message);
       })
       .finally(() => setIsLoading(false));
   };
