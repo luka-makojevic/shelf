@@ -81,8 +81,8 @@ public class ExceptionSupplier {
             ErrorMessages.FORBIDDEN.getErrorMessage()
     );
 
-    public static final Supplier<ShelfException> userNotValid = () -> new ShelfException(
-            ErrorMessages.USER_NOT_VALID.getErrorMessage(),
+    public static final Supplier<ShelfException> userDoesNotHavePermission = () -> new ShelfException(
+            ErrorMessages.USER_DOES_NOT_HAVE_PERMISSION.getErrorMessage(),
             HttpStatus.FORBIDDEN.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.FORBIDDEN.getErrorMessage()
@@ -118,6 +118,19 @@ public class ExceptionSupplier {
 
     public static final Supplier<ShelfException> accessTokenNotActive = () -> new ShelfException(
             ErrorMessages.TOKEN_NOT_ACTIVE.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+    public static final Supplier<ShelfException> pageWrong = () -> new ShelfException(
+            ErrorMessages.PAGE_NUMBER_WRONG.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> sizeWrong = () -> new ShelfException(
+            ErrorMessages.SIZE_NUMBER_WRONG.getErrorMessage(),
             HttpStatus.BAD_REQUEST.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.BAD_REQUEST.getErrorMessage()

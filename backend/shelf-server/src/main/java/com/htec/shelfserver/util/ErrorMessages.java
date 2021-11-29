@@ -11,7 +11,7 @@ public enum ErrorMessages {
     COULD_NOT_UPDATE_RECORD("Could not update record."),
     COULD_NOT_DELETE_RECORD("Could not delete record."),
     EMAIL_ADDRESS_NOT_VERIFIED("Email address is not verified."),
-    USER_NOT_VALID("User is not valid."),
+    USER_DOES_NOT_HAVE_PERMISSION("User does not have permission."),
     PASSWORD_NOT_VALID("Password is not valid."),
     EMAIL_NOT_VALID("Email is not valid."),
     FIRST_NAME_NOT_VALID("First name is not valid."),
@@ -24,7 +24,9 @@ public enum ErrorMessages {
     TOKEN_EXPIRED("Token expired."),
     USER_NOT_FOUND("User not found."),
     TOKEN_NOT_VALID("Token not valid."),
-    TOKEN_NOT_ACTIVE("Access token has expired or is not yet valid.");
+    TOKEN_NOT_ACTIVE("Access token has expired or is not yet valid."),
+    PAGE_NUMBER_WRONG("Page index must not be less than one."),
+    SIZE_NUMBER_WRONG("Page size must not be less than one.");
 
     private String errorMessage;
 
