@@ -78,7 +78,6 @@ public class RegisterService {
 
         UserEntity storedUser = userRepository.save(userEntity);
         createAndSendToken(storedUser);
-
     }
 
     public void registerUserMicrosoft(String bearerToken) {
@@ -114,6 +113,7 @@ public class RegisterService {
     }
 
     void createAndSendToken(UserEntity userEntity) {
+
         String token = tokenGenerator.generateConfirmationToken(userEntity.getId());
 
         TokenEntity confirmationToken = new TokenEntity(

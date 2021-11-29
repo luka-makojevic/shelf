@@ -29,7 +29,6 @@ public class LoginService implements UserDetailsService {
 
     @Autowired
     LoginService(UserRepository userRepository, AuthenticationManager authenticationManager) {
-
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
     }
@@ -44,6 +43,7 @@ public class LoginService implements UserDetailsService {
     }
 
     public UserDTO authenticateUser(UserDTO userDTO) {
+
         UserDTO returnValue = new UserDTO();
         Optional<UserEntity> userEntity = userRepository.findByEmail(userDTO.getEmail());
 
@@ -67,6 +67,4 @@ public class LoginService implements UserDetailsService {
         returnValue = UserMapper.INSTANCE.userEntityToUserDTO(userEntity.get());
         return returnValue;
     }
-
-
 }

@@ -20,13 +20,13 @@ public class AuthorizationController {
 
     private final TokenGenerator tokenGenerator;
 
-    AuthorizationController(TokenGenerator tokenGenerator) {
+    public AuthorizationController(TokenGenerator tokenGenerator) {
 
         this.tokenGenerator = tokenGenerator;
     }
 
     @GetMapping("/refresh/token")
-    public ResponseEntity getUserById(@AuthenticationUser AuthUser authUser, @RequestBody RefreshTokenRequestModel refreshTokenRequestModel) {
+    public ResponseEntity getUserById(@AuthenticationUser AuthUser authUser) {
 
         UserDTO userDTO = UserMapper.INSTANCE.authUserToUserDTO(authUser);
         String jwtToken = tokenGenerator.generateJwtToken(userDTO);
