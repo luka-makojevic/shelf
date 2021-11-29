@@ -22,13 +22,13 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
-public class AuthenticationService implements UserDetailsService {
+public class LoginService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-    AuthenticationService(UserRepository userRepository, AuthenticationManager authenticationManager) {
+    LoginService(UserRepository userRepository, AuthenticationManager authenticationManager) {
 
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
