@@ -160,13 +160,15 @@ public class UserService {
 
     public UserResponseModel updateUserRole(Long id, Long roleId) {
 
-        UserEntity user = userRepository.findById(id).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         if (user.getRole().getId().equals(roleId)) {
             throw ExceptionSupplier.wrongRoleUpdate.get();
         }
 
-        RoleEntity role = roleRepository.findById(roleId).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+        RoleEntity role = roleRepository.findById(roleId)
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         user.setRole(new RoleEntity(role.getId(), role.getName()));
 
