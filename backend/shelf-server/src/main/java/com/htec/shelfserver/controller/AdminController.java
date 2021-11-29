@@ -22,7 +22,7 @@ public class AdminController {
     }
 
     @GetMapping
-    @ValidateRoles(roles = {Roles.USER})
+    @ValidateRoles(roles = {Roles.SUPER_ADMIN})
     public ResponseEntity getUsers(@AuthenticationUser AuthUser user,
                                    @RequestParam(defaultValue = "1") Integer page,
                                    @RequestParam(defaultValue = "5") Integer size) {

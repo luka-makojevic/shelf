@@ -13,6 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 public class UserPageResponseModel<T> {
     private List<T> users;
-    private Integer total;
+    private Integer totalPages;
     private Integer currentPage;
 }
