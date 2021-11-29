@@ -11,12 +11,10 @@ import com.htec.shelfserver.repository.PasswordResetTokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
 import com.htec.shelfserver.util.Roles;
 import com.htec.shelfserver.util.TokenGenerator;
-<<<<<<< Updated upstream
-=======
 import com.htec.shelfserver.validator.UserValidator;
->>>>>>> Stashed changes
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -30,6 +28,8 @@ public class UserService {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final TokenGenerator tokenGenerator;
     private final EmailService emailService;
+    private final UserValidator userValidator;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final String emailPasswordResetTokenLink;
 
     @Autowired
@@ -37,12 +37,16 @@ public class UserService {
                        UserRepository userRepository,
                        TokenGenerator tokenGenerator,
                        EmailService emailService,
+                       UserValidator userValidator,
+                       BCryptPasswordEncoder bCryptPasswordEncoder,
                        @Value("${emailPasswordResetTokenLink}") String emailPasswordResetTokenLink) {
 
         this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.userRepository = userRepository;
         this.tokenGenerator = tokenGenerator;
         this.emailService = emailService;
+        this.userValidator = userValidator;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.emailPasswordResetTokenLink = emailPasswordResetTokenLink;
     }
 
@@ -78,7 +82,6 @@ public class UserService {
         }
     }
 
-<<<<<<< Updated upstream
     public void requestPasswordReset(String email) {
 
         UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(ExceptionSupplier.userNotValid);
@@ -103,7 +106,6 @@ public class UserService {
 
     }
 
-=======
     public void updateUser(UserDTO userDTO) {
         UserEntity user = userRepository.findById(userDTO.getId()).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
@@ -123,5 +125,4 @@ public class UserService {
 
         userRepository.save(user);
     }
->>>>>>> Stashed changes
 }
