@@ -23,7 +23,8 @@ public enum ErrorMessages {
     EMAIL_ALREADY_CONFIRMED("Email already confirmed."),
     TOKEN_EXPIRED("Token expired."),
     USER_NOT_FOUND("User not found."),
-    TOKEN_NOT_VALID("Token not valid.");
+    TOKEN_NOT_VALID("Token not valid."),
+    TOKEN_NOT_ACTIVE("Access token has expired or is not yet valid.");
 
     private String errorMessage;
 
