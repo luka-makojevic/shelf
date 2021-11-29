@@ -11,6 +11,10 @@ import com.htec.shelfserver.repository.PasswordResetTokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
 import com.htec.shelfserver.util.Roles;
 import com.htec.shelfserver.util.TokenGenerator;
+<<<<<<< Updated upstream
+=======
+import com.htec.shelfserver.validator.UserValidator;
+>>>>>>> Stashed changes
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -52,6 +56,7 @@ public class UserService {
     }
 
     public List<UserResponseModel> getUsers() {
+
         return UserMapper.INSTANCE.userEntityToUserResponseModels(userRepository.findAll());
     }
 
@@ -73,6 +78,7 @@ public class UserService {
         }
     }
 
+<<<<<<< Updated upstream
     public void requestPasswordReset(String email) {
 
         UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(ExceptionSupplier.userNotValid);
@@ -97,4 +103,25 @@ public class UserService {
 
     }
 
+=======
+    public void updateUser(UserDTO userDTO) {
+        UserEntity user = userRepository.findById(userDTO.getId()).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+
+        userValidator.isUserUpdateValid(userDTO);
+
+        if (userDTO.getFirstName() != null) {
+            user.setFirstName(userDTO.getFirstName());
+        }
+
+        if (userDTO.getLastName() != null) {
+            user.setLastName(userDTO.getLastName());
+        }
+
+        if (userDTO.getPassword() != null) {
+            user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
+        }
+
+        userRepository.save(user);
+    }
+>>>>>>> Stashed changes
 }

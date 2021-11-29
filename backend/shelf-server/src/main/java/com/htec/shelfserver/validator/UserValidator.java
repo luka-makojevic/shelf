@@ -1,4 +1,4 @@
-package com.htec.shelfserver.util;
+package com.htec.shelfserver.validator;
 
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.exception.ExceptionSupplier;
@@ -38,6 +38,15 @@ public class UserValidator {
 
         if (ObjectUtils.isEmpty(lastName)) {
             throw ExceptionSupplier.lastNameNotValid.get();
+        }
+    }
+
+    public void isUserUpdateValid(UserDTO userDTO) {
+
+        String password = userDTO.getPassword();
+        Matcher matcher = pattern.matcher(password);
+        if (!matcher.matches()) {
+            throw ExceptionSupplier.passwordNotValid.get();
         }
     }
 }

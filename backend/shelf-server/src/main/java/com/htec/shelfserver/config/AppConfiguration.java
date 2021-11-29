@@ -1,6 +1,6 @@
 package com.htec.shelfserver.config;
 
-import com.htec.shelfserver.util.UserValidator;
+import com.htec.shelfserver.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
