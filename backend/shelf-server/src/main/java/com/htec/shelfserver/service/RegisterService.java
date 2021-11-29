@@ -18,6 +18,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
@@ -87,9 +88,21 @@ public class RegisterService {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + bearerToken);
 
-        ResponseEntity<UserRegisterMicrosoftResponseModel> response = restTemplate.exchange(MICROSOFT_GRAPH_URL,
-                HttpMethod.GET, new HttpEntity<>(headers),
-                UserRegisterMicrosoftResponseModel.class);
+        ResponseEntity<UserRegisterMicrosoftResponseModel> response;
+
+        try {
+            response = restTemplate.exchange(MICROSOFT_GRAPH_URL,
+                    HttpMethod.GET, new HttpEntity<>(headers),
+                    UserRegisterMicrosoftResponseModel.class);
+
+        } catch (RestClientException ex) {
+            throw ExceptionSupplier.accessTokenNotActive.get();
+        }
+
+        userRepository.findByEmail(response.getBody().getMail()).ifPresent(
+                userEntity -> {
+                    throw ExceptionSupplier.recordAlreadyExists.get();
+                });
 
         UserEntity userEntity = UserMapper.INSTANCE.userRegisterMicrosoftResponseModelToUserEntity(response.getBody());
 
