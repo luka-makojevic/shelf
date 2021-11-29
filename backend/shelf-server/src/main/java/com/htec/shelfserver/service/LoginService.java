@@ -56,13 +56,11 @@ public class LoginService implements UserDetailsService {
         UserEntity userEntity = userRepository.findByEmail(userDTO.getEmail())
                 .orElseThrow(ExceptionSupplier.userNotFound);
 
-        String salt = userEntity != null ? userEntity.getSalt() : "";
-
         UsernamePasswordAuthenticationToken authReq
                 = new UsernamePasswordAuthenticationToken(userDTO.getEmail(),
-                userDTO.getPassword() + salt);
-        Authentication auth;
+                userDTO.getPassword() + userEntity.getSalt());
 
+        Authentication auth;
         try {
             auth = authenticationManager.authenticate(authReq);
             SecurityContext sc = SecurityContextHolder.getContext();
