@@ -2,7 +2,6 @@ package tests;
 
 import com.google.gson.Gson;
 import helpers.BaseHelperPropertieManager;
-import helpers.ExcelReader;
 import helpers.RestHelpers;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;
@@ -16,16 +15,10 @@ import java.io.IOException;
 public class ApiTest {
 
     @Test
-    public void apiPostUserRegisteredCheck() throws IOException {
-
-        ExcelReader excelReader = new ExcelReader("src/main/resources/ExcelRead.xlsx");
-        
-        String email = excelReader.getStringData("apiTest", 1, 0);
-        String password = excelReader.getStringData("apiTest", 1, 1);
-        String firstName = excelReader.getStringData("apiTest", 1, 2);
-        String lastName = excelReader.getStringData("apiTest", 1, 3);
-
-        User user = new User(email,password,firstName,lastName);
+    public void apiPostUserRegisteredCheck() throws IOException
+    {
+        User user = new User();
+        user.setValuesForValidUser(user.email, user.password, user.firstName, user.lastName);
         Gson gson = new Gson();
         String parsedJson = gson.toJson(user);
 
