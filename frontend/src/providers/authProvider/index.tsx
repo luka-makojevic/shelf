@@ -13,7 +13,7 @@ const defaultValue: ContextTypes = {
   user: null,
   login: async () => {},
   register: async () => {},
-  resetPass: async () => {},
+  resetPassword: async () => {},
   isLoading: false,
   accessToken: '',
 };
@@ -76,28 +76,28 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       .finally(() => setIsLoading(false));
   };
 
-  const resetPass = (
+  const resetPassword = (
     data: ResetPasswordData,
-    onSuccess: (success: string) => void,
-    onError: (error: string) => void
+    onSuccess: (navigate: NavigateFunction) => void,
+    onError: (err: string) => void
   ) => {
     setIsLoading(true);
-    AuthService.resetPass(data)
+    AuthService.resetPassword(data)
       .then((res) => {
-        if (res.data.passwordResetToken) {
-          setResetToken(res.data?.passwordResetToken);
-          onSuccess(res.data?.message);
+        if (res.data.resetToken) {
+          setResetToken(res.data?.resetToken);
+          onSuccess(navigation);
         }
       })
       .catch((err) => {
-        onError(err.data?.message);
+        onError(err.response?.data?.message);
       })
       .finally(() => setIsLoading(false));
   };
 
   return (
     <AuthContext.Provider
-      value={{ user, login, register, resetPass, isLoading, accessToken }}
+      value={{ user, login, register, resetPassword, isLoading, accessToken }}
     >
       {children}
     </AuthContext.Provider>

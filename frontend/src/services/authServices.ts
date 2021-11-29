@@ -17,12 +17,12 @@ const logout = (setUser: (arg: null) => void) => {
   setUser(null);
 };
 
-const resetPass = (data: ResetPasswordData) =>
+const resetPassword = (data: ResetPasswordData) =>
   axios.post(`${API_URL}password-reset-request`, data);
 
 export default {
   register,
   login,
   logout,
-  resetPass,
+  resetPassword,
 };

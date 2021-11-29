@@ -6,6 +6,8 @@ import { InputField } from '../../components/input/InputField';
 import { ResetPasswordData } from '../../interfaces/types';
 import { AuthContext } from '../../providers/authProvider';
 import { Error } from '../../components/text/text-styles';
+import { Routes } from '../../enums/routes';
+import { emailFormValidation } from '../../validation/config/EmailFormValidation';
 
 const EmailFormValidation = () => {
   const {
@@ -14,29 +16,19 @@ const EmailFormValidation = () => {
     formState: { errors },
   } = useForm<ResetPasswordData>();
 
-  const validation = {
-    required: 'This field is required',
-    pattern: {
-      value:
-        /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i,
-      message: 'Invalid email format',
-    },
-  };
+  const validation = emailFormValidation;
 
-  const { resetPass, isLoading } = useContext(AuthContext);
+  const { resetPassword, isLoading } = useContext(AuthContext);
   const [error, setError] = useState<string>('');
-  const [successMessage, setSuccessMessage] = useState<string>('');
 
   const submitData = (data: ResetPasswordData) => {
-    // console.log(data);
-    resetPass(
+    resetPassword(
       data,
-      (res: string) => {
-        setSuccessMessage(res);
+      (navigation) => {
+        navigation(Routes.RESET_PASSWORD);
       },
       (err: string) => {
         setError(err);
-        // console.log(err);
       }
     );
   };
@@ -49,7 +41,7 @@ const EmailFormValidation = () => {
           placeholder="Enter your email"
           error={errors.email}
           type="email"
-          {...register('email', validation)}
+          {...register('email', { ...validation })}
         />
       </InputFieldWrapper>
 
