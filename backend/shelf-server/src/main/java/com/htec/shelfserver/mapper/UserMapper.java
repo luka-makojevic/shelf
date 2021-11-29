@@ -1,9 +1,11 @@
 package com.htec.shelfserver.mapper;
 
+import com.htec.shelfserver.dto.AuthUser;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.model.request.UserLoginRequestModel;
 import com.htec.shelfserver.model.request.UserRegisterRequestModel;
+import com.htec.shelfserver.model.response.RefreshTokenResponseModel;
 import com.htec.shelfserver.model.response.UserLoginResponseModel;
 import com.htec.shelfserver.model.response.UserRegisterMicrosoftResponseModel;
 import com.htec.shelfserver.model.request.UserUpdateRequestModel;
@@ -27,7 +29,11 @@ public interface UserMapper {
 
     UserDTO userEntityToUserDTO(UserEntity user);
 
+    UserDTO authUserToUserDTO(AuthUser authUser);
+
     UserResponseModel userDtoToUserResponseModel(UserDTO userDTO);
+
+    RefreshTokenResponseModel userDtoToRefreshTokenResponseModel(RefreshTokenResponseModel refreshTokenResponseModel);
 
     UserResponseModel userEntityToUserResponseModel(UserEntity userEntity);
 
@@ -44,4 +50,5 @@ public interface UserMapper {
     UserEntity userRegisterMicrosoftResponseModelToUserEntity(UserRegisterMicrosoftResponseModel body);
   
     UserDTO userUpdateRequestModelToUserDto(UserUpdateRequestModel userUpdateRequestModel);
+    UserLoginResponseModel userDtoToUserLoginResponseModel(UserDTO userDTO, String jwtToken, String jwtRefreshToken);
 }

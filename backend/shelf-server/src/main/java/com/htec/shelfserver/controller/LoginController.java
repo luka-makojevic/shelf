@@ -4,7 +4,7 @@ import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.model.request.UserLoginRequestModel;
 import com.htec.shelfserver.model.response.UserLoginResponseModel;
-import com.htec.shelfserver.service.AuthenticationService;
+import com.htec.shelfserver.service.LoginService;
 import com.htec.shelfserver.util.TokenGenerator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,28 +15,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
-public class AuthenticationController {
+@RequestMapping("/login")
+public class LoginController {
 
-    private final AuthenticationService authenticationService;
+    private final LoginService loginService;
     private final TokenGenerator tokenGenerator;
 
-    public AuthenticationController(AuthenticationService authenticationService, TokenGenerator tokenGenerator) {
+    public LoginController(LoginService loginService, TokenGenerator tokenGenerator) {
 
-        this.authenticationService = authenticationService;
+        this.loginService = loginService;
         this.tokenGenerator = tokenGenerator;
     }
 
-    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserLoginResponseModel> createUser(@RequestBody UserLoginRequestModel userLoginRequestModel) {
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserLoginResponseModel> loginUser(@RequestBody UserLoginRequestModel userLoginRequestModel) {
 
         UserDTO userDTO = UserMapper.INSTANCE.userLoginRequestModelToUserDto(userLoginRequestModel);
 
-        UserDTO loggedInUser = authenticationService.authenticateUser(userDTO);
+        UserDTO loggedInUser = loginService.authenticateUser(userDTO);
 
         String jwtToken =  tokenGenerator.generateJwtToken(userDTO);
 
-        UserLoginResponseModel userLoginResponse = UserMapper.INSTANCE.userDtoToUserLoginResponseModel(userDTO, jwtToken);
+        String jwtRefreshToken =  tokenGenerator.generateJwtRefreshToken(userDTO);
+
+        UserLoginResponseModel userLoginResponse = UserMapper.INSTANCE.userDtoToUserLoginResponseModel(userDTO, jwtToken, jwtRefreshToken);
 
         return ResponseEntity.status(HttpStatus.OK).body(userLoginResponse);
     }

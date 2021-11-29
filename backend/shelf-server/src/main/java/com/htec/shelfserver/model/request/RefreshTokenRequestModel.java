@@ -7,9 +7,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class UserLoginRequestModel {
-    private String email;
-    private String password;
+@AllArgsConstructor
+public class RefreshTokenRequestModel {
+
+    private String token;
 }
