@@ -78,7 +78,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const resetPassword = (
     data: ResetPasswordData,
-    onSuccess: (navigate: NavigateFunction) => void,
+    onSuccess: (success: string) => void,
     onError: (err: string) => void
   ) => {
     setIsLoading(true);
@@ -86,7 +86,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       .then((res) => {
         if (res.data.resetToken) {
           setResetToken(res.data?.resetToken);
-          onSuccess(navigation);
+          onSuccess('A reset token has been sent to your email');
         }
       })
       .catch((err) => {

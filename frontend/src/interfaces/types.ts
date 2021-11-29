@@ -31,12 +31,13 @@ export interface ContextTypes {
   ) => void;
   resetPassword: (
     data: ResetPasswordData,
-    onSuccess: (navigate: NavigateFunction) => void,
+    onSuccess: (success: string) => void,
     onError: (error: string) => void
   ) => void;
   isLoading: boolean;
   accessToken: string;
 }
+
 export interface UserType {
   id: number;
   firstName: string;
@@ -45,6 +46,7 @@ export interface UserType {
   jwtToken: string;
   role: Role;
 }
+
 export interface RegisterFormData {
   areTermsRead: boolean;
   email: string;
