@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Error } from '../../components/input/input-styles';
+import { Error } from '../../components/text/text-styles';
 import { Routes } from '../../enums/routes';
 
 const CheckBox = ({ register, error }: any) => (

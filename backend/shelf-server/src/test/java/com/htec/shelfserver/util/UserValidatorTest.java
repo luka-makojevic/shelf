@@ -2,6 +2,7 @@ package com.htec.shelfserver.util;
 
 import com.htec.shelfserver.exception.ShelfException;
 import com.htec.shelfserver.dto.UserDTO;
+import com.htec.shelfserver.validator.UserValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

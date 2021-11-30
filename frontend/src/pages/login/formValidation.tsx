@@ -5,6 +5,7 @@ import { InputFieldWrapper } from '../../components/form/form-styles';
 import { InputField, InputFieldType } from '../../components/input/InputField';
 import { Error } from '../../components/text/text-styles';
 import { Button } from '../../components/UI/button';
+import { Holder } from "../../components/layout/layout.styles"
 import { LoginData } from '../../interfaces/types';
 import { AuthContext } from '../../providers/authProvider';
 
@@ -44,15 +45,6 @@ const FormValidation = () => {
       name: 'password',
       validations: {
         required: 'This field is required',
-        minLength: {
-          value: 8,
-          message: 'Password must have at least 8 characters',
-        },
-        pattern: {
-          value:
-            /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&.()–[{}\]:;',?/*~$^+=<>])([^\s]){8,}$/i,
-          message: 'Invalid password format',
-        },
       },
     },
   ];
@@ -72,7 +64,9 @@ const FormValidation = () => {
 
   return (
     <Form.Base onSubmit={handleSubmit(submitForm)}>
-      <Error>{error}</Error>
+     <Holder m="0 auto" maxWidth="200px" minHeight="15px" >
+        <Error>{error}</Error>
+      </Holder>
       <InputFieldWrapper>
         {fieldConfigs.map((fieldConfig: FieldConfig) => (
           <InputField

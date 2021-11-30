@@ -1,6 +1,7 @@
 package helpers;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -8,9 +9,15 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 
-public class BaseWdWaitHelpers extends BaseWebDriverManager{
+public class BaseWdWaitHelpers {
 
+    WebDriver driver;
     WebDriverWait wait;
+
+    public BaseWdWaitHelpers(WebDriver driver) {
+        this.driver = driver;
+    }
+
 
     /**
      * Wait for element to be clickable

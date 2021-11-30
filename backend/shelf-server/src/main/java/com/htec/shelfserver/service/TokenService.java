@@ -1,6 +1,6 @@
 package com.htec.shelfserver.service;
 
-import com.htec.shelfserver.entity.TokenEntity;
+import com.htec.shelfserver.entity.EmailVerifyTokenEntity;
 import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.repository.TokenRepository;
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class TokenService {
     private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
-    private final UserService userService;
+    private final RegisterService regsterService;
 
     public final String EMAIL_ALREADY_CONFIRMED = "Email already confirmed";
     public final String EMAIL_CONFIRMED = "Email confirmed";
@@ -27,10 +27,10 @@ public class TokenService {
     @Autowired
     public TokenService(TokenRepository tokenRepository,
                         UserRepository userRepository,
-                        UserService userService) {
+                        RegisterService regsterService) {
         this.tokenRepository = tokenRepository;
         this.userRepository = userRepository;
-        this.userService = userService;
+        this.regsterService = regsterService;
     }
 
     @Transactional
@@ -54,7 +54,7 @@ public class TokenService {
             return EMAIL_ALREADY_CONFIRMED;
         }
 
-        TokenEntity confirmationToken = tokenRepository.findByToken(token)
+        EmailVerifyTokenEntity confirmationToken = tokenRepository.findByToken(token)
                 .orElseThrow(ExceptionSupplier.tokenNotFound);
 
         LocalDateTime expiredAt = confirmationToken.getExpiresAt();
@@ -86,12 +86,12 @@ public class TokenService {
             return EMAIL_ALREADY_CONFIRMED;
         }
 
-        TokenEntity oldConfirmationToken = tokenRepository.findByToken(token)
+        EmailVerifyTokenEntity oldConfirmationToken = tokenRepository.findByToken(token)
                 .orElseThrow(ExceptionSupplier.tokenNotFound);
 
         tokenRepository.delete(oldConfirmationToken);
 
-        userService.createAndSendToken(userEntity);
+        regsterService.createAndSendToken(userEntity);
 
         return TOKEN_RESENT;
     }

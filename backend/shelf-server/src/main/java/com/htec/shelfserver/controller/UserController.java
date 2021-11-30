@@ -4,8 +4,8 @@ import com.htec.shelfserver.annotation.AuthenticationUser;
 import com.htec.shelfserver.dto.AuthUser;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.mapper.UserMapper;
-import com.htec.shelfserver.model.request.UserRegisterMicrosoftRequestModel;
-import com.htec.shelfserver.model.request.UserRegisterRequestModel;
+import com.htec.shelfserver.model.request.PasswordResetRequestModel;
+import com.htec.shelfserver.model.request.UserUpdateRequestModel;
 import com.htec.shelfserver.model.response.TextResponseMessage;
 import com.htec.shelfserver.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -29,27 +29,23 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TextResponseMessage> registerUser(@RequestBody UserRegisterRequestModel userRegisterRequestModel) {
+    @PutMapping("/{id}")
+    public ResponseEntity updateUser(@PathVariable Long id,
+                                     @RequestBody UserUpdateRequestModel userUpdateRequestModel) {
 
-        UserDTO userDTO = UserMapper.INSTANCE.userRegisterRequestModelToUserDto(userRegisterRequestModel);
+        UserDTO userDTO = UserMapper.INSTANCE.userUpdateRequestModelToUserDto(userUpdateRequestModel);
+        userDTO.setId(id);
 
-        userService.registerUser(userDTO);
+        userService.updateUser(userDTO);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new TextResponseMessage("User registered", HttpStatus.CREATED.value()));
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    @PostMapping(value = "/register/microsoft", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TextResponseMessage> registerUserMicrosoft(@RequestBody UserRegisterMicrosoftRequestModel userRegisterMicrosoftRequestModel) {
+    @PostMapping(value = "/password-reset-request", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity requestReset(@RequestBody PasswordResetRequestModel passwordResetRequestModel) {
 
-        userService.registerUserMicrosoft(userRegisterMicrosoftRequestModel.getBearerToken());
+        userService.requestPasswordReset(passwordResetRequestModel.getEmail());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new TextResponseMessage("User registered", HttpStatus.CREATED.value()));
+        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("Email sent", HttpStatus.OK.value()));
     }
-
-    @PutMapping
-    public String updateUser() {
-        return "Update user is called.";
-    }
-
 }

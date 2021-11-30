@@ -2,8 +2,11 @@ package com.htec.shelfserver.security;
 
 import com.htec.shelfserver.repository.UserRepository;
 import com.htec.shelfserver.service.UserService;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -35,9 +38,17 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
                 .permitAll()
+                .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_IN_URL)
+                .permitAll()
+                .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_IN_MICROSOFT_URL)
+                .permitAll()
+                .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_MICROSOFT_URL)
+                .permitAll()
                 .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_CONFIRM_EMAIL_URL)
                 .permitAll()
                 .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_RESEND_TOKEN_URL)
+                .permitAll()
+                .antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_REQUEST_URL)
                 .permitAll()
                 .antMatchers(
                         "/v2/api-docs",
@@ -48,16 +59,15 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .anyRequest()
                 .authenticated().and()
-                .addFilter(getAuthenticationFilter())
                 .addFilter(new AuthorizationFilter(authenticationManager()))
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
-    protected AuthenticationFilter getAuthenticationFilter() throws Exception {
-        final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager(), userService, userRepository);
-        filter.setFilterProcessesUrl(SecurityConstants.SIGN_IN_URL);
-        return filter;
+    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 }
 

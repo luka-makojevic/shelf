@@ -1,111 +1,63 @@
 package com.htec.shelfserver.service;
 
+
 import com.htec.shelfserver.dto.UserDTO;
+import com.htec.shelfserver.entity.PasswordResetTokenEntity;
 import com.htec.shelfserver.entity.RoleEntity;
-import com.htec.shelfserver.entity.TokenEntity;
 import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.mapper.UserMapper;
+import com.htec.shelfserver.model.response.UserPageResponseModel;
 import com.htec.shelfserver.model.response.UserResponseModel;
-import com.htec.shelfserver.repository.TokenRepository;
+import com.htec.shelfserver.repository.PasswordResetTokenRepository;
+import com.htec.shelfserver.repository.RoleRepository;
 import com.htec.shelfserver.repository.UserRepository;
 import com.htec.shelfserver.util.Roles;
 import com.htec.shelfserver.util.TokenGenerator;
-import com.htec.shelfserver.util.UserValidator;
+import com.htec.shelfserver.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
 
     private final UserRepository userRepository;
-    private final TokenRepository confirmationTokenRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final TokenGenerator tokenGenerator;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final EmailService emailService;
     private final UserValidator userValidator;
-
-    private final String emailVerificationLink;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final String emailPasswordResetTokenLink;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository,
-                       TokenRepository confirmationTokenRepository,
+    public UserService(PasswordResetTokenRepository passwordResetTokenRepository,
+                       UserRepository userRepository,
                        TokenGenerator tokenGenerator,
-                       BCryptPasswordEncoder bCryptPasswordEncoder,
                        EmailService emailService,
                        UserValidator userValidator,
-                       @Value("${emailVerificationLink}") String emailVerificationLink) {
+                       BCryptPasswordEncoder bCryptPasswordEncoder,
+                       @Value("${emailPasswordResetTokenLink}") String emailPasswordResetTokenLink, RoleRepository roleRepository) {
 
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.userRepository = userRepository;
-        this.confirmationTokenRepository = confirmationTokenRepository;
         this.tokenGenerator = tokenGenerator;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.emailService = emailService;
         this.userValidator = userValidator;
-        this.emailVerificationLink = emailVerificationLink;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.emailPasswordResetTokenLink = emailPasswordResetTokenLink;
+        this.roleRepository = roleRepository;
     }
 
-    public void registerUser(UserDTO userDTO) {
-
-        userRepository.findByEmail(userDTO.getEmail()).ifPresent(
-                userEntity -> {
-                    throw ExceptionSupplier.recordAlreadyExists.get();
-                });
-
-        userValidator.isUserValid(userDTO);
-
-        UserEntity userEntity = UserMapper.INSTANCE.userDtoToUserEntity(userDTO);
-
-        userEntity.setCreatedAt(LocalDateTime.now());
-        userEntity.setEmailVerified(false);
-        userEntity.setRole(new RoleEntity(3L));
-
-        String salt = tokenGenerator.generateSalt(8);
-        userEntity.setSalt(salt);
-
-        String encryptedPassword = bCryptPasswordEncoder.encode(userDTO.getPassword() + salt);
-        userEntity.setPassword(encryptedPassword);
-
-        UserEntity storedUser = userRepository.save(userEntity);
-        createAndSendToken(storedUser);
-
-    }
-
-    void createAndSendToken(UserEntity userEntity) {
-        String token = tokenGenerator.generateConfirmationToken(userEntity.getId());
-
-        TokenEntity confirmationToken = new TokenEntity(
-                token,
-                LocalDateTime.now(),
-                LocalDateTime.now().plusMinutes(15),
-                userEntity
-        );
-
-        confirmationTokenRepository.save(confirmationToken);
-
-        String confirmationLink = emailVerificationLink + token;
-
-        Map<String, Object> model = new HashMap<>();
-        model.put("firstName", userEntity.getFirstName());
-        model.put("confirmationLink", confirmationLink);
-
-        emailService.sendEmail(userEntity.getEmail(), model, "email-confirmation.html", "Confirm your email");
-    }
-
-    public void registerUserMicrosoft(String bearerToken) {
-        //todo: implement
-    }
 
     public UserDTO getUser(String email) {
 
@@ -115,35 +67,117 @@ public class UserService implements UserDetailsService {
         return UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String email) {
+    public UserPageResponseModel<UserResponseModel> getUsers(Integer page, Integer size) {
 
-        UserEntity userEntity = userRepository.findByEmail(email).
-                orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
+        if (page <= 0) {
+            throw ExceptionSupplier.pageWrong.get();
+        }
 
-        return new User(userEntity.getEmail(), userEntity.getPassword(), new ArrayList<>());
-    }
+        if (size < 1) {
+            throw ExceptionSupplier.sizeWrong.get();
+        }
 
-    public List<UserResponseModel> getUsers() {
-        return UserMapper.INSTANCE.userEntityToUserResponseModels(userRepository.findAll());
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        Page<UserEntity> users = userRepository.findAll(pageable);
+
+        List<UserResponseModel> allUsers = UserMapper.INSTANCE.userEntityToUserResponseModels(users.getContent());
+
+        return new UserPageResponseModel<>(allUsers, users.getTotalPages(), users.getNumber() + 1);
     }
 
     public UserResponseModel getUserById(Long id) {
-        UserEntity user = userRepository.findById(id).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
     }
 
     public void deleteUserById(Long id) {
-        UserEntity user = userRepository.findById(id).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         if (user.getRole() != null) {
-            if (user.getRole().getId().equals(Long.valueOf(Roles.SUPER_ADMIN))) {
+            if (!user.getRole().getId().equals(Long.valueOf(Roles.SUPER_ADMIN))) {
                 userRepository.delete(user);
             }
         } else {
-            throw ExceptionSupplier.userNotValid.get();
+            throw ExceptionSupplier.userDoesNotHavePermission.get();
         }
     }
 
+    public void requestPasswordReset(String email) {
+
+        UserEntity userEntity = userRepository.findByEmail(email)
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
+
+        sendPasswordResetMail(userEntity);
+    }
+
+    void sendPasswordResetMail(UserEntity userEntity) {
+
+        String token = tokenGenerator.generatePasswordResetToken(userEntity.getId().toString());
+
+        PasswordResetTokenEntity passwordResetToken = new PasswordResetTokenEntity(token, userEntity);
+
+        passwordResetTokenRepository.save(passwordResetToken);
+
+        String passwordResetTokenLink = emailPasswordResetTokenLink + token;
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("firstName", userEntity.getFirstName());
+        model.put("passwordResetTokenLink", passwordResetTokenLink);
+
+        emailService.sendEmail(userEntity.getEmail(), model, "password-reset.html", "Reset your password");
+    }
+
+    public UserResponseModel updateUser(UserDTO userDTO) {
+
+        UserEntity user = userRepository.findById(userDTO.getId())
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+
+        if (userDTO.getFirstName() != null) {
+            user.setFirstName(userDTO.getFirstName());
+        } else {
+            user.setFirstName(user.getFirstName());
+        }
+
+        if (userDTO.getLastName() != null) {
+            user.setLastName(userDTO.getLastName());
+        } else {
+            user.setLastName(user.getLastName());
+        }
+
+        if (userDTO.getPassword() != null) {
+            userValidator.isUserUpdateValid(userDTO);
+            user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword() + user.getSalt()));
+        } else {
+            user.setPassword(user.getPassword());
+        }
+
+        userRepository.save(user);
+
+        return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
+    }
+
+    public UserResponseModel updateUserRole(Long id, Long roleId) {
+
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+
+        if (user.getRole().getId().equals(roleId)) {
+            throw ExceptionSupplier.wrongRoleUpdate.get();
+        }
+
+        RoleEntity role = roleRepository.findById(roleId)
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+
+        user.setRole(new RoleEntity(role.getId(), role.getName()));
+
+        userRepository.save(user);
+
+        return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
+    }
 }

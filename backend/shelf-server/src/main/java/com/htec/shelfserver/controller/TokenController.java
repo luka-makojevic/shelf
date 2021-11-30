@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/users/register")
+@RequestMapping("/tokens")
 @AllArgsConstructor
 public class TokenController {
 
@@ -32,6 +32,5 @@ public class TokenController {
         String response = tokenService.createAndSendToken(tokenJSON.getToken());
 
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(response, HttpStatus.OK.value()));
-
     }
 }

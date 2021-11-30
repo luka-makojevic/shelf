@@ -15,7 +15,6 @@ public class ShelfServerApplication {
 
 	@Bean
 	public SpringApplicationContext springApplicationContext() {
-
 		return new SpringApplicationContext();
 	}
 }
