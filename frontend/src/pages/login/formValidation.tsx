@@ -5,7 +5,7 @@ import { InputFieldWrapper } from '../../components/form/form-styles';
 import { InputField } from '../../components/input/InputField';
 import { Error } from '../../components/text/text-styles';
 import { Button } from '../../components/UI/button';
-import { Holder } from "../../components/layout/layout.styles"
+import { Holder } from '../../components/layout/layout.styles';
 import { loginFieldConfig } from '../../validation/config/loginValidationConfig';
 import {
   LoginData,
@@ -50,7 +50,7 @@ const FormValidation = ({ login }: LoginValidationProps) => {
 
   return (
     <Form.Base onSubmit={handleSubmit(submitForm)}>
-     <Holder m="0 auto" maxWidth="200px" minHeight="15px" >
+      <Holder m="0 auto" maxWidth="200px" minHeight="15px">
         <Error>{error}</Error>
       </Holder>
       <InputFieldWrapper>
