@@ -4,10 +4,6 @@
 -- ------------------------------------------------------
 -- Server version	8.0.27-0ubuntu0.20.04.1
 
-CREATE SCHEMA IF NOT EXISTS `shelf` ;
-
-USE `shelf`;
-
 -- Table structure for table `role`
 
 DROP TABLE IF EXISTS `role`;
@@ -45,14 +41,42 @@ CREATE TABLE `user` (
   FOREIGN KEY (`role_id`) REFERENCES `role`(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Table structure for table `token`
+-- Dumping data for table `user`
 
-DROP TABLE IF EXISTS `token`;
+INSERT INTO `user` VALUES (1,NOW(),NULL,'admin',_binary '','Admin','Admin','$2a$10$e8tgcSblVDBbMD9JVuqL9.1WbutyqJsGNBZbrlh8chy5vN57cspji','00ErvyFq',NULL,1);
 
-CREATE TABLE `token` (
+-- Table structure for table `email_verify_token`
+
+DROP TABLE IF EXISTS `email_verify_token`;
+
+CREATE TABLE `email_verify_token` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `created_at` datetime(6) NOT NULL,
   `expires_at` datetime(6) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `user_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table structure for table `password_reset_token`
+
+DROP TABLE IF EXISTS `password_reset_token`;
+
+CREATE TABLE `password_reset_token` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `token` varchar(255) NOT NULL,
+  `user_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Table structure for table `invalid_jwt_token`
+
+DROP TABLE IF EXISTS `invalid_jwt_token`;
+
+CREATE TABLE `invalid_jwt_token` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
   `token` varchar(255) NOT NULL,
   `user_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
