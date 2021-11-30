@@ -27,8 +27,14 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const userLocalStorage = localStorage.getItem('user')
       ? JSON.parse(localStorage.getItem('user') || '')
       : null;
+    const tokenLocalStorage = localStorage.getItem('token')
+      ? JSON.parse(localStorage.getItem('token') || '')
+      : null;
     if (userLocalStorage) {
       setUser(userLocalStorage);
+    }
+    if (tokenLocalStorage) {
+      setAccesToken(tokenLocalStorage);
     }
   }, []);
 
@@ -43,6 +49,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       .then((res) => {
         if (res.data.jwtToken) {
           localStorage.setItem('user', JSON.stringify(res.data));
+          localStorage.setItem('token', JSON.stringify(res.data.jwtToken));
           setUser(res.data);
           setAccesToken(res.data.jwtToken);
           onSuccess(navigation);

@@ -1,15 +1,16 @@
 import { useContext, useState } from 'react';
 import { useForm, RegisterOptions } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 import Form from '../../components/form';
 import { InputFieldWrapper } from '../../components/form/form-styles';
 import { InputField, InputFieldType } from '../../components/input/InputField';
-import CheckBox from './checkBox';
 import { RegisterData, RegisterFormData } from '../../interfaces/types';
 import { AuthContext } from '../../providers/authProvider';
-import { Error } from '../../components/text/text-styles';
-import { Button } from '../../components/UI/button';
-import { Holder } from '../../components/layout/layout.styles';
-import { Logo } from '../../components/header/header-styles';
+import { Error, PlainText } from '../../components/text/text-styles';
+import { Routes } from '../../enums/routes';
+import CheckBox from '../../components/checkbox/checkBox';
+import {Button} from "../../components/UI/button"
+
 
 interface FieldConfig {
   type: InputFieldType;
@@ -116,7 +117,19 @@ const FormValidation = () => {
             {...register(fieldConfig.name, fieldConfig.validations)}
           />
         ))}
-        <CheckBox register={register} error={errors.areTermsRead?.message} />
+        <CheckBox
+          id="id"
+          {...register('areTermsRead', { required: 'This field is required' })}
+        >
+          <PlainText>
+            I accept{` `}
+            <Link to={Routes.TERMS} target="_blank">
+              Terms of Service
+            </Link>
+          </PlainText>
+        </CheckBox>
+
+        <Error>{errors.areTermsRead?.message}</Error>
       </InputFieldWrapper>
 
       <Button
