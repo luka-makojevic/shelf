@@ -6,11 +6,14 @@ import helpers.RestHelpers;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.junit.Assert;
 import org.junit.Test;
 import pages.User;
 
 import java.io.IOException;
+import java.util.Arrays;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ApiTest {
 
@@ -32,8 +35,8 @@ public class ApiTest {
         Response response = RestHelpers.sendPostRequest(rSpec);
 
         //Assertions
-        Assert.assertEquals("User registered",response.jsonPath().get("message").toString());
-        Assert.assertEquals("201",response.jsonPath().get("status").toString());
+        assertEquals("User registered",response.jsonPath().get("message").toString());
+        assertEquals("201",response.jsonPath().get("status").toString());
     }
 
     @Test
@@ -53,17 +56,10 @@ public class ApiTest {
         RequestSpecification rSpec = builder.build();
         Response response = RestHelpers.sendPostRequest(rSpec);
 
-
         //Assertions
-        try {
-            Assert.assertEquals("Email is not valid.",response.jsonPath().get("message").toString());
-            Assert.assertEquals("400",response.jsonPath().get("status").toString());
-        } catch (AssertionError e) {
-            Assert.assertEquals("Password is not valid.",response.jsonPath().get("message").toString());
-            Assert.assertEquals("400",response.jsonPath().get("status").toString());
-        }
-
-
-
+        String[] expectedMess = {"Email is not valid.","Password is not valid."};
+        String[] expectedStatus = {"400"};
+        assertTrue(Arrays.toString(expectedMess).contains(response.jsonPath().get("message").toString()));
+        assertTrue(Arrays.toString(expectedStatus).contains(response.jsonPath().get("status").toString()));
     }
 }
