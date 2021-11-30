@@ -100,7 +100,7 @@ public class UserService {
                 .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         if (user.getRole() != null) {
-            if (user.getRole().getId().equals(Long.valueOf(Roles.SUPER_ADMIN))) {
+            if (!user.getRole().getId().equals(Long.valueOf(Roles.SUPER_ADMIN))) {
                 userRepository.delete(user);
             }
         } else {
