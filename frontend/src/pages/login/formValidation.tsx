@@ -4,6 +4,7 @@ import Form from '../../components/form';
 import { InputFieldWrapper } from '../../components/form/form-styles';
 import { InputField, InputFieldType } from '../../components/input/InputField';
 import { Error } from '../../components/text/text-styles';
+import { Button } from '../../components/UI/button';
 import { Holder } from "../../components/layout/layout.styles"
 import { LoginData } from '../../interfaces/types';
 import { AuthContext } from '../../providers/authProvider';
@@ -78,7 +79,9 @@ const FormValidation = () => {
         ))}
       </InputFieldWrapper>
 
-      <Form.Submit isLoading={isLoading}>Sign in</Form.Submit>
+      <Button spinner isLoading={isLoading} fullwidth size="large">
+        Sign in
+      </Button>
     </Form.Base>
   );
 };

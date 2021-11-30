@@ -10,7 +10,7 @@ const LoginForm = () => (
     <FormValidation />
     <AccentText>
       {`New to the shelf?  `}
-      <Link to={Routes.REGISTER}>Sign in</Link>
+      <Link to={Routes.REGISTER}>Sign up</Link>
     </AccentText>
   </Form>
 );

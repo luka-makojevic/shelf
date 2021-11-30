@@ -9,6 +9,7 @@ import { AuthContext } from '../../providers/authProvider';
 import { Error, PlainText } from '../../components/text/text-styles';
 import { Routes } from '../../enums/routes';
 import CheckBox from '../../components/checkbox/checkBox';
+import {Button} from "../../components/UI/button"
 import { Holder } from '../../components/layout/layout.styles';
 
 interface FieldConfig {
@@ -137,7 +138,15 @@ const FormValidation = () => {
         </Holder>
       </InputFieldWrapper>
 
-      <Form.Submit isLoading={isLoading}>Sign up</Form.Submit>
+      <Button
+        spinner
+        isLoading={isLoading}
+        variant="primary"
+        fullwidth
+        size="large"
+      >
+        Sign up
+      </Button>
     </Form.Base>
   );
 };
