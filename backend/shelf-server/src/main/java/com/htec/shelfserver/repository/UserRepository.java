@@ -19,5 +19,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
             "SET u.emailVerified = TRUE WHERE u.email = ?1")
     int enableUser(String email);
 
-    Page<UserEntity> findAll(Pageable pageable);
+    @Query("SELECT u FROM UserEntity u WHERE u.role.id != ?1")
+    Page<UserEntity> findAll(Long roleId, Pageable pageable);
 }
