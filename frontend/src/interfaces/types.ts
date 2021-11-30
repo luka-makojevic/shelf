@@ -73,3 +73,15 @@ export interface FormSubmitProps {
   children: React.ReactNode;
   isLoading: boolean;
 }
+
+export interface ButtonProps {
+  children?: React.ReactNode;
+  icon?: JSX.Element;
+  to?: string;
+  isLoading?: boolean;
+  spinner?: boolean;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  variant?: string | any;
+  size?: string | any;
+  fullwidth?: boolean;
+}

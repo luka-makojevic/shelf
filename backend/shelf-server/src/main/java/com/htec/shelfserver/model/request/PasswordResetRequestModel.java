@@ -1,4 +1,4 @@
-package com.htec.shelfserver.requestModel;
+package com.htec.shelfserver.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +10,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PasswordResetRequestModel {
-
     private String email;
 }

@@ -12,6 +12,7 @@ import {
   Link,
 } from '../../components/text/text-styles';
 import { Routes } from '../../enums/routes';
+import { Button } from '../../components/UI/button';
 
 const featuresInfo = [
   {
@@ -38,25 +39,11 @@ const featuresInfo = [
 
 const Landing = () => (
   <Wrapper flexDirection="column">
-    <Container
-      width="100%"
-      height="100px"
-      minHeight="100px"
-      justifyContent="flex-end"
-      px="50px"
-    >
-      <Link padding="10px 15px" mr="20px" to={Routes.LOGIN}>
+    <Container width="100%" height="100px" justifyContent="flex-end" px="50px">
+      <Button variant="light" to={Routes.LOGIN}>
         Sign in
-      </Link>
-      <Link
-        bg="primary"
-        color="white"
-        padding="10px 15px"
-        borderRadius="10px"
-        to={Routes.REGISTER}
-      >
-        Sign up
-      </Link>
+      </Button>
+      <Button to={Routes.REGISTER}>Sign up</Button>
     </Container>
     <Holder display="flex" flexDirection={['column', 'column', 'row']}>
       <Container

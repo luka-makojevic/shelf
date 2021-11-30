@@ -2,14 +2,16 @@ package com.htec.shelfserver.service;
 
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.RoleEntity;
-import com.htec.shelfserver.entity.TokenEntity;
+import com.htec.shelfserver.entity.EmailVerifyTokenEntity;
 import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.mapper.UserMapper;
+import com.htec.shelfserver.model.response.UserRegisterMicrosoftResponseModel;
 import com.htec.shelfserver.repository.TokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
+import com.htec.shelfserver.security.SecurityConstants;
 import com.htec.shelfserver.util.TokenGenerator;
-import com.htec.shelfserver.util.UserValidator;
+import com.htec.shelfserver.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +19,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
@@ -53,7 +56,6 @@ public class RegisterService {
 
     }
 
-
     public void registerUser(UserDTO userDTO) {
 
         userRepository.findByEmail(userDTO.getEmail()).ifPresent(
@@ -77,7 +79,6 @@ public class RegisterService {
 
         UserEntity storedUser = userRepository.save(userEntity);
         createAndSendToken(storedUser);
-
     }
 
     public void registerUserMicrosoft(String bearerToken) {
@@ -85,18 +86,38 @@ public class RegisterService {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + bearerToken);
+        headers.add(SecurityConstants.AUTHORIZATION_HEADER_STRING, SecurityConstants.BEARER_TOKEN_PREFIX + bearerToken);
 
-        ResponseEntity<String> response = restTemplate.exchange(MICROSOFT_GRAPH_URL, HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        ResponseEntity<UserRegisterMicrosoftResponseModel> response;
 
-        // todo: Add new user.
+        try {
+            response = restTemplate.exchange(MICROSOFT_GRAPH_URL,
+                    HttpMethod.GET, new HttpEntity<>(headers),
+                    UserRegisterMicrosoftResponseModel.class);
 
+        } catch (RestClientException ex) {
+            throw ExceptionSupplier.accessTokenNotActive.get();
+        }
+
+        userRepository.findByEmail(response.getBody().getMail()).ifPresent(
+                userEntity -> {
+                    throw ExceptionSupplier.recordAlreadyExists.get();
+                });
+
+        UserEntity userEntity = UserMapper.INSTANCE.userRegisterMicrosoftResponseModelToUserEntity(response.getBody());
+
+        userEntity.setCreatedAt(LocalDateTime.now());
+        userEntity.setEmailVerified(true);
+        userEntity.setRole(new RoleEntity(3L));
+
+        userRepository.save(userEntity);
     }
 
     void createAndSendToken(UserEntity userEntity) {
+
         String token = tokenGenerator.generateConfirmationToken(userEntity.getId());
 
-        TokenEntity confirmationToken = new TokenEntity(
+        EmailVerifyTokenEntity confirmationToken = new EmailVerifyTokenEntity(
                 token,
                 LocalDateTime.now(),
                 LocalDateTime.now().plusMinutes(15),

@@ -30,10 +30,9 @@ export const Link = styled(ReachRouterLink)<TextProps>`
   ${border}
 `;
 
-export const Error = styled.p`
-  color: red;
-  width: 100%;
-  text-align: center;
+export const Error = styled.div`
+  margin-left: 1em;
+  color: ${({ theme }) => theme.colors.danger};
   font-size: 10px;
 `;
 
@@ -46,6 +45,7 @@ export const Success = styled.p`
 
 export const PlainText = styled.p<TextProps>`
   font-size: 13px;
+  margin: 5px 0;
   ${typography}
   ${color}
 `;

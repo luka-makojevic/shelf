@@ -3,6 +3,7 @@ package com.htec.shelfserver.controller;
 import com.htec.shelfserver.annotation.AuthenticationUser;
 import com.htec.shelfserver.annotation.ValidateRoles;
 import com.htec.shelfserver.dto.AuthUser;
+import com.htec.shelfserver.model.request.UserUpdateRoleRequestModel;
 import com.htec.shelfserver.model.response.TextResponseMessage;
 import com.htec.shelfserver.service.UserService;
 import com.htec.shelfserver.util.Roles;
@@ -22,9 +23,11 @@ public class AdminController {
 
     @GetMapping
     @ValidateRoles(roles = {Roles.SUPER_ADMIN})
-    public ResponseEntity getUsers(@AuthenticationUser AuthUser user) {
+    public ResponseEntity getUsers(@AuthenticationUser AuthUser user,
+                                   @RequestParam(defaultValue = "1") Integer page,
+                                   @RequestParam(defaultValue = "5") Integer size) {
 
-        return ResponseEntity.ok(userService.getUsers());
+        return ResponseEntity.ok(userService.getUsers(page, size));
     }
 
     @GetMapping("/{id}")
@@ -35,10 +38,21 @@ public class AdminController {
     }
 
     @DeleteMapping("/{id}")
-    @ValidateRoles(roles = {Roles.USER})
+    @ValidateRoles(roles = {Roles.SUPER_ADMIN})
     public ResponseEntity<TextResponseMessage> deleteUserById(@AuthenticationUser AuthUser user, @PathVariable Long id) {
 
         userService.deleteUserById(id);
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("User deleted", HttpStatus.OK.value()));
+    }
+
+    @PutMapping("/grant/{id}")
+    @ValidateRoles(roles = {Roles.SUPER_ADMIN})
+    public ResponseEntity updateUserRole(@AuthenticationUser AuthUser user,
+                                         @PathVariable Long id,
+                                         @RequestBody UserUpdateRoleRequestModel userUpdateRoleRequestModel) {
+
+        Long roleId = userUpdateRoleRequestModel.getRoleId();
+        userService.updateUserRole(id, roleId);
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 }

@@ -48,9 +48,6 @@ public class EmailService {
         } catch (MessagingException | IOException | TemplateException e) {
 
             throw ExceptionSupplier.emailFailedToSend.get();
-
         }
-
-
     }
 }

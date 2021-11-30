@@ -6,11 +6,11 @@ import FormValidation from './formValidation';
 
 const LoginForm = () => (
   <Form>
-    <Title fontSize={[4, 5, 6]}>Log in</Title>
+    <Title fontSize={[4, 5, 6]} my="10px">Log in</Title>
     <FormValidation />
     <AccentText>
       {`New to the shelf?  `}
-      <Link to={Routes.REGISTER}>Sign in</Link>
+      <Link to={Routes.REGISTER}>Sign up</Link>
     </AccentText>
   </Form>
 );

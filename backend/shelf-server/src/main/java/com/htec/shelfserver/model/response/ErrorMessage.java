@@ -10,7 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ErrorMessage {
-
     private String message;
     private Integer status;
     private String timestamp;

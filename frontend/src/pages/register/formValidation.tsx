@@ -11,6 +11,8 @@ import { Error, PlainText, Success } from '../../components/text/text-styles';
 import { Routes } from '../../enums/routes';
 import CheckBox from '../../components/checkbox/checkBox';
 import { loginRequest } from '../../azure/authConfig';
+import { Button } from '../../components/UI/button';
+import { Holder } from '../../components/layout/layout.styles';
 
 interface FieldConfig {
   type: InputFieldType;
@@ -117,7 +119,9 @@ const FormValidation = () => {
     );
   };
 
-  const handleMicrosoftSignUp = () => {
+  const handleMicrosoftSignUp = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
     instance.acquireTokenPopup(loginRequest).then(({ accessToken }) => {
       microsoftRegister(
         { bearerToken: accessToken },
@@ -135,8 +139,10 @@ const FormValidation = () => {
 
   return (
     <Form.Base onSubmit={handleSubmit(submitForm)}>
-      {error && <Error>{error}</Error>}
-      {success && <Success>{success}</Success>}
+      <Holder m="0 auto" maxWidth="200px" minHeight="15px">
+        {error && <Error>{error}</Error>}
+        {success && <Success>{success}</Success>}
+      </Holder>
       <InputFieldWrapper>
         {fieldConfigs.map((fieldConfig: FieldConfig) => (
           <InputField
@@ -147,25 +153,41 @@ const FormValidation = () => {
             {...register(fieldConfig.name, fieldConfig.validations)}
           />
         ))}
-        <CheckBox
-          id="id"
-          {...register('areTermsRead', { required: 'This field is required' })}
-        >
-          <PlainText>
-            I accept{` `}
-            <Link to={Routes.TERMS_AND_CONDITIONS} target="_blank">
-              Terms of Service
-            </Link>
-          </PlainText>
-        </CheckBox>
+        <Holder flexDirection="column" height="36px">
+          <CheckBox
+            id="id"
+            {...register('areTermsRead', {
+              required: 'This field is required',
+            })}
+          >
+            <PlainText>
+              I accept{` `}
+              <Link to={Routes.TERMS_AND_CONDITIONS} target="_blank">
+                Terms of Service
+              </Link>
+            </PlainText>
+          </CheckBox>
 
-        <Error>{errors.areTermsRead?.message}</Error>
+          <Error>{errors.areTermsRead?.message}</Error>
+        </Holder>
       </InputFieldWrapper>
-
-      <Form.Submit isLoading={isLoading}>Sign up</Form.Submit>
-      <button type="button" onClick={handleMicrosoftSignUp}>
+      <Button
+        spinner
+        isLoading={isLoading}
+        variant="primary"
+        fullwidth
+        size="large"
+      >
+        Sign up
+      </Button>
+      <Button
+        onClick={handleMicrosoftSignUp}
+        icon={<img src="./assets/images/microsoft-logo.png" alt="" />}
+        fullwidth
+        size="large"
+      >
         Sign up with Microsoft
-      </button>
+      </Button>
     </Form.Base>
   );
 };

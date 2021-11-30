@@ -1,12 +1,12 @@
 package com.htec.shelfserver.repository;
 
-import com.htec.shelfserver.entity.TokenEntity;
+import com.htec.shelfserver.entity.EmailVerifyTokenEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface TokenRepository extends JpaRepository<TokenEntity, Long> {
+public interface TokenRepository extends JpaRepository<EmailVerifyTokenEntity, Long> {
 
-    Optional<TokenEntity> findByToken(String token);
+    Optional<EmailVerifyTokenEntity> findByToken(String token);
 
 }

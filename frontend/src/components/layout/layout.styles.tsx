@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { layout, flexbox, space, color, grid } from 'styled-system';
+import { layout, flexbox, space, color, grid, border } from 'styled-system';
 import { ContainerProps } from '../../interfaces/styles';
 
 export const Wrapper = styled.div<ContainerProps>`
@@ -27,6 +27,7 @@ export const Holder = styled.div<ContainerProps>`
   ${flexbox}
   ${color}
   ${grid}
+  ${border}
 `;
 export const Feature = styled.div<ContainerProps>`
   display: flex;
