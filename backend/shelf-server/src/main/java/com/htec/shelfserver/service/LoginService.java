@@ -72,8 +72,7 @@ public class LoginService implements UserDetailsService {
         if (!userEntity.getEmailVerified())
             throw ExceptionSupplier.emailNotVerified.get();
 
-        UserDTO returnValue = UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
-        return returnValue;
+        return UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
     }
 
     public UserDTO authenticateUserMicrosoft(String bearerToken) {
@@ -100,8 +99,6 @@ public class LoginService implements UserDetailsService {
         if (!userEntity.getEmailVerified())
             throw ExceptionSupplier.emailNotVerified.get();
 
-        UserDTO returnValue = UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
-
-        return returnValue;
+        return UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
     }
 }

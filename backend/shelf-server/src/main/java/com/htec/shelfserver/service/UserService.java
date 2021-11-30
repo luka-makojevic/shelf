@@ -152,7 +152,7 @@ public class UserService {
 
         if (userDTO.getPassword() != null) {
             userValidator.isUserUpdateValid(userDTO);
-            user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
+            user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword() + user.getSalt()));
         } else {
             user.setPassword(user.getPassword());
         }

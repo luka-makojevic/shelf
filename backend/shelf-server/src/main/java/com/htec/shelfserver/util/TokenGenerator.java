@@ -18,7 +18,6 @@ import java.util.UUID;
 public class TokenGenerator {
     private final Random RANDOM = new SecureRandom();
     private final UserRepository userRepository;
-    private String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
     TokenGenerator(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -32,6 +31,7 @@ public class TokenGenerator {
         StringBuilder returnValue = new StringBuilder(length);
 
         for (int i = 0; i < length; i++) {
+            String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
             returnValue.append(ALPHABET.charAt(RANDOM.nextInt(ALPHABET.length())));
         }
 
@@ -47,37 +47,34 @@ public class TokenGenerator {
     }
 
     public String generatePasswordResetToken(String userId) {
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .setSubject(userId)
                 .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.PASSWORD_RESET_EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET)
                 .compact();
-        return token;
     }
 
     public String generateJwtToken(UserDTO userDTO) {
 
         UserEntity userEntity = userRepository.findByEmail(userDTO.getEmail()).orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .setId(userEntity.getId().toString())
                 .setSubject(userEntity.getEmail())
                 .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.JWT_EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET)
                 .claim(JwtFieldConstants.ROLE_ID, userEntity.getRole().getId())
                 .compact();
-        return token;
     }
 
     public String generateJwtRefreshToken(UserDTO userDTO) {
 
         UserEntity userEntity = userRepository.findByEmail(userDTO.getEmail()).orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .setId(userEntity.getId().toString())
                 .setSubject(userEntity.getEmail())
                 .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.REFRESH_JWT_EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.TOKEN_SECRET)
                 .claim(JwtFieldConstants.ROLE_ID, userEntity.getRole().getId())
                 .compact();
-        return token;
     }
 }
