@@ -19,7 +19,7 @@ const Register = () => {
           <RegisterForm />
         </Container>
         <Container bg="primary" width={[1, 1 / 2]} display={['none', 'flex']}>
-          <Feature height={['550', '600']}>
+          <Feature height='600px'>
             <Title fontSize={['40px', '50px']}>Explore new world</Title>
             <SubTitle fontSize={['15px', '19px']}>
               Enter your personal details and start your journey with us

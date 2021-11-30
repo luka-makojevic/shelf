@@ -22,6 +22,8 @@ export const Container = styled.div<FormProps>`
 export const Base = styled.form`
   display: flex;
   flex-wrap: wrap;
+  max-width: 300px;
+  padding: 10px;
 `;
 
 export const Input = styled.input<FormProps>`
@@ -91,6 +93,7 @@ export const Submit = styled.button`
   margin-top: 1em;
   padding: 0px 20px;
   width: 100%;
+  min-width: 250px;
   min-height: 45px;
   font-size: 17px;
   font-weight: 700;
@@ -103,6 +106,5 @@ export const Submit = styled.button`
 export const InputFieldWrapper = styled.div`
   display: flex;
   flex-direction: column;
-
   width: 100%;
 `;

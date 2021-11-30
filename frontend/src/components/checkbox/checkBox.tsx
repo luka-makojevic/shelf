@@ -16,6 +16,7 @@ const CheckBox = React.forwardRef(
     <CheckboxWrapper>
       <Checkbox id={id} type="checkbox" ref={ref} {...restProps} />
       <Label htmlFor={id}>{children}</Label>
+      
     </CheckboxWrapper>
   )
 );

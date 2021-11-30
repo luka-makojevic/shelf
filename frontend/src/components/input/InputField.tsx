@@ -1,7 +1,7 @@
-
 import React, { ChangeEventHandler, ForwardedRef, useState } from 'react';
-import { Ref, FieldError } from 'react-hook-form';
-import { Error, Input, InputContainer, SeenIcon } from './input-styles';
+import { FieldError } from 'react-hook-form';
+import { Input, InputContainer, SeenIcon } from './input-styles';
+import { Error } from '../text/text-styles';
 
 export type InputFieldType = 'text' | 'password' | 'email';
 
@@ -14,7 +14,6 @@ export type InputFieldProps = {
   value?: string;
 };
 
-
 export const InputField = React.forwardRef(
   (
     { error, type = 'text', ...restProps }: InputFieldProps,
@@ -26,17 +25,9 @@ export const InputField = React.forwardRef(
       setPasswordShown(!passwordShown);
     };
 
-    // console.log({ ...register(name, validationRule) })
-
     return (
       <InputContainer>
-        <Input
-          marginY={[1, 2]}
-          padding={[1, 2]}
-          type={!passwordShown ? type : 'text'}
-          ref={ref}
-          {...restProps}
-        />
+        <Input type={!passwordShown ? type : 'text'} ref={ref} {...restProps} />
         {type === 'password' && (
           <SeenIcon
             src={
@@ -52,4 +43,3 @@ export const InputField = React.forwardRef(
     );
   }
 );
-
