@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "token")
-public class TokenEntity {
+@Table(name = "email_verify_token")
+public class EmailVerifyTokenEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,10 +33,10 @@ public class TokenEntity {
     @JoinColumn( nullable = false )
     private UserEntity user;
 
-    public TokenEntity(String token,
-                       LocalDateTime createdAt,
-                       LocalDateTime expiresAt,
-                       UserEntity user) {
+    public EmailVerifyTokenEntity(String token,
+                                  LocalDateTime createdAt,
+                                  LocalDateTime expiresAt,
+                                  UserEntity user) {
         this.token = token;
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;

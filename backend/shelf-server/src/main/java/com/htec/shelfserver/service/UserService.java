@@ -100,7 +100,7 @@ public class UserService {
                 .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         if (user.getRole() != null) {
-            if (user.getRole().getId().equals(Long.valueOf(Roles.SUPER_ADMIN))) {
+            if (!user.getRole().getId().equals(Long.valueOf(Roles.SUPER_ADMIN))) {
                 userRepository.delete(user);
             }
         } else {
@@ -152,7 +152,7 @@ public class UserService {
 
         if (userDTO.getPassword() != null) {
             userValidator.isUserUpdateValid(userDTO);
-            user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
+            user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword() + user.getSalt()));
         } else {
             user.setPassword(user.getPassword());
         }

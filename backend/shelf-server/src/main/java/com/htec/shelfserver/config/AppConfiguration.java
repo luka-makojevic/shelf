@@ -53,7 +53,6 @@ public class AppConfiguration {
         return new UserValidator();
     }
 
-
     @Bean
     public JavaMailSender javaMailSender() {
 
@@ -92,5 +91,4 @@ public class AppConfiguration {
 
         return source;
     }
-
 }

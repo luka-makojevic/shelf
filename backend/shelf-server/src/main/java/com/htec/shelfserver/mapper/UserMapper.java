@@ -3,6 +3,7 @@ package com.htec.shelfserver.mapper;
 import com.htec.shelfserver.dto.AuthUser;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.UserEntity;
+import com.htec.shelfserver.model.request.UserLoginMicrosoftRequestModel;
 import com.htec.shelfserver.model.request.UserLoginRequestModel;
 import com.htec.shelfserver.model.request.UserRegisterRequestModel;
 import com.htec.shelfserver.model.request.UserUpdateRequestModel;
@@ -39,16 +40,19 @@ public interface UserMapper {
 
     UserDTO userLoginRequestModelToUserDto(UserLoginRequestModel userLoginRequestModel);
 
+    UserDTO userLoginMicrosoftRequestModelToUserDto(UserLoginMicrosoftRequestModel userLoginMicrosoftRequestModel);
+
     @Mapping(target = "role", source = "userDTO.role.id")
     UserLoginResponseModel userDtoToUserLoginResponseModel(UserDTO userDTO, String jwtToken);
 
     @Mapping(target = "firstName", source = "givenName")
     @Mapping(target = "lastName", source = "surname")
     @Mapping(target = "email", source = "mail")
-    UserEntity userRegisterMicrosoftResponseModelToUserEntity(UserRegisterMicrosoftResponseModel body);
+    UserEntity userRegisterMicrosoftResponseModelToUserEntity(UserRegisterMicrosoftResponseModel userRegisterMicrosoftResponseModel);
 
     UserDTO userUpdateRequestModelToUserDto(UserUpdateRequestModel userUpdateRequestModel);
 
     @Mapping(target = "role", source = "userDTO.role.id")
     UserLoginResponseModel userDtoToUserLoginResponseModel(UserDTO userDTO, String jwtToken, String jwtRefreshToken);
+
 }

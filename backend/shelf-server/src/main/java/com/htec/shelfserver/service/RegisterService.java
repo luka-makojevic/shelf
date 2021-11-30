@@ -2,13 +2,14 @@ package com.htec.shelfserver.service;
 
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.RoleEntity;
-import com.htec.shelfserver.entity.TokenEntity;
+import com.htec.shelfserver.entity.EmailVerifyTokenEntity;
 import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.model.response.UserRegisterMicrosoftResponseModel;
 import com.htec.shelfserver.repository.TokenRepository;
 import com.htec.shelfserver.repository.UserRepository;
+import com.htec.shelfserver.security.SecurityConstants;
 import com.htec.shelfserver.util.TokenGenerator;
 import com.htec.shelfserver.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Value;
@@ -85,7 +86,7 @@ public class RegisterService {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + bearerToken);
+        headers.add(SecurityConstants.AUTHORIZATION_HEADER_STRING, SecurityConstants.BEARER_TOKEN_PREFIX + bearerToken);
 
         ResponseEntity<UserRegisterMicrosoftResponseModel> response;
 
@@ -116,7 +117,7 @@ public class RegisterService {
 
         String token = tokenGenerator.generateConfirmationToken(userEntity.getId());
 
-        TokenEntity confirmationToken = new TokenEntity(
+        EmailVerifyTokenEntity confirmationToken = new EmailVerifyTokenEntity(
                 token,
                 LocalDateTime.now(),
                 LocalDateTime.now().plusMinutes(15),
