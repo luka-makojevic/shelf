@@ -1,54 +1,61 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Form from '../../components/form';
 import { InputFieldWrapper } from '../../components/form/form-styles';
 import { InputField } from '../../components/input/InputField';
-import { ResetPasswordData } from '../../interfaces/types';
-import { AuthContext } from '../../providers/authProvider';
-import { Error } from '../../components/text/text-styles';
-import { emailFormValidation } from '../../validation/config/EmailFormValidation';
+import { ForgotPasswordData } from '../../interfaces/types';
+import { Error, PlainText } from '../../components/text/text-styles';
+import { forgotPasswordFieldConfig } from '../../validation/config/forgotPasswordValidationConfig';
+import userServices from '../../services/userServices';
+import { Button } from '../../components/UI/button';
 
-const EmailFormValidation = () => {
+const FormValidation = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ResetPasswordData>();
+  } = useForm<ForgotPasswordData>();
 
-  const validation = emailFormValidation;
+  const validation = forgotPasswordFieldConfig;
 
-  const { resetPassword, isLoading } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [successMessage, setSuccessMessage] = useState<string>('');
 
-  const submitData = (data: ResetPasswordData) => {
-    resetPassword(
-      data,
-      (success: string) => {
-        setSuccessMessage(success);
-      },
-      (err: string) => {
-        setError(err);
-      }
-    );
+  const submitData = (data: ForgotPasswordData) => {
+    setIsLoading(true);
+    userServices
+      .forgotPassword(data)
+      .then((res) => {
+        if (res.data.resetToken) {
+          setSuccessMessage('Go to your email to reset password');
+        }
+      })
+      .catch((err) => {
+        setError(err.response?.data?.message);
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (
     <Form.Base onSubmit={handleSubmit(submitData)}>
       <Error>{error}</Error>
+      <PlainText>{successMessage}</PlainText>
       <p>{successMessage}</p>
       <InputFieldWrapper>
         <InputField
           placeholder="Enter your email"
           error={errors.email}
           type="email"
-          {...register('email', { ...validation })}
+          {...register('email', validation.validations)}
         />
       </InputFieldWrapper>
 
-      <Form.Submit isLoading={isLoading}>Sign in</Form.Submit>
+      <Button spinner fullwidth isLoading={isLoading}>
+        Send
+      </Button>
     </Form.Base>
   );
 };
 
-export default EmailFormValidation;
+export default FormValidation;

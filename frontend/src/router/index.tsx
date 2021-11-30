@@ -8,6 +8,7 @@ import Landing from '../pages/landing';
 import EmailVerification from '../pages/emailVerification';
 import Login from '../pages/login';
 import Register from '../pages/register';
+import ResetPassword from '../pages/resetPassword';
 import TermsAndConditions from '../pages/termsOfService';
 import ProtectedRoute from './protectedRoute';
 import PublicOnlyRoute from './publicOnlyRoute';
@@ -56,11 +57,27 @@ const Router = () => {
     },
     {
       path: Routes.TERMS_AND_CONDITIONS,
-      element: <TermsAndConditions />,
+      element: (
+        <PublicOnlyRoute>
+          <TermsAndConditions />
+        </PublicOnlyRoute>
+      ),
     },
     {
       path: Routes.FORGOT_PASSWORD,
-      element: <ForgotPassword />,
+      element: (
+        <PublicOnlyRoute>
+          <ForgotPassword />
+        </PublicOnlyRoute>
+      ),
+    },
+    {
+      path: Routes.RESET_PASSWORD,
+      element: (
+        <PublicOnlyRoute>
+          <ResetPassword />
+        </PublicOnlyRoute>
+      ),
     },
   ];
 

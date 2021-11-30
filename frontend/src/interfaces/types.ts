@@ -1,3 +1,5 @@
+import { RegisterOptions } from 'react-hook-form';
+import { InputFieldType } from '../components/input/InputField';
 import { Role } from '../enums/roles';
 
 export interface RegisterData {
@@ -20,8 +22,23 @@ export interface MicrosoftLoginData {
   bearerToken: string;
 }
 
-export interface ResetPasswordData {
+export interface ForgotPasswordData {
   email: string;
+}
+
+export interface ResetPasswordData {
+  password: string;
+}
+
+export interface ForgotPasswordConfig {
+  validations: RegisterOptions;
+}
+
+export interface ResetPasswordFieldConfig {
+  type: InputFieldType;
+  placeholder: string;
+  name: 'password' | 'confirmPassword';
+  validations: RegisterOptions;
 }
 
 export interface ContextTypes {
@@ -44,11 +61,6 @@ export interface ContextTypes {
   microsoftRegister: (
     data: MicrosoftRegisterData,
     onSuccess: () => void,
-    onError: (error: string) => void
-  ) => void;
-  resetPassword: (
-    data: ResetPasswordData,
-    onSuccess: (success: string) => void,
     onError: (error: string) => void
   ) => void;
   isLoading: boolean;

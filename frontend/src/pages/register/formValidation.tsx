@@ -104,9 +104,14 @@ const FormValidation = () => {
   } = useContext(AuthContext);
   const { instance } = useMsal();
 
-  const submitForm = (data: RegisterData) => {
+  const submitForm = ({
+    password,
+    email,
+    firstName,
+    lastName,
+  }: RegisterData) => {
     httpRegister(
-      data,
+      { password, email, firstName, lastName },
       () => {
         setSuccess('A verification link has been sent to your email address.');
         setError('');

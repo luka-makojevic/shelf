@@ -7,7 +7,6 @@ import {
   UserType,
   MicrosoftRegisterData,
   MicrosoftLoginData,
-  ResetPasswordData,
 } from '../../interfaces/types';
 
 const defaultValue: ContextTypes = {
@@ -16,7 +15,6 @@ const defaultValue: ContextTypes = {
   microsoftLogin: async () => {},
   register: async () => {},
   microsoftRegister: async () => {},
-  resetPassword: async () => {},
   isLoading: false,
   accessToken: '',
 };
@@ -123,24 +121,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       .finally(() => setIsLoading(false));
   };
 
-  const resetPassword = (
-    data: ResetPasswordData,
-    onSuccess: (success: string) => void,
-    onError: (err: string) => void
-  ) => {
-    setIsLoading(true);
-    AuthService.resetPassword(data)
-      .then((res) => {
-        if (res.data.resetToken) {
-          onSuccess('A reset token has been sent to your email');
-        }
-      })
-      .catch((err) => {
-        onError(err.response?.data?.message);
-      })
-      .finally(() => setIsLoading(false));
-  };
-
   return (
     <AuthContext.Provider
       value={{
@@ -148,7 +128,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         login,
         microsoftLogin,
         register,
-        resetPassword,
         microsoftRegister,
         isLoading,
         accessToken,

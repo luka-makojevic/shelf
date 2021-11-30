@@ -4,6 +4,8 @@ import { NavigateFunction, useParams } from 'react-router';
 import { Form } from '../../components';
 import { InputField } from '../../components/input/InputField';
 import { Error, PlainText } from '../../components/text/text-styles';
+import { InputFieldWrapper } from '../../components/form/form-styles';
+import { Button } from '../../components/UI/button';
 // import { Routes } from '../../enums/routes';
 import {
   ResetPasswordData,
@@ -54,16 +56,20 @@ const ResetPasswordForm = () => {
     <Form.Base onSubmit={handleSubmit(onSubmit)}>
       <Error>{error}</Error>
       <PlainText color="green">{successMessage}</PlainText>
-      {registerFieldConfig.map((fieldConfig) => (
-        <InputField
-          key={fieldConfig.name}
-          placeholder={fieldConfig.placeholder}
-          type={fieldConfig.type}
-          error={errors[fieldConfig.name]}
-          {...register(fieldConfig.name, fieldConfig.validations)}
-        />
-      ))}
-      <Form.Submit isLoading={isLoading}>Reset Password</Form.Submit>
+      <InputFieldWrapper>
+        {registerFieldConfig.map((fieldConfig) => (
+          <InputField
+            key={fieldConfig.name}
+            placeholder={fieldConfig.placeholder}
+            type={fieldConfig.type}
+            error={errors[fieldConfig.name]}
+            {...register(fieldConfig.name, fieldConfig.validations)}
+          />
+        ))}
+      </InputFieldWrapper>
+      <Button spinner fullwidth isLoading={isLoading}>
+        Reset Password
+      </Button>
     </Form.Base>
   );
 };
