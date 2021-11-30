@@ -5,7 +5,7 @@ import userServices from '../../services/userServices';
 import { Spinner } from '../../components/form/form-styles';
 import { Link, Title } from '../../components/text/text-styles';
 import { Routes } from '../../enums/routes';
-import { StyledButton } from '../../components/UI/button/button-styles';
+import { Button } from '../../components/UI/button';
 
 const EmailVerification = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -50,18 +50,9 @@ const EmailVerification = () => {
             {confirmMessage}
           </Title>
 
-          <Link
-            to={Routes.LOGIN}
-            p="10px 16px"
-            bg="primary"
-            color="white"
-            border="2px solid white"
-            mb="20px"
-            fontSize="17px"
-            borderRadius="30px"
-          >
+          <Button variant="light" to={Routes.LOGIN}>
             Procced to login
-          </Link>
+          </Button>
         </>
       );
     }
@@ -69,17 +60,9 @@ const EmailVerification = () => {
       return (
         <>
           <Title fontSize="25px">{error}</Title>
-          <StyledButton
-            padding="10px 20px"
-            fontSize="18px"
-            bg="primary"
-            color="white"
-            fontWeight="bold"
-            border="2px solid white"
-            onClick={resendEmailVerification}
-          >
-            Reset token
-          </StyledButton>
+          <Button onClick={resendEmailVerification} variant="light">
+            Reset Token
+          </Button>
         </>
       );
     }

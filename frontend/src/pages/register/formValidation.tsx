@@ -7,6 +7,9 @@ import CheckBox from './checkBox';
 import { RegisterData, RegisterFormData } from '../../interfaces/types';
 import { AuthContext } from '../../providers/authProvider';
 import { Error } from '../../components/text/text-styles';
+import { Button } from '../../components/UI/button';
+import { Holder } from '../../components/layout/layout.styles';
+import { Logo } from '../../components/header/header-styles';
 
 interface FieldConfig {
   type: InputFieldType;
@@ -116,7 +119,15 @@ const FormValidation = () => {
         <CheckBox register={register} error={errors.areTermsRead?.message} />
       </InputFieldWrapper>
 
-      <Form.Submit isLoading={isLoading}>Sign up</Form.Submit>
+      <Button
+        spinner
+        isLoading={isLoading}
+        variant="primary"
+        fullwidth
+        size="large"
+      >
+        Sign up
+      </Button>
     </Form.Base>
   );
 };

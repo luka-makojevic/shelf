@@ -39,6 +39,7 @@ export const theme = {
     body: 1.5,
     heading: 1.125,
   },
+  
   colors: {
     white: '#fff',
     black: '#000',
@@ -46,6 +47,7 @@ export const theme = {
     secondary: '#8EA2D8',
     danger: 'red',
   },
+  
   styles: {
     root: {
       fontFamily: 'body',
