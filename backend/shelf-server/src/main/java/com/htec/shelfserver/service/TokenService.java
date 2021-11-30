@@ -1,6 +1,6 @@
 package com.htec.shelfserver.service;
 
-import com.htec.shelfserver.entity.TokenEntity;
+import com.htec.shelfserver.entity.EmailVerifyTokenEntity;
 import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.repository.TokenRepository;
@@ -54,7 +54,7 @@ public class TokenService {
             return EMAIL_ALREADY_CONFIRMED;
         }
 
-        TokenEntity confirmationToken = tokenRepository.findByToken(token)
+        EmailVerifyTokenEntity confirmationToken = tokenRepository.findByToken(token)
                 .orElseThrow(ExceptionSupplier.tokenNotFound);
 
         LocalDateTime expiredAt = confirmationToken.getExpiresAt();
@@ -86,7 +86,7 @@ public class TokenService {
             return EMAIL_ALREADY_CONFIRMED;
         }
 
-        TokenEntity oldConfirmationToken = tokenRepository.findByToken(token)
+        EmailVerifyTokenEntity oldConfirmationToken = tokenRepository.findByToken(token)
                 .orElseThrow(ExceptionSupplier.tokenNotFound);
 
         tokenRepository.delete(oldConfirmationToken);

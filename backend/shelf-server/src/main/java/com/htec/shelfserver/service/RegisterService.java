@@ -2,7 +2,7 @@ package com.htec.shelfserver.service;
 
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.RoleEntity;
-import com.htec.shelfserver.entity.TokenEntity;
+import com.htec.shelfserver.entity.EmailVerifyTokenEntity;
 import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.mapper.UserMapper;
@@ -117,7 +117,7 @@ public class RegisterService {
 
         String token = tokenGenerator.generateConfirmationToken(userEntity.getId());
 
-        TokenEntity confirmationToken = new TokenEntity(
+        EmailVerifyTokenEntity confirmationToken = new EmailVerifyTokenEntity(
                 token,
                 LocalDateTime.now(),
                 LocalDateTime.now().plusMinutes(15),
