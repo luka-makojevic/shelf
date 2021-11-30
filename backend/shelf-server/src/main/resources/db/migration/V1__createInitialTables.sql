@@ -6,8 +6,6 @@
 
 -- Table structure for table `role`
 
-DROP TABLE IF EXISTS `role`;
-
 CREATE TABLE `role` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
@@ -16,13 +14,9 @@ CREATE TABLE `role` (
 
 -- Dumping data for table `role`
 
-LOCK TABLES `role` WRITE;
 INSERT INTO `role` VALUES (1,'super-admin'),(2,'moderator'),(3,'user');
-UNLOCK TABLES;
 
 -- Table structure for table `user`
-
-DROP TABLE IF EXISTS `user`;
 
 CREATE TABLE `user` (
   `id` bigint NOT NULL AUTO_INCREMENT,
@@ -47,8 +41,6 @@ INSERT INTO `user` VALUES (1,NOW(),NULL,'admin',_binary '','Admin','Admin','$2a
 
 -- Table structure for table `email_verify_token`
 
-DROP TABLE IF EXISTS `email_verify_token`;
-
 CREATE TABLE `email_verify_token` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `created_at` datetime(6) NOT NULL,
@@ -59,26 +51,4 @@ CREATE TABLE `email_verify_token` (
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Table structure for table `password_reset_token`
 
-DROP TABLE IF EXISTS `password_reset_token`;
-
-CREATE TABLE `password_reset_token` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `token` varchar(255) NOT NULL,
-  `user_id` bigint NOT NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- Table structure for table `invalid_jwt_token`
-
-DROP TABLE IF EXISTS `invalid_jwt_token`;
-
-CREATE TABLE `invalid_jwt_token` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `token` varchar(255) NOT NULL,
-  `user_id` bigint NOT NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
