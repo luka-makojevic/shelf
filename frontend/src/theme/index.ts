@@ -45,6 +45,7 @@ export const theme = {
     primary: '#006FD1',
     secondary: '#8EA2D8',
     danger: 'red',
+    success: 'green',
   },
   styles: {
     root: {

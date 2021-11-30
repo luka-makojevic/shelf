@@ -1,9 +1,13 @@
+import { useMsal } from '@azure/msal-react';
 import { useContext, useState } from 'react';
 import { useForm, RegisterOptions } from 'react-hook-form';
+import { useNavigate } from 'react-router';
+import { loginRequest } from '../../azure/authConfig';
 import Form from '../../components/form';
 import { InputFieldWrapper } from '../../components/form/form-styles';
 import { InputField, InputFieldType } from '../../components/input/InputField';
 import { Error } from '../../components/text/text-styles';
+import { Routes } from '../../enums/routes';
 
 import { LoginData } from '../../interfaces/types';
 import { AuthContext } from '../../providers/authProvider';
@@ -56,18 +60,36 @@ const FormValidation = () => {
       },
     },
   ];
-  const { login, isLoading } = useContext(AuthContext);
+
+  const { login, microsoftLogin, isLoading } = useContext(AuthContext);
+  const { instance } = useMsal();
+
+  const navigation = useNavigate();
 
   const submitForm = (data: LoginData) => {
     login(
       data,
-      (navigation) => {
-        navigation('/dashboard');
+      () => {
+        navigation(Routes.DASHBOARD);
       },
       (err: string) => {
         setError(err);
       }
     );
+  };
+
+  const handleMicrosoftSignIn = () => {
+    instance.acquireTokenPopup(loginRequest).then(({ accessToken }) => {
+      microsoftLogin(
+        { bearerToken: accessToken },
+        () => {
+          navigation(Routes.DASHBOARD);
+        },
+        (err: string) => {
+          setError(err);
+        }
+      );
+    });
   };
 
   return (
@@ -86,6 +108,9 @@ const FormValidation = () => {
       </InputFieldWrapper>
 
       <Form.Submit isLoading={isLoading}>Sign in</Form.Submit>
+      <button type="button" onClick={handleMicrosoftSignIn}>
+        Sign in with Microsoft
+      </button>
     </Form.Base>
   );
 };
