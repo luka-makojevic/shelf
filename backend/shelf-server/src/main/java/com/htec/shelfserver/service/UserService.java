@@ -178,6 +178,12 @@ public class UserService {
 
         userRepository.save(user);
 
+        Map<String, Object> model = new HashMap<>();
+        model.put("firstName", user.getFirstName());
+        model.put("roleName", user.getRole().getName());
+
+        emailService.sendEmail(user.getEmail(), model, "update-role-email.html", "Role updated" );
+
         return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
     }
 }
