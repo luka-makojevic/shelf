@@ -6,12 +6,7 @@ import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.model.response.UserRegisterMicrosoftResponseModel;
 import com.htec.shelfserver.repository.UserRepository;
-import com.htec.shelfserver.security.SecurityConstants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,8 +18,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 
@@ -34,12 +27,15 @@ public class LoginService implements UserDetailsService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
 
-    private final String MICROSOFT_GRAPH_URL = "https://graph.microsoft.com/v1.0/me";
+    private final MicrosoftApiService microsoftApiService;
 
     @Autowired
-    LoginService(UserRepository userRepository, AuthenticationManager authenticationManager) {
+    LoginService(UserRepository userRepository,
+                 AuthenticationManager authenticationManager,
+                 MicrosoftApiService microsoftApiService) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
+        this.microsoftApiService = microsoftApiService;
     }
 
     @Override
@@ -77,23 +73,10 @@ public class LoginService implements UserDetailsService {
 
     public UserDTO authenticateUserMicrosoft(String bearerToken) {
 
-        RestTemplate restTemplate = new RestTemplate();
+        UserRegisterMicrosoftResponseModel response = microsoftApiService.getUserInfo(bearerToken)
+                .orElseThrow(ExceptionSupplier.accessTokenNotActive);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(SecurityConstants.AUTHORIZATION_HEADER_STRING, SecurityConstants.BEARER_TOKEN_PREFIX + bearerToken);
-
-        ResponseEntity<UserRegisterMicrosoftResponseModel> response;
-
-        try {
-            response = restTemplate.exchange(MICROSOFT_GRAPH_URL,
-                    HttpMethod.GET, new HttpEntity<>(headers),
-                    UserRegisterMicrosoftResponseModel.class);
-
-        } catch (RestClientException ex) {
-            throw ExceptionSupplier.accessTokenNotActive.get();
-        }
-
-        UserEntity userEntity = userRepository.findByEmail(response.getBody().getMail())
+        UserEntity userEntity = userRepository.findByEmail(response.getMail())
                 .orElseThrow(ExceptionSupplier.userNotFound);
 
         if (!userEntity.getEmailVerified())
