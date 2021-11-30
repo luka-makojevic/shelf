@@ -1,6 +1,7 @@
 package com.htec.shelfserver.service;
 
 
+import com.htec.shelfserver.dto.AuthUser;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.PasswordResetTokenEntity;
 import com.htec.shelfserver.entity.RoleEntity;
@@ -67,7 +68,7 @@ public class UserService {
         return UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
     }
 
-    public UserPageResponseModel<UserResponseModel> getUsers(Integer page, Integer size) {
+    public UserPageResponseModel<UserResponseModel> getUsers(AuthUser user, Integer page, Integer size) {
 
         if (page <= 0) {
             throw ExceptionSupplier.pageWrong.get();
@@ -79,7 +80,7 @@ public class UserService {
 
         Pageable pageable = PageRequest.of(page - 1, size);
 
-        Page<UserEntity> users = userRepository.findAll(pageable);
+        Page<UserEntity> users = userRepository.findAll(user.getRoleId(), pageable);
 
         List<UserResponseModel> allUsers = UserMapper.INSTANCE.userEntityToUserResponseModels(users.getContent());
 

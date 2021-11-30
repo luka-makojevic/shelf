@@ -27,7 +27,7 @@ public class AdminController {
                                    @RequestParam(defaultValue = "1") Integer page,
                                    @RequestParam(defaultValue = "5") Integer size) {
 
-        return ResponseEntity.ok(userService.getUsers(page, size));
+        return ResponseEntity.ok(userService.getUsers(user, page, size));
     }
 
     @GetMapping("/{id}")
