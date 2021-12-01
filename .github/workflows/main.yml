@@ -5,11 +5,15 @@ on:
   push:
     branches: [ master ]
     paths:
-      - './backend/**'
+      - 'backend/**'
+      - '!frontend/**'
+      - '!qa/**'
   pull_request:
     branches: [ master ]
     paths:
-      - './backend/**'
+      - 'backend/**'
+      - '!frontend/**'
+      - '!qa/**'
 jobs:
   build:
     name: Build and Run Tests
