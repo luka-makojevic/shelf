@@ -6,7 +6,8 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-
+  paths:
+      - 'backend/**'
 jobs:
   build:
     name: Build and Run Tests
