@@ -80,11 +80,11 @@ public class UserService {
 
         Pageable pageable = PageRequest.of(page - 1, size);
 
-        Page<UserEntity> users = userRepository.findAll(user.getRoleId(), pageable);
+        Page<UserEntity> users = userRepository.findAll(user.getId(), pageable);
 
         List<UserResponseModel> allUsers = UserMapper.INSTANCE.userEntityToUserResponseModels(users.getContent());
 
-        return new UserPageResponseModel<>(allUsers, users.getTotalPages(), users.getNumber() + 1);
+        return new UserPageResponseModel<>(allUsers, users.getTotalPages(), users.getNumber() + 1, allUsers.size());
     }
 
     public UserResponseModel getUserById(Long id) {
