@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,6 +19,8 @@ import java.util.Arrays;
 import java.util.Properties;
 
 @Configuration
+@EnableJpaRepositories(basePackages="com.htec.shelfserver.repository.mysql")
+@EnableCassandraRepositories(basePackages = "com.htec.shelfserver.repository.cassandra")
 public class AppConfiguration {
     private final String host;
     private final Integer port;

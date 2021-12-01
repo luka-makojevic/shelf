@@ -1,7 +1,7 @@
 package com.htec.shelfserver.config;
 
 import com.htec.shelfserver.annotation.AuthUserArgumentResolver;
-import com.htec.shelfserver.repository.UserRepository;
+import com.htec.shelfserver.repository.mysql.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
