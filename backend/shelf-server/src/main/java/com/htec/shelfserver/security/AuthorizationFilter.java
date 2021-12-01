@@ -1,5 +1,6 @@
 package com.htec.shelfserver.security;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.exception.ShelfException;
@@ -46,32 +47,17 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
         try {
 
             authentication = getAuthentication(req);
-        }catch (ShelfException e){
-            ShelfException ex = ExceptionSupplier.userIsNotLoggedIn.get();
-            ErrorMessage jsonResponse = new ErrorMessage(ex.getMessage(), ex.getStatus(), ex.getTimestamp(), ex.getErrorMessage());
-            String userResponseJson = new ObjectMapper().writeValueAsString(jsonResponse);
-            res.setStatus(HttpStatus.UNAUTHORIZED.value());
-            res.setContentType("application/json");
-            res.getWriter().write(userResponseJson);
-            return;
-        }
-        catch (ExpiredJwtException e) {
+        } catch (ShelfException e) {
 
-            ShelfException ex = ExceptionSupplier.tokenExpired.get();
-            ErrorMessage jsonResponse = new ErrorMessage(ex.getMessage(), ex.getStatus(), ex.getTimestamp(), ex.getErrorMessage());
-            String userResponseJson = new ObjectMapper().writeValueAsString(jsonResponse);
-            res.setStatus(HttpStatus.FORBIDDEN.value());
-            res.setContentType("application/json");
-            res.getWriter().write(userResponseJson);
+            setServletResponseMessage(res, ExceptionSupplier.userIsNotLoggedIn.get());
+            return;
+        } catch (ExpiredJwtException e) {
+
+            setServletResponseMessage(res, ExceptionSupplier.tokenExpired.get());
             return;
         } catch (Exception e) {
 
-            ShelfException ex = ExceptionSupplier.tokenNotValid.get();
-            ErrorMessage jsonResponse = new ErrorMessage(ex.getMessage(), ex.getStatus(), ex.getTimestamp(), ex.getErrorMessage());
-            String userResponseJson = new ObjectMapper().writeValueAsString(jsonResponse);
-            res.setStatus(HttpStatus.FORBIDDEN.value());
-            res.setContentType("application/json");
-            res.getWriter().write(userResponseJson);
+            setServletResponseMessage(res, ExceptionSupplier.tokenNotValid.get());
             return;
         }
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -107,5 +93,19 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
         }
 
         return null;
+    }
+
+    public void setServletResponseMessage(HttpServletResponse res, ShelfException exception) {
+
+        try {
+            ShelfException ex = exception;
+            ErrorMessage jsonResponse = new ErrorMessage(ex.getMessage(), ex.getStatus(), ex.getTimestamp(), ex.getErrorMessage());
+            String userResponseJson = new ObjectMapper().writeValueAsString(jsonResponse);
+            res.setStatus(HttpStatus.FORBIDDEN.value());
+            res.setContentType("application/json");
+            res.getWriter().write(userResponseJson);
+        } catch (IOException e) {
+            ExceptionSupplier.internalError.get();
+        }
     }
 }

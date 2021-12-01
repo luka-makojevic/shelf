@@ -81,6 +81,13 @@ public class ExceptionSupplier {
             ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> internalError = () -> new ShelfException(
+            ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(),
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> emailNotVerified = () -> new ShelfException(
             ErrorMessages.EMAIL_ADDRESS_NOT_VERIFIED.getErrorMessage(),
             HttpStatus.FORBIDDEN.value(),
