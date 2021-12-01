@@ -1,4 +1,4 @@
-package com.htec.shelfserver.repository;
+package com.htec.shelfserver.repository.mysql;
 
 import com.htec.shelfserver.entity.UserEntity;
 import org.springframework.data.domain.Page;

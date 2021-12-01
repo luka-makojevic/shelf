@@ -3,7 +3,7 @@ package com.htec.shelfserver.util;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.exception.ExceptionSupplier;
-import com.htec.shelfserver.repository.UserRepository;
+import com.htec.shelfserver.repository.mysql.UserRepository;
 import com.htec.shelfserver.security.SecurityConstants;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
