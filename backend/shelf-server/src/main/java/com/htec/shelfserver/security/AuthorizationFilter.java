@@ -1,6 +1,5 @@
 package com.htec.shelfserver.security;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.exception.ShelfException;
