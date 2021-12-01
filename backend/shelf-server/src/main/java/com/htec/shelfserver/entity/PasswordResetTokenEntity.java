@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "password_reset_tokens")
+@Entity(name = "password_reset_token")
 public class PasswordResetTokenEntity implements Serializable {
 
     @Id

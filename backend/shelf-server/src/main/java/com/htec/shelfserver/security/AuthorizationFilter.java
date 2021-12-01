@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.exception.ShelfException;
 import com.htec.shelfserver.model.response.ErrorMessage;
+import com.htec.shelfserver.repository.cassandra.InvalidJwtTokenRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.http.HttpStatus;
@@ -17,13 +18,17 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class AuthorizationFilter extends BasicAuthenticationFilter {
 
-    public AuthorizationFilter(AuthenticationManager authenticationManager) {
+    private final InvalidJwtTokenRepository invalidJwtTokenRepository;
+
+    public AuthorizationFilter(AuthenticationManager authenticationManager,
+                               InvalidJwtTokenRepository invalidJwtTokenRepository) {
+
         super(authenticationManager);
+        this.invalidJwtTokenRepository = invalidJwtTokenRepository;
     }
 
     @Override
@@ -41,22 +46,30 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
         try {
 
             authentication = getAuthentication(req);
-        } catch (ExpiredJwtException e) {
-
-            ShelfException ex = ExceptionSupplier.tokenExpired.get();
+        }catch (ShelfException e){
+            ShelfException ex = ExceptionSupplier.userIsNotLoggedIn.get();
             ErrorMessage jsonResponse = new ErrorMessage(ex.getMessage(), ex.getStatus(), ex.getTimestamp(), ex.getErrorMessage());
             String userResponseJson = new ObjectMapper().writeValueAsString(jsonResponse);
-            res.setStatus(HttpStatus.OK.value());
+            res.setStatus(HttpStatus.UNAUTHORIZED.value());
             res.setContentType("application/json");
             res.getWriter().write(userResponseJson);
             return;
         }
-        catch (Exception e) {
+        catch (ExpiredJwtException e) {
+
+            ShelfException ex = ExceptionSupplier.tokenExpired.get();
+            ErrorMessage jsonResponse = new ErrorMessage(ex.getMessage(), ex.getStatus(), ex.getTimestamp(), ex.getErrorMessage());
+            String userResponseJson = new ObjectMapper().writeValueAsString(jsonResponse);
+            res.setStatus(HttpStatus.FORBIDDEN.value());
+            res.setContentType("application/json");
+            res.getWriter().write(userResponseJson);
+            return;
+        } catch (Exception e) {
 
             ShelfException ex = ExceptionSupplier.tokenNotValid.get();
             ErrorMessage jsonResponse = new ErrorMessage(ex.getMessage(), ex.getStatus(), ex.getTimestamp(), ex.getErrorMessage());
             String userResponseJson = new ObjectMapper().writeValueAsString(jsonResponse);
-            res.setStatus(HttpStatus.BAD_REQUEST.value());
+            res.setStatus(HttpStatus.FORBIDDEN.value());
             res.setContentType("application/json");
             res.getWriter().write(userResponseJson);
             return;
@@ -72,6 +85,11 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
         if (token != null) {
 
             token = token.replace(SecurityConstants.BEARER_TOKEN_PREFIX, "");
+
+            if (invalidJwtTokenRepository.findByJwt(token).isPresent()) {
+                throw new ShelfException();
+            }
+
             String user;
 
             user = Jwts.parser()
