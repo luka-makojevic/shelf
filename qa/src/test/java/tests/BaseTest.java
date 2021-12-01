@@ -7,7 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import pages.ShelfLoginPage;
+import pages.LoginPage;
 
 import java.io.IOException;
 
@@ -18,7 +18,7 @@ import java.io.IOException;
     public BaseWebDriverManager baseWebDriverManager;
     public BaseWdWaitHelpers baseWdWaitHelpers;
     public ExcelReader excelReader;
-    public ShelfLoginPage shelfLoginPage;
+    public LoginPage loginPage;
 
     @Before
     public void initialize() throws IOException
@@ -28,12 +28,14 @@ import java.io.IOException;
         baseWdWaitHelpers = new BaseWdWaitHelpers(driver);
         driver.manage().window().maximize();
         excelReader = new ExcelReader("src/main/resources/ExcelRead.xlsx");
-        shelfLoginPage = new ShelfLoginPage(driver);
+        loginPage = new LoginPage(driver);
     }
-
+/*
     @After
     public void testTearDown() {
         driver.close();
         driver.quit();
     }
+
+ */
 }
