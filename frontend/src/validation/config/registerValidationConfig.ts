@@ -1,6 +1,4 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
-import { RegisterFormData } from '../../interfaces/types';
 import { RegisterFieldConfig } from '../../interfaces/types';
 
 export const config = (watch: any): RegisterFieldConfig[] => [

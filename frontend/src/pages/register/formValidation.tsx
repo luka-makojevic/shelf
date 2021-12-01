@@ -14,7 +14,7 @@ import { AuthContext } from '../../providers/authProvider';
 import { Error, PlainText } from '../../components/text/text-styles';
 import { Routes } from '../../enums/routes';
 import CheckBox from '../../components/checkbox/checkBox';
-import {Button} from "../../components/UI/button"
+import { Button } from '../../components/UI/button';
 import { Holder } from '../../components/layout/layout.styles';
 import { config } from '../../validation/config/registerValidationConfig';
 
@@ -30,7 +30,7 @@ const FormValidation = ({ registerTest }: RegisterValidationProps) => {
 
   const { register: httpRegister, isLoading } = useContext(AuthContext);
 
-  const submitForm = async (data: RegisterData) => {
+  const submitForm = (data: RegisterData) => {
     httpRegister(
       data,
       () => {},
@@ -38,19 +38,6 @@ const FormValidation = ({ registerTest }: RegisterValidationProps) => {
         setError(err);
       }
     );
-    if (registerTest) {
-      try {
-        await registerTest(
-          data.email,
-          data.password,
-          data.confirmPassword,
-          data.areTermsRead
-        );
-      } catch (e) {
-        console.log(e);
-      }
-    }
-
     reset();
   };
   const registeFieldConfig: RegisterFieldConfig[] = config(watch);
