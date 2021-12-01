@@ -36,6 +36,13 @@ export const Error = styled.div`
   font-size: 10px;
 `;
 
+export const Success = styled.p`
+  width: 100%;
+  text-align: center;
+  color: ${({ theme }) => theme.colors.success};
+  font-size: ${({ theme }) => theme.fontSizes[0]};
+`;
+
 export const PlainText = styled.p<TextProps>`
   font-size: 13px;
   margin: 5px 0;

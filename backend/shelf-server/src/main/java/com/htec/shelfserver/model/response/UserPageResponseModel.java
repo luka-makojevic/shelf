@@ -15,4 +15,5 @@ public class UserPageResponseModel<T> {
     private List<T> users;
     private Integer totalPages;
     private Integer currentPage;
+    private Integer usersCount;
 }

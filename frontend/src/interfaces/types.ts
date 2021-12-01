@@ -1,6 +1,5 @@
 import { ChangeEventHandler } from 'react';
 import { FieldError, RegisterOptions } from 'react-hook-form';
-import { NavigateFunction } from 'react-router-dom';
 import { Role } from '../enums/roles';
 
 export interface RegisterData {
@@ -12,19 +11,37 @@ export interface RegisterData {
   lastName: string;
 }
 
+export interface MicrosoftRegisterData {
+  bearerToken: string;
+}
+
 export interface LoginData {
   email: string;
   password: string;
+}
+
+export interface MicrosoftLoginData {
+  bearerToken: string;
 }
 export interface ContextTypes {
   user?: UserType | null;
   login: (
     data: LoginData,
-    onSuccess: (nav: NavigateFunction) => void,
+    onSuccess: () => void,
+    onError: (error: string) => void
+  ) => void;
+  microsoftLogin: (
+    data: MicrosoftLoginData,
+    onSuccess: () => void,
     onError: (error: string) => void
   ) => void;
   register: (
     data: RegisterData,
+    onSuccess: () => void,
+    onError: (error: string) => void
+  ) => void;
+  microsoftRegister: (
+    data: MicrosoftRegisterData,
     onSuccess: () => void,
     onError: (error: string) => void
   ) => void;

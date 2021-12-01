@@ -1,15 +1,18 @@
+import { useMsal } from '@azure/msal-react';
 import { useContext, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, RegisterOptions } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { loginRequest } from '../../azure/authConfig';
 import Form from '../../components/form';
 import { InputFieldWrapper } from '../../components/form/form-styles';
 import { InputField } from '../../components/input/InputField';
 import { Error } from '../../components/text/text-styles';
+import { Routes } from '../../enums/routes';
 import { Button } from '../../components/UI/button';
 import { Holder } from '../../components/layout/layout.styles';
 import { loginFieldConfig } from '../../validation/config/loginValidationConfig';
 import { LoginData, LoginFieldConfig } from '../../interfaces/types';
 import { AuthContext } from '../../providers/authProvider';
-import { Routes } from '../../enums/routes';
 
 const FormValidation = () => {
   const {
@@ -20,17 +23,43 @@ const FormValidation = () => {
   } = useForm<LoginData>({});
   const [error, setError] = useState<string>();
 
-  const { login: HttpLogin, isLoading } = useContext(AuthContext);
+  const { login, microsoftLogin, isLoading } = useContext(AuthContext);
+  const { instance } = useMsal();
+
+  const navigation = useNavigate();
 
   const submitForm = (data: LoginData) => {
-    HttpLogin(
+    login(
       data,
-      () => {},
+      () => {
+        navigation(Routes.DASHBOARD);
+      },
       (err: string) => {
         setError(err);
       }
     );
-    reset();
+  };
+
+  const handleMicrosoftSignIn = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    instance
+      .acquireTokenPopup(loginRequest)
+      .then(({ accessToken }) => {
+        microsoftLogin(
+          { bearerToken: accessToken },
+          () => {
+            navigation(Routes.DASHBOARD);
+          },
+          (err: string) => {
+            setError(err);
+          }
+        );
+      })
+      .catch((err) => {
+        if (err.errorCode === 'user_cancelled') return;
+        setError(err.message);
+      });
   };
 
   return (
@@ -49,9 +78,16 @@ const FormValidation = () => {
           />
         ))}
       </InputFieldWrapper>
-
       <Button spinner isLoading={isLoading} fullwidth size="large">
         Sign in
+      </Button>
+      <Button
+        onClick={handleMicrosoftSignIn}
+        icon={<img src="./assets/images/microsoft-logo.png" alt="" />}
+        fullwidth
+        size="large"
+      >
+        Sign in with Microsoft
       </Button>
     </Form.Base>
   );

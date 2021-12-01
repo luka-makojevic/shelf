@@ -1,6 +1,7 @@
 package com.htec.shelfserver.service;
 
 
+import com.htec.shelfserver.dto.AuthUser;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.PasswordResetTokenEntity;
 import com.htec.shelfserver.entity.RoleEntity;
@@ -67,7 +68,7 @@ public class UserService {
         return UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
     }
 
-    public UserPageResponseModel<UserResponseModel> getUsers(Integer page, Integer size) {
+    public UserPageResponseModel<UserResponseModel> getUsers(AuthUser user, Integer page, Integer size) {
 
         if (page <= 0) {
             throw ExceptionSupplier.pageWrong.get();
@@ -79,11 +80,11 @@ public class UserService {
 
         Pageable pageable = PageRequest.of(page - 1, size);
 
-        Page<UserEntity> users = userRepository.findAll(pageable);
+        Page<UserEntity> users = userRepository.findAll(user.getId(), pageable);
 
         List<UserResponseModel> allUsers = UserMapper.INSTANCE.userEntityToUserResponseModels(users.getContent());
 
-        return new UserPageResponseModel<>(allUsers, users.getTotalPages(), users.getNumber() + 1);
+        return new UserPageResponseModel<>(allUsers, users.getTotalPages(), users.getNumber() + 1, allUsers.size());
     }
 
     public UserResponseModel getUserById(Long id) {
@@ -177,6 +178,12 @@ public class UserService {
         user.setRole(new RoleEntity(role.getId(), role.getName()));
 
         userRepository.save(user);
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("firstName", user.getFirstName());
+        model.put("roleName", user.getRole().getName());
+
+        emailService.sendEmail(user.getEmail(), model, "update-role-email.html", "Role updated" );
 
         return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
     }
