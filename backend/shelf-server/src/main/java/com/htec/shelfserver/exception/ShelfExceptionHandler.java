@@ -16,5 +16,4 @@ public class ShelfExceptionHandler {
                         ex.getMessage(), ex.getStatus(), ex.getTimestamp(), ex.getErrorMessage()
                 ));
     }
-
 }

@@ -1,14 +1,18 @@
 import { useContext, useState } from 'react';
 import { useForm, RegisterOptions } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import { useMsal } from '@azure/msal-react';
 import Form from '../../components/form';
 import { InputFieldWrapper } from '../../components/form/form-styles';
 import { InputField, InputFieldType } from '../../components/input/InputField';
 import { RegisterData, RegisterFormData } from '../../interfaces/types';
 import { AuthContext } from '../../providers/authProvider';
-import { Error, PlainText } from '../../components/text/text-styles';
+import { Error, PlainText, Success } from '../../components/text/text-styles';
 import { Routes } from '../../enums/routes';
 import CheckBox from '../../components/checkbox/checkBox';
+import { loginRequest } from '../../azure/authConfig';
+import { Button } from '../../components/UI/button';
+import { Holder } from '../../components/layout/layout.styles';
 
 interface FieldConfig {
   type: InputFieldType;
@@ -29,8 +33,10 @@ const FormValidation = () => {
     handleSubmit,
     watch,
     formState: { errors },
+    reset,
   } = useForm<RegisterFormData>();
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState<string>('');
+  const [success, setSuccess] = useState<string>('');
 
   const fieldConfigs: FieldConfig[] = [
     {
@@ -90,21 +96,53 @@ const FormValidation = () => {
       },
     },
   ];
-  const { register: httpRegister, isLoading } = useContext(AuthContext);
+
+  const {
+    register: httpRegister,
+    microsoftRegister,
+    isLoading,
+  } = useContext(AuthContext);
+  const { instance } = useMsal();
 
   const submitForm = (data: RegisterData) => {
     httpRegister(
       data,
-      () => {},
+      () => {
+        setSuccess('A verification link has been sent to your email address.');
+        setError('');
+        reset();
+      },
       (err) => {
         setError(err);
+        setSuccess('');
       }
     );
   };
 
+  const handleMicrosoftSignUp = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    instance.acquireTokenPopup(loginRequest).then(({ accessToken }) => {
+      microsoftRegister(
+        { bearerToken: accessToken },
+        () => {
+          setSuccess('Registered Successfully');
+          setError('');
+        },
+        (err) => {
+          setError(err);
+          setSuccess('');
+        }
+      );
+    });
+  };
+
   return (
     <Form.Base onSubmit={handleSubmit(submitForm)}>
-      <Error>{error}</Error>
+      <Holder m="0 auto" maxWidth="200px" minHeight="15px">
+        {error && <Error>{error}</Error>}
+        {success && <Success>{success}</Success>}
+      </Holder>
       <InputFieldWrapper>
         {fieldConfigs.map((fieldConfig: FieldConfig) => (
           <InputField
@@ -115,22 +153,41 @@ const FormValidation = () => {
             {...register(fieldConfig.name, fieldConfig.validations)}
           />
         ))}
-        <CheckBox
-          id="id"
-          {...register('areTermsRead', { required: 'This field is required' })}
-        >
-          <PlainText>
-            I accept{` `}
-            <Link to={Routes.TERMS_AND_CONDITIONS} target="_blank">
-              Terms of Service
-            </Link>
-          </PlainText>
-        </CheckBox>
+        <Holder flexDirection="column" height="36px">
+          <CheckBox
+            id="id"
+            {...register('areTermsRead', {
+              required: 'This field is required',
+            })}
+          >
+            <PlainText>
+              I accept{` `}
+              <Link to={Routes.TERMS_AND_CONDITIONS} target="_blank">
+                Terms of Service
+              </Link>
+            </PlainText>
+          </CheckBox>
 
-        <Error>{errors.areTermsRead?.message}</Error>
+          <Error>{errors.areTermsRead?.message}</Error>
+        </Holder>
       </InputFieldWrapper>
-
-      <Form.Submit isLoading={isLoading}>Sign up</Form.Submit>
+      <Button
+        spinner
+        isLoading={isLoading}
+        variant="primary"
+        fullwidth
+        size="large"
+      >
+        Sign up
+      </Button>
+      <Button
+        onClick={handleMicrosoftSignUp}
+        icon={<img src="./assets/images/microsoft-logo.png" alt="" />}
+        fullwidth
+        size="large"
+      >
+        Sign up with Microsoft
+      </Button>
     </Form.Base>
   );
 };

@@ -1,6 +1,7 @@
 import React, { ChangeEventHandler, ForwardedRef, useState } from 'react';
 import { FieldError } from 'react-hook-form';
-import { Error, Input, InputContainer, SeenIcon } from './input-styles';
+import { Input, InputContainer, SeenIcon } from './input-styles';
+import { Error } from '../text/text-styles';
 
 export type InputFieldType = 'text' | 'password' | 'email';
 

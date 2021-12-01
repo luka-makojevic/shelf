@@ -4,6 +4,7 @@ import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.mapper.UserMapper;
+import com.htec.shelfserver.model.response.UserRegisterMicrosoftResponseModel;
 import com.htec.shelfserver.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,19 +20,22 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 @Service
-public class AuthenticationService implements UserDetailsService {
+public class LoginService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    AuthenticationService(UserRepository userRepository, AuthenticationManager authenticationManager) {
+    private final MicrosoftApiService microsoftApiService;
 
+    @Autowired
+    LoginService(UserRepository userRepository,
+                 AuthenticationManager authenticationManager,
+                 MicrosoftApiService microsoftApiService) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
+        this.microsoftApiService = microsoftApiService;
     }
 
     @Override
@@ -44,29 +48,40 @@ public class AuthenticationService implements UserDetailsService {
     }
 
     public UserDTO authenticateUser(UserDTO userDTO) {
-        UserDTO returnValue = new UserDTO();
-        Optional<UserEntity> userEntity = userRepository.findByEmail(userDTO.getEmail());
 
-        String salt = userEntity.isPresent() ? userEntity.get().getSalt() : "";
+        UserEntity userEntity = userRepository.findByEmail(userDTO.getEmail())
+                .orElseThrow(ExceptionSupplier.userNotFound);
 
         UsernamePasswordAuthenticationToken authReq
                 = new UsernamePasswordAuthenticationToken(userDTO.getEmail(),
-                userDTO.getPassword() + salt);
-        Authentication auth = null;
+                userDTO.getPassword() + userEntity.getSalt());
+
+        Authentication auth;
         try {
             auth = authenticationManager.authenticate(authReq);
             SecurityContext sc = SecurityContextHolder.getContext();
             sc.setAuthentication(auth);
         } catch (AuthenticationException ex) {
-            throw ExceptionSupplier.userNotValid.get();
+            throw ExceptionSupplier.authenticationCredentialsNotValid.get();
         }
 
-        if (!userEntity.get().getEmailVerified())
+        if (!userEntity.getEmailVerified())
             throw ExceptionSupplier.emailNotVerified.get();
 
-        returnValue = UserMapper.INSTANCE.userEntityToUserDTO(userEntity.get());
-        return returnValue;
+        return UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
     }
 
+    public UserDTO authenticateUserMicrosoft(String bearerToken) {
 
+        UserRegisterMicrosoftResponseModel response = microsoftApiService.getUserInfo(bearerToken)
+                .orElseThrow(ExceptionSupplier.accessTokenNotActive);
+
+        UserEntity userEntity = userRepository.findByEmail(response.getMail())
+                .orElseThrow(ExceptionSupplier.userNotFound);
+
+        if (!userEntity.getEmailVerified())
+            throw ExceptionSupplier.emailNotVerified.get();
+
+        return UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
+    }
 }

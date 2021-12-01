@@ -39,13 +39,16 @@ export const theme = {
     body: 1.5,
     heading: 1.125,
   },
+  
   colors: {
     white: '#fff',
     black: '#000',
     primary: '#006FD1',
     secondary: '#8EA2D8',
     danger: 'red',
+    success: 'green',
   },
+  
   styles: {
     root: {
       fontFamily: 'body',

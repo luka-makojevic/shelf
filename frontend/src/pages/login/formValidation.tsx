@@ -1,10 +1,15 @@
+import { useMsal } from '@azure/msal-react';
 import { useContext, useState } from 'react';
 import { useForm, RegisterOptions } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { loginRequest } from '../../azure/authConfig';
 import Form from '../../components/form';
 import { InputFieldWrapper } from '../../components/form/form-styles';
 import { InputField, InputFieldType } from '../../components/input/InputField';
 import { Error } from '../../components/text/text-styles';
-
+import { Routes } from '../../enums/routes';
+import { Button } from '../../components/UI/button';
+import { Holder } from '../../components/layout/layout.styles';
 import { LoginData } from '../../interfaces/types';
 import { AuthContext } from '../../providers/authProvider';
 
@@ -44,25 +49,20 @@ const FormValidation = () => {
       name: 'password',
       validations: {
         required: 'This field is required',
-        minLength: {
-          value: 8,
-          message: 'Password must have at least 8 characters',
-        },
-        pattern: {
-          value:
-            /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&.()–[{}\]:;',?/*~$^+=<>])([^\s]){8,}$/i,
-          message: 'Invalid password format',
-        },
       },
     },
   ];
-  const { login, isLoading } = useContext(AuthContext);
+
+  const { login, microsoftLogin, isLoading } = useContext(AuthContext);
+  const { instance } = useMsal();
+
+  const navigation = useNavigate();
 
   const submitForm = (data: LoginData) => {
     login(
       data,
-      (navigation) => {
-        navigation('/dashboard');
+      () => {
+        navigation(Routes.DASHBOARD);
       },
       (err: string) => {
         setError(err);
@@ -70,9 +70,27 @@ const FormValidation = () => {
     );
   };
 
+  const handleMicrosoftSignIn = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    instance.acquireTokenPopup(loginRequest).then(({ accessToken }) => {
+      microsoftLogin(
+        { bearerToken: accessToken },
+        () => {
+          navigation(Routes.DASHBOARD);
+        },
+        (err: string) => {
+          setError(err);
+        }
+      );
+    });
+  };
+
   return (
     <Form.Base onSubmit={handleSubmit(submitForm)}>
-      <Error>{error}</Error>
+      <Holder m="0 auto" maxWidth="200px" minHeight="15px">
+        <Error>{error}</Error>
+      </Holder>
       <InputFieldWrapper>
         {fieldConfigs.map((fieldConfig: FieldConfig) => (
           <InputField
@@ -84,8 +102,17 @@ const FormValidation = () => {
           />
         ))}
       </InputFieldWrapper>
-
-      <Form.Submit isLoading={isLoading}>Sign in</Form.Submit>
+      <Button spinner isLoading={isLoading} fullwidth size="large">
+        Sign in
+      </Button>
+      <Button
+        onClick={handleMicrosoftSignIn}
+        icon={<img src="./assets/images/microsoft-logo.png" alt="" />}
+        fullwidth
+        size="large"
+      >
+        Sign in with Microsoft
+      </Button>
     </Form.Base>
   );
 };

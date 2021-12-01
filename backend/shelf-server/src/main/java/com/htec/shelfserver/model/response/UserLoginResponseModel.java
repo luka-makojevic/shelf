@@ -15,5 +15,6 @@ public class UserLoginResponseModel {
     private String lastName;
     private String email;
     private String jwtToken;
+    private String jwtRefreshToken;
     private Long role;
 }

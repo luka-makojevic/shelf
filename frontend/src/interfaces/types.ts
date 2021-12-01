@@ -1,4 +1,3 @@
-import { NavigateFunction } from 'react-router-dom';
 import { Role } from '../enums/roles';
 
 export interface RegisterData {
@@ -8,19 +7,37 @@ export interface RegisterData {
   lastName: string;
 }
 
+export interface MicrosoftRegisterData {
+  bearerToken: string;
+}
+
 export interface LoginData {
   email: string;
   password: string;
+}
+
+export interface MicrosoftLoginData {
+  bearerToken: string;
 }
 export interface ContextTypes {
   user?: UserType | null;
   login: (
     data: LoginData,
-    onSuccess: (nav: NavigateFunction) => void,
+    onSuccess: () => void,
+    onError: (error: string) => void
+  ) => void;
+  microsoftLogin: (
+    data: MicrosoftLoginData,
+    onSuccess: () => void,
     onError: (error: string) => void
   ) => void;
   register: (
     data: RegisterData,
+    onSuccess: () => void,
+    onError: (error: string) => void
+  ) => void;
+  microsoftRegister: (
+    data: MicrosoftRegisterData,
     onSuccess: () => void,
     onError: (error: string) => void
   ) => void;
@@ -55,4 +72,16 @@ export interface FormBaseProps {
 export interface FormSubmitProps {
   children: React.ReactNode;
   isLoading: boolean;
+}
+
+export interface ButtonProps {
+  children?: React.ReactNode;
+  icon?: JSX.Element;
+  to?: string;
+  isLoading?: boolean;
+  spinner?: boolean;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  variant?: string | any;
+  size?: string | any;
+  fullwidth?: boolean;
 }

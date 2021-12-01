@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Base, Submit, Spinner } from './form-styles';
+import { Container, Base, Submit } from './form-styles';
 import {
   FormProps,
   FormBaseProps,
@@ -18,14 +18,4 @@ Form.Base = function FormBase({ children, onSubmit }: FormBaseProps) {
   return <Base onSubmit={onSubmit}>{children}</Base>;
 };
 
-Form.Submit = function FormSubmit({ isLoading, children }: FormSubmitProps) {
-  return (
-    <Submit>
-      {isLoading ? (
-        <Spinner src="./assets/icons/loading.png" alt="loading" />
-      ) : (
-        children
-      )}
-    </Submit>
-  );
-};
+

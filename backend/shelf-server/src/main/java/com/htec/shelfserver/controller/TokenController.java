@@ -32,6 +32,5 @@ public class TokenController {
         String response = tokenService.createAndSendToken(tokenJSON.getToken());
 
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(response, HttpStatus.OK.value()));
-
     }
 }

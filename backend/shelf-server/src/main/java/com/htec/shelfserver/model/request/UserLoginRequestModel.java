@@ -12,5 +12,4 @@ import lombok.Setter;
 public class UserLoginRequestModel {
     private String email;
     private String password;
-    private String salt;
 }

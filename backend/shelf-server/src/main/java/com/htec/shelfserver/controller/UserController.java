@@ -4,9 +4,9 @@ import com.htec.shelfserver.annotation.AuthenticationUser;
 import com.htec.shelfserver.dto.AuthUser;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.mapper.UserMapper;
+import com.htec.shelfserver.model.request.PasswordResetRequestModel;
 import com.htec.shelfserver.model.request.UserUpdateRequestModel;
 import com.htec.shelfserver.model.response.TextResponseMessage;
-import com.htec.shelfserver.requestModel.PasswordResetRequestModel;
 import com.htec.shelfserver.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,7 +31,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity updateUser(@PathVariable Long id,
-                                                          @RequestBody UserUpdateRequestModel userUpdateRequestModel) {
+                                     @RequestBody UserUpdateRequestModel userUpdateRequestModel) {
 
         UserDTO userDTO = UserMapper.INSTANCE.userUpdateRequestModelToUserDto(userUpdateRequestModel);
         userDTO.setId(id);
