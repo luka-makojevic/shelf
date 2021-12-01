@@ -14,7 +14,6 @@ on:
       - 'backend/**'
       - '!frontend/**'
       - '!qa/**'
-
 jobs:
   build:
     name: Build and Run Tests
