@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { NavigateFunction, useParams } from 'react-router';
 import { Form } from '../../components';
 import { InputField } from '../../components/input/InputField';
 import { Error, PlainText } from '../../components/text/text-styles';
 import { InputFieldWrapper } from '../../components/form/form-styles';
 import { Button } from '../../components/UI/button';
-// import { Routes } from '../../enums/routes';
 import {
   ResetPasswordData,
   ResetPasswordFieldConfig,

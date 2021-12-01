@@ -56,7 +56,6 @@ const Router = () => {
       ),
     },
     {
-<<<<<<< HEAD
       path: Routes.TERMS_AND_CONDITIONS,
       element: (
         <PublicOnlyRoute>
@@ -79,10 +78,6 @@ const Router = () => {
           <ResetPassword />
         </PublicOnlyRoute>
       ),
-=======
-      path: Routes.FORGOT_PASSWORD,
-      element: <ForgotPassword />,
->>>>>>> a0bdbc56e9f8097a0ad2be7504f2c9e906c594a1
     },
   ];
 

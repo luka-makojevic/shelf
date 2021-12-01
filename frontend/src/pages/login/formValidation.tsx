@@ -59,7 +59,7 @@ const FormValidation = () => {
   const navigation = useNavigate();
 
   const submitForm = (data: LoginData) => {
-    console.log(data);
+    // console.log(data);
 
     login(
       data,

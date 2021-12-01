@@ -1,7 +1,7 @@
 import { Form, Header } from '../../components';
 import { Container, Wrapper } from '../../components/layout/layout.styles';
-import { Title } from '../../components/text/text-styles';
 import FormValidation from './formValidation';
+import { Title } from '../../components/text/text-styles';
 
 const ForgotPassword = () => (
   <>
