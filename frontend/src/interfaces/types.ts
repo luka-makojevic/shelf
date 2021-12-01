@@ -20,7 +20,7 @@ export interface MicrosoftLoginData {
   bearerToken: string;
 }
 export interface ContextTypes {
-  user?: UserType | null;
+  user: UserType | null;
   login: (
     data: LoginData,
     onSuccess: () => void,
@@ -41,6 +41,7 @@ export interface ContextTypes {
     onSuccess: () => void,
     onError: (error: string) => void
   ) => void;
+  logout: (data: LogoutData) => void;
   isLoading: boolean;
   accessToken: string;
 }
@@ -50,6 +51,7 @@ export interface UserType {
   lastName: string;
   email: string;
   jwtToken: string;
+  jwtRefreshToken: string;
   role: Role;
 }
 export interface RegisterFormData {
@@ -84,4 +86,8 @@ export interface ButtonProps {
   variant?: string | any;
   size?: string | any;
   fullwidth?: boolean;
+}
+export interface LogoutData {
+  jwtRefreshToken: string | undefined;
+  jwtToken: string | undefined;
 }

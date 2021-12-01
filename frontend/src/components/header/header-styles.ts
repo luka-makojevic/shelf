@@ -6,10 +6,11 @@ import { HeaderProps, ProfileProps } from '../../interfaces/styles';
 export const Container = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   max-height: 100px;
   width: 100%;
   position: absolute;
-  padding: 20px 15px 0 15px;
+  padding: 15px 20px 0 20px;
 `;
 
 export const Link = styled(ReachRouterLink)``;
@@ -18,6 +19,20 @@ export const Logo = styled.img<HeaderProps>`
   width: 70px;
   ${layout}
   ${space}
+`;
+export const DropDown = styled.div`
+  position: absolute;
+  display: none;
+  background: white;
+  border: 1px solid black;
+  justify-content: center;
+  align-items: center;
+  top: 48px;
+  right: 0px;
+  padding: 10px;
+  width: 120px;
+  height: 80px;
+  border-radius: 20px;
 `;
 
 export const Profile = styled.div<ProfileProps>`
@@ -29,9 +44,13 @@ export const Profile = styled.div<ProfileProps>`
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
   cursor: pointer;
   user-select: none;
+  background: white;
   ${({ hideProfile }) => hideProfile && 'display:none;'}
+  &:hover > ${DropDown} {
+    display: flex;
+    cursor: default;
+  }
 `;
-
-export const Top = styled.div``;

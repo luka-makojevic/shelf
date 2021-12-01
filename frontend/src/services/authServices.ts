@@ -4,6 +4,7 @@ import {
   LoginData,
   MicrosoftRegisterData,
   MicrosoftLoginData,
+  LogoutData,
 } from '../interfaces/types';
 
 const API_URL = 'http://10.10.0.117:8080/';
@@ -18,11 +19,10 @@ const login = (data: LoginData) => axios.post(`${API_URL}login`, data);
 const microsoftLogin = (data: MicrosoftLoginData) =>
   axios.post(`${API_URL}login/microsoft`, data);
 
-const logout = (setUser: (arg: null) => void) => {
-  // missing features from backend
-  localStorage.removeItem('user');
-  setUser(null);
-};
+const logout = (data: LogoutData) =>
+  axios.post(`${API_URL}logout`, data, {
+    headers: { Authorization: `Bearer ${data.jwtToken}` },
+  });
 
 export default {
   register,
