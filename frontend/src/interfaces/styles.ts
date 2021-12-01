@@ -55,7 +55,7 @@ export interface ButtonStyleProps
     BorderProps,
     VariantArgs {
   children: React.ReactNode;
-  variant?: string | any;
-  size?: string | any;
+  variant?: string;
+  size?: string;
   fullwidth?: boolean;
 }

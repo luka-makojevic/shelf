@@ -95,7 +95,7 @@ export const Submit = styled.button`
   width: 100%;
   min-width: 250px;
   min-height: 45px;
-  font-size: 17px;
+  font-size: ${({ theme }) => theme.fontSizes[2]};
   font-weight: 700;
   color: ${({ theme }) => theme.colors.white};
   background: #006fd1;

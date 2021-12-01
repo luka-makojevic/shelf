@@ -32,8 +32,8 @@ export const InputField = React.forwardRef(
           <SeenIcon
             src={
               passwordShown
-                ? './assets/icons/eyeclosed.png'
-                : './assets/icons/eyeopen.png'
+                ? './assets/icons/eyeopen.png'
+                : './assets/icons/eyeclosed.png'
             }
             onClick={handlePasswordVisibilityClick}
           />

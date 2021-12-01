@@ -10,7 +10,7 @@ export const CardWrapper = styled.div`
 `;
 
 export const Text = styled.p`
-  font-size: 12px;
+  font-size: ${({ theme }) => theme.fontSizes[0]};
 `;
 
 export const IconWrapper = styled.div`

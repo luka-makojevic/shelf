@@ -1,3 +1,4 @@
+import { SpaceProps } from 'styled-system';
 import { Role } from '../enums/roles';
 
 export interface RegisterData {
@@ -76,15 +77,15 @@ export interface FormSubmitProps {
   isLoading: boolean;
 }
 
-export interface ButtonProps {
+export interface ButtonProps extends SpaceProps {
   children?: React.ReactNode;
   icon?: JSX.Element;
   to?: string;
   isLoading?: boolean;
   spinner?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  variant?: string | any;
-  size?: string | any;
+  variant?: string;
+  size?: string;
   fullwidth?: boolean;
 }
 export interface LogoutData {

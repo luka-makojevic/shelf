@@ -1,13 +1,17 @@
 import { useContext, useState } from 'react';
 import { useForm, RegisterOptions } from 'react-hook-form';
-import { Link } from 'react-router-dom';
 import { useMsal } from '@azure/msal-react';
 import Form from '../../components/form';
 import { InputFieldWrapper } from '../../components/form/form-styles';
 import { InputField, InputFieldType } from '../../components/input/InputField';
 import { RegisterData, RegisterFormData } from '../../interfaces/types';
 import { AuthContext } from '../../providers/authProvider';
-import { Error, PlainText, Success } from '../../components/text/text-styles';
+import {
+  Error,
+  Link,
+  PlainText,
+  Success,
+} from '../../components/text/text-styles';
 import { Routes } from '../../enums/routes';
 import CheckBox from '../../components/checkbox/checkBox';
 import { loginRequest } from '../../azure/authConfig';
@@ -171,23 +175,25 @@ const FormValidation = () => {
           <Error>{errors.areTermsRead?.message}</Error>
         </Holder>
       </InputFieldWrapper>
-      <Button
-        spinner
-        isLoading={isLoading}
-        variant="primary"
-        fullwidth
-        size="large"
-      >
-        Sign up
-      </Button>
-      <Button
-        onClick={handleMicrosoftSignUp}
-        icon={<img src="./assets/images/microsoft-logo.png" alt="" />}
-        fullwidth
-        size="large"
-      >
-        Sign up with Microsoft
-      </Button>
+      <Holder>
+        <Button
+          spinner
+          isLoading={isLoading}
+          variant="primary"
+          fullwidth
+          size="large"
+        >
+          Sign up
+        </Button>
+        <Button
+          onClick={handleMicrosoftSignUp}
+          icon={<img src="./assets/images/microsoft-logo.png" alt="" />}
+          fullwidth
+          size="large"
+        >
+          Sign up with Microsoft
+        </Button>
+      </Holder>
     </Form.Base>
   );
 };
