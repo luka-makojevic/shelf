@@ -85,8 +85,8 @@ export interface ButtonProps {
   isLoading?: boolean;
   spinner?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  variant?: string | any;
-  size?: string | any;
+  variant?: string;
+  size?: string;
   fullwidth?: boolean;
 }
 export type InputFieldType = 'text' | 'password' | 'email';
@@ -118,31 +118,4 @@ export interface RegisterFieldConfig {
     | 'firstName'
     | 'lastName';
   validations: RegisterOptions;
-}
-
-export interface RegisterValidationProps {
-  registerTest?: jest.Mock<
-    Promise<{
-      email: string;
-      password: string;
-      confirmPassword: string;
-      areTermsRead: boolean;
-    }>,
-    [
-      email: string,
-      password: string,
-      confirmPassword: string,
-      areTermsRead: boolean
-    ]
-  >;
-}
-
-export interface LoginValidationProps {
-  login?: jest.Mock<
-    Promise<{
-      email: string;
-      password: string;
-    }>,
-    [email: string, password: string]
-  >;
 }
