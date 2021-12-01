@@ -2,6 +2,7 @@ package tests;
 
 import com.google.gson.Gson;
 import helpers.BaseHelperPropertieManager;
+import helpers.ExcelReader;
 import helpers.RestHelpers;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;
@@ -40,26 +41,31 @@ public class ApiTest {
     }
 
     @Test
-    public void apiPostNTCUserRegisteredCheck() throws IOException
-    {
-        User user = new User();
-        user.setValuesForInvalidUser(user.email, user.password, user.firstName, user.lastName);
-        Gson gson = new Gson();
-        String parsedJson = gson.toJson(user);
+    public void apiPostNTCUserRegisteredCheck() throws IOException {
+        ExcelReader excelReader = new ExcelReader("src/main/resources/ExcelRead.xlsx");
 
-        // Sending Post request
-        RequestSpecBuilder builder = new RequestSpecBuilder();
-        builder.setBaseUri(BaseHelperPropertieManager.getInstance().getURI(""));
-        builder.setBasePath("/register");
-        builder.setContentType("application/json");
-        builder.setBody(parsedJson);
-        RequestSpecification rSpec = builder.build();
-        Response response = RestHelpers.sendPostRequest(rSpec);
+        // Loop through methods
+        for (int i = 2; i <= excelReader.getLastRowNumberFromSheet("apiTest"); i++) {
+            User user = new User();
+            user.setValuesForInvalidUser(i, user.email, user.password, user.firstName, user.lastName);
+            Gson gson = new Gson();
+            String parsedJson = gson.toJson(user);
 
-        //Assertions
-        String[] expectedMess = {"Email is not valid.","Password is not valid."};
-        String[] expectedStatus = {"400"};
-        assertTrue(Arrays.toString(expectedMess).contains(response.jsonPath().get("message").toString()));
-        assertTrue(Arrays.toString(expectedStatus).contains(response.jsonPath().get("status").toString()));
+            // Sending Post request
+            RequestSpecBuilder builder = new RequestSpecBuilder();
+            builder.setBaseUri(BaseHelperPropertieManager.getInstance().getURI(""));
+            builder.setBasePath("/register");
+            builder.setContentType("application/json");
+            builder.setBody(parsedJson);
+            RequestSpecification rSpec = builder.build();
+            Response response = RestHelpers.sendPostRequest(rSpec);
+
+            //Assertions
+            String[] expectedMess = {"Record already exists.", "Email is not valid.", "Password is not valid."};
+            String[] expectedStatus = {"400"};
+            assertTrue(Arrays.toString(expectedMess).contains(response.jsonPath().get("message").toString()));
+            assertTrue(Arrays.toString(expectedStatus).contains(response.jsonPath().get("status").toString()));
+            System.out.println("---------------------------------");
+        }
     }
 }
