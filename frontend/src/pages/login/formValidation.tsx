@@ -5,21 +5,14 @@ import { useNavigate } from 'react-router-dom';
 import { loginRequest } from '../../azure/authConfig';
 import Form from '../../components/form';
 import { InputFieldWrapper } from '../../components/form/form-styles';
-import { InputField, InputFieldType } from '../../components/input/InputField';
+import { InputField } from '../../components/input/InputField';
 import { Error } from '../../components/text/text-styles';
 import { Routes } from '../../enums/routes';
 import { Button } from '../../components/UI/button';
 import { Holder } from '../../components/layout/layout.styles';
-import { LoginData } from '../../interfaces/types';
+import { loginFieldConfig } from '../../validation/config/loginValidationConfig';
+import { LoginData, LoginFieldConfig } from '../../interfaces/types';
 import { AuthContext } from '../../providers/authProvider';
-
-interface FieldConfig {
-  type: InputFieldType;
-  placeholder: string;
-  name: 'email' | 'password';
-
-  validations: RegisterOptions;
-}
 
 const FormValidation = () => {
   const {
@@ -28,30 +21,6 @@ const FormValidation = () => {
     formState: { errors },
   } = useForm<LoginData>({});
   const [error, setError] = useState<string>();
-
-  const fieldConfigs: FieldConfig[] = [
-    {
-      type: 'email',
-      placeholder: 'Email',
-      name: 'email',
-      validations: {
-        required: 'This field is required',
-        pattern: {
-          value:
-            /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i,
-          message: 'Invalid email format',
-        },
-      },
-    },
-    {
-      type: 'password',
-      placeholder: 'Password',
-      name: 'password',
-      validations: {
-        required: 'This field is required',
-      },
-    },
-  ];
 
   const { login, microsoftLogin, isLoading } = useContext(AuthContext);
   const { instance } = useMsal();
@@ -73,17 +42,23 @@ const FormValidation = () => {
   const handleMicrosoftSignIn = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    instance.acquireTokenPopup(loginRequest).then(({ accessToken }) => {
-      microsoftLogin(
-        { bearerToken: accessToken },
-        () => {
-          navigation(Routes.DASHBOARD);
-        },
-        (err: string) => {
-          setError(err);
-        }
-      );
-    });
+    instance
+      .acquireTokenPopup(loginRequest)
+      .then(({ accessToken }) => {
+        microsoftLogin(
+          { bearerToken: accessToken },
+          () => {
+            navigation(Routes.DASHBOARD);
+          },
+          (err: string) => {
+            setError(err);
+          }
+        );
+      })
+      .catch((err) => {
+        if (err.errorCode === 'user_cancelled') return;
+        setError(err.message);
+      });
   };
 
   return (
@@ -92,7 +67,7 @@ const FormValidation = () => {
         <Error>{error}</Error>
       </Holder>
       <InputFieldWrapper>
-        {fieldConfigs.map((fieldConfig: FieldConfig) => (
+        {loginFieldConfig.map((fieldConfig: LoginFieldConfig) => (
           <InputField
             key={fieldConfig.name}
             placeholder={fieldConfig.placeholder}
