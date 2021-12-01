@@ -32,6 +32,14 @@ export interface FormProps
     LayoutProps {
   children?: React.ReactNode;
 }
+
+export interface InputProps
+  extends VariantArgs,
+    BorderProps,
+    SpaceProps,
+    LayoutProps {
+  children?: React.ReactNode;
+}
 export interface TextProps
   extends ColorProps,
     TypographyProps,
