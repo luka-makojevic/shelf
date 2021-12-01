@@ -18,7 +18,6 @@ const FormValidation = () => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<LoginData>({});
   const [error, setError] = useState<string>();
