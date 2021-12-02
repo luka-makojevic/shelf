@@ -29,7 +29,7 @@ public class TokenController {
     @PostMapping(path = "/resend")
     public ResponseEntity<TextResponseMessage> resend(@RequestBody ConfirmTokenRequestModel tokenJSON) {
 
-        String response = tokenService.createAndSendToken(tokenJSON.getToken());
+        String response = tokenService.resendToken(tokenJSON.getToken());
 
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(response, HttpStatus.OK.value()));
     }

@@ -7,6 +7,7 @@ import com.htec.shelfserver.exception.ShelfException;
 import com.htec.shelfserver.model.response.UserRegisterMicrosoftResponseModel;
 import com.htec.shelfserver.repository.mysql.TokenRepository;
 import com.htec.shelfserver.repository.mysql.UserRepository;
+import com.htec.shelfserver.util.ErrorMessages;
 import com.htec.shelfserver.util.TokenGenerator;
 import com.htec.shelfserver.validator.UserValidator;
 import org.junit.jupiter.api.Assertions;
@@ -100,7 +101,7 @@ class RegisterServiceTest {
         verify(emailService, times(0))
                 .sendEmail(anyString(), anyMap(), anyString(), anyString());
 
-        Assertions.assertEquals("Record already exists.", exception.getMessage());
+        Assertions.assertEquals(ErrorMessages.RECORD_ALREADY_EXISTS.getErrorMessage(), exception.getMessage());
     }
 
     @Test
@@ -130,7 +131,7 @@ class RegisterServiceTest {
         verify(userRepository, times(1)).findByEmail(anyString());
         verify(userRepository, times(0)).save(any());
 
-        Assertions.assertEquals("Record already exists.", exception.getMessage());
+        Assertions.assertEquals(ErrorMessages.RECORD_ALREADY_EXISTS.getErrorMessage(), exception.getMessage());
     }
 
     @Test
@@ -145,7 +146,7 @@ class RegisterServiceTest {
         verify(userRepository, times(0)).findByEmail(anyString());
         verify(userRepository, times(0)).save(any());
 
-        Assertions.assertEquals("Access token has expired or is not yet valid.", exception.getMessage());
+        Assertions.assertEquals(ErrorMessages.TOKEN_NOT_ACTIVE.getErrorMessage(), exception.getMessage());
     }
 
     @Test

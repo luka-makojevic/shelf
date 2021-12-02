@@ -116,6 +116,13 @@ public class ExceptionSupplier {
             ErrorMessages.BAD_REQUEST.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> tokenNotExpired = () -> new ShelfException(
+            ErrorMessages.TOKEN_NOT_EXPIRED.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> userNotFound = () -> new ShelfException(
             ErrorMessages.USER_NOT_FOUND.getErrorMessage(),
             HttpStatus.BAD_REQUEST.value(),
