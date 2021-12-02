@@ -42,7 +42,11 @@ export interface ContextTypes {
     onSuccess: () => void,
     onError: (error: string) => void
   ) => void;
-  logout: (data: LogoutData) => void;
+  logout: (
+    data: LogoutData,
+    onSuccess: () => void,
+    onError: (error: string) => void
+  ) => void;
   isLoading: boolean;
   accessToken: string;
 }

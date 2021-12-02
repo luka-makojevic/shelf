@@ -22,8 +22,6 @@ export const Container = styled.div<ContainerProps>`
   ${grid}
 `;
 export const Holder = styled.div<ContainerProps>`
-  width: 100%;
-  margin-top: 10px;
   ${space}
   ${layout}
   ${flexbox}

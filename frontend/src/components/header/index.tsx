@@ -10,8 +10,8 @@ import { AuthContext } from '../../providers/authProvider';
 import { Button } from '../UI/button';
 import { Routes } from '../../enums/routes';
 import { Holder } from '../layout/layout.styles';
-import { PlainText } from '../text/text-styles';
-import { Link } from '../text/text-styles';
+import { PlainText, Link } from '../text/text-styles';
+
 type HeaderProps = {
   hideProfile: boolean;
 };
@@ -44,7 +44,11 @@ const Header = ({ hideProfile }: HeaderProps) => {
               <Holder display="flex" justifyContent="flex-end">
                 <Button
                   onClick={() => {
-                    logout(data);
+                    logout(
+                      data,
+                      () => {},
+                      () => {}
+                    );
                   }}
                   size="small"
                   m="8px 0 0 0"

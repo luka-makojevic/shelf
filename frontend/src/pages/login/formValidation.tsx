@@ -94,6 +94,7 @@ const FormValidation = () => {
       <InputFieldWrapper>
         {fieldConfigs.map((fieldConfig: FieldConfig) => (
           <InputField
+          data-test={fieldConfig.name}
             key={fieldConfig.name}
             placeholder={fieldConfig.placeholder}
             error={errors[fieldConfig.name]}

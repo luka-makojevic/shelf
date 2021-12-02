@@ -15,7 +15,7 @@ const ProtectedRoute = ({ children, roles }: ProtectedRouteProps) => {
   const userHasRequiredRole = user && roles.includes(user?.role);
 
   if (!isLoggedIn) {
-    return <Navigate to={Routes.LOGIN} />;
+    return <Navigate to={Routes.HOME} />;
   }
 
   if (isLoggedIn && !userHasRequiredRole) {

@@ -63,7 +63,9 @@ const Landing = () => (
         </SubTitle>
         <AccentText>
           Start working more efficiently today,
-          <Link to={Routes.REGISTER}> Sign up to get started</Link>
+          <Link to={Routes.REGISTER} fontWeight="bold">
+            Sign up to get started
+          </Link>
         </AccentText>
       </Container>
       <Container

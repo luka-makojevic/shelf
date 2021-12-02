@@ -157,7 +157,7 @@ const FormValidation = () => {
             {...register(fieldConfig.name, fieldConfig.validations)}
           />
         ))}
-        <Holder flexDirection="column" height="36px">
+        <Holder flexDirection="column" height="43px">
           <CheckBox
             id="id"
             {...register('areTermsRead', {
@@ -175,7 +175,7 @@ const FormValidation = () => {
           <Error>{errors.areTermsRead?.message}</Error>
         </Holder>
       </InputFieldWrapper>
-      <Holder>
+      <Holder width="100%">
         <Button
           spinner
           isLoading={isLoading}
