@@ -11,6 +11,17 @@ export const theme = {
     '256px',
     '512px',
   ],
+  size:[
+    '100px',
+    '200px',
+    '300px',
+    '400px',
+    '500px',
+    '600px',
+    '700px',
+    '800px',
+    '900px',
+  ],
 
   fonts: {
     body: 'Source Sans Pro, sans-serif',

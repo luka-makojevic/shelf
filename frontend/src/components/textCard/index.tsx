@@ -1,12 +1,7 @@
 import ReactMarkdown from 'react-markdown';
 import { PlainText, Title } from '../text/text-styles';
 import { Body, CardWrapper, Footer, Header } from './textcard-styles';
-
-interface TextCardProps {
-  title?: string;
-  subtitle?: string;
-  text: string;
-}
+import { TextCardProps } from '../../interfaces/types';
 
 const TextCard = ({ title, text, subtitle }: TextCardProps) => (
   <CardWrapper>

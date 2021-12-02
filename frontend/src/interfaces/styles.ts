@@ -10,7 +10,7 @@ import {
 } from 'styled-system';
 
 export interface ProfileProps {
-  hideProfile: boolean;
+  hideProfile?: boolean;
 }
 export interface HeaderProps extends ColorProps, SpaceProps {
   children?: React.ReactNode;

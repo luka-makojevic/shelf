@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Link as ReachRouterLink } from 'react-router-dom';
 import { space, layout } from 'styled-system';
 import { HeaderProps, ProfileProps } from '../../interfaces/styles';
 
@@ -27,7 +26,7 @@ export const DropDown = styled.div`
   align-items: center;
   top: 48px;
   right: 0px;
-  padding: 10px;
+  padding: ${({ theme }) => theme.space[2]};
   min-width: 200px;
   height: 140px;
   border-radius: 20px;
@@ -43,7 +42,7 @@ export const ProfilePicture = styled.div`
   cursor: pointer;
 `;
 
-export const Profile = styled.div<ProfileProps>`
+export const ProfileContainer = styled.div<ProfileProps>`
   position: relative;
-  ${({ hideProfile }) => hideProfile && 'display:none'}
+  ${({ hideProfile }) => hideProfile && 'display:none;'}
 `;

@@ -137,6 +137,7 @@ export type InputFieldProps = {
   type?: InputFieldType;
   value?: string;
 };
+
 export interface LoginFieldConfig {
   type: InputFieldType;
   placeholder: string;
@@ -156,4 +157,23 @@ export interface RegisterFieldConfig {
     | 'firstName'
     | 'lastName';
   validations: RegisterOptions;
+}
+
+export type CardProps = { image: string; text: string; alt: string };
+
+export type CheckBoxProps = {
+  onChange?: ChangeEventHandler;
+  name?: string;
+  id: string;
+  children: React.ReactNode;
+};
+
+export type HeaderProps = {
+  hideProfile?: boolean;
+};
+
+export interface TextCardProps {
+  title?: string;
+  subtitle?: string;
+  text: string;
 }

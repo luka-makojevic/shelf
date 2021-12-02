@@ -34,9 +34,9 @@ export const Feature = styled.div<ContainerProps>`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 0 1em;
-  padding: 1em;
-  height: 550px;
+  margin: 0 ${({theme}) => theme.space[3]};
+  padding: ${({theme}) => theme.space[3]};
+  height: 100%;
   max-width: 400px;
   max-height: 450px;
   text-align: center;

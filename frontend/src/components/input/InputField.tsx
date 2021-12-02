@@ -1,17 +1,7 @@
-import React, { ChangeEventHandler, ForwardedRef, useState } from 'react';
-import { FieldError } from 'react-hook-form';
+import React, { ForwardedRef, useState } from 'react';
 import { Input, InputContainer, SeenIcon } from './input-styles';
 import { Error } from '../text/text-styles';
-import { InputFieldType } from '../../interfaces/types';
-
-export type InputFieldProps = {
-  name?: string;
-  placeholder?: string;
-  onChange?: ChangeEventHandler;
-  error?: FieldError;
-  type?: InputFieldType;
-  value?: string;
-};
+import { InputFieldProps } from '../../interfaces/types';
 
 export const InputField = React.forwardRef(
   (

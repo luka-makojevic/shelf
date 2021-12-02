@@ -38,7 +38,9 @@ const EmailVerification = () => {
 
   const feedbackMessage = () => {
     if (isLoading) {
-      return <Spinner src="../assets/icons/loading.png" />;
+      return (
+        <Spinner src={`${process.env.PUBLIC_URL}/assets/icons/loading.png`} />
+      );
     }
     if (resendMessage) {
       return <Title fontSize="25px">{resendMessage}</Title>;

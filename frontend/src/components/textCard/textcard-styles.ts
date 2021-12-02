@@ -7,7 +7,7 @@ export const CardWrapper = styled.div`
   text-align: justify;
   position: relative;
   max-width: 700px;
-  margin: 30px;
+  margin: ${({theme}) => theme.space[4]};
   background-color: ${({ theme }) => theme.colors.primary};
   color: white;
   border-radius: 30px;
@@ -15,13 +15,13 @@ export const CardWrapper = styled.div`
 `;
 
 export const Header = styled.div`
-  padding: 10px 20px;
+  padding: ${({theme}) => theme.space[2]} ${({theme}) => theme.space[3]};
   border-bottom: 1px solid white;
   width: 100%;
 `;
 
 export const Body = styled.div`
-  padding: 0 5%;
+  padding: 0 ${({theme}) => theme.space[4]};
   width: 100%;
   height: 100%;
   overflow-y: scroll;
@@ -30,7 +30,7 @@ export const Body = styled.div`
 
 export const Footer = styled.div`
   bottom: 0;
-  padding: 10px 20px;
+  padding: ${({theme}) => theme.space[2]} ${({theme}) => theme.space[3]};
   height: 100px;
   width: 100%;
   border-top: 1px solid white;

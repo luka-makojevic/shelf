@@ -16,7 +16,7 @@ export const Text = styled.p`
 export const IconWrapper = styled.div`
   width: 100%;
   height: 200px;
-  padding: 40px;
+  padding: ${({ theme }) => theme.space[4]};
   display: flex;
   justify-content: center;
   align-items: center;

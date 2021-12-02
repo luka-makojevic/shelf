@@ -1,12 +1,6 @@
-import React, { ChangeEventHandler, ForwardedRef, ReactNode } from 'react';
+import React, { ForwardedRef } from 'react';
 import { Checkbox, CheckboxWrapper, Label } from './checkbox-styles';
-
-type CheckBoxProps = {
-  onChange?: ChangeEventHandler;
-  name?: string;
-  id: string;
-  children: ReactNode;
-};
+import { CheckBoxProps } from '../../interfaces/types';
 
 const CheckBox = React.forwardRef(
   (
@@ -16,7 +10,6 @@ const CheckBox = React.forwardRef(
     <CheckboxWrapper>
       <Checkbox id={id} type="checkbox" ref={ref} {...restProps} />
       <Label htmlFor={id}>{children}</Label>
-      
     </CheckboxWrapper>
   )
 );
