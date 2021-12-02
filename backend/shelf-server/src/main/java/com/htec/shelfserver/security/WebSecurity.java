@@ -1,6 +1,7 @@
 package com.htec.shelfserver.security;
 
-import com.htec.shelfserver.repository.UserRepository;
+import com.htec.shelfserver.repository.cassandra.InvalidJwtTokenRepository;
+import com.htec.shelfserver.repository.mysql.UserRepository;
 import com.htec.shelfserver.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,14 +21,17 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     private final UserService userService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
+    private final InvalidJwtTokenRepository invalidJwtTokenRepository;
 
     public WebSecurity(UserService userService,
                        BCryptPasswordEncoder bCryptPasswordEncoder,
-                       UserRepository userRepository
-    ) {
+                       UserRepository userRepository,
+                       InvalidJwtTokenRepository invalidJwtTokenRepository) {
+
         this.userService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userRepository = userRepository;
+        this.invalidJwtTokenRepository = invalidJwtTokenRepository;
     }
 
     @Override
@@ -50,6 +54,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_REQUEST_URL)
                 .permitAll()
+                .antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_URL)
+                .permitAll()
                 .antMatchers(
                         "/v2/api-docs",
                         "/swagger-resources/**",
@@ -59,7 +65,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .anyRequest()
                 .authenticated().and()
-                .addFilter(new AuthorizationFilter(authenticationManager()))
+                .addFilter(new AuthorizationFilter(authenticationManager(), invalidJwtTokenRepository))
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }

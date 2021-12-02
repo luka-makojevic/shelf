@@ -4,9 +4,16 @@ on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
     branches: [ master ]
+    paths:
+      - 'backend/**'
+      - '!frontend/**'
+      - '!qa/**'
   pull_request:
     branches: [ master ]
-
+    paths:
+      - 'backend/**'
+      - '!frontend/**'
+      - '!qa/**'
 jobs:
   build:
     name: Build and Run Tests

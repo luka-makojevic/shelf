@@ -4,6 +4,7 @@ import com.htec.shelfserver.annotation.AuthenticationUser;
 import com.htec.shelfserver.dto.AuthUser;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.mapper.UserMapper;
+import com.htec.shelfserver.model.request.PasswordResetModel;
 import com.htec.shelfserver.model.request.PasswordResetRequestModel;
 import com.htec.shelfserver.model.request.UserUpdateRequestModel;
 import com.htec.shelfserver.model.response.TextResponseMessage;
@@ -42,10 +43,18 @@ public class UserController {
     }
 
     @PostMapping(value = "/password-reset-request", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity requestReset(@RequestBody PasswordResetRequestModel passwordResetRequestModel) {
+    public ResponseEntity requestResetPassword(@RequestBody PasswordResetRequestModel passwordResetRequestModel) {
 
         userService.requestPasswordReset(passwordResetRequestModel.getEmail());
 
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("Email sent", HttpStatus.OK.value()));
+    }
+
+    @PostMapping(value = "/password-reset", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity resetPassword(@RequestBody PasswordResetModel passwordResetModel) {
+
+        userService.resetPassword(passwordResetModel);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("User's password changed successfully", HttpStatus.OK.value()));
     }
 }

@@ -1,10 +1,12 @@
-import { RegisterOptions } from 'react-hook-form';
-import { InputFieldType } from '../components/input/InputField';
+import { ChangeEventHandler } from 'react';
+import { FieldError, RegisterOptions } from 'react-hook-form';
 import { Role } from '../enums/roles';
 
 export interface RegisterData {
+  areTermsRead: boolean;
   email: string;
   password: string;
+  confirmPassword: string;
   firstName: string;
   lastName: string;
 }
@@ -105,7 +107,37 @@ export interface ButtonProps {
   isLoading?: boolean;
   spinner?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  variant?: string | any;
-  size?: string | any;
+  variant?: string;
+  size?: string;
   fullwidth?: boolean;
+}
+export type InputFieldType = 'text' | 'password' | 'email';
+
+export type InputFieldProps = {
+  name?: string;
+  placeholder?: string;
+  onChange?: ChangeEventHandler;
+  error?: FieldError;
+  type?: InputFieldType;
+  value?: string;
+};
+export interface LoginFieldConfig {
+  type: InputFieldType;
+  placeholder: string;
+  name: 'email' | 'password';
+
+  validations: RegisterOptions;
+}
+
+export interface RegisterFieldConfig {
+  type: InputFieldType;
+  placeholder: string;
+  name:
+    | 'areTermsRead'
+    | 'email'
+    | 'password'
+    | 'confirmPassword'
+    | 'firstName'
+    | 'lastName';
+  validations: RegisterOptions;
 }
