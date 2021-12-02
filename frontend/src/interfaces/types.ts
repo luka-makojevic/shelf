@@ -3,10 +3,10 @@ import { FieldError, RegisterOptions } from 'react-hook-form';
 import { Role } from '../enums/roles';
 
 export interface RegisterData {
-  areTermsRead: boolean;
+  areTermsRead?: boolean;
   email: string;
   password: string;
-  confirmPassword: string;
+  confirmPassword?: string;
   firstName: string;
   lastName: string;
 }
@@ -23,6 +23,31 @@ export interface LoginData {
 export interface MicrosoftLoginData {
   bearerToken: string;
 }
+
+export interface ForgotPasswordData {
+  email: string;
+}
+
+export interface PasswordData {
+  password: string;
+}
+
+export interface ResetPasswordData {
+  password: string;
+  jwtToken: string | undefined;
+}
+
+export interface ForgotPasswordConfig {
+  validations: RegisterOptions;
+}
+
+export interface ResetPasswordFieldConfig {
+  type: InputFieldType;
+  placeholder: string;
+  name: 'password' | 'confirmPassword';
+  validations: RegisterOptions;
+}
+
 export interface ContextTypes {
   user?: UserType | null;
   login: (
@@ -48,6 +73,7 @@ export interface ContextTypes {
   isLoading: boolean;
   accessToken: string;
 }
+
 export interface UserType {
   id: number;
   firstName: string;
@@ -56,6 +82,7 @@ export interface UserType {
   jwtToken: string;
   role: Role;
 }
+
 export interface RegisterFormData {
   areTermsRead: boolean;
   email: string;
