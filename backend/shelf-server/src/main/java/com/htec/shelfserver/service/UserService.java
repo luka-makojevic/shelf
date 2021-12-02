@@ -96,7 +96,7 @@ public class UserService {
         UserEntity user = userRepository.findById(id).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         if (user.getRole() != null) {
-            if (!user.getRole().getId().equals(Long.valueOf(String.valueOf(Roles.SUPER_ADMIN)))) {
+            if (!user.getRole().getId().equals(Roles.SUPER_ADMIN.getValue())) {
                 userRepository.delete(user);
             }
         } else {

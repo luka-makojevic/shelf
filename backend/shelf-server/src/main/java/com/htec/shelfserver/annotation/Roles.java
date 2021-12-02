@@ -4,13 +4,13 @@ import lombok.Getter;
 
 @Getter
 public enum Roles {
-    SUPER_ADMIN(1),
-    MODERATOR(2),
-    USER(3);
+    SUPER_ADMIN(1L),
+    MODERATOR(2L),
+    USER(3L);
 
-    private final Integer value;
+    private final Long value;
 
-    Roles(Integer value) {
+    Roles(Long value) {
         this.value = value;
     }
 }
