@@ -51,7 +51,8 @@ public class UserService {
                        EmailService emailService,
                        UserValidator userValidator,
                        BCryptPasswordEncoder bCryptPasswordEncoder,
-                       @Value("${emailPasswordResetTokenLink}") String emailPasswordResetTokenLink, RoleRepository roleRepository) {
+                       @Value("${emailPasswordResetTokenLink}") String emailPasswordResetTokenLink,
+                       RoleRepository roleRepository) {
 
         this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.userRepository = userRepository;
