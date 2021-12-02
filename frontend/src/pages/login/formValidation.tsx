@@ -65,12 +65,13 @@ const FormValidation = () => {
 
   return (
     <Form.Base onSubmit={handleSubmit(submitForm)}>
-      <Holder m="0 auto" maxWidth="200px" minHeight="15px">
+      <Holder m="0 auto">
         <Error>{error}</Error>
       </Holder>
       <InputFieldWrapper>
         {loginFieldConfig.map((fieldConfig: LoginFieldConfig) => (
           <InputField
+          data-test={fieldConfig.name}
             key={fieldConfig.name}
             placeholder={fieldConfig.placeholder}
             error={errors[fieldConfig.name]}

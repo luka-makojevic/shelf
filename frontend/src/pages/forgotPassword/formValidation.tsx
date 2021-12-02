@@ -8,6 +8,7 @@ import { Error, PlainText } from '../../components/text/text-styles';
 import { forgotPasswordFieldConfig } from '../../validation/config/forgotPasswordValidationConfig';
 import userServices from '../../services/userServices';
 import { Button } from '../../components/UI/button';
+import { Holder } from '../../components/layout/layout.styles';
 
 const FormValidation = () => {
   const {
@@ -39,8 +40,11 @@ const FormValidation = () => {
 
   return (
     <Form.Base onSubmit={handleSubmit(submitData)}>
-      <Error>{error}</Error>
-      <PlainText color="green">{successMessage}</PlainText>
+      <Holder m="0 auto" maxWidth="300px" minHeight="15px">
+        <Error>{error}</Error>
+        <PlainText color="green">{successMessage}</PlainText>
+      </Holder>
+
       <InputFieldWrapper>
         <InputField
           placeholder="Enter your email"

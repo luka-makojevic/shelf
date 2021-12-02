@@ -22,17 +22,17 @@ export const AccentText = styled.p<TextProps>`
 export const Link = styled(ReachRouterLink)<TextProps>`
   color: ${({ theme }) => theme.colors.primary};
   text-decoration: none;
-  font-weight: ${({ theme }) => theme.fontWeights.bold};
   ${space}
   ${typography}
   ${color}
   ${border}
 `;
 
-export const Error = styled.div`
-  margin-left: 1em;
+export const Error = styled.p`
+  margin: 0;
+  margin-left: 10px;
   color: ${({ theme }) => theme.colors.danger};
-  font-size: 10px;
+  font-size: ${({ theme }) => theme.fontSizes[0]};
 `;
 
 export const Success = styled.p`
@@ -43,7 +43,7 @@ export const Success = styled.p`
 `;
 
 export const PlainText = styled.p<TextProps>`
-  font-size: 13px;
+  font-size: ${({ theme }) => theme.fontSizes[1]};
   margin: 5px 0;
   ${typography}
   ${color}
