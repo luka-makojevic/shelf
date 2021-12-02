@@ -17,12 +17,22 @@ type HeaderProps = {
 };
 
 const Header = ({ hideProfile }: HeaderProps) => {
-  const [showDopdown, setShowDopdown] = useState<boolean>(false);
+  const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
   const { logout, user } = useContext(AuthContext);
   const data = {
     jwtRefreshToken: user?.jwtRefreshToken,
     jwtToken: user?.jwtToken,
+  };
+  const handleDropdownVisibility = () => {
+    setShowDropdown(!showDropdown);
+  };
+  const handleLogout = () => {
+    logout(
+      data,
+      () => {},
+      () => {}
+    );
   };
 
   return (
@@ -31,8 +41,8 @@ const Header = ({ hideProfile }: HeaderProps) => {
         <Logo src={`${process.env.PUBLIC_URL}/assets/images/logo.png`} />
       </Link>
       <Profile hideProfile={hideProfile}>
-        <ProfilePicture onClick={() => setShowDopdown(!showDopdown)} />
-        {showDopdown && (
+        <ProfilePicture onClick={handleDropdownVisibility} />
+        {showDropdown && (
           <DropDown>
             <ProfilePicture />
             <Holder ml="10px">
@@ -42,17 +52,7 @@ const Header = ({ hideProfile }: HeaderProps) => {
               <PlainText>{user?.email}</PlainText>
               <Link to="/manage-account">manage account</Link>
               <Holder display="flex" justifyContent="flex-end">
-                <Button
-                  onClick={() => {
-                    logout(
-                      data,
-                      () => {},
-                      () => {}
-                    );
-                  }}
-                  size="small"
-                  m="8px 0 0 0"
-                >
+                <Button onClick={handleLogout} size="small" m="8px 0 0 0">
                   log out
                 </Button>
               </Holder>
