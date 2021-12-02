@@ -4,10 +4,10 @@ import Form from '../../components/form';
 import { InputFieldWrapper } from '../../components/form/form-styles';
 import { InputField } from '../../components/input/InputField';
 import { ForgotPasswordData } from '../../interfaces/types';
-import { Error, PlainText } from '../../components/text/text-styles';
 import { forgotPasswordFieldConfig } from '../../validation/config/forgotPasswordValidationConfig';
 import userServices from '../../services/userServices';
 import { Button } from '../../components/UI/button';
+import AlertContainer from '../../components/alert/alert';
 
 const FormValidation = () => {
   const {
@@ -20,7 +20,7 @@ const FormValidation = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
-  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [success, setSuccess] = useState<string>('');
 
   const submitData = (data: ForgotPasswordData) => {
     setIsLoading(true);
@@ -28,7 +28,7 @@ const FormValidation = () => {
       .forgotPassword(data)
       .then((res) => {
         if (res.data) {
-          setSuccessMessage('Go to your email to reset password');
+          setSuccess('Go to your email to reset password');
         }
       })
       .catch((err) => {
@@ -37,23 +37,44 @@ const FormValidation = () => {
       .finally(() => setIsLoading(false));
   };
 
-  return (
-    <Form.Base onSubmit={handleSubmit(submitData)}>
-      <Error>{error}</Error>
-      <PlainText color="green">{successMessage}</PlainText>
-      <InputFieldWrapper>
-        <InputField
-          placeholder="Enter your email"
-          error={errors.email}
-          type="email"
-          {...register('email', validation.validations)}
-        />
-      </InputFieldWrapper>
+  const handleAlertClose = () => {
+    setError('');
+    setSuccess('');
+  };
 
-      <Button spinner fullwidth isLoading={isLoading}>
-        Send
-      </Button>
-    </Form.Base>
+  return (
+    <>
+      {error && (
+        <AlertContainer
+          type="error"
+          title="Error"
+          message={error}
+          onClose={handleAlertClose}
+        />
+      )}
+      {success && (
+        <AlertContainer
+          type="info"
+          title="Info"
+          message={success}
+          onClose={handleAlertClose}
+        />
+      )}
+      <Form.Base onSubmit={handleSubmit(submitData)}>
+        <InputFieldWrapper>
+          <InputField
+            placeholder="Enter your email"
+            error={errors.email}
+            type="email"
+            {...register('email', validation.validations)}
+          />
+        </InputFieldWrapper>
+
+        <Button spinner fullwidth isLoading={isLoading}>
+          Send
+        </Button>
+      </Form.Base>
+    </>
   );
 };
 

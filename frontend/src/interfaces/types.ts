@@ -146,3 +146,10 @@ export interface RegisterFieldConfig {
     | 'lastName';
   validations: RegisterOptions;
 }
+
+export interface AlertPorps {
+  type: string;
+  title: string;
+  message: string | undefined;
+  onClose: () => void;
+}
