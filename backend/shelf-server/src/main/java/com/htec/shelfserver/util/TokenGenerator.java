@@ -19,7 +19,7 @@ public class TokenGenerator {
     private final Random RANDOM = new SecureRandom();
     private final UserRepository userRepository;
 
-    TokenGenerator(UserRepository userRepository) {
+    public TokenGenerator(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
