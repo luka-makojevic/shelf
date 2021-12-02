@@ -19,10 +19,10 @@ const LoginForm = () => (
       {`New to the shelf?  `}
       <Link to={Routes.REGISTER}>Sign up</Link>
     </PlainText>
-    <AccentText>
+    <PlainText>
       {`Forgot password?  `}
       <Link to={Routes.FORGOT_PASSWORD}>Reset password</Link>
-    </AccentText>
+    </PlainText>
   </Form>
 );
 

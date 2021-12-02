@@ -39,7 +39,7 @@ const featuresInfo = [
 
 const Landing = () => (
   <Wrapper flexDirection="column">
-    <Container width="100%" height="100px" justifyContent="flex-end" px="50px">
+    <Container width="100%" height="100px" justifyContent="flex-end" px="20px">
       <Button variant="light" to={Routes.LOGIN}>
         Sign in
       </Button>

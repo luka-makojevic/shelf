@@ -28,7 +28,7 @@ const Header = ({ hideProfile }: HeaderProps) => {
   return (
     <Container>
       <Link to={Routes.HOME}>
-        <Logo src="./assets/images/logo.png" />
+        <Logo src={`${process.env.PUBLIC_URL}/assets/images/logo.png`} />
       </Link>
       <Profile hideProfile={hideProfile}>
         <ProfilePicture onClick={() => setShowDopdown(!showDopdown)} />

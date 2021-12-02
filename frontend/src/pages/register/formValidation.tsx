@@ -102,7 +102,7 @@ const FormValidation = () => {
             {...register(fieldConfig.name, fieldConfig.validations)}
           />
         ))}
-        <Holder flexDirection="column" height="43px">
+        <Holder flexDirection="column" height="45px">
           <CheckBox
             id="id"
             {...register('areTermsRead', {

@@ -10,7 +10,6 @@ export const Container = styled.div<FormProps>`
   margin: auto 1em;
   padding: 1em;
   width: 100%;
-  max-height: 700px;
 
   border-radius: 50px;
   border: 2px solid ${({ theme }) => theme.colors.secondary};
