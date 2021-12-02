@@ -1,5 +1,4 @@
 name: Running JUnit tests
-
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
@@ -14,7 +13,6 @@ on:
       - 'backend/**'
       - '!frontend/**'
       - '!qa/**'
-
 jobs:
   build:
     name: Build and Run Tests
