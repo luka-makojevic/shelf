@@ -45,7 +45,14 @@ public class UserService {
     private final RoleRepository roleRepository;
 
     @Autowired
-    public UserService(PasswordResetTokenRepository passwordResetTokenRepository, UserRepository userRepository, TokenGenerator tokenGenerator, EmailService emailService, UserValidator userValidator, BCryptPasswordEncoder bCryptPasswordEncoder, @Value("${emailPasswordResetTokenLink}") String emailPasswordResetTokenLink, RoleRepository roleRepository) {
+    public UserService(PasswordResetTokenRepository passwordResetTokenRepository,
+                       UserRepository userRepository,
+                       TokenGenerator tokenGenerator,
+                       EmailService emailService,
+                       UserValidator userValidator,
+                       BCryptPasswordEncoder bCryptPasswordEncoder,
+                       @Value("${emailPasswordResetTokenLink}") String emailPasswordResetTokenLink,
+                       RoleRepository roleRepository) {
 
         this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.userRepository = userRepository;
@@ -60,7 +67,8 @@ public class UserService {
 
     public UserDTO getUser(String email) {
 
-        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
+        UserEntity userEntity = userRepository.findByEmail(email)
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
 
         return UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
     }
@@ -86,14 +94,16 @@ public class UserService {
 
     public UserResponseModel getUserById(Long id) {
 
-        UserEntity user = userRepository.findById(id).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
     }
 
     public void deleteUserById(Long id) {
 
-        UserEntity user = userRepository.findById(id).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         if (user.getRole() != null) {
             if (!user.getRole().getId().equals(Roles.SUPER_ADMIN.getValue())) {
@@ -106,7 +116,8 @@ public class UserService {
 
     public void requestPasswordReset(String email) {
 
-        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
+        UserEntity userEntity = userRepository.findByEmail(email)
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
 
         sendPasswordResetMail(userEntity);
     }
@@ -130,7 +141,8 @@ public class UserService {
 
     public UserResponseModel updateUser(UserDTO userDTO) {
 
-        UserEntity user = userRepository.findById(userDTO.getId()).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+        UserEntity user = userRepository.findById(userDTO.getId())
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         if (userDTO.getFirstName() != null) {
             user.setFirstName(userDTO.getFirstName());
@@ -158,13 +170,15 @@ public class UserService {
 
     public UserResponseModel updateUserRole(Long id, Long roleId) {
 
-        UserEntity user = userRepository.findById(id).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         if (user.getRole().getId().equals(roleId)) {
             throw ExceptionSupplier.wrongRoleUpdate.get();
         }
 
-        RoleEntity role = roleRepository.findById(roleId).orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+        RoleEntity role = roleRepository.findById(roleId)
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         user.setRole(new RoleEntity(role.getId(), role.getName()));
 
@@ -191,7 +205,8 @@ public class UserService {
             throw ExceptionSupplier.emailResetRequestWasNotSent.get();
 
         long userId = findUserIdByJwtToken(jwtToken);
-        UserEntity userEntity = userRepository.findById(userId).orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
 
         String salt = userEntity.getSalt();
         String newPassword = bCryptPasswordEncoder.encode(password + salt);
@@ -205,7 +220,12 @@ public class UserService {
 
         String user;
         try {
-            user = Jwts.parser().setSigningKey(SecurityConstants.TOKEN_SECRET).parseClaimsJws(jwtToken).getBody().getSubject();
+            user = Jwts
+                    .parser()
+                    .setSigningKey(SecurityConstants.TOKEN_SECRET)
+                    .parseClaimsJws(jwtToken)
+                    .getBody()
+                    .getSubject();
         } catch (ExpiredJwtException e) {
             throw ExceptionSupplier.tokenExpired.get();
         } catch (Exception e) {
@@ -216,6 +236,7 @@ public class UserService {
     }
 
     public long findUserIdByJwtToken(String jwtToken) {
-        return passwordResetTokenRepository.findByToken(jwtToken).orElseThrow(ExceptionSupplier.emailResetRequestWasNotSent).getUserDetails().getId();
+        return passwordResetTokenRepository.findByToken(jwtToken)
+                .orElseThrow(ExceptionSupplier.emailResetRequestWasNotSent).getUserDetails().getId();
     }
 }
