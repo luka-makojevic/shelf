@@ -1,7 +1,14 @@
 import { Header } from '../../components';
+import Modal from '../../components/modal';
 
 const Dashboard = () => {
-  return <Header hideProfile={false} />;
+  const hideProfile = true;
+  return (
+    <>
+      <Header hideProfile={hideProfile} />
+      <Modal />
+    </>
+  );
 };
 
 export default Dashboard;
