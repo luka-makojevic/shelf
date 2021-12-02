@@ -28,6 +28,8 @@ const FormValidation = () => {
   const navigation = useNavigate();
 
   const submitForm = (data: LoginData) => {
+    // console.log(data);
+
     login(
       data,
       () => {

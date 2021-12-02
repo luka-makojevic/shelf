@@ -156,4 +156,11 @@ public class ExceptionSupplier {
             LocalDateTime.now().format(formatter),
             ErrorMessages.BAD_REQUEST.getErrorMessage()
     );
+
+    public static final Supplier<ShelfException> emailResetRequestWasNotSent = () -> new ShelfException(
+            ErrorMessages.EMAIL_RESET_REQUEST_WAS_NOT_SENT.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
 }

@@ -6,7 +6,7 @@ import {
   MicrosoftLoginData,
 } from '../interfaces/types';
 
-const API_URL = 'http://10.10.0.117:8080/';
+const API_URL = 'http://10.10.0.136:8080/';
 
 const register = (data: RegisterData) => axios.post(`${API_URL}register`, data);
 
