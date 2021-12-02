@@ -8,14 +8,18 @@ import com.htec.shelfserver.entity.RoleEntity;
 import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.mapper.UserMapper;
+import com.htec.shelfserver.model.request.PasswordResetModel;
 import com.htec.shelfserver.model.response.UserPageResponseModel;
 import com.htec.shelfserver.model.response.UserResponseModel;
 import com.htec.shelfserver.repository.mysql.RoleRepository;
 import com.htec.shelfserver.repository.mysql.PasswordResetTokenRepository;
 import com.htec.shelfserver.repository.mysql.UserRepository;
+import com.htec.shelfserver.security.SecurityConstants;
 import com.htec.shelfserver.util.Roles;
 import com.htec.shelfserver.util.TokenGenerator;
 import com.htec.shelfserver.validator.UserValidator;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -152,7 +156,7 @@ public class UserService {
         }
 
         if (userDTO.getPassword() != null) {
-            userValidator.isUserUpdateValid(userDTO);
+            userValidator.isUserPasswordValid(userDTO.getPassword());
             user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword() + user.getSalt()));
         } else {
             user.setPassword(user.getPassword());
@@ -183,8 +187,56 @@ public class UserService {
         model.put("firstName", user.getFirstName());
         model.put("roleName", user.getRole().getName());
 
-        emailService.sendEmail(user.getEmail(), model, "update-role-email.html", "Role updated" );
+        emailService.sendEmail(user.getEmail(), model, "update-role-email.html", "Role updated");
 
         return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
+    }
+
+    public void resetPassword(PasswordResetModel passwordResetModel) {
+
+        String password = passwordResetModel.getPassword();
+        userValidator.isUserPasswordValid(password);
+        String jwtToken = passwordResetModel.getJwtToken();
+
+        if(!checkUserByJwtToken(jwtToken))
+            throw ExceptionSupplier.tokenNotValid.get();
+
+        if (!passwordResetTokenRepository.findByToken(jwtToken).isPresent())
+            throw ExceptionSupplier.emailResetRequestWasNotSent.get();
+
+        long userId = findUserIdByJwtToken(jwtToken);
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
+
+        String salt = userEntity.getSalt();
+        String newPassword = bCryptPasswordEncoder.encode(password + salt);
+        userEntity.setPassword(newPassword);
+        userRepository.save(userEntity);
+
+        passwordResetTokenRepository.deleteAllByUserDetails(userEntity);
+    }
+
+    public boolean checkUserByJwtToken(String jwtToken) {
+
+        String user;
+        try {
+            user = Jwts.parser()
+                    .setSigningKey(SecurityConstants.TOKEN_SECRET)
+                    .parseClaimsJws(jwtToken)
+                    .getBody()
+                    .getSubject();
+        } catch (ExpiredJwtException e) {
+            throw ExceptionSupplier.tokenExpired.get();
+        } catch (Exception e) {
+            throw ExceptionSupplier.tokenNotValid.get();
+        }
+
+        return user != null;
+    }
+
+    public long findUserIdByJwtToken(String jwtToken) {
+        return passwordResetTokenRepository.findByToken(jwtToken)
+                .orElseThrow(ExceptionSupplier.emailResetRequestWasNotSent)
+                .getUserDetails().getId();
     }
 }

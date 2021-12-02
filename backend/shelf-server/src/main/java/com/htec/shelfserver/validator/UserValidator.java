@@ -41,9 +41,8 @@ public class UserValidator {
         }
     }
 
-    public void isUserUpdateValid(UserDTO userDTO) {
+    public void isUserPasswordValid(String password) {
 
-        String password = userDTO.getPassword();
         Matcher matcher = pattern.matcher(password);
         if (!matcher.matches()) {
             throw ExceptionSupplier.passwordNotValid.get();
