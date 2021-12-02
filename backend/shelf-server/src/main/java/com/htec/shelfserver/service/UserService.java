@@ -205,11 +205,14 @@ public class UserService {
             throw ExceptionSupplier.emailResetRequestWasNotSent.get();
 
         long userId = findUserIdByJwtToken(jwtToken);
-        UserEntity userEntity = userRepository.findById(userId).orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
+
         String salt = userEntity.getSalt();
         String newPassword = bCryptPasswordEncoder.encode(password + salt);
         userEntity.setPassword(newPassword);
         userRepository.save(userEntity);
+
         passwordResetTokenRepository.deleteAllByUserDetails(userEntity);
     }
 
@@ -232,6 +235,8 @@ public class UserService {
     }
 
     public long findUserIdByJwtToken(String jwtToken) {
-        return passwordResetTokenRepository.findByToken(jwtToken).get().getUserDetails().getId();
+        return passwordResetTokenRepository.findByToken(jwtToken)
+                .orElseThrow(ExceptionSupplier.emailResetRequestWasNotSent)
+                .getUserDetails().getId();
     }
 }
