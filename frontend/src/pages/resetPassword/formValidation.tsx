@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Form } from '../../components';
@@ -6,12 +6,10 @@ import { InputField } from '../../components/input/InputField';
 import { Error, PlainText } from '../../components/text/text-styles';
 import { InputFieldWrapper } from '../../components/form/form-styles';
 import { Button } from '../../components/UI/button';
-import {
-  ResetPasswordData,
-  ResetPasswordFieldConfig,
-} from '../../interfaces/types';
+import { PasswordData, ResetPasswordFieldConfig } from '../../interfaces/types';
 import userServices from '../../services/userServices';
 import { config } from '../../validation/config/resetPasswordValidationConfig';
+import { Routes } from '../../enums/routes';
 
 const ResetPasswordForm = () => {
   const {
@@ -25,28 +23,24 @@ const ResetPasswordForm = () => {
   const [error, setError] = useState<string>('');
   const [successMessage, setSuccessMessage] = useState<string>('');
 
-  const { token } = useParams();
+  const { jwtToken } = useParams();
 
   const registerFieldConfig: ResetPasswordFieldConfig[] = config(watch);
+  const navigation = useNavigate();
 
-  // useEffect(() => {
-  //   console.log({ token: token });  -- will be deleted, just need it to test this
-  // }, []);
-
-  const onSubmit = ({ password }: ResetPasswordData) => {
-    // console.log(password); -- will be deleted, just need it to test this
+  const onSubmit = ({ password }: PasswordData) => {
     setIsLoading(true);
 
+    const data = { password, jwtToken };
+
     userServices
-      .resetPassword({ password }, token)
+      .resetPassword(data)
       .then((res) => {
-        // console.log({ password, token }); -- will be deleted, just need it to test this
         setSuccessMessage(res.data.message);
-        // console.log(res.data.message); -- will be deleted, just need it to test this
+        navigation(Routes.LOGIN);
       })
       .catch((err) => {
         setError(err.response?.data.message);
-        // console.log({ password, token }); -- will be deleted, just need it to test this
       })
       .finally(() => setIsLoading(false));
   };

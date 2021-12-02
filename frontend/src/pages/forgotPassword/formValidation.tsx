@@ -40,8 +40,7 @@ const FormValidation = () => {
   return (
     <Form.Base onSubmit={handleSubmit(submitData)}>
       <Error>{error}</Error>
-      <PlainText>{successMessage}</PlainText>
-      <p>{successMessage}</p>
+      <PlainText color="green">{successMessage}</PlainText>
       <InputFieldWrapper>
         <InputField
           placeholder="Enter your email"

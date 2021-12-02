@@ -28,8 +28,13 @@ export interface ForgotPasswordData {
   email: string;
 }
 
+export interface PasswordData {
+  password: string;
+}
+
 export interface ResetPasswordData {
   password: string;
+  jwtToken: string | undefined;
 }
 
 export interface ForgotPasswordConfig {
