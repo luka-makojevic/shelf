@@ -8,7 +8,7 @@ export const Input = styled.input<InputProps>`
   border: 1px solid ${theme.colors.secondary};
   border-radius: 30px;
   text-indent: 10px;
-  margin: 10px 0;
+  margin: 5px 0;
 
   &:focus {
     outline: none;
@@ -19,8 +19,7 @@ export const Input = styled.input<InputProps>`
 export const InputContainer = styled.div`
   position: relative;
   width: 100%;
-  max-width: 700px;
-  min-height: 80px;
+  min-height: 75px;
 `;
 
 export const SeenIcon = styled.img`

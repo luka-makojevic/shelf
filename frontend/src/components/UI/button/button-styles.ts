@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { variant } from 'styled-system';
+import { variant, space } from 'styled-system';
 import { Link as ReachRouterLink } from 'react-router-dom';
 import { ButtonStyleProps } from '../../../interfaces/styles';
 
@@ -8,22 +8,22 @@ export const StyledButton = styled('button')<ButtonStyleProps>`
   font-family: inherit;
   border: none;
   border-radius: 999px;
-  margin: 8px 0;
   padding: 8px 16px;
-  font-size: 16px;
+  margin: 8px 0;
+  font-size: ${({ theme }) => theme.fontSizes[2]};
   cursor: pointer;
   min-width: 90px;
   ${(props) =>
     props.size === 'large' &&
     css`
       padding: 10px 20px;
-      font-size: 18px;
+      font-size: ${({ theme }) => theme.fontSizes[3]};
     `}
   ${(props) =>
     props.size === 'small' &&
     css`
       padding: 7px 14px;
-      font-size: 15px;
+      font-size: ${({ theme }) => theme.fontSizes[2]};
     `}
   ${(props) =>
     props.fullwidth &&
@@ -47,6 +47,7 @@ export const StyledButton = styled('button')<ButtonStyleProps>`
       },
     },
   })};
+  ${space}
 `;
 export const SpinnerButton = styled(StyledButton)`
   padding: 0;
@@ -60,7 +61,7 @@ export const StyledLink = styled(ReachRouterLink)<ButtonStyleProps>`
   border-radius: 999px;
   margin: 8px 0;
   padding: 8px 16px;
-  font-size: 16px;
+  font-size: ${({ theme }) => theme.fontSizes[2]};
   text-decoration: none;
   text-align: center;
   cursor: pointer;
@@ -68,13 +69,13 @@ export const StyledLink = styled(ReachRouterLink)<ButtonStyleProps>`
     props.size === 'large' &&
     css`
       padding: 10px 20px;
-      font-size: 18px;
+      font-size: ${({ theme }) => theme.fontSizes[3]};
     `}
   ${(props) =>
     props.size === 'small' &&
     css`
       padding: 7px 14px;
-      font-size: 15px;
+      font-size: ${({ theme }) => theme.fontSizes[2]};
     `}
     
 

@@ -1,3 +1,4 @@
+import { SpaceProps } from 'styled-system';
 import { ChangeEventHandler } from 'react';
 import { FieldError, RegisterOptions } from 'react-hook-form';
 import { Role } from '../enums/roles';
@@ -49,7 +50,7 @@ export interface ResetPasswordFieldConfig {
 }
 
 export interface ContextTypes {
-  user?: UserType | null;
+  user: UserType | null;
   login: (
     data: LoginData,
     onSuccess: () => void,
@@ -70,6 +71,11 @@ export interface ContextTypes {
     onSuccess: () => void,
     onError: (error: string) => void
   ) => void;
+  logout: (
+    data: LogoutData,
+    onSuccess: () => void,
+    onError: (error: string) => void
+  ) => void;
   isLoading: boolean;
   accessToken: string;
 }
@@ -80,6 +86,7 @@ export interface UserType {
   lastName: string;
   email: string;
   jwtToken: string;
+  jwtRefreshToken: string;
   role: Role;
 }
 
@@ -105,7 +112,7 @@ export interface FormSubmitProps {
   isLoading: boolean;
 }
 
-export interface ButtonProps {
+export interface ButtonProps extends SpaceProps {
   children?: React.ReactNode;
   icon?: JSX.Element;
   to?: string;
@@ -115,6 +122,10 @@ export interface ButtonProps {
   variant?: string;
   size?: string;
   fullwidth?: boolean;
+}
+export interface LogoutData {
+  jwtRefreshToken: string | undefined;
+  jwtToken: string | undefined;
 }
 export type InputFieldType = 'text' | 'password' | 'email';
 

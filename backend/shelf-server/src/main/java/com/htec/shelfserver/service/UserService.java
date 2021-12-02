@@ -1,6 +1,7 @@
 package com.htec.shelfserver.service;
 
 
+import com.htec.shelfserver.annotation.Roles;
 import com.htec.shelfserver.dto.AuthUser;
 import com.htec.shelfserver.dto.UserDTO;
 import com.htec.shelfserver.entity.PasswordResetTokenEntity;
@@ -11,11 +12,10 @@ import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.model.request.PasswordResetModel;
 import com.htec.shelfserver.model.response.UserPageResponseModel;
 import com.htec.shelfserver.model.response.UserResponseModel;
-import com.htec.shelfserver.repository.mysql.RoleRepository;
 import com.htec.shelfserver.repository.mysql.PasswordResetTokenRepository;
+import com.htec.shelfserver.repository.mysql.RoleRepository;
 import com.htec.shelfserver.repository.mysql.UserRepository;
 import com.htec.shelfserver.security.SecurityConstants;
-import com.htec.shelfserver.util.Roles;
 import com.htec.shelfserver.util.TokenGenerator;
 import com.htec.shelfserver.validator.UserValidator;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -67,8 +67,8 @@ public class UserService {
 
     public UserDTO getUser(String email) {
 
-        UserEntity userEntity = userRepository.findByEmail(email).
-                orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
+        UserEntity userEntity = userRepository.findByEmail(email)
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithEmail);
 
         return UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
     }
@@ -106,7 +106,7 @@ public class UserService {
                 .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         if (user.getRole() != null) {
-            if (!user.getRole().getId().equals(Long.valueOf(Roles.SUPER_ADMIN))) {
+            if (!user.getRole().getId().equals(Roles.SUPER_ADMIN.getValue())) {
                 userRepository.delete(user);
             }
         } else {
@@ -199,8 +199,7 @@ public class UserService {
         userValidator.isUserPasswordValid(password);
         String jwtToken = passwordResetModel.getJwtToken();
 
-        if(!checkUserByJwtToken(jwtToken))
-            throw ExceptionSupplier.tokenNotValid.get();
+        if (!checkUserByJwtToken(jwtToken)) throw ExceptionSupplier.tokenNotValid.get();
 
         if (!passwordResetTokenRepository.findByToken(jwtToken).isPresent())
             throw ExceptionSupplier.emailResetRequestWasNotSent.get();
@@ -221,7 +220,8 @@ public class UserService {
 
         String user;
         try {
-            user = Jwts.parser()
+            user = Jwts
+                    .parser()
                     .setSigningKey(SecurityConstants.TOKEN_SECRET)
                     .parseClaimsJws(jwtToken)
                     .getBody()
@@ -237,7 +237,6 @@ public class UserService {
 
     public long findUserIdByJwtToken(String jwtToken) {
         return passwordResetTokenRepository.findByToken(jwtToken)
-                .orElseThrow(ExceptionSupplier.emailResetRequestWasNotSent)
-                .getUserDetails().getId();
+                .orElseThrow(ExceptionSupplier.emailResetRequestWasNotSent).getUserDetails().getId();
     }
 }

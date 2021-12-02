@@ -17,10 +17,17 @@ export const Button = ({
   size,
   variant = 'primary',
   fullwidth,
+  ...restProps
 }: ButtonProps) => {
   if (to) {
     return (
-      <StyledLink size={size} fullwidth={fullwidth} variant={variant} to={to}>
+      <StyledLink
+        size={size}
+        fullwidth={fullwidth}
+        variant={variant}
+        to={to}
+        {...restProps}
+      >
         {children}
       </StyledLink>
     );
@@ -32,6 +39,7 @@ export const Button = ({
         onClick={onClick}
         fullwidth={fullwidth}
         variant={variant}
+        {...restProps}
       >
         {isLoading ? (
           <Spinner
@@ -51,6 +59,7 @@ export const Button = ({
         onClick={onClick}
         fullwidth={fullwidth}
         variant={variant}
+        {...restProps}
       >
         {icon}
         {children}
@@ -63,10 +72,9 @@ export const Button = ({
       onClick={onClick}
       fullwidth={fullwidth}
       variant={variant}
+      {...restProps}
     >
       {children}
     </StyledButton>
   );
 };
-
-export const x = 0;

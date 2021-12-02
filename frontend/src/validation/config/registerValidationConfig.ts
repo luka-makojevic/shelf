@@ -3,7 +3,7 @@ import { RegisterFieldConfig } from '../../interfaces/types';
 
 export const config = (watch: any): RegisterFieldConfig[] => [
   {
-    type: 'email',
+    type: 'text',
     placeholder: 'Email',
     name: 'email',
     validations: {

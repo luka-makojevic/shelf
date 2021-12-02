@@ -19,16 +19,15 @@ export const theme = {
 
   // fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 96],
   fontSizes: [
-    '10px',
     '12px',
     '14px',
     '16px',
+    '18px',
     '20px',
     '24px',
     '32px',
     '48px',
     '64px',
-    '96px',
   ],
   fontWeights: {
     body: 400,
@@ -39,7 +38,7 @@ export const theme = {
     body: 1.5,
     heading: 1.125,
   },
-  
+
   colors: {
     white: '#fff',
     black: '#000',
@@ -48,7 +47,7 @@ export const theme = {
     danger: 'red',
     success: 'green',
   },
-  
+
   styles: {
     root: {
       fontFamily: 'body',
