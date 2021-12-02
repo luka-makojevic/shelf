@@ -3,10 +3,10 @@ import { FieldError, RegisterOptions } from 'react-hook-form';
 import { Role } from '../enums/roles';
 
 export interface RegisterData {
-  areTermsRead: boolean;
+  areTermsRead?: boolean;
   email: string;
   password: string;
-  confirmPassword: string;
+  confirmPassword?: string;
   firstName: string;
   lastName: string;
 }

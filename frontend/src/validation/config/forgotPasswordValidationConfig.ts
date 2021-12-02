@@ -1,11 +1,11 @@
 import { ForgotPasswordConfig } from '../../interfaces/types';
-import { emailRegEx } from '../regex';
+import { emailRegex } from '../regex';
 
 export const forgotPasswordFieldConfig: ForgotPasswordConfig = {
   validations: {
     required: 'This field is required',
     pattern: {
-      value: emailRegEx,
+      value: emailRegex,
       message: 'Invalid email format',
     },
   },

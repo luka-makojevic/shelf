@@ -27,7 +27,7 @@ const FormValidation = () => {
     userServices
       .forgotPassword(data)
       .then((res) => {
-        if (res.data.resetToken) {
+        if (res.data) {
           setSuccessMessage('Go to your email to reset password');
         }
       })
