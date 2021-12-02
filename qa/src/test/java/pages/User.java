@@ -20,17 +20,13 @@ public class User
         return this;
     }
 
-    public User setValuesForInvalidUser(String email, String password, String firstName, String lastName) throws IOException
+    public User setValuesForInvalidUser(int i,String email, String password, String firstName, String lastName) throws IOException
     {
         ExcelReader excelReader = new ExcelReader("src/main/resources/ExcelRead.xlsx");
-
-        for (int i = 2; i < excelReader.getLastRowNumberFromSheet("apiTest"); i++)
-        {
-            this.email = email = excelReader.getStringData("apiTest",i,0);
-            this.password = password = excelReader.getStringData("apiTest",i,1);
-            this.firstName = firstName = excelReader.getStringData("apiTest",i,2);
-            this.lastName = lastName = excelReader.getStringData("apiTest",i,3);
-        }
+        this.email = email = excelReader.getStringData("apiTest", i,0);
+        this.password = password = excelReader.getStringData("apiTest", i,1);
+        this.firstName = firstName = excelReader.getStringData("apiTest", i,2);
+        this.lastName = lastName = excelReader.getStringData("apiTest", i,3);
         return this;
     }
 }

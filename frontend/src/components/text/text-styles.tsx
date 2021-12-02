@@ -4,7 +4,6 @@ import { Link as ReachRouterLink } from 'react-router-dom';
 import { TextProps } from '../../interfaces/styles';
 
 export const Title = styled.h1<TextProps>`
-  /* height: 50%; */
   ${space}
   ${typography}
   ${color}

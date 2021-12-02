@@ -1,9 +1,13 @@
 import { SpaceProps } from 'styled-system';
+import { ChangeEventHandler } from 'react';
+import { FieldError, RegisterOptions } from 'react-hook-form';
 import { Role } from '../enums/roles';
 
 export interface RegisterData {
+  areTermsRead?: boolean;
   email: string;
   password: string;
+  confirmPassword?: string;
   firstName: string;
   lastName: string;
 }
@@ -20,6 +24,31 @@ export interface LoginData {
 export interface MicrosoftLoginData {
   bearerToken: string;
 }
+
+export interface ForgotPasswordData {
+  email: string;
+}
+
+export interface PasswordData {
+  password: string;
+}
+
+export interface ResetPasswordData {
+  password: string;
+  jwtToken: string | undefined;
+}
+
+export interface ForgotPasswordConfig {
+  validations: RegisterOptions;
+}
+
+export interface ResetPasswordFieldConfig {
+  type: InputFieldType;
+  placeholder: string;
+  name: 'password' | 'confirmPassword';
+  validations: RegisterOptions;
+}
+
 export interface ContextTypes {
   user: UserType | null;
   login: (
@@ -50,6 +79,7 @@ export interface ContextTypes {
   isLoading: boolean;
   accessToken: string;
 }
+
 export interface UserType {
   id: number;
   firstName: string;
@@ -59,6 +89,7 @@ export interface UserType {
   jwtRefreshToken: string;
   role: Role;
 }
+
 export interface RegisterFormData {
   areTermsRead: boolean;
   email: string;
@@ -95,4 +126,34 @@ export interface ButtonProps extends SpaceProps {
 export interface LogoutData {
   jwtRefreshToken: string | undefined;
   jwtToken: string | undefined;
+}
+export type InputFieldType = 'text' | 'password' | 'email';
+
+export type InputFieldProps = {
+  name?: string;
+  placeholder?: string;
+  onChange?: ChangeEventHandler;
+  error?: FieldError;
+  type?: InputFieldType;
+  value?: string;
+};
+export interface LoginFieldConfig {
+  type: InputFieldType;
+  placeholder: string;
+  name: 'email' | 'password';
+
+  validations: RegisterOptions;
+}
+
+export interface RegisterFieldConfig {
+  type: InputFieldType;
+  placeholder: string;
+  name:
+    | 'areTermsRead'
+    | 'email'
+    | 'password'
+    | 'confirmPassword'
+    | 'firstName'
+    | 'lastName';
+  validations: RegisterOptions;
 }

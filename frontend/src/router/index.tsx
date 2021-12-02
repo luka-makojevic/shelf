@@ -3,10 +3,12 @@ import { Role } from '../enums/roles';
 import { Routes } from '../enums/routes';
 import { RouteProps } from '../interfaces/route';
 import Dashboard from '../pages/dashboard';
+import ForgotPassword from '../pages/forgotPassword';
 import Landing from '../pages/landing';
 import EmailVerification from '../pages/emailVerification';
 import Login from '../pages/login';
 import Register from '../pages/register';
+import ResetPassword from '../pages/resetPassword';
 import TermsAndConditions from '../pages/termsOfService';
 import ProtectedRoute from './protectedRoute';
 import PublicOnlyRoute from './publicOnlyRoute';
@@ -55,7 +57,27 @@ const Router = () => {
     },
     {
       path: Routes.TERMS_AND_CONDITIONS,
-      element: <TermsAndConditions />,
+      element: (
+        <PublicOnlyRoute>
+          <TermsAndConditions />
+        </PublicOnlyRoute>
+      ),
+    },
+    {
+      path: Routes.FORGOT_PASSWORD,
+      element: (
+        <PublicOnlyRoute>
+          <ForgotPassword />
+        </PublicOnlyRoute>
+      ),
+    },
+    {
+      path: Routes.RESET_PASSWORD,
+      element: (
+        <PublicOnlyRoute>
+          <ResetPassword />
+        </PublicOnlyRoute>
+      ),
     },
   ];
 

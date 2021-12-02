@@ -96,9 +96,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   ) => {
     setIsLoading(true);
     AuthService.register(data)
-      .then((res) => {
-        localStorage.setItem('user', JSON.stringify(res.data));
-        setUser(res.data);
+      .then(() => {
         onSuccess();
       })
       .catch((err) => {

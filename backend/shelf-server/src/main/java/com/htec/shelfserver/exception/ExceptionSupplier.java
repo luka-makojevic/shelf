@@ -46,6 +46,13 @@ public class ExceptionSupplier {
             ErrorMessages.BAD_REQUEST.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> userIsNotLoggedIn = () -> new ShelfException(
+            ErrorMessages.USER_IS_NOT_LOGGED_IN.getErrorMessage(),
+            HttpStatus.UNAUTHORIZED.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.UNAUTHORIZED.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> emailNotValid = () -> new ShelfException(
             ErrorMessages.EMAIL_NOT_VALID.getErrorMessage(),
             HttpStatus.BAD_REQUEST.value(),
@@ -68,6 +75,13 @@ public class ExceptionSupplier {
     );
 
     public static final Supplier<ShelfException> emailFailedToSend = () -> new ShelfException(
+            ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(),
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> internalError = () -> new ShelfException(
             ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(),
             HttpStatus.INTERNAL_SERVER_ERROR.value(),
             LocalDateTime.now().format(formatter),
@@ -138,6 +152,13 @@ public class ExceptionSupplier {
 
     public static final Supplier<ShelfException> wrongRoleUpdate = () -> new ShelfException(
             ErrorMessages.ROLE_UPDATE_FAILED.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> emailResetRequestWasNotSent = () -> new ShelfException(
+            ErrorMessages.EMAIL_RESET_REQUEST_WAS_NOT_SENT.getErrorMessage(),
             HttpStatus.BAD_REQUEST.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.BAD_REQUEST.getErrorMessage()

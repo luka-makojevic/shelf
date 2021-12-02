@@ -1,4 +1,4 @@
-package com.htec.shelfserver.repository;
+package com.htec.shelfserver.repository.mysql;
 
 import com.htec.shelfserver.entity.UserEntity;
 import org.springframework.data.domain.Page;
@@ -19,5 +19,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
             "SET u.emailVerified = TRUE WHERE u.email = ?1")
     int enableUser(String email);
 
-    Page<UserEntity> findAll(Pageable pageable);
+    @Query("SELECT u FROM UserEntity u WHERE u.id != ?1 AND u.emailVerified != 0")
+    Page<UserEntity> findAll(Long userId, Pageable pageable);
 }
