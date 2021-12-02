@@ -55,7 +55,6 @@ class RegisterServiceTest {
         userDTO.setLastName("newUserFirstNameLastName");
 
         when(userRepository.findByEmail("newUser@email.com")).thenReturn(Optional.empty());
-
         when(userRepository.save(any())).thenAnswer(invocationOnMock -> {
             UserEntity userEntity = new UserEntity();
             userEntity.setEmail("newUserEmail@email.com");
@@ -66,19 +65,12 @@ class RegisterServiceTest {
         registerService.registerUser(userDTO);
 
         verify(userRepository, times(1)).findByEmail(userDTO.getEmail());
-
         verify(userValidator, times(1)).isUserValid(userDTO);
-
         verify(tokenGenerator, times(1)).generateSalt(8);
-
         verify(bCryptPasswordEncoder, times(1)).encode(anyString());
-
         verify(userRepository, times(1)).save(any());
-
         verify(tokenGenerator, times(1)).generateConfirmationToken(userDTO.getId());
-
         verify(confirmationTokenRepository, times(1)).save(any());
-
         verify(emailService, times(1))
                 .sendEmail(anyString(), anyMap(), anyString(), anyString());
     }
@@ -98,7 +90,15 @@ class RegisterServiceTest {
         ShelfException exception = Assertions.assertThrows(ShelfException.class, () ->
                 registerService.registerUser(userDTO));
 
-        verify(userRepository).findByEmail(userDTO.getEmail());
+        verify(userRepository, times(1)).findByEmail(userDTO.getEmail());
+        verify(userValidator, times(0)).isUserValid(userDTO);
+        verify(tokenGenerator, times(0)).generateSalt(8);
+        verify(bCryptPasswordEncoder, times(0)).encode(anyString());
+        verify(userRepository, times(0)).save(any());
+        verify(tokenGenerator, times(0)).generateConfirmationToken(userDTO.getId());
+        verify(confirmationTokenRepository, times(0)).save(any());
+        verify(emailService, times(0))
+                .sendEmail(anyString(), anyMap(), anyString(), anyString());
 
         Assertions.assertEquals("Record already exists.", exception.getMessage());
     }
@@ -108,15 +108,12 @@ class RegisterServiceTest {
 
         when(microsoftApiService.getUserInfo("validTestToken"))
                 .thenReturn(Optional.of(new UserRegisterMicrosoftResponseModel("newUserGivenName", "newUserSurname", "newUser@email.com")));
-
         when(userRepository.findByEmail("newUser@email.com")).thenReturn(Optional.empty());
 
         registerService.registerUserMicrosoft("validTestToken");
 
         verify(microsoftApiService, times(1)).getUserInfo("validTestToken");
-
         verify(userRepository, times(1)).findByEmail(anyString());
-
         verify(userRepository, times(1)).save(any());
     }
 
@@ -125,14 +122,13 @@ class RegisterServiceTest {
 
         when(microsoftApiService.getUserInfo("validTestToken"))
                 .thenReturn(Optional.of(new UserRegisterMicrosoftResponseModel("oldUserGivenName", "oldUserSurname", "oldUser@email.com")));
-
         when(userRepository.findByEmail("oldUser@email.com")).thenReturn(Optional.of(new UserEntity()));
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> registerService.registerUserMicrosoft("validTestToken"));
 
         verify(microsoftApiService, times(1)).getUserInfo("validTestToken");
-
         verify(userRepository, times(1)).findByEmail(anyString());
+        verify(userRepository, times(0)).save(any());
 
         Assertions.assertEquals("Record already exists.", exception.getMessage());
     }
@@ -146,6 +142,8 @@ class RegisterServiceTest {
         ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> registerService.registerUserMicrosoft("expiredTestToken"));
 
         verify(microsoftApiService, times(1)).getUserInfo("expiredTestToken");
+        verify(userRepository, times(0)).findByEmail(anyString());
+        verify(userRepository, times(0)).save(any());
 
         Assertions.assertEquals("Access token has expired or is not yet valid.", exception.getMessage());
     }
@@ -164,9 +162,7 @@ class RegisterServiceTest {
         registerService.createAndSendToken(userEntity);
 
         verify(tokenGenerator, times(1)).generateConfirmationToken(anyLong());
-
         verify(confirmationTokenRepository, times(1)).save(any());
-
         verify(emailService, times(1))
                 .sendEmail(anyString(), anyMap(), anyString(), anyString());
     }
