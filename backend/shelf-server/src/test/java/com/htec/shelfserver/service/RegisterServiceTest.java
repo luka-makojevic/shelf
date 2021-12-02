@@ -57,7 +57,7 @@ class RegisterServiceTest {
         when(userRepository.findByEmail("newUser@email.com")).thenReturn(Optional.empty());
         when(userRepository.save(any())).thenAnswer(invocationOnMock -> {
             UserEntity userEntity = new UserEntity();
-            userEntity.setEmail("newUserEmail@email.com");
+            userEntity.setEmail("newUser@email.com");
             userEntity.setId(userDTO.getId());
             return userEntity;
         });
@@ -72,7 +72,7 @@ class RegisterServiceTest {
         verify(tokenGenerator, times(1)).generateConfirmationToken(userDTO.getId());
         verify(confirmationTokenRepository, times(1)).save(any());
         verify(emailService, times(1))
-                .sendEmail(anyString(), anyMap(), anyString(), anyString());
+                .sendEmail(eq(userDTO.getEmail()), anyMap(), anyString(), anyString());
     }
 
     @Test
