@@ -1,5 +1,5 @@
 import { SpaceProps } from 'styled-system';
-import { ChangeEventHandler } from 'react';
+import { ChangeEventHandler, Dispatch, SetStateAction } from 'react';
 import { FieldError, RegisterOptions } from 'react-hook-form';
 import { Role } from '../enums/roles';
 
@@ -122,6 +122,7 @@ export interface ButtonProps extends SpaceProps {
   variant?: string;
   size?: string;
   fullwidth?: boolean;
+  disabled?: boolean;
 }
 export interface LogoutData {
   jwtRefreshToken: string | undefined;
@@ -156,4 +157,16 @@ export interface RegisterFieldConfig {
     | 'firstName'
     | 'lastName';
   validations: RegisterOptions;
+}
+
+export interface CreateShelfModalProps {
+  onCloseModal: Dispatch<SetStateAction<boolean>>;
+}
+
+export interface AddFileModalProps {
+  onCloseModal: Dispatch<SetStateAction<boolean>>;
+}
+
+export interface CreateShelfData {
+  name: string;
 }

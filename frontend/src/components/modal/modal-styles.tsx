@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { ButtonProps } from '../../interfaces/types';
 import { theme } from '../../theme';
 
 export const Backdrop = styled.div`
@@ -16,11 +17,58 @@ export const Backdrop = styled.div`
 
 export const ModalContainer = styled.div`
   width: 500px;
-  height: 500px;
   position: absolute;
 
-  display: flex;
+  background-color: ${theme.colors.white};
+  border-radius: 10px;
+  box-shadow: 0 0 8px 0 ${theme.colors.shadow};
 
-  background-color: ${theme.colors.primary};
-  box-shadow: 0 0 8px 0 ${theme.colors.danger};
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  height: 70px;
+  padding: 0 10px;
+
+  width: 100%;
+  color: ${theme.colors.primary};
+`;
+
+export const Body = styled.div`
+  height: 100%;
+  width: 100%;
+
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  color: ${theme.colors.primary};
+`;
+
+export const Footer = styled.div`
+  padding: 0 10px;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  bottom: 0;
+  height: 90px;
+  width: 100%;
+  border-top: 1px solid ${theme.colors.primary};
+`;
+
+export const Close = styled.button<ButtonProps>`
+  background-color: transparent;
+  border: none;
+  padding: 0;
 `;
