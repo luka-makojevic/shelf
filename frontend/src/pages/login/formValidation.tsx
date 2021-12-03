@@ -73,6 +73,7 @@ const FormValidation = () => {
           onClose={handleAlertClose}
         />
       )}
+      {/* {error && <p>{error}</p>} */}
       <Form.Base onSubmit={handleSubmit(submitForm)}>
         <InputFieldWrapper>
           {loginFieldConfig.map((fieldConfig: LoginFieldConfig) => (

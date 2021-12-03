@@ -19,64 +19,36 @@ import {
 const alertPortal = document.getElementById('alert-root');
 
 const AlertContainer = ({ type, title, message, onClose }: AlertPorps) => {
-  let alert;
-
-  if (type === 'error') {
-    alert = (
-      <AlertBox type={type}>
-        <CloseContainer>
-          <Close onClick={onClose}>
+  const alert = (
+    <AlertBox type={type}>
+      <CloseContainer>
+        <Close onClick={onClose}>
+          {type === 'error' && (
             <AiOutlineCloseCircle
               size={theme.space[5]}
               color={theme.colors.danger}
             />
-          </Close>
-        </CloseContainer>
-        <ContentContainer>
-          <Title>{title}</Title>
-          <Message>{message}</Message>
-        </ContentContainer>
-      </AlertBox>
-    );
-  }
-
-  if (type === 'success') {
-    alert = (
-      <AlertBox type={type}>
-        <CloseContainer>
-          <Close onClick={onClose}>
+          )}
+          {type === 'success' && (
             <AiOutlineCheckCircle
               size={theme.space[5]}
               color={theme.colors.success}
             />
-          </Close>
-        </CloseContainer>
-        <ContentContainer>
-          <Title>{title}</Title>
-          <Message>{message}</Message>
-        </ContentContainer>
-      </AlertBox>
-    );
-  }
-
-  if (type === 'info') {
-    alert = (
-      <AlertBox type={type}>
-        <CloseContainer>
-          <Close onClick={onClose}>
+          )}
+          {type === 'info' && (
             <AiOutlineInfoCircle
               size={theme.space[5]}
               color={theme.colors.info}
             />
-          </Close>
-        </CloseContainer>
-        <ContentContainer>
-          <Title>{title}</Title>
-          <Message>{message}</Message>
-        </ContentContainer>
-      </AlertBox>
-    );
-  }
+          )}
+        </Close>
+      </CloseContainer>
+      <ContentContainer>
+        <Title>{title}</Title>
+        <Message>{message}</Message>
+      </ContentContainer>
+    </AlertBox>
+  );
 
   useEffect(() => {
     setTimeout(() => {

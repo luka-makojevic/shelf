@@ -1,10 +1,7 @@
 import styled from 'styled-components';
+import { AlertBoxProp } from '../../interfaces/styles';
 import { ButtonProps } from '../../interfaces/types';
 import { theme } from '../../theme';
-
-interface AlertBoxProp {
-  type: string;
-}
 
 export const AlertBox = styled.div<AlertBoxProp>`
   position: absolute;
