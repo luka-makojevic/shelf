@@ -18,16 +18,15 @@ export const theme = {
   },
 
   fontSizes: [
-    '10px',
     '12px',
     '14px',
     '16px',
+    '18px',
     '20px',
     '24px',
     '32px',
     '48px',
     '64px',
-    '96px',
   ],
   fontWeights: {
     body: 400,

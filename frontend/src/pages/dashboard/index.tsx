@@ -1,2 +1,7 @@
-const Dashboard = () => <div>Dashboard Page</div>;
+import { Header } from '../../components';
+
+const Dashboard = () => {
+  return <Header hideProfile={false} />;
+};
+
 export default Dashboard;

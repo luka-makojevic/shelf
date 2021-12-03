@@ -25,7 +25,7 @@ export const Body = styled.div`
   width: 100%;
   height: 100%;
   overflow-y: scroll;
-  font-size: 13px;
+  font-size: ${({ theme }) => theme.fontSizes[1]};
 `;
 
 export const Footer = styled.div`

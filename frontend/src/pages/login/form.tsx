@@ -1,6 +1,11 @@
 import React from 'react';
 import Form from '../../components/form';
-import { Title, AccentText, Link } from '../../components/text/text-styles';
+import {
+  Title,
+  AccentText,
+  Link,
+  PlainText,
+} from '../../components/text/text-styles';
 import { Routes } from '../../enums/routes';
 import FormValidation from './formValidation';
 
@@ -10,14 +15,14 @@ const LoginForm = () => (
       Log in
     </Title>
     <FormValidation />
-    <AccentText>
+    <PlainText>
       {`New to the shelf?  `}
       <Link to={Routes.REGISTER}>Sign up</Link>
-    </AccentText>
-    <AccentText>
+    </PlainText>
+    <PlainText>
       {`Forgot password?  `}
       <Link to={Routes.FORGOT_PASSWORD}>Reset password</Link>
-    </AccentText>
+    </PlainText>
   </Form>
 );
 

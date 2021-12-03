@@ -1,6 +1,5 @@
 import { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
 import { useMsal } from '@azure/msal-react';
 import Form from '../../components/form';
 import { InputFieldWrapper } from '../../components/form/form-styles';
@@ -11,7 +10,7 @@ import {
   RegisterFieldConfig,
 } from '../../interfaces/types';
 import { AuthContext } from '../../providers/authProvider';
-import { Error, PlainText } from '../../components/text/text-styles';
+import { Error, Link, PlainText } from '../../components/text/text-styles';
 import { Routes } from '../../enums/routes';
 import CheckBox from '../../components/checkbox/checkBox';
 import { loginRequest } from '../../azure/authConfig';

@@ -20,9 +20,9 @@ public class TokenService {
     private final UserRepository userRepository;
     private final RegisterService regsterService;
 
-    public final String EMAIL_ALREADY_CONFIRMED = "Email already confirmed";
-    public final String EMAIL_CONFIRMED = "Email confirmed";
-    public final String TOKEN_RESENT = "Token resent";
+    public static final String EMAIL_ALREADY_CONFIRMED = "Email already confirmed";
+    public static final String EMAIL_CONFIRMED = "Email confirmed";
+    public static final String TOKEN_RESENT = "Token resent";
 
     @Autowired
     public TokenService(TokenRepository tokenRepository,
@@ -71,13 +71,18 @@ public class TokenService {
     }
 
     @Transactional
-    public String createAndSendToken(String token) {
+    public String resendToken(String token) {
 
-        String userId = Jwts.parser()
-                .setSigningKey(SecurityConstants.CONFIRMATION_TOKEN_SECRET)
-                .parseClaimsJws(token)
-                .getBody()
-                .getId();
+        String userId;
+        try {
+            userId = Jwts.parser()
+                    .setSigningKey(SecurityConstants.CONFIRMATION_TOKEN_SECRET)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getId();
+        } catch (JwtException ex) {
+            throw ExceptionSupplier.tokenNotValid.get();
+        }
 
         UserEntity userEntity = userRepository.findById(Long.parseLong(userId))
                 .orElseThrow(ExceptionSupplier.userNotFound);
@@ -88,6 +93,12 @@ public class TokenService {
 
         EmailVerifyTokenEntity oldConfirmationToken = tokenRepository.findByToken(token)
                 .orElseThrow(ExceptionSupplier.tokenNotFound);
+
+        LocalDateTime expiredAt = oldConfirmationToken.getExpiresAt();
+
+        if (expiredAt.isAfter(LocalDateTime.now())) {
+            throw ExceptionSupplier.tokenNotExpired.get();
+        }
 
         tokenRepository.delete(oldConfirmationToken);
 

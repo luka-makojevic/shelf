@@ -1,5 +1,4 @@
 name: Running JUnit tests
-
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
@@ -22,4 +21,4 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v1
       - name: Build and Run Tests
-        run: mvn -f ./backend/shelf-server/pom.xml clean test
+        run: mvn -f ./backend/*/pom.xml clean test

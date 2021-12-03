@@ -74,7 +74,8 @@ const EmailVerification = () => {
       display="flex"
       flexDirection="column"
       maxWidth={['300px', '500px']}
-      margin="100px auto"
+      my={6}
+      mx="auto"
       height="300px"
       justifyContent="center"
       alignItems="center"

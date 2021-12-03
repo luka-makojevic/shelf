@@ -4,7 +4,7 @@ import { emailRegex } from '../regex';
 
 export const loginFieldConfig: LoginFieldConfig[] = [
   {
-    type: 'email',
+    type: 'text',
     placeholder: 'Email',
     name: 'email',
     validations: {

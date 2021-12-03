@@ -7,11 +7,13 @@ import {
   UserType,
   MicrosoftRegisterData,
   MicrosoftLoginData,
+  LogoutData,
 } from '../../interfaces/types';
 
 const defaultValue: ContextTypes = {
   user: null,
   login: async () => {},
+  logout: async () => {},
   microsoftLogin: async () => {},
   register: async () => {},
   microsoftRegister: async () => {},
@@ -103,6 +105,26 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       .finally(() => setIsLoading(false));
   };
 
+  const logout = (
+    data: LogoutData,
+    onSuccess: () => void,
+    onError: (error: string) => void
+  ) => {
+    AuthService.logout(data)
+      .then((res) => {
+        console.log(res);
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setUser(null);
+        setAccessToken('');
+        onSuccess();
+      })
+      .catch((err) => {
+        console.log(err.response?.data.message);
+        onError(err.response?.data.message);
+      });
+  };
+
   const microsoftRegister = (
     data: MicrosoftRegisterData,
     onSuccess: () => void,
@@ -124,6 +146,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       value={{
         user,
         login,
+        logout,
         microsoftLogin,
         register,
         microsoftRegister,

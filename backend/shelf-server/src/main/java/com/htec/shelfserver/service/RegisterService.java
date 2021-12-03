@@ -23,8 +23,8 @@ import java.util.Map;
 public class RegisterService {
 
     private final UserRepository userRepository;
-
     private final TokenRepository confirmationTokenRepository;
+
     private final TokenGenerator tokenGenerator;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final EmailService emailService;
