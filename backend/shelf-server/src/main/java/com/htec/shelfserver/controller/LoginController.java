@@ -45,7 +45,7 @@ public class LoginController {
     }
 
     @PostMapping(value = "/microsoft", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserLoginResponseModel> createUser(@RequestBody UserLoginMicrosoftRequestModel userLoginRequestModel) {
+    public ResponseEntity<UserLoginResponseModel> loginUserMicrosoft(@RequestBody UserLoginMicrosoftRequestModel userLoginRequestModel) {
 
         UserDTO loggedInUser = loginService.authenticateUserMicrosoft(userLoginRequestModel.getBearerToken());
 
