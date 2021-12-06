@@ -1,0 +1,8 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: path_route
+          uri: https://example.org
+          predicates:
+            - Path=/red/{segment},/blue/{segment}
