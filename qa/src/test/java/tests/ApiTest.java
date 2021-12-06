@@ -98,4 +98,44 @@ public class ApiTest {
         assertEquals("srdjan.rados@htecgroup.com", getResponse.jsonPath().get("email").toString());
         assertEquals("{id=3, name=user}", getResponse.jsonPath().get("role").toString());
     }
+
+    @Test
+    public void apiUpdateUserById() throws IOException
+    {
+        User user = new User();
+        user.setValuesForValidUserToLogin(user.email, user.password);
+        Gson gson = new Gson();
+        String parsedJson = gson.toJson(user);
+
+        Response response = RestHelpers.generateToken(parsedJson);
+        String tokenGenerated = response.jsonPath().get("jwtToken");
+        Integer id = response.jsonPath().get("id");
+
+        // Sending Update request
+//        User putUser = new User();
+//        user.setValuesForUpdatinUser(user.firstName, user.lastName, user.password);
+        //Gson putgson = new Gson();
+        //String newParsedJson = putgson.toJson(user.setValuesForUpdatingUser(user.firstName, user.lastName, user.password));
+        user = new User();
+        user.setValuesForUpdatingUser(user.firstName, user.lastName, user.password);
+        gson = new Gson();
+        parsedJson = gson.toJson(user);
+
+
+        RequestSpecBuilder getBuilder = new RequestSpecBuilder();
+        getBuilder.setBaseUri(BaseHelperPropertieManager.getInstance().getURI(""));
+        getBuilder.setBasePath(String.format("/users/%d", id));
+        getBuilder.addHeader("Authorization","Bearer "+tokenGenerated);
+        getBuilder.setContentType("application/json");
+        getBuilder.setBody(parsedJson);
+        RequestSpecification reqSpec = getBuilder.build();
+        Response getResponse = RestHelpers.sendPutRequest(reqSpec);
+
+        //Assertions
+        assertEquals(id.toString(),getResponse.jsonPath().get("id").toString());
+        assertEquals("Srdjan1", getResponse.jsonPath().get("firstName").toString());
+        assertEquals("Rados1", getResponse.jsonPath().get("lastName").toString());
+        assertEquals("{id=3, name=user}", getResponse.jsonPath().get("role").toString());
+
+    }
 }

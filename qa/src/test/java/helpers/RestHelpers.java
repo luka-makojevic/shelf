@@ -71,6 +71,22 @@ public class RestHelpers {
 
 
     /**
+     * Method for sending Put request when request specification object is inserted as parameter
+     *
+     * @param reqSpec request specification object
+     * @return response which can be used for assertion
+     * @author srdjanshelf
+     *
+     */
+
+    public static Response sendPutRequest(RequestSpecification reqSpec){
+
+        return given().spec(reqSpec).log().all().relaxedHTTPSValidation().when()
+                .put().then().log().all().extract().response();
+    }
+
+
+    /**
      * Method for sending post request too generate token
      *
      * @param parsedJson request specification String
