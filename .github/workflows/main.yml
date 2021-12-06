@@ -20,5 +20,10 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v1
-      - name: Build and Run Tests
-        run: mvn -f ./backend/**/pom.xml clean test
+      - name: Build and run tests - shelf-server
+        run: mvn  -f ./backend/shelf-server/pom.xml clean test
+      - name: Build and run tests - gateway
+        run: mvn  -f ./backend/gateway/pom.xml clean test
+      - name: Build and run tests - file-system
+        run: mvn  -f ./backend/file-system/pom.xml clean test
+
