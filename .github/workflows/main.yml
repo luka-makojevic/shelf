@@ -21,4 +21,4 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v1
       - name: Build and Run Tests
-        run: mvn -f ./backend/*/pom.xml clean test
+        run: mvn -f ./backend/**/pom.xml clean test
