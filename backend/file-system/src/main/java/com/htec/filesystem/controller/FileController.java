@@ -8,9 +8,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/file")
 public class FileController {
 
-    @GetMapping
-    public String get() {
-        return "Hello";
-    }
-
 }
