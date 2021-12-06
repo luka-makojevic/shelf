@@ -29,4 +29,12 @@ public class User
         this.lastName = lastName = excelReader.getStringData("apiTest", i,3);
         return this;
     }
+
+    public User setValuesForValidUserToLogin(String email,String password) throws IOException
+    {
+        ExcelReader excelReader = new ExcelReader("src/main/resources/ExcelRead.xlsx");
+        this.email = email = excelReader.getStringData("apiTest",1,0);
+        this.password = password = excelReader.getStringData("apiTest",1,1);
+        return this;
+    }
 }

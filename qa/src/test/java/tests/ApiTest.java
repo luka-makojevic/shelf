@@ -68,4 +68,38 @@ public class ApiTest {
             System.out.println("---------------------------------");
         }
     }
+
+    @Test
+    public void apiGetUserById() throws IOException
+    {
+        User user = new User();
+        user.setValuesForValidUserToLogin(user.email, user.password);
+        Gson gson = new Gson();
+        String parsedJson = gson.toJson(user);
+
+        // Sending Post request to fetch token and id
+        RequestSpecBuilder builder = new RequestSpecBuilder();
+        builder.setBaseUri(BaseHelperPropertieManager.getInstance().getURI(""));
+        builder.setBasePath("/login");
+        builder.setContentType("application/json");
+        builder.setBody(parsedJson);
+        RequestSpecification rSpec = builder.build();
+        Response response = RestHelpers.sendPostRequest(rSpec);
+
+        String tokenGenerated = response.jsonPath().get("jwtToken");
+        Integer id = response.jsonPath().get("id");
+
+        // Sending Get request
+        RequestSpecBuilder getBuilder = new RequestSpecBuilder();
+        getBuilder.setBaseUri(BaseHelperPropertieManager.getInstance().getURI(""));
+        getBuilder.setBasePath(String.format("/users/%d", id));
+        getBuilder.addHeader("Authorization","Bearer "+tokenGenerated);
+        getBuilder.setContentType("application/json");
+        getBuilder.setBody("");
+        RequestSpecification reqSpec = getBuilder.build();
+        Response getResponse = RestHelpers.sendGetRequest(reqSpec);
+
+        //Assertions
+        assertEquals(user.email,getResponse.jsonPath().get("email").toString());
+    }
 }
