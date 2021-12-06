@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { variant, space } from 'styled-system';
+import { variant, space, border } from 'styled-system';
 import { Link as ReachRouterLink } from 'react-router-dom';
 import { ButtonStyleProps } from '../../../interfaces/styles';
 
@@ -13,6 +13,13 @@ export const StyledButton = styled('button')<ButtonStyleProps>`
   font-size: ${({ theme }) => theme.fontSizes[2]};
   cursor: pointer;
   min-width: 90px;
+
+  &:disabled,
+  &[disabled] {
+    background-color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.shadow};
+  }
+
   ${(props) =>
     props.size === 'large' &&
     css`
@@ -45,9 +52,22 @@ export const StyledButton = styled('button')<ButtonStyleProps>`
         color: 'primary',
         bg: 'white',
       },
+      primaryBordered: {
+        color: 'white',
+        bg: 'primary',
+        border: '1px solid',
+        borderColor: 'white',
+      },
+      lightBordered: {
+        color: 'primary',
+        bg: 'white',
+        border: '1px solid',
+        borderColor: 'primary',
+      },
     },
   })};
   ${space}
+  ${border}
 `;
 export const SpinnerButton = styled(StyledButton)`
   padding: 0;
