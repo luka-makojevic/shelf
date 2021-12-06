@@ -1,6 +1,7 @@
 package helpers;
 
 
+import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
@@ -66,6 +67,28 @@ public class RestHelpers {
 
         return given().spec(reqSpec).log().all().relaxedHTTPSValidation().when()
                 .delete().then().log().all().extract().response();
+    }
+
+
+    /**
+     * Method for sending post request too generate token
+     *
+     * @param parsedJson request specification String
+     * @return response which can be used for assertion
+     * @author srdjanshelf
+     *
+     */
+    public static Response generateToken(String parsedJson)
+    {
+        // Sending Post request to fetch token and id
+        RequestSpecBuilder builder = new RequestSpecBuilder();
+        builder.setBaseUri(BaseHelperPropertieManager.getInstance().getURI(""));
+        builder.setBasePath("/login");
+        builder.setContentType("application/json");
+        builder.setBody(parsedJson);
+        RequestSpecification rSpec = builder.build();
+        Response generateToken = RestHelpers.sendPostRequest(rSpec);
+        return generateToken;
     }
 
 }

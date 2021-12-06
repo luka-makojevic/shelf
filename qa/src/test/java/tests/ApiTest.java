@@ -77,15 +77,7 @@ public class ApiTest {
         Gson gson = new Gson();
         String parsedJson = gson.toJson(user);
 
-        // Sending Post request to fetch token and id
-        RequestSpecBuilder builder = new RequestSpecBuilder();
-        builder.setBaseUri(BaseHelperPropertieManager.getInstance().getURI(""));
-        builder.setBasePath("/login");
-        builder.setContentType("application/json");
-        builder.setBody(parsedJson);
-        RequestSpecification rSpec = builder.build();
-        Response response = RestHelpers.sendPostRequest(rSpec);
-
+        Response response = RestHelpers.generateToken(parsedJson);
         String tokenGenerated = response.jsonPath().get("jwtToken");
         Integer id = response.jsonPath().get("id");
 
@@ -100,6 +92,10 @@ public class ApiTest {
         Response getResponse = RestHelpers.sendGetRequest(reqSpec);
 
         //Assertions
-        assertEquals(user.email,getResponse.jsonPath().get("email").toString());
+        assertEquals(id.toString(),getResponse.jsonPath().get("id").toString());
+        assertEquals("Srdjan", getResponse.jsonPath().get("firstName").toString());
+        assertEquals("Rados", getResponse.jsonPath().get("lastName").toString());
+        assertEquals("srdjan.rados@htecgroup.com", getResponse.jsonPath().get("email").toString());
+        assertEquals("{id=3, name=user}", getResponse.jsonPath().get("role").toString());
     }
 }
