@@ -170,3 +170,10 @@ export interface AddFileModalProps {
 export interface CreateShelfData {
   name: string;
 }
+
+export interface ModalProps {
+  onCloseModal: Dispatch<SetStateAction<boolean>>;
+  children: JSX.Element;
+  title: string;
+  closeIcon?: boolean;
+}

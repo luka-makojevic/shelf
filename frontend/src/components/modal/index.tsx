@@ -1,15 +1,8 @@
-import { Dispatch, SetStateAction } from 'react';
 import ReactDOM from 'react-dom';
 import { FaRegTimesCircle } from 'react-icons/fa';
+import { ModalProps } from '../../interfaces/types';
 import { theme } from '../../theme';
 import { Backdrop, ModalContainer, Header, Close, Body } from './modal-styles';
-
-interface ModalProps {
-  onCloseModal: Dispatch<SetStateAction<boolean>>;
-  children: JSX.Element;
-  title: string;
-  closeIcon?: boolean;
-}
 
 const Modal = ({ onCloseModal, children, title, closeIcon }: ModalProps) => {
   const handleCloseModal = () => {
