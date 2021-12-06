@@ -1,6 +1,7 @@
 package com.htec.shelfserver.service;
 
 import com.htec.shelfserver.dto.UserDTO;
+import com.htec.shelfserver.entity.RoleEntity;
 import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.mapper.UserMapper;
@@ -19,7 +20,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class LoginService implements UserDetailsService {
@@ -76,11 +79,23 @@ public class LoginService implements UserDetailsService {
         UserRegisterMicrosoftResponseModel response = microsoftApiService.getUserInfo(bearerToken)
                 .orElseThrow(ExceptionSupplier.accessTokenNotActive);
 
-        UserEntity userEntity = userRepository.findByEmail(response.getMail())
-                .orElseThrow(ExceptionSupplier.userNotFound);
+        Optional<UserEntity> userEntityOptional = userRepository.findByEmail(response.getMail());
 
-        if (!userEntity.getEmailVerified())
-            throw ExceptionSupplier.emailNotVerified.get();
+        UserEntity userEntity;
+
+        if (!userEntityOptional.isPresent()) {
+
+            userEntity = UserMapper.INSTANCE.userRegisterMicrosoftResponseModelToUserEntity(response);
+
+            userEntity.setCreatedAt(LocalDateTime.now());
+            userEntity.setEmailVerified(true);
+            userEntity.setRole(new RoleEntity(3L));
+
+            userRepository.save(userEntity);
+
+        } else {
+            userEntity = userEntityOptional.get();
+        }
 
         return UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
     }
