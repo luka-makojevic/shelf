@@ -9,6 +9,7 @@ import com.htec.shelfserver.security.SecurityConstants;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -18,19 +19,22 @@ import java.time.LocalDateTime;
 public class TokenService {
     private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
-    private final RegisterService regsterService;
+    private final RegisterService registerService;
 
     public static final String EMAIL_ALREADY_CONFIRMED = "Email already confirmed";
     public static final String EMAIL_CONFIRMED = "Email confirmed";
     public static final String TOKEN_RESENT = "Token resent";
+    public final String INIT_USER_FOLDER_URL;
 
     @Autowired
     public TokenService(TokenRepository tokenRepository,
                         UserRepository userRepository,
-                        RegisterService regsterService) {
+                        RegisterService registerService,
+                        @Value("${initUserFolderUrl}") String initUserFolderUrl, String init_user_folder_url) {
         this.tokenRepository = tokenRepository;
         this.userRepository = userRepository;
-        this.regsterService = regsterService;
+        this.registerService = registerService;
+        this.INIT_USER_FOLDER_URL = initUserFolderUrl;
     }
 
     @Transactional
@@ -102,7 +106,7 @@ public class TokenService {
 
         tokenRepository.delete(oldConfirmationToken);
 
-        regsterService.createAndSendToken(userEntity);
+        registerService.createAndSendToken(userEntity);
 
         return TOKEN_RESENT;
     }
