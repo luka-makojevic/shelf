@@ -3,9 +3,11 @@ package com.htec.shelfserver.controller;
 import com.htec.shelfserver.annotation.AuthenticationUser;
 import com.htec.shelfserver.dto.AuthUser;
 import com.htec.shelfserver.dto.UserDTO;
+import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.model.request.PasswordResetModel;
 import com.htec.shelfserver.model.request.PasswordResetRequestModel;
+import com.htec.shelfserver.model.request.UpdateUserPhotoByIdRequestModel;
 import com.htec.shelfserver.model.request.UserUpdateRequestModel;
 import com.htec.shelfserver.model.response.TextResponseMessage;
 import com.htec.shelfserver.service.UserService;
@@ -56,5 +58,17 @@ public class UserController {
         userService.resetPassword(passwordResetModel);
 
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("User's password changed successfully", HttpStatus.OK.value()));
+    }
+
+    @PutMapping("/update/photo")
+    public ResponseEntity updateUserPhotoById(@RequestBody UpdateUserPhotoByIdRequestModel updateUserPhotoByIdRequestModel) {
+
+        userService.getUserById(updateUserPhotoByIdRequestModel.getId());
+        UserDTO userDTO = UserMapper.INSTANCE.updateUserPhotoByIdToUserDto(updateUserPhotoByIdRequestModel);
+        userDTO.setPictureName(updateUserPhotoByIdRequestModel.getPictureName());
+
+        userService.updateUserProfilePicture(userDTO);
+
+        return ResponseEntity.ok(userService.getUserById(updateUserPhotoByIdRequestModel.getId()));
     }
 }

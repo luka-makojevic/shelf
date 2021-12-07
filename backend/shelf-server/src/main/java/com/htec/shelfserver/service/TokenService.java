@@ -30,7 +30,7 @@ public class TokenService {
     public TokenService(TokenRepository tokenRepository,
                         UserRepository userRepository,
                         RegisterService registerService,
-                        @Value("${initUserFolderUrl}") String initUserFolderUrl, String init_user_folder_url) {
+                        @Value("${initUserFolderUrl}") String initUserFolderUrl) {
         this.tokenRepository = tokenRepository;
         this.userRepository = userRepository;
         this.registerService = registerService;

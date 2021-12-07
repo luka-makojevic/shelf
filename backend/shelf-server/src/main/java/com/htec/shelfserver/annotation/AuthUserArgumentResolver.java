@@ -4,6 +4,7 @@ import com.htec.shelfserver.dto.AuthUser;
 import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.repository.mysql.UserRepository;
+import com.htec.shelfserver.security.SecurityConstants;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
