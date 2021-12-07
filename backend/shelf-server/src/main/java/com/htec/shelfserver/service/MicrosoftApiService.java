@@ -27,8 +27,10 @@ public class MicrosoftApiService {
         ResponseEntity<UserRegisterMicrosoftResponseModel> response;
 
         try {
-            response = restTemplate.exchange(MICROSOFT_GRAPH_URL,
-                    HttpMethod.GET, new HttpEntity<>(headers),
+            response = restTemplate.exchange(
+                    MICROSOFT_GRAPH_URL,
+                    HttpMethod.GET,
+                    new HttpEntity<>(headers),
                     UserRegisterMicrosoftResponseModel.class);
 
         } catch (RestClientException ex) {
