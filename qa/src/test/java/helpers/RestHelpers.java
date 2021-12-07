@@ -68,27 +68,4 @@ public class RestHelpers {
         return given().spec(reqSpec).log().all().relaxedHTTPSValidation().when()
                 .delete().then().log().all().extract().response();
     }
-
-    /**
-     * Method for sending post request too confirm token
-     *
-     * @param parsedJson request specification String
-     * @return response which can be used for assertion
-     * @author srdjanshelf
-     *
-     */
-    public static Response sendingPostReqWithGeneratedToken(String parsedJson, String tokenGenerated)
-    {
-        RequestSpecBuilder getBuilder = new RequestSpecBuilder();
-        getBuilder.setBaseUri(BaseHelperPropertieManager.getInstance().getURI(""));
-        getBuilder.setBasePath("/tokens/confirmation");
-        getBuilder.addHeader("Authorization","Bearer "+tokenGenerated);
-        getBuilder.setContentType("application/json");
-        getBuilder.setBody(parsedJson);
-        RequestSpecification reqSpec = getBuilder.build();
-        Response getResponse = RestHelpers.sendPostRequest(reqSpec);
-        return getResponse;
-    }
-
-
 }

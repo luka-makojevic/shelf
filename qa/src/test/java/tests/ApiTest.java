@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import helpers.BaseHelperPropertieManager;
 import helpers.ExcelReader;
 import helpers.RestHelpers;
+import helpers.RestFunctionHelpers;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -17,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ApiTest {
+
 
     @Test
     public void apiPostUserRegisteredCheck() throws IOException
@@ -83,7 +85,8 @@ public class ApiTest {
         gson = new Gson();
         parsedJson = gson.toJson(tokenGenerated);
 
-        Response getResponse = RestHelpers.sendingPostReqWithGeneratedToken(parsedJson, tokenGenerated);
+        RestFunctionHelpers restFunctionHelpers = new RestFunctionHelpers();
+        Response getResponse = (Response) restFunctionHelpers.sendingPostReqWithGeneratedToken(parsedJson,tokenGenerated);
 
         assertEquals("Email confirmed", getResponse.jsonPath().get("message").toString());
         assertEquals(200, getResponse.jsonPath().get("status").toString());
