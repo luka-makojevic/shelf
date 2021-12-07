@@ -79,5 +79,9 @@ public class BaseWdWaitHelpers {
         return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
+    public Boolean waitUrlToBe (String url) {
+        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        return wait.until(ExpectedConditions.urlToBe(url));
+    }
 
 }

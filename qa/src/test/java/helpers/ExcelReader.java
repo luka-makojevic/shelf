@@ -46,4 +46,29 @@ public class ExcelReader {
         this.sheet = wb.getSheet(sheetName);
         return sheet.getLastRowNum();
     }
+
+    /**
+     * @author stefan.gajic
+     */
+    public int getLastRowNumberFromColumn(String sheetName, String columnName) {
+        int rowNum = 0;
+        int colNum = 0;
+        this.sheet = wb.getSheet(sheetName);
+        this.row = sheet.getRow(rowNum);
+
+        for (int i = 0; i < row.getLastCellNum(); i++) {
+            if (row.getCell(i).getStringCellValue().equals(columnName)) {
+                colNum = i;}
+        }
+        for(int i = 1; i <= sheet.getLastRowNum(); i++) {
+            row = sheet.getRow(i);
+            if (row.getCell(colNum).getStringCellValue().equals("")) {
+                rowNum = i-1;
+                break;
+            } else {
+                rowNum = sheet.getLastRowNum();}
+        }
+        return rowNum;
+    }
+
 }
