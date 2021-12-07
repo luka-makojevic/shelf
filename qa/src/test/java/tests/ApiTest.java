@@ -70,8 +70,8 @@ public class ApiTest {
     }
 
     @Test
-    public void applyTokenConfirmation() throws IOException {
-
+    public void applyTokenConfirmation() throws IOException
+    {
         User user = new User();
         user.setValuesForValidUserToLogin(user.email, user.password);
         Gson gson = new Gson();
@@ -83,14 +83,7 @@ public class ApiTest {
         gson = new Gson();
         parsedJson = gson.toJson(tokenGenerated);
 
-        RequestSpecBuilder getBuilder = new RequestSpecBuilder();
-        getBuilder.setBaseUri(BaseHelperPropertieManager.getInstance().getURI(""));
-        getBuilder.setBasePath("/tokens/confirmation");
-        getBuilder.addHeader("Authorization","Bearer "+tokenGenerated);
-        getBuilder.setContentType("application/json");
-        getBuilder.setBody(parsedJson);
-        RequestSpecification reqSpec = getBuilder.build();
-        Response getResponse = RestHelpers.sendPostRequest(reqSpec);
+        Response getResponse = RestHelpers.sendingPostReqWithGeneratedToken(parsedJson, tokenGenerated);
 
         assertEquals("Email confirmed", getResponse.jsonPath().get("message").toString());
         assertEquals(200, getResponse.jsonPath().get("status").toString());
