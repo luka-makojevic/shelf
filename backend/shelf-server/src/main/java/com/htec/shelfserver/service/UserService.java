@@ -10,6 +10,7 @@ import com.htec.shelfserver.entity.UserEntity;
 import com.htec.shelfserver.exception.ExceptionSupplier;
 import com.htec.shelfserver.mapper.UserMapper;
 import com.htec.shelfserver.model.request.PasswordResetModel;
+import com.htec.shelfserver.model.request.UpdateUserPhotoByIdRequestModel;
 import com.htec.shelfserver.model.response.UserPageResponseModel;
 import com.htec.shelfserver.model.response.UserResponseModel;
 import com.htec.shelfserver.repository.mysql.PasswordResetTokenRepository;
@@ -168,13 +169,13 @@ public class UserService {
         return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
     }
 
-    public UserResponseModel updateUserProfilePicture(UserDTO userDTO) {
+    public UserResponseModel updateUserProfilePicture(UpdateUserPhotoByIdRequestModel updateUserPhotoByIdRequestModel) {
 
-        UserEntity user = userRepository.findById(userDTO.getId())
+        UserEntity user = userRepository.findById(updateUserPhotoByIdRequestModel.getId())
                 .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
-        if (userDTO.getPictureName() != null)
-            user.setPictureName(userDTO.getPictureName());
+        if (updateUserPhotoByIdRequestModel.getPictureName() != null)
+            user.setPictureName(updateUserPhotoByIdRequestModel.getPictureName());
 
         userRepository.save(user);
 
