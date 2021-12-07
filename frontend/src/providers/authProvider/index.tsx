@@ -54,6 +54,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (res.data.jwtToken) {
           localStorage.setItem('user', JSON.stringify(res.data));
           localStorage.setItem('token', JSON.stringify(res.data.jwtToken));
+          localStorage.setItem(
+            'refreshToken',
+            JSON.stringify(res.data.jwtRefreshToken)
+          );
           setUser(res.data);
           setAccessToken(res.data.jwtToken);
           onSuccess();
@@ -77,6 +81,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (res.data.jwtToken) {
           localStorage.setItem('user', JSON.stringify(res.data));
           localStorage.setItem('token', JSON.stringify(res.data.jwtToken));
+          localStorage.setItem(
+            'refreshToken',
+            JSON.stringify(res.data.jwtRefreshToken)
+          );
           setUser(res.data);
           setAccessToken(res.data.jwtToken);
           onSuccess();
@@ -111,16 +119,15 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     onError: (error: string) => void
   ) => {
     AuthService.logout(data)
-      .then((res) => {
-        console.log(res);
+      .then(() => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        localStorage.removeItem('refreshToken');
         setUser(null);
         setAccessToken('');
         onSuccess();
       })
       .catch((err) => {
-        console.log(err.response?.data.message);
         onError(err.response?.data.message);
       });
   };
