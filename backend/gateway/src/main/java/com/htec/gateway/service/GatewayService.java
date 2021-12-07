@@ -13,7 +13,6 @@ import java.util.Optional;
 @Service
 public class GatewayService {
 
-
     public ResponseEntity<byte[]> sendRequest(RequestEntity<byte[]> entity, String apiServer) {
 
         String apiUrl = getApiUrl(entity.getUrl().getPath(), apiServer);
