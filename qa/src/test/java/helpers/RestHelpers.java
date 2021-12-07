@@ -108,7 +108,7 @@ public class RestHelpers {
     }
 
     /**
-     * Method for sending post request too generate token
+     * Method for sending put request with already generated token
      *
      * @param parsedJson request specification String
      * @return response which can be used for assertion
