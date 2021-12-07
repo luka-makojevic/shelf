@@ -16,7 +16,7 @@ instance.interceptors.request.use(
       : null;
 
     if (token) {
-      if (config.headers) config.headers.Authorization = ` Bearer ${token}`; // for Spring Boot back-end
+      if (config.headers) config.headers.Authorization = ` Bearer ${token}`;
     }
     return config;
   },
