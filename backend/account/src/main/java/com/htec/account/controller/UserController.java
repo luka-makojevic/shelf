@@ -57,4 +57,16 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("User's password changed successfully", HttpStatus.OK.value()));
     }
+
+    @PutMapping("/update/photo")
+    public ResponseEntity updateUserPhotoById(@RequestBody UpdateUserPhotoByIdRequestModel updateUserPhotoByIdRequestModel) {
+
+        userService.getUserById(updateUserPhotoByIdRequestModel.getId());
+        UserDTO userDTO = UserMapper.INSTANCE.updateUserPhotoByIdToUserDto(updateUserPhotoByIdRequestModel);
+        userDTO.setPictureName(updateUserPhotoByIdRequestModel.getPictureName());
+
+        userService.updateUserProfilePicture(userDTO);
+
+        return ResponseEntity.ok(userService.getUserById(updateUserPhotoByIdRequestModel.getId()));
+    }
 }

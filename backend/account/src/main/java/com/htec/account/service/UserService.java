@@ -168,6 +168,19 @@ public class UserService {
         return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
     }
 
+    public UserResponseModel updateUserProfilePicture(UserDTO userDTO) {
+
+        UserEntity user = userRepository.findById(userDTO.getId())
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+
+        if (userDTO.getPictureName() != null)
+            user.setPictureName(userDTO.getPictureName());
+
+        userRepository.save(user);
+
+        return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
+    }
+
     public UserResponseModel updateUserRole(Long id, Long roleId) {
 
         UserEntity user = userRepository.findById(id)
