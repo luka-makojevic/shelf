@@ -61,11 +61,7 @@ public class UserController {
     @PutMapping("/update/photo")
     public ResponseEntity updateUserPhotoById(@RequestBody UpdateUserPhotoByIdRequestModel updateUserPhotoByIdRequestModel) {
 
-        userService.getUserById(updateUserPhotoByIdRequestModel.getId());
-        UserDTO userDTO = UserMapper.INSTANCE.updateUserPhotoByIdToUserDto(updateUserPhotoByIdRequestModel);
-        userDTO.setPictureName(updateUserPhotoByIdRequestModel.getPictureName());
-
-        userService.updateUserProfilePicture(userDTO);
+        userService.updateUserProfilePicture(updateUserPhotoByIdRequestModel);
 
         return ResponseEntity.ok(userService.getUserById(updateUserPhotoByIdRequestModel.getId()));
     }

@@ -13,12 +13,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileController {
 
     private final FileService fileService;
-    private final UserAPICallService userAPICallService;
 
     FileController(FileService fileService,
                    UserAPICallService userAPICallService) {
         this.fileService = fileService;
-        this.userAPICallService = userAPICallService;
     }
 
     @PostMapping("/upload/profile/{id}")
@@ -26,7 +24,6 @@ public class FileController {
                                    @PathVariable Long id) {
 
         fileService.saveUserProfilePicture(multipartFile, id);
-        userAPICallService.updateUserPhotoById(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("Image Uploaded", HttpStatus.OK.value()));
     }

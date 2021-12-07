@@ -1,6 +1,5 @@
 package com.htec.account.service;
 
-
 import com.htec.account.annotation.Roles;
 import com.htec.account.dto.AuthUser;
 import com.htec.account.dto.UserDTO;
@@ -168,13 +167,13 @@ public class UserService {
         return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
     }
 
-    public UserResponseModel updateUserProfilePicture(UserDTO userDTO) {
+    public UserResponseModel updateUserProfilePicture(UpdateUserPhotoByIdRequestModel updateUserPhotoByIdRequestModel) {
 
-        UserEntity user = userRepository.findById(userDTO.getId())
+        UserEntity user = userRepository.findById(updateUserPhotoByIdRequestModel.getId())
                 .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
-        if (userDTO.getPictureName() != null)
-            user.setPictureName(userDTO.getPictureName());
+        if (updateUserPhotoByIdRequestModel.getPictureName() != null)
+            user.setPictureName(updateUserPhotoByIdRequestModel.getPictureName());
 
         userRepository.save(user);
 

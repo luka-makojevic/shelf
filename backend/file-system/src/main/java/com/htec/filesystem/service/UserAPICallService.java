@@ -2,6 +2,7 @@ package com.htec.filesystem.service;
 
 import com.htec.filesystem.exception.ExceptionSupplier;
 import com.htec.filesystem.model.request.UpdateUserPhotoByIdRequestModel;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -13,16 +14,18 @@ import org.springframework.web.client.RestTemplate;
 public class UserAPICallService {
 
     RestTemplate restTemplate = new RestTemplate();
-    private final String UPDATE_PHOTO_URL = "http://localhost:8080/users/update/photo";
+    @Value("${baseUrl}")
+    private String host;
+    private final String UPDATE_PHOTO_URL = "/users/update/photo";
 
-    public void updateUserPhotoById(Long id) {
+    public void updateUserPhotoById(Long id, String pictureName) {
 
         try {
             UpdateUserPhotoByIdRequestModel updateUserPhotoByIdRequestModel = new UpdateUserPhotoByIdRequestModel();
             updateUserPhotoByIdRequestModel.setId(id);
-            updateUserPhotoByIdRequestModel.setPictureName(id.toString());
+            updateUserPhotoByIdRequestModel.setPictureName(pictureName);
             HttpEntity<UpdateUserPhotoByIdRequestModel> httpEntityRequestBody = new HttpEntity<>(updateUserPhotoByIdRequestModel);
-            restTemplate.exchange(UPDATE_PHOTO_URL, HttpMethod.PUT, httpEntityRequestBody, Void.class);
+            restTemplate.exchange(host + UPDATE_PHOTO_URL, HttpMethod.PUT, httpEntityRequestBody, Void.class);
 
         } catch (RestClientException ex) {
             throw ExceptionSupplier.couldNotUpdateUser.get();
