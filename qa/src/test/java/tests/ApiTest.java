@@ -68,4 +68,31 @@ public class ApiTest {
             System.out.println("---------------------------------");
         }
     }
+
+    @Test
+    public void applyTokenConfirmation() throws IOException {
+
+        User user = new User();
+        user.setValuesForValidUserToLogin(user.email, user.password);
+        Gson gson = new Gson();
+        String parsedJson = gson.toJson(user);
+
+        Response response = RestHelpers.generateToken(parsedJson);
+        String tokenGenerated = response.jsonPath().get("jwtToken");
+
+        gson = new Gson();
+        parsedJson = gson.toJson(tokenGenerated);
+
+        RequestSpecBuilder getBuilder = new RequestSpecBuilder();
+        getBuilder.setBaseUri(BaseHelperPropertieManager.getInstance().getURI(""));
+        getBuilder.setBasePath("/tokens/confirmation");
+        getBuilder.addHeader("Authorization","Bearer "+tokenGenerated);
+        getBuilder.setContentType("application/json");
+        getBuilder.setBody(parsedJson);
+        RequestSpecification reqSpec = getBuilder.build();
+        Response getResponse = RestHelpers.sendPostRequest(reqSpec);
+
+        assertEquals("Email confirmed", getResponse.jsonPath().get("message").toString());
+        assertEquals(200, getResponse.jsonPath().get("status").toString());
+    }
 }
