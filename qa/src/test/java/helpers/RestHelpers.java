@@ -107,4 +107,26 @@ public class RestHelpers {
         return generateToken;
     }
 
+    /**
+     * Method for sending post request too generate token
+     *
+     * @param parsedJson request specification String
+     * @return response which can be used for assertion
+     * @author srdjanshelf
+     *
+     */
+    public static Response sendingPutReqWithGeneratedToken(String parsedJson, String tokenGenerated, Integer id)
+    {
+        // Sending Post request to fetch token and id
+        RequestSpecBuilder getBuilder = new RequestSpecBuilder();
+        getBuilder.setBaseUri(BaseHelperPropertieManager.getInstance().getURI(""));
+        getBuilder.setBasePath(String.format("/users/%d", id));
+        getBuilder.addHeader("Authorization","Bearer "+tokenGenerated);
+        getBuilder.setContentType("application/json");
+        getBuilder.setBody(parsedJson);
+        RequestSpecification reqSpec = getBuilder.build();
+        Response getResponse = RestHelpers.sendPutRequest(reqSpec);
+        return getResponse;
+    }
+
 }
