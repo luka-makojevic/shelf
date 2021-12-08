@@ -10,7 +10,8 @@ import { PasswordData, ResetPasswordFieldConfig } from '../../interfaces/types';
 import userServices from '../../services/userServices';
 import { config } from '../../validation/config/resetPasswordValidationConfig';
 import { Routes } from '../../enums/routes';
-import AlertContainer from '../../components/alert/alert';
+import AlertPortal from '../../components/alert/alert';
+import { AlertMessage } from '../../enums/alertMessages';
 
 const ResetPasswordForm = () => {
   const {
@@ -53,8 +54,8 @@ const ResetPasswordForm = () => {
   return (
     <>
       {error && (
-        <AlertContainer
-          type="error"
+        <AlertPortal
+          type={AlertMessage.ERRROR}
           title="Error"
           message={error}
           onClose={handleAlertClose}

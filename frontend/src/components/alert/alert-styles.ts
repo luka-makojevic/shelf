@@ -3,7 +3,7 @@ import { AlertBoxProp } from '../../interfaces/styles';
 import { ButtonProps } from '../../interfaces/types';
 import { theme } from '../../theme';
 
-export const AlertBox = styled.div<AlertBoxProp>`
+export const AlertContainer = styled.div<AlertBoxProp>`
   position: absolute;
   top: 20px;
   right: 20px;

@@ -5,10 +5,11 @@ import {
   AiOutlineCheckCircle,
   AiOutlineInfoCircle,
 } from 'react-icons/ai';
+import { AlertMessage } from '../../enums/alertMessages';
 import { AlertPorps } from '../../interfaces/types';
 import { theme } from '../../theme';
 import {
-  AlertBox,
+  AlertContainer,
   Close,
   Message,
   Title,
@@ -18,24 +19,24 @@ import {
 
 const alertPortal = document.getElementById('alert-root');
 
-const AlertContainer = ({ type, title, message, onClose }: AlertPorps) => {
+const AlertPortal = ({ type, title, message, onClose }: AlertPorps) => {
   const alert = (
-    <AlertBox type={type}>
+    <AlertContainer type={type}>
       <CloseContainer>
         <Close onClick={onClose}>
-          {type === 'error' && (
+          {type === AlertMessage.ERRROR && (
             <AiOutlineCloseCircle
               size={theme.space[5]}
               color={theme.colors.danger}
             />
           )}
-          {type === 'success' && (
+          {type === AlertMessage.SUCCESS && (
             <AiOutlineCheckCircle
               size={theme.space[5]}
               color={theme.colors.success}
             />
           )}
-          {type === 'info' && (
+          {type === AlertMessage.INFO && (
             <AiOutlineInfoCircle
               size={theme.space[5]}
               color={theme.colors.info}
@@ -47,7 +48,7 @@ const AlertContainer = ({ type, title, message, onClose }: AlertPorps) => {
         <Title>{title}</Title>
         <Message>{message}</Message>
       </ContentContainer>
-    </AlertBox>
+    </AlertContainer>
   );
 
   useEffect(() => {
@@ -59,4 +60,4 @@ const AlertContainer = ({ type, title, message, onClose }: AlertPorps) => {
   return <>{alertPortal ? ReactDOM.createPortal(alert, alertPortal) : null}</>;
 };
 
-export default AlertContainer;
+export default AlertPortal;

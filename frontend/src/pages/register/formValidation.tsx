@@ -17,7 +17,8 @@ import { loginRequest } from '../../azure/authConfig';
 import { Button } from '../../components/UI/button';
 import { Holder } from '../../components/layout/layout.styles';
 import { config } from '../../validation/config/registerValidationConfig';
-import AlertContainer from '../../components/alert/alert';
+import AlertPortal from '../../components/alert/alert';
+import { AlertMessage } from '../../enums/alertMessages';
 
 const FormValidation = () => {
   const {
@@ -90,16 +91,16 @@ const FormValidation = () => {
   return (
     <>
       {error && (
-        <AlertContainer
-          type="error"
+        <AlertPortal
+          type={AlertMessage.ERRROR}
           title="Error"
           message={error}
           onClose={handleAlertClose}
         />
       )}
       {success && (
-        <AlertContainer
-          type="info"
+        <AlertPortal
+          type={AlertMessage.INFO}
           title="Info"
           message={success}
           onClose={handleAlertClose}

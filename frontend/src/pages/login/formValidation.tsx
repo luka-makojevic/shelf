@@ -11,7 +11,8 @@ import { Button } from '../../components/UI/button';
 import { loginFieldConfig } from '../../validation/config/loginValidationConfig';
 import { LoginData, LoginFieldConfig } from '../../interfaces/types';
 import { AuthContext } from '../../providers/authProvider';
-import AlertContainer from '../../components/alert/alert';
+import AlertPortal from '../../components/alert/alert';
+import { AlertMessage } from '../../enums/alertMessages';
 
 const FormValidation = () => {
   const {
@@ -66,8 +67,8 @@ const FormValidation = () => {
   return (
     <>
       {error && (
-        <AlertContainer
-          type="error"
+        <AlertPortal
+          type={AlertMessage.ERRROR}
           title="Error"
           message={error}
           onClose={handleAlertClose}
