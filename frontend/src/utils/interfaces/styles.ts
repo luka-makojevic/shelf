@@ -21,11 +21,14 @@ export interface TextProps {
 export interface ContainerProps {
   background?: string;
   children: React.ReactNode;
-  isHiddenOnSmallScreen?: boolean
+  isHiddenOnSmallScreen?: boolean;
 }
 export interface ButtonStyleProps {
   children: React.ReactNode;
   variant?: string;
   size?: string;
   fullwidth?: boolean;
+}
+export interface AlertBoxProp {
+  type: string;
 }

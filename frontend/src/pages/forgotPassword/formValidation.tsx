@@ -3,10 +3,11 @@ import { useForm } from 'react-hook-form';
 import { Base, InputFieldWrapper } from '../../components/form/form-styles';
 import { InputField } from '../../components/input/InputField';
 import { ForgotPasswordData } from '../../utils/interfaces/dataTypes';
-import { Error, PlainText } from '../../components/text/text-styles';
 import { forgotPasswordFieldConfig } from '../../utils/validation/config/forgotPasswordValidationConfig';
 import userServices from '../../services/userServices';
 import { Button } from '../../components/UI/button';
+import AlertPortal from '../../components/alert/alert';
+import { AlertMessage } from '../../utils/enums/alertMessages';
 
 const FormValidation = () => {
   const {
@@ -19,7 +20,7 @@ const FormValidation = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
-  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [success, setSuccess] = useState<string>('');
 
   const submitData = (data: ForgotPasswordData) => {
     setIsLoading(true);
@@ -27,7 +28,7 @@ const FormValidation = () => {
       .forgotPassword(data)
       .then((res) => {
         if (res.data) {
-          setSuccessMessage('Go to your email to reset password');
+          setSuccess('Go to your email to reset password');
         }
       })
       .catch((err) => {
@@ -36,23 +37,44 @@ const FormValidation = () => {
       .finally(() => setIsLoading(false));
   };
 
-  return (
-    <Base onSubmit={handleSubmit(submitData)}>
-      <Error>{error}</Error>
-      <PlainText>{successMessage}</PlainText>
+  const handleAlertClose = () => {
+    setError('');
+    setSuccess('');
+  };
 
-      <InputFieldWrapper>
-        <InputField
-          placeholder="Enter your email"
-          error={errors.email}
-          type="text"
-          {...register('email', validation.validations)}
+  return (
+    <>
+      {error && (
+        <AlertPortal
+          type={AlertMessage.ERRROR}
+          title="Error"
+          message={error}
+          onClose={handleAlertClose}
         />
-      </InputFieldWrapper>
-      <Button spinner fullwidth isLoading={isLoading}>
-        Send
-      </Button>
-    </Base>
+      )}
+      {success && (
+        <AlertPortal
+          type={AlertMessage.INFO}
+          title="Info"
+          message={success}
+          onClose={handleAlertClose}
+        />
+      )}
+      <Base onSubmit={handleSubmit(submitData)}>
+        <InputFieldWrapper>
+          <InputField
+            placeholder="Enter your email"
+            error={errors.email}
+            type="email"
+            {...register('email', validation.validations)}
+          />
+        </InputFieldWrapper>
+
+        <Button spinner fullwidth isLoading={isLoading}>
+          Send
+        </Button>
+      </Base>
+    </>
   );
 };
 

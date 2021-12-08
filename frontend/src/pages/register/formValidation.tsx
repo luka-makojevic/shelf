@@ -9,16 +9,13 @@ import {
   RegisterFieldConfig,
 } from '../../utils/interfaces/dataTypes';
 import { AuthContext } from '../../providers/authProvider';
-import {
-  Error,
-  Link,
-  PlainText,
-  Success,
-} from '../../components/text/text-styles';
-import { Routes } from '../../utils/enums/routes';
+import { Error, Link, PlainText } from '../../components/text/text-styles';
 import CheckBox from '../../components/checkbox/checkBox';
 import { loginRequest } from '../../azure/authConfig';
 import { Button } from '../../components/UI/button';
+import AlertPortal from '../../components/alert/alert';
+import { AlertMessage } from '../../utils/enums/alertMessages';
+import { Routes } from '../../utils/enums/routes';
 import { config } from '../../utils/validation/config/registerValidationConfig';
 
 const FormValidation = () => {
@@ -84,10 +81,29 @@ const FormValidation = () => {
       });
   };
 
+  const handleAlertClose = () => {
+    setError('');
+    setSuccess('');
+  };
+
   return (
     <Base onSubmit={handleSubmit(submitForm)}>
-      {error && <Error>{error}</Error>}
-      {success && <Success>{success}</Success>}
+      {error && (
+        <AlertPortal
+          type={AlertMessage.ERRROR}
+          title="Error"
+          message={error}
+          onClose={handleAlertClose}
+        />
+      )}
+      {success && (
+        <AlertPortal
+          type={AlertMessage.INFO}
+          title="Info"
+          message={success}
+          onClose={handleAlertClose}
+        />
+      )}
       <InputFieldWrapper>
         {registeFieldConfig.map((fieldConfig: RegisterFieldConfig) => (
           <InputField

@@ -54,6 +54,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (res.data.jwtToken) {
           localStorage.setItem('user', JSON.stringify(res.data));
           localStorage.setItem('token', JSON.stringify(res.data.jwtToken));
+          localStorage.setItem(
+            'refreshToken',
+            JSON.stringify(res.data.jwtRefreshToken)
+          );
           setUser(res.data);
           setAccessToken(res.data.jwtToken);
           onSuccess();
@@ -77,6 +81,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (res.data.jwtToken) {
           localStorage.setItem('user', JSON.stringify(res.data));
           localStorage.setItem('token', JSON.stringify(res.data.jwtToken));
+          localStorage.setItem(
+            'refreshToken',
+            JSON.stringify(res.data.jwtRefreshToken)
+          );
           setUser(res.data);
           setAccessToken(res.data.jwtToken);
           onSuccess();
@@ -114,6 +122,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       .then(() => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        localStorage.removeItem('refreshToken');
         setUser(null);
         setAccessToken('');
         onSuccess();

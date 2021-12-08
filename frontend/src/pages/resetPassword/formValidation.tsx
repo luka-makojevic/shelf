@@ -10,8 +10,11 @@ import {
   ResetPasswordFieldConfig,
 } from '../../utils/interfaces/dataTypes';
 import userServices from '../../services/userServices';
-import { config } from '../../utils/validation/config/resetPasswordValidationConfig';
+
+import AlertPortal from '../../components/alert/alert';
+import { AlertMessage } from '../../utils/enums/alertMessages';
 import { Routes } from '../../utils/enums/routes';
+import { config } from '../../utils/validation/config/resetPasswordValidationConfig';
 
 const ResetPasswordForm = () => {
   const {
@@ -47,25 +50,39 @@ const ResetPasswordForm = () => {
       .finally(() => setIsLoading(false));
   };
 
+  const handleAlertClose = () => {
+    setError('');
+  };
+
   return (
-    <Base onSubmit={handleSubmit(onSubmit)}>
-      <Error>{error}</Error>
-      <PlainText color="green">{successMessage}</PlainText>
-      <InputFieldWrapper>
-        {registerFieldConfig.map((fieldConfig) => (
-          <InputField
-            key={fieldConfig.name}
-            placeholder={fieldConfig.placeholder}
-            type={fieldConfig.type}
-            error={errors[fieldConfig.name]}
-            {...register(fieldConfig.name, fieldConfig.validations)}
-          />
-        ))}
-      </InputFieldWrapper>
-      <Button spinner fullwidth isLoading={isLoading}>
-        Reset Password
-      </Button>
-    </Base>
+    <>
+      {error && (
+        <AlertPortal
+          type={AlertMessage.ERRROR}
+          title="Error"
+          message={error}
+          onClose={handleAlertClose}
+        />
+      )}
+      <Base onSubmit={handleSubmit(onSubmit)}>
+        <Error>{error}</Error>
+        <PlainText color="green">{successMessage}</PlainText>
+        <InputFieldWrapper>
+          {registerFieldConfig.map((fieldConfig) => (
+            <InputField
+              key={fieldConfig.name}
+              placeholder={fieldConfig.placeholder}
+              type={fieldConfig.type}
+              error={errors[fieldConfig.name]}
+              {...register(fieldConfig.name, fieldConfig.validations)}
+            />
+          ))}
+        </InputFieldWrapper>
+        <Button spinner fullwidth isLoading={isLoading}>
+          Reset Password
+        </Button>
+      </Base>
+    </>
   );
 };
 
