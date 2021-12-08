@@ -4,12 +4,12 @@ import { TextProps } from '../../utils/interfaces/styles';
 import { theme } from '../../theme';
 
 export const H1 = styled.h1<TextProps>`
-  font-size: ${theme.fontSizes[8]};
+  font-size: ${theme.fontSizes.xxl};
   text-align: center;
 `;
 
 export const H2 = styled.h2<TextProps>`
-  font-size: ${theme.fontSizes[5]};
+  font-size: ${theme.fontSizes.xl};
   text-align: center;
 `;
 
@@ -26,19 +26,19 @@ export const Link = styled(ReachRouterLink)<TextProps>`
 
 export const Error = styled.p`
   margin: 0;
-  margin-left: ${theme.space[2]};
+  margin-left: ${theme.space.sm};
   color: ${theme.colors.danger};
-  font-size: ${theme.fontSizes[0]};
+  font-size: ${theme.fontSizes.xs};
 `;
 
 export const Success = styled.p`
   width: 100%;
   text-align: center;
   color: ${theme.colors.success};
-  font-size: ${theme.fontSizes[0]};
+  font-size: ${theme.fontSizes.xs};
 `;
 
 export const PlainText = styled.p<TextProps>`
-  font-size: ${theme.fontSizes[1]};
-  margin: ${theme.space[1]} 0;
+  font-size: ${theme.fontSizes.sm};
+  margin: ${theme.space.xs} 0;
 `;

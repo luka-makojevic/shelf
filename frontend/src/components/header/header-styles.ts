@@ -20,7 +20,7 @@ export const Logo = styled.img<HeaderProps>`
 `;
 
 export const ProfileInfoWrapper = styled.div`
-  margin-left: ${theme.space[3]};
+  margin-left: ${theme.space.md};
 `;
 
 export const DropDown = styled.div`
@@ -32,7 +32,7 @@ export const DropDown = styled.div`
   align-items: center;
   top: 48px;
   right: 0px;
-  padding: ${theme.space[3]};
+  padding: ${theme.space.md};
   min-width: 200px;
   height: 140px;
   border-radius: 20px;

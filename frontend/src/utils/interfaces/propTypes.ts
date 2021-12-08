@@ -1,4 +1,4 @@
-import { ChangeEventHandler } from 'react';
+import { ChangeEventHandler, Dispatch, SetStateAction } from 'react';
 import { FieldError } from 'react-hook-form';
 import { InputFieldType } from './dataTypes';
 
@@ -55,4 +55,26 @@ export interface ButtonProps {
   variant?: string;
   size?: string;
   fullwidth?: boolean;
+  disabled?: boolean;
+}
+
+export interface AlertPorps {
+  type: string;
+  title: string;
+  message: string | undefined;
+  onClose: () => void;
+}
+export interface CreateShelfModalProps {
+  onCloseModal: Dispatch<SetStateAction<boolean>>;
+}
+
+export interface AddFileModalProps {
+  onCloseModal: Dispatch<SetStateAction<boolean>>;
+}
+
+export interface ModalProps {
+  onCloseModal: Dispatch<SetStateAction<boolean>>;
+  children: JSX.Element;
+  title: string;
+  closeIcon?: boolean;
 }

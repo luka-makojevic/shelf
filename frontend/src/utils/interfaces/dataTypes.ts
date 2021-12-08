@@ -1,5 +1,4 @@
-
-import {  RegisterOptions } from 'react-hook-form';
+import { RegisterOptions } from 'react-hook-form';
 import { Role } from '../enums/roles';
 
 export interface RegisterData {
@@ -104,8 +103,6 @@ export interface LogoutData {
 }
 export type InputFieldType = 'text' | 'password' | 'email';
 
-
-
 export interface LoginFieldConfig {
   type: InputFieldType;
   placeholder: string;
@@ -127,3 +124,6 @@ export interface RegisterFieldConfig {
   validations: RegisterOptions;
 }
 
+export interface CreateShelfData {
+  name: string;
+}

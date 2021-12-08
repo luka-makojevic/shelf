@@ -11,13 +11,13 @@ export const CardWrapper = styled.div`
 `;
 
 export const Text = styled.p`
-  font-size: ${theme.fontSizes[0]};
+  font-size: ${theme.fontSizes.xs};
 `;
 
 export const IconWrapper = styled.div`
   width: 100%;
   height: 200px;
-  padding: ${theme.space[4]};
+  padding: ${theme.space.lg};
   display: flex;
   justify-content: center;
   align-items: center;

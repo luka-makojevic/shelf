@@ -10,7 +10,7 @@ export const StyledButton = styled('button')<ButtonStyleProps>`
   border-radius: 999px;
   padding: 8px 16px;
   margin: 8px 0;
-  font-size: ${theme.fontSizes[2]};
+  font-size: ${theme.fontSizes.md};
   cursor: pointer;
   min-width: 90px;
 
@@ -24,13 +24,13 @@ export const StyledButton = styled('button')<ButtonStyleProps>`
     props.size === 'large' &&
     css`
       padding: 10px 20px;
-      font-size: ${theme.fontSizes[3]};
+      font-size: ${theme.fontSizes.lg};
     `}
   ${(props) =>
     props.size === 'small' &&
     css`
       padding: 7px 14px;
-      font-size: ${theme.fontSizes[2]};
+      font-size: ${theme.fontSizes.md};
     `}
   ${(props) =>
     props.fullwidth &&
@@ -72,7 +72,7 @@ export const StyledLink = styled(ReachRouterLink)<ButtonStyleProps>`
   border-radius: 999px;
   margin: 8px 0;
   padding: 8px 16px;
-  font-size: ${theme.fontSizes[2]};
+  font-size: ${theme.fontSizes.md};
   text-decoration: none;
   text-align: center;
   cursor: pointer;
@@ -80,13 +80,13 @@ export const StyledLink = styled(ReachRouterLink)<ButtonStyleProps>`
     props.size === 'large' &&
     css`
       padding: 10px 20px;
-      font-size: ${theme.fontSizes[3]};
+      font-size: ${theme.fontSizes.lg};
     `}
   ${(props) =>
     props.size === 'small' &&
     css`
       padding: 7px 14px;
-      font-size: ${theme.fontSizes[2]};
+      font-size: ${theme.fontSizes.md};
     `}
     
 

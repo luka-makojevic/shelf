@@ -6,8 +6,8 @@ export const FormContainer = styled.div<FormProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: auto ${theme.space[3]};
-  padding: ${theme.space[3]};
+  margin: auto ${theme.space.lg};
+  padding: ${theme.space.md};
   border-radius: 50px;
   border: 2px solid ${theme.colors.secondary};
   max-width: 380px;
@@ -18,7 +18,7 @@ export const Base = styled.form`
   display: flex;
   flex-wrap: wrap;
   max-width: 300px;
-  padding: ${theme.space[2]};
+  padding: ${theme.space.sm};
 `;
 
 export const Spinner = styled.img`

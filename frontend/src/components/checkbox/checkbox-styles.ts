@@ -12,6 +12,6 @@ export const Checkbox = styled.input`
 `;
 
 export const Label = styled.label`
-  font-size: ${theme.fontSizes[2]};
+  font-size: ${theme.fontSizes.md};
   cursor: pointer;
 `;

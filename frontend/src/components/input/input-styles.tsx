@@ -8,7 +8,7 @@ export const Input = styled.input<InputProps>`
   border: 1px solid ${theme.colors.secondary};
   border-radius: 30px;
   text-indent: 10px;
-  margin: ${theme.space[1]} 0;
+  margin: ${theme.space.xs} 0;
 
   &:focus {
     outline: none;

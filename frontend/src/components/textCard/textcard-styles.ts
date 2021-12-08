@@ -9,7 +9,7 @@ export const CardWrapper = styled.div`
   position: relative;
   max-width: 700px;
   max-height: 750px;
-  margin: ${theme.space[4]};
+  margin: ${theme.space.lg};
   background-color: ${theme.colors.primary};
   color: white;
   border-radius: 30px;
@@ -17,22 +17,22 @@ export const CardWrapper = styled.div`
 `;
 
 export const Header = styled.div`
-  padding: ${theme.space[2]} ${theme.space[3]};
+  padding: ${theme.space.sm} ${theme.space.md};
   border-bottom: 1px solid white;
   width: 100%;
 `;
 
 export const Body = styled.div`
-  padding: 0 ${theme.space[4]};
+  padding: 0 ${theme.space.lg};
   width: 100%;
   height: 100%;
   overflow-y: scroll;
-  font-size: ${theme.fontSizes[1]};
+  font-size: ${theme.fontSizes.sm};
 `;
 
 export const Footer = styled.div`
   bottom: 0;
-  padding: ${theme.space[2]} ${theme.space[3]};
+  padding: ${theme.space.sm} ${theme.space.md};
   height: 100px;
   width: 100%;
   border-top: 1px solid white;
