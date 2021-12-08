@@ -1,7 +1,10 @@
 import React from 'react';
-import { RegisterFieldConfig } from '../../interfaces/types';
+import { UseFormWatch } from 'react-hook-form';
+import { RegisterFieldConfig, RegisterFormData } from '../../interfaces/types';
 
-export const config = (watch: any): RegisterFieldConfig[] => [
+export const config = (
+  watch: UseFormWatch<RegisterFormData>
+): RegisterFieldConfig[] => [
   {
     type: 'text',
     placeholder: 'Email',
