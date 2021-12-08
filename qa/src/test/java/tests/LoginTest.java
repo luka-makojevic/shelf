@@ -23,7 +23,7 @@ public class LoginTest extends BaseTest {
     }
     @Test
     public void userShouldNotLoginWithInvalidEmailFormat(){
-
+      
         for (int i = 1; i < excelReader.getLastRowNumberFromSheet("LoginTest") -2; i++) {
 
             String email = excelReader.getStringData("LoginTest", i, 2);
@@ -38,7 +38,7 @@ public class LoginTest extends BaseTest {
     public void userShouldNotLoginWithInvalidPassword() {
 
         for (int i = 1; i < excelReader.getLastRowNumberFromSheet("LoginTest") + 1; i++) {
-
+          
             String username = excelReader.getStringData("LoginTest", 1, 0);
             String password = excelReader.getStringData("LoginTest", i, 3);
             loginPage.loginAsUser(username, password);

@@ -7,11 +7,13 @@ import {
   UserType,
   MicrosoftRegisterData,
   MicrosoftLoginData,
+  LogoutData,
 } from '../../interfaces/types';
 
 const defaultValue: ContextTypes = {
   user: null,
   login: async () => {},
+  logout: async () => {},
   microsoftLogin: async () => {},
   register: async () => {},
   microsoftRegister: async () => {},
@@ -52,6 +54,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (res.data.jwtToken) {
           localStorage.setItem('user', JSON.stringify(res.data));
           localStorage.setItem('token', JSON.stringify(res.data.jwtToken));
+          localStorage.setItem(
+            'refreshToken',
+            JSON.stringify(res.data.jwtRefreshToken)
+          );
           setUser(res.data);
           setAccessToken(res.data.jwtToken);
           onSuccess();
@@ -59,7 +65,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       })
       .catch((err) => {
         setUser(null);
-        onError(err.response.data.message);
+        onError(err.response?.data.message);
       })
       .finally(() => setIsLoading(false));
   };
@@ -75,6 +81,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (res.data.jwtToken) {
           localStorage.setItem('user', JSON.stringify(res.data));
           localStorage.setItem('token', JSON.stringify(res.data.jwtToken));
+          localStorage.setItem(
+            'refreshToken',
+            JSON.stringify(res.data.jwtRefreshToken)
+          );
           setUser(res.data);
           setAccessToken(res.data.jwtToken);
           onSuccess();
@@ -103,6 +113,25 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       .finally(() => setIsLoading(false));
   };
 
+  const logout = (
+    data: LogoutData,
+    onSuccess: () => void,
+    onError: (error: string) => void
+  ) => {
+    AuthService.logout(data)
+      .then(() => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('refreshToken');
+        setUser(null);
+        setAccessToken('');
+        onSuccess();
+      })
+      .catch((err) => {
+        onError(err.response?.data.message);
+      });
+  };
+
   const microsoftRegister = (
     data: MicrosoftRegisterData,
     onSuccess: () => void,
@@ -114,7 +143,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         onSuccess();
       })
       .catch((err) => {
-        onError(err.response.data.message);
+        onError(err.response?.data.message);
       })
       .finally(() => setIsLoading(false));
   };
@@ -124,6 +153,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       value={{
         user,
         login,
+        logout,
         microsoftLogin,
         register,
         microsoftRegister,

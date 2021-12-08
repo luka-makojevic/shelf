@@ -2,8 +2,7 @@ import React, { ChangeEventHandler, ForwardedRef, useState } from 'react';
 import { FieldError } from 'react-hook-form';
 import { Input, InputContainer, SeenIcon } from './input-styles';
 import { Error } from '../text/text-styles';
-
-export type InputFieldType = 'text' | 'password' | 'email';
+import { InputFieldType } from '../../interfaces/types';
 
 export type InputFieldProps = {
   name?: string;
@@ -32,8 +31,8 @@ export const InputField = React.forwardRef(
           <SeenIcon
             src={
               passwordShown
-                ? './assets/icons/eyeclosed.png'
-                : './assets/icons/eyeopen.png'
+                ? `${process.env.PUBLIC_URL}/assets/icons/eyeopen.png`
+                : `${process.env.PUBLIC_URL}/assets/icons/eyeclosed.png`
             }
             onClick={handlePasswordVisibilityClick}
           />

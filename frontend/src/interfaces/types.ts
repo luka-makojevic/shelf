@@ -1,12 +1,13 @@
-import { ChangeEventHandler } from 'react';
+import { SpaceProps } from 'styled-system';
+import { ChangeEventHandler, Dispatch, SetStateAction } from 'react';
 import { FieldError, RegisterOptions } from 'react-hook-form';
 import { Role } from '../enums/roles';
 
 export interface RegisterData {
-  areTermsRead: boolean;
+  areTermsRead?: boolean;
   email: string;
   password: string;
-  confirmPassword: string;
+  confirmPassword?: string;
   firstName: string;
   lastName: string;
 }
@@ -23,8 +24,33 @@ export interface LoginData {
 export interface MicrosoftLoginData {
   bearerToken: string;
 }
+
+export interface ForgotPasswordData {
+  email: string;
+}
+
+export interface PasswordData {
+  password: string;
+}
+
+export interface ResetPasswordData {
+  password: string;
+  jwtToken: string | undefined;
+}
+
+export interface ForgotPasswordConfig {
+  validations: RegisterOptions;
+}
+
+export interface ResetPasswordFieldConfig {
+  type: InputFieldType;
+  placeholder: string;
+  name: 'password' | 'confirmPassword';
+  validations: RegisterOptions;
+}
+
 export interface ContextTypes {
-  user?: UserType | null;
+  user: UserType | null;
   login: (
     data: LoginData,
     onSuccess: () => void,
@@ -45,17 +71,25 @@ export interface ContextTypes {
     onSuccess: () => void,
     onError: (error: string) => void
   ) => void;
+  logout: (
+    data: LogoutData,
+    onSuccess: () => void,
+    onError: (error: string) => void
+  ) => void;
   isLoading: boolean;
   accessToken: string;
 }
+
 export interface UserType {
   id: number;
   firstName: string;
   lastName: string;
   email: string;
   jwtToken: string;
+  jwtRefreshToken: string;
   role: Role;
 }
+
 export interface RegisterFormData {
   areTermsRead: boolean;
   email: string;
@@ -78,7 +112,7 @@ export interface FormSubmitProps {
   isLoading: boolean;
 }
 
-export interface ButtonProps {
+export interface ButtonProps extends SpaceProps {
   children?: React.ReactNode;
   icon?: JSX.Element;
   to?: string;
@@ -88,6 +122,11 @@ export interface ButtonProps {
   variant?: string;
   size?: string;
   fullwidth?: boolean;
+  disabled?: boolean;
+}
+export interface LogoutData {
+  jwtRefreshToken: string | undefined;
+  jwtToken: string | undefined;
 }
 export type InputFieldType = 'text' | 'password' | 'email';
 
@@ -118,4 +157,30 @@ export interface RegisterFieldConfig {
     | 'firstName'
     | 'lastName';
   validations: RegisterOptions;
+}
+
+export interface AlertPorps {
+  type: string;
+  title: string;
+  message: string | undefined;
+  onClose: () => void;
+}
+
+export interface CreateShelfModalProps {
+  onCloseModal: Dispatch<SetStateAction<boolean>>;
+}
+
+export interface AddFileModalProps {
+  onCloseModal: Dispatch<SetStateAction<boolean>>;
+}
+
+export interface CreateShelfData {
+  name: string;
+}
+
+export interface ModalProps {
+  onCloseModal: Dispatch<SetStateAction<boolean>>;
+  children: JSX.Element;
+  title: string;
+  closeIcon?: boolean;
 }

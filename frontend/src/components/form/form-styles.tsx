@@ -10,7 +10,6 @@ export const Container = styled.div<FormProps>`
   margin: auto 1em;
   padding: 1em;
   width: 100%;
-  max-height: 700px;
 
   border-radius: 50px;
   border: 2px solid ${({ theme }) => theme.colors.secondary};
@@ -95,7 +94,7 @@ export const Submit = styled.button`
   width: 100%;
   min-width: 250px;
   min-height: 45px;
-  font-size: 17px;
+  font-size: ${({ theme }) => theme.fontSizes[2]};
   font-weight: 700;
   color: ${({ theme }) => theme.colors.white};
   background: #006fd1;
