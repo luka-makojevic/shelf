@@ -3,7 +3,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 const API_URL = 'http://10.10.0.136:8080/';
 
 const instance = axios.create({
-  baseURL: 'http://10.10.0.136:8080/',
+  baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -11,9 +11,7 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   (config: AxiosRequestConfig) => {
-    const token = localStorage.getItem('token')
-      ? JSON.parse(localStorage.getItem('token') || '')
-      : null;
+    const token = JSON.parse(localStorage.getItem('token') || '');
 
     if (token) {
       if (config.headers) config.headers.Authorization = `Bearer ${token}`;
