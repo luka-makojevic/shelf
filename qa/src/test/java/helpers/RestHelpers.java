@@ -1,6 +1,7 @@
 package helpers;
 
 
+import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
@@ -67,5 +68,4 @@ public class RestHelpers {
         return given().spec(reqSpec).log().all().relaxedHTTPSValidation().when()
                 .delete().then().log().all().extract().response();
     }
-
 }
