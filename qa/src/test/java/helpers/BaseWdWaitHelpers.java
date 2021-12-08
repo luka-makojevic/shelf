@@ -38,9 +38,9 @@ public class BaseWdWaitHelpers {
      * @return WebElement after wait
      * @author stefan.gajic
      */
-    public WebElement waitToBeVisible (By locator) {
+    public WebElement waitToBeVisible (WebElement locator) {
         wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        return wait.until(ExpectedConditions.visibilityOfElementLocated((By) locator));
     }
 
     /**
@@ -79,5 +79,16 @@ public class BaseWdWaitHelpers {
         return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
+    /**
+     * Wait for URL of the current page to be a specific url
+     *
+     * @param url
+     * @return Boolean after wait
+     * @author lidija.veljkovic
+     */
 
+    public Boolean  waitUrlToBe(String url){
+        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        return wait.until(ExpectedConditions.urlToBe(url));
+    }
 }

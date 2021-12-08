@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { Link as ReachRouterLink } from 'react-router-dom';
-import { ButtonStyleProps } from '../../../utils/interfaces/styles';
 import { theme } from '../../../theme';
+import { ButtonStyleProps } from '../../../utils/interfaces/styles';
 
 export const StyledButton = styled('button')<ButtonStyleProps>`
   appearance: none;
@@ -13,6 +13,13 @@ export const StyledButton = styled('button')<ButtonStyleProps>`
   font-size: ${theme.fontSizes[2]};
   cursor: pointer;
   min-width: 90px;
+
+  &:disabled,
+  &[disabled] {
+    background-color: ${theme.colors.secondary};
+    color: ${theme.colors.shadow};
+  }
+
   ${(props) =>
     props.size === 'large' &&
     css`

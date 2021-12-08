@@ -127,4 +127,3 @@ export interface RegisterFieldConfig {
   validations: RegisterOptions;
 }
 
-
