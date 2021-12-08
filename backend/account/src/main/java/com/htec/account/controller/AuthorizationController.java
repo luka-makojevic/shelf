@@ -34,7 +34,7 @@ public class AuthorizationController {
     }
 
     @GetMapping("/authenticate")
-    public ResponseEntity authenticate(@AuthenticationUser AuthUser authUser) {
+    public ResponseEntity authenticate() {
         return ResponseEntity.ok().build();
     }
 }

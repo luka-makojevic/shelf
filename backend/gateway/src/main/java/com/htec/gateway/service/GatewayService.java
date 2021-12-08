@@ -1,5 +1,6 @@
 package com.htec.gateway.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,12 @@ public class GatewayService {
 
     private final Map<String, String> apiServerUrls;
 
-    public GatewayService(@Value("#{${apiServers}}") Map<String, String> apiServerUrls) {
+    private RestTemplate restTemplate;
+
+    public GatewayService(@Value("#{${apiServers}}") Map<String, String> apiServerUrls,
+                          RestTemplate restTemplate) {
         this.apiServerUrls = apiServerUrls;
+        this.restTemplate = restTemplate;
     }
 
     public ResponseEntity<byte[]> sendRequest(RequestEntity<byte[]> entity) {
@@ -43,8 +48,6 @@ public class GatewayService {
     }
 
     private ResponseEntity<byte[]> send(String apiUrl, HttpMethod httpMethod, HttpEntity<byte[]> request) {
-
-        RestTemplate restTemplate = new RestTemplate();
 
         try {
             return restTemplate.exchange(
@@ -76,16 +79,21 @@ public class GatewayService {
 
         String urlPath = "";
 
-        if(arr.length > 0){
-             urlPath = arr[arr.length - 1];
+        if (arr.length > 0) {
+            urlPath = arr[arr.length - 1];
         }
 
         return apiServer + "/" + urlPath;
     }
 
     private String getMicroserviceName(String path) {
+
         String[] arr = path.split("/");
-        String microserviceName = arr[1];
+        String microserviceName = "";
+
+        if (arr.length > 0) {
+            microserviceName = arr[1];
+        }
 
         return microserviceName;
     }
