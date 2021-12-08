@@ -1,19 +1,12 @@
 import React from 'react';
-import Form from '../../components/form';
-import {
-  Title,
-  AccentText,
-  Link,
-  PlainText,
-} from '../../components/text/text-styles';
-import { Routes } from '../../enums/routes';
+import { FormContainer } from '../../components/form/form-styles';
+import { H2, Link, PlainText } from '../../components/text/text-styles';
+import { Routes } from '../../utils/enums/routes';
 import FormValidation from './formValidation';
 
 const LoginForm = () => (
-  <Form>
-    <Title fontSize={[4, 5, 6]} my="10px">
-      Log in
-    </Title>
+  <FormContainer>
+    <H2>Log in</H2>
     <FormValidation />
     <PlainText>
       {`New to the shelf?  `}
@@ -23,7 +16,7 @@ const LoginForm = () => (
       {`Forgot password?  `}
       <Link to={Routes.FORGOT_PASSWORD}>Reset password</Link>
     </PlainText>
-  </Form>
+  </FormContainer>
 );
 
 export default LoginForm;

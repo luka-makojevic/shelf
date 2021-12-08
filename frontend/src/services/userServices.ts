@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ForgotPasswordData, ResetPasswordData } from '../interfaces/types';
+import { ForgotPasswordData, ResetPasswordData } from '../utils/interfaces/dataTypes';
 
 const API_URL = `http://10.10.0.136:8080/`;
 

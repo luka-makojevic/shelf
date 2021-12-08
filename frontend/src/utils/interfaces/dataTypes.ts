@@ -1,6 +1,5 @@
-import { SpaceProps } from 'styled-system';
-import { ChangeEventHandler } from 'react';
-import { FieldError, RegisterOptions } from 'react-hook-form';
+
+import {  RegisterOptions } from 'react-hook-form';
 import { Role } from '../enums/roles';
 
 export interface RegisterData {
@@ -98,45 +97,14 @@ export interface RegisterFormData {
   firstName: string;
   lastName: string;
 }
-export interface FormProps {
-  children: React.ReactNode;
-}
 
-export interface FormBaseProps {
-  children: React.ReactNode;
-  onSubmit: React.FormEventHandler<HTMLFormElement>;
-}
-
-export interface FormSubmitProps {
-  children: React.ReactNode;
-  isLoading: boolean;
-}
-
-export interface ButtonProps extends SpaceProps {
-  children?: React.ReactNode;
-  icon?: JSX.Element;
-  to?: string;
-  isLoading?: boolean;
-  spinner?: boolean;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  variant?: string;
-  size?: string;
-  fullwidth?: boolean;
-}
 export interface LogoutData {
   jwtRefreshToken: string | undefined;
   jwtToken: string | undefined;
 }
 export type InputFieldType = 'text' | 'password' | 'email';
 
-export type InputFieldProps = {
-  name?: string;
-  placeholder?: string;
-  onChange?: ChangeEventHandler;
-  error?: FieldError;
-  type?: InputFieldType;
-  value?: string;
-};
+
 
 export interface LoginFieldConfig {
   type: InputFieldType;
@@ -159,21 +127,4 @@ export interface RegisterFieldConfig {
   validations: RegisterOptions;
 }
 
-export type CardProps = { image: string; text: string; alt: string };
 
-export type CheckBoxProps = {
-  onChange?: ChangeEventHandler;
-  name?: string;
-  id: string;
-  children: React.ReactNode;
-};
-
-export type HeaderProps = {
-  hideProfile?: boolean;
-};
-
-export interface TextCardProps {
-  title?: string;
-  subtitle?: string;
-  text: string;
-}

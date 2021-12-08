@@ -1,21 +1,18 @@
-import { Form, Header } from '../../components';
+import { Header } from '../../components';
 import { Container, Wrapper } from '../../components/layout/layout.styles';
 import FormValidation from './formValidation';
-import { Title } from '../../components/text/text-styles';
+import { H2 } from '../../components/text/text-styles';
+import { FormContainer } from '../../components/form/form-styles';
 
 const ForgotPassword = () => (
   <>
-    <Header hideProfile />
-    <Wrapper
-      flexDirection={['column', 'row']}
-      alignItems="center"
-      justifyContent="center"
-    >
-      <Container width={[1, 1 / 2]}>
-        <Form>
-          <Title fontSize={[4, 5, 6]}>Send email</Title>
+    <Header hideProfile position="absolute" />
+    <Wrapper>
+      <Container>
+        <FormContainer>
+          <H2>Send email</H2>
           <FormValidation />
-        </Form>
+        </FormContainer>
       </Container>
     </Wrapper>
   </>

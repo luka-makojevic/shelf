@@ -1,5 +1,4 @@
-import React from 'react';
-import { LoginFieldConfig } from '../../interfaces/types';
+import { LoginFieldConfig } from '../../interfaces/dataTypes';
 import { emailRegex } from '../regex';
 
 export const loginFieldConfig: LoginFieldConfig[] = [
@@ -23,7 +22,11 @@ export const loginFieldConfig: LoginFieldConfig[] = [
       required: 'This field is required',
       minLength: {
         value: 8,
-        message: 'Password must have at least 8 characters',
+        message: 'Invalid password format',
+      },
+      maxLength: {
+        value: 50,
+        message: 'Invalid password format',
       },
     },
   },

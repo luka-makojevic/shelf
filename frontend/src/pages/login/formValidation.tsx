@@ -1,17 +1,15 @@
 import { useMsal } from '@azure/msal-react';
 import { useContext, useState } from 'react';
-import { useForm, RegisterOptions } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { loginRequest } from '../../azure/authConfig';
-import Form from '../../components/form';
-import { InputFieldWrapper } from '../../components/form/form-styles';
+import { Base, InputFieldWrapper } from '../../components/form/form-styles';
 import { InputField } from '../../components/input/InputField';
 import { Error } from '../../components/text/text-styles';
-import { Routes } from '../../enums/routes';
+import { Routes } from '../../utils/enums/routes';
 import { Button } from '../../components/UI/button';
-import { Holder } from '../../components/layout/layout.styles';
-import { loginFieldConfig } from '../../validation/config/loginValidationConfig';
-import { LoginData, LoginFieldConfig } from '../../interfaces/types';
+import { loginFieldConfig } from '../../utils/validation/config/loginValidationConfig';
+import { LoginData, LoginFieldConfig } from '../../utils/interfaces/dataTypes';
 import { AuthContext } from '../../providers/authProvider';
 
 const FormValidation = () => {
@@ -28,8 +26,6 @@ const FormValidation = () => {
   const navigation = useNavigate();
 
   const submitForm = (data: LoginData) => {
-    // console.log(data);
-
     login(
       data,
       () => {
@@ -64,14 +60,12 @@ const FormValidation = () => {
   };
 
   return (
-    <Form.Base onSubmit={handleSubmit(submitForm)}>
-      <Holder m="0 auto">
-        <Error>{error}</Error>
-      </Holder>
+    <Base onSubmit={handleSubmit(submitForm)}>
+      <Error>{error}</Error>
       <InputFieldWrapper>
         {loginFieldConfig.map((fieldConfig: LoginFieldConfig) => (
           <InputField
-          data-test={fieldConfig.name}
+            data-test={fieldConfig.name}
             key={fieldConfig.name}
             placeholder={fieldConfig.placeholder}
             error={errors[fieldConfig.name]}
@@ -91,7 +85,7 @@ const FormValidation = () => {
       >
         Sign in with Microsoft
       </Button>
-    </Form.Base>
+    </Base>
   );
 };
 

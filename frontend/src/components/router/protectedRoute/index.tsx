@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
-import { Routes } from '../../enums/routes';
-import { AuthContext } from '../../providers/authProvider';
+import { Routes } from '../../../utils/enums/routes';
+import { AuthContext } from '../../../providers/authProvider';
 
 type ProtectedRouteProps = {
   children: JSX.Element;

@@ -1,5 +1,5 @@
 import { FieldValues, UseFormWatch } from 'react-hook-form';
-import { ResetPasswordFieldConfig } from '../../interfaces/types';
+import { ResetPasswordFieldConfig } from '../../interfaces/dataTypes';
 import { passwordRegex } from '../regex';
 
 export const config = (

@@ -1,14 +1,13 @@
 import { useContext, useState } from 'react';
-import { useForm, RegisterOptions } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useMsal } from '@azure/msal-react';
-import Form from '../../components/form';
-import { InputFieldWrapper } from '../../components/form/form-styles';
+import { Base, InputFieldWrapper } from '../../components/form/form-styles';
 import { InputField } from '../../components/input/InputField';
 import {
   RegisterData,
   RegisterFormData,
   RegisterFieldConfig,
-} from '../../interfaces/types';
+} from '../../utils/interfaces/dataTypes';
 import { AuthContext } from '../../providers/authProvider';
 import {
   Error,
@@ -16,12 +15,11 @@ import {
   PlainText,
   Success,
 } from '../../components/text/text-styles';
-import { Routes } from '../../enums/routes';
+import { Routes } from '../../utils/enums/routes';
 import CheckBox from '../../components/checkbox/checkBox';
 import { loginRequest } from '../../azure/authConfig';
 import { Button } from '../../components/UI/button';
-import { Holder } from '../../components/layout/layout.styles';
-import { config } from '../../validation/config/registerValidationConfig';
+import { config } from '../../utils/validation/config/registerValidationConfig';
 
 const FormValidation = () => {
   const {
@@ -87,11 +85,9 @@ const FormValidation = () => {
   };
 
   return (
-    <Form.Base onSubmit={handleSubmit(submitForm)}>
-      <Holder m="0 auto" maxWidth="200px" minHeight="15px">
-        {error && <Error>{error}</Error>}
-        {success && <Success>{success}</Success>}
-      </Holder>
+    <Base onSubmit={handleSubmit(submitForm)}>
+      {error && <Error>{error}</Error>}
+      {success && <Success>{success}</Success>}
       <InputFieldWrapper>
         {registeFieldConfig.map((fieldConfig: RegisterFieldConfig) => (
           <InputField
@@ -102,7 +98,7 @@ const FormValidation = () => {
             {...register(fieldConfig.name, fieldConfig.validations)}
           />
         ))}
-        <Holder flexDirection="column" height="45px">
+        <InputFieldWrapper>
           <CheckBox
             id="id"
             {...register('areTermsRead', {
@@ -118,28 +114,26 @@ const FormValidation = () => {
           </CheckBox>
 
           <Error>{errors.areTermsRead?.message}</Error>
-        </Holder>
+        </InputFieldWrapper>
       </InputFieldWrapper>
-      <Holder width="100%">
-        <Button
-          spinner
-          isLoading={isLoading}
-          variant="primary"
-          fullwidth
-          size="large"
-        >
-          Sign up
-        </Button>
-        <Button
-          onClick={handleMicrosoftSignUp}
-          icon={<img src="./assets/images/microsoft-logo.png" alt="" />}
-          fullwidth
-          size="large"
-        >
-          Sign up with Microsoft
-        </Button>
-      </Holder>
-    </Form.Base>
+      <Button
+        spinner
+        isLoading={isLoading}
+        variant="primary"
+        fullwidth
+        size="large"
+      >
+        Sign up
+      </Button>
+      <Button
+        onClick={handleMicrosoftSignUp}
+        icon={<img src="./assets/images/microsoft-logo.png" alt="" />}
+        fullwidth
+        size="large"
+      >
+        Sign up with Microsoft
+      </Button>
+    </Base>
   );
 };
 export default FormValidation;

@@ -1,20 +1,18 @@
 import React from 'react';
-import Form from '../../components/form';
-import { Title, PlainText, Link } from '../../components/text/text-styles';
-import { Routes } from '../../enums/routes';
+import { FormContainer } from '../../components/form/form-styles';
+import { H2, PlainText, Link } from '../../components/text/text-styles';
+import { Routes } from '../../utils/enums/routes';
 import FormValidation from './formValidation';
 
 const RegisterForm = () => (
-  <Form>
-    <Title fontSize={[4, 5, 6]} my="10px">
-      Register
-    </Title>
+  <FormContainer>
+    <H2>Register</H2>
     <FormValidation />
     <PlainText>
       {`Already have an account?  `}
       <Link to={Routes.LOGIN}>Sign in</Link>
     </PlainText>
-  </Form>
+  </FormContainer>
 );
 
 export default RegisterForm;

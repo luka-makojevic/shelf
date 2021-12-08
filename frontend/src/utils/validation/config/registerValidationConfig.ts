@@ -1,6 +1,6 @@
-import React from 'react';
 import { UseFormWatch } from 'react-hook-form';
-import { RegisterFieldConfig, RegisterFormData } from '../../interfaces/types';
+import { RegisterFieldConfig, RegisterFormData } from '../../interfaces/dataTypes';
+import { emailRegex, passwordRegex } from '../regex';
 
 export const config = (
   watch: UseFormWatch<RegisterFormData>
@@ -11,9 +11,12 @@ export const config = (
     name: 'email',
     validations: {
       required: 'This field is required',
+      maxLength: {
+        value: 50,
+        message: 'Email can not be longer than 50 characters',
+      },
       pattern: {
-        value:
-          /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i,
+        value: emailRegex,
         message: 'Invalid email format',
       },
     },
@@ -28,9 +31,12 @@ export const config = (
         value: 8,
         message: 'Password must have at least 8 characters',
       },
+      maxLength: {
+        value: 50,
+        message: 'Password can not be longer than 50 characters',
+      },
       pattern: {
-        value:
-          /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&.()–[{}\]:;',?/*~$^+=<>])([^\s]){8,}$/i,
+        value: passwordRegex,
         message: 'Invalid password format',
       },
     },
@@ -51,6 +57,10 @@ export const config = (
     name: 'firstName',
     validations: {
       required: 'This field is required',
+      maxLength: {
+        value: 50,
+        message: 'First name can not be longer than 50 characters',
+      },
     },
   },
   {
@@ -59,6 +69,10 @@ export const config = (
     name: 'lastName',
     validations: {
       required: 'This field is required',
+      maxLength: {
+        value: 50,
+        message: 'Last name can not be longer than 50 characters',
+      },
     },
   },
 ];

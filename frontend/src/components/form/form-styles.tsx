@@ -1,26 +1,24 @@
 import styled from 'styled-components';
-import { space, layout } from 'styled-system';
-import { FormProps } from '../../interfaces/styles';
+import { theme } from '../../theme';
+import { FormProps } from '../../utils/interfaces/styles';
 
-export const Container = styled.div<FormProps>`
+export const FormContainer = styled.div<FormProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: auto ${({ theme }) => theme.space[3]};
-  padding: ${({ theme }) => theme.space[3]};
-  width: 100%;
+  margin: auto ${theme.space[3]};
+  padding: ${theme.space[3]};
   border-radius: 50px;
-  border: 2px solid ${({ theme }) => theme.colors.secondary};
-
-  ${space}
-  ${layout}
+  border: 2px solid ${theme.colors.secondary};
+  max-width: 380px;
+  width: 100%;
 `;
 
 export const Base = styled.form`
   display: flex;
   flex-wrap: wrap;
   max-width: 300px;
-  padding: ${({ theme }) => theme.space[2]};
+  padding: ${theme.space[2]};
 `;
 
 export const Spinner = styled.img`
@@ -70,4 +68,5 @@ export const InputFieldWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  min-height: 75px;
 `;

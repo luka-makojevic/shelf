@@ -1,10 +1,8 @@
 import React, { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { AuthContext } from '../../providers/authProvider';
-import { Holder } from '../layout/layout.styles';
-import { PlainText } from '../text/text-styles';
+import { PlainText, Link } from '../text/text-styles';
 import { Button } from '../UI/button';
-import { DropDown, ProfilePicture } from './header-styles';
+import { DropDown, ProfilePicture, ProfileInfoWrapper } from './header-styles';
 
 const Profile = () => {
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
@@ -32,19 +30,21 @@ const Profile = () => {
       <ProfilePicture onClick={handleDropdownVisibility} />
       {showDropdown && (
         <DropDown>
-          <ProfilePicture />
-          <Holder ml="10px">
+          <div>
+            <ProfilePicture />
+          </div>
+          <ProfileInfoWrapper>
             <PlainText>
               {user?.firstName} {user?.lastName}
             </PlainText>
             <PlainText>{user?.email}</PlainText>
             <Link to="/manage-account">manage account</Link>
-            <Holder display="flex" justifyContent="flex-end">
+            <div>
               <Button onClick={handleLogout} size="small">
                 log out
               </Button>
-            </Holder>
-          </Holder>
+            </div>
+          </ProfileInfoWrapper>
         </DropDown>
       )}
     </>

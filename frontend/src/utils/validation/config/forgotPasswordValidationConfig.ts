@@ -1,4 +1,4 @@
-import { ForgotPasswordConfig } from '../../interfaces/types';
+import { ForgotPasswordConfig } from '../../interfaces/dataTypes';
 import { emailRegex } from '../regex';
 
 export const forgotPasswordFieldConfig: ForgotPasswordConfig = {

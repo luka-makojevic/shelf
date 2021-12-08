@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { InputProps } from '../../interfaces/styles';
+import { InputProps } from '../../utils/interfaces/styles';
 import { theme } from '../../theme';
 
 export const Input = styled.input<InputProps>`

@@ -1,14 +1,12 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import Form from '../../components/form';
-import { InputFieldWrapper } from '../../components/form/form-styles';
+import { Base, InputFieldWrapper } from '../../components/form/form-styles';
 import { InputField } from '../../components/input/InputField';
-import { ForgotPasswordData } from '../../interfaces/types';
+import { ForgotPasswordData } from '../../utils/interfaces/dataTypes';
 import { Error, PlainText } from '../../components/text/text-styles';
-import { forgotPasswordFieldConfig } from '../../validation/config/forgotPasswordValidationConfig';
+import { forgotPasswordFieldConfig } from '../../utils/validation/config/forgotPasswordValidationConfig';
 import userServices from '../../services/userServices';
 import { Button } from '../../components/UI/button';
-import { Holder } from '../../components/layout/layout.styles';
 
 const FormValidation = () => {
   const {
@@ -39,25 +37,22 @@ const FormValidation = () => {
   };
 
   return (
-    <Form.Base onSubmit={handleSubmit(submitData)}>
-      <Holder m="0 auto" maxWidth="300px" minHeight="15px">
-        <Error>{error}</Error>
-        <PlainText color="green">{successMessage}</PlainText>
-      </Holder>
+    <Base onSubmit={handleSubmit(submitData)}>
+      <Error>{error}</Error>
+      <PlainText>{successMessage}</PlainText>
 
       <InputFieldWrapper>
         <InputField
           placeholder="Enter your email"
           error={errors.email}
-          type="email"
+          type="text"
           {...register('email', validation.validations)}
         />
       </InputFieldWrapper>
-
       <Button spinner fullwidth isLoading={isLoading}>
         Send
       </Button>
-    </Form.Base>
+    </Base>
   );
 };
 

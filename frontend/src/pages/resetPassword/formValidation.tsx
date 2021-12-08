@@ -1,15 +1,17 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Form } from '../../components';
 import { InputField } from '../../components/input/InputField';
 import { Error, PlainText } from '../../components/text/text-styles';
-import { InputFieldWrapper } from '../../components/form/form-styles';
+import { Base, InputFieldWrapper } from '../../components/form/form-styles';
 import { Button } from '../../components/UI/button';
-import { PasswordData, ResetPasswordFieldConfig } from '../../interfaces/types';
+import {
+  PasswordData,
+  ResetPasswordFieldConfig,
+} from '../../utils/interfaces/dataTypes';
 import userServices from '../../services/userServices';
-import { config } from '../../validation/config/resetPasswordValidationConfig';
-import { Routes } from '../../enums/routes';
+import { config } from '../../utils/validation/config/resetPasswordValidationConfig';
+import { Routes } from '../../utils/enums/routes';
 
 const ResetPasswordForm = () => {
   const {
@@ -46,7 +48,7 @@ const ResetPasswordForm = () => {
   };
 
   return (
-    <Form.Base onSubmit={handleSubmit(onSubmit)}>
+    <Base onSubmit={handleSubmit(onSubmit)}>
       <Error>{error}</Error>
       <PlainText color="green">{successMessage}</PlainText>
       <InputFieldWrapper>
@@ -63,7 +65,7 @@ const ResetPasswordForm = () => {
       <Button spinner fullwidth isLoading={isLoading}>
         Reset Password
       </Button>
-    </Form.Base>
+    </Base>
   );
 };
 

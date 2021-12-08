@@ -1,15 +1,15 @@
 import { useRoutes } from 'react-router-dom';
-import { Role } from '../enums/roles';
-import { Routes } from '../enums/routes';
-import { RouteProps } from '../interfaces/route';
-import Dashboard from '../pages/dashboard';
-import ForgotPassword from '../pages/forgotPassword';
-import Landing from '../pages/landing';
-import EmailVerification from '../pages/emailVerification';
-import Login from '../pages/login';
-import Register from '../pages/register';
-import ResetPassword from '../pages/resetPassword';
-import TermsAndConditions from '../pages/termsOfService';
+import { Role } from '../../utils/enums/roles';
+import { Routes } from '../../utils/enums/routes';
+import { RouteProps } from '../../utils/interfaces/route';
+import Dashboard from '../../pages/dashboard';
+import ForgotPassword from '../../pages/forgotPassword';
+import Landing from '../../pages/landing';
+import EmailVerification from '../../pages/emailVerification';
+import Login from '../../pages/login';
+import Register from '../../pages/register';
+import ResetPassword from '../../pages/resetPassword';
+import TermsAndConditions from '../../pages/termsOfService';
 import ProtectedRoute from './protectedRoute';
 import PublicOnlyRoute from './publicOnlyRoute';
 
@@ -49,6 +49,14 @@ const Router = () => {
     },
     {
       path: Routes.DASHBOARD,
+      element: (
+        <ProtectedRoute roles={[Role.USER, Role.ADMIN, Role.MASTER_ADMIN]}>
+          <Dashboard />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/profile',
       element: (
         <ProtectedRoute roles={[Role.USER, Role.ADMIN, Role.MASTER_ADMIN]}>
           <Dashboard />

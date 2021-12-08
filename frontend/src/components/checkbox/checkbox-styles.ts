@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { theme } from '../../theme';
 
 export const CheckboxWrapper = styled.div`
   display: flex;
@@ -11,6 +12,6 @@ export const Checkbox = styled.input`
 `;
 
 export const Label = styled.label`
-  font-size: ${({ theme }) => theme.fontSizes[2]};
+  font-size: ${theme.fontSizes[2]};
   cursor: pointer;
 `;

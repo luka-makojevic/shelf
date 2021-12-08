@@ -1,22 +1,28 @@
 import styled from 'styled-components';
-import { space, layout } from 'styled-system';
-import { HeaderProps, ProfileProps } from '../../interfaces/styles';
+import { theme } from '../../theme';
+import { HeaderProps, ProfileProps } from '../../utils/interfaces/styles';
 
-export const Container = styled.div`
+interface Propo {
+  position?: string;
+}
+export const HeaderContainer = styled.div<Propo>`
   display: flex;
   justify-content: space-between;
   align-items: center;
   max-height: 100px;
   width: 100%;
-  position: absolute;
+  ${({ position }) => position && `position:${position};`};
   padding: 15px 20px 0 20px;
 `;
 
 export const Logo = styled.img<HeaderProps>`
   width: 70px;
-  ${layout}
-  ${space}
 `;
+
+export const ProfileInfoWrapper = styled.div`
+  margin-left: ${theme.space[3]};
+`;
+
 export const DropDown = styled.div`
   position: absolute;
   display: flex;
@@ -26,7 +32,7 @@ export const DropDown = styled.div`
   align-items: center;
   top: 48px;
   right: 0px;
-  padding: ${({ theme }) => theme.space[2]};
+  padding: ${theme.space[3]};
   min-width: 200px;
   height: 140px;
   border-radius: 20px;

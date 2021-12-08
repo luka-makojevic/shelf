@@ -1,7 +1,5 @@
 import { Header } from '../../components';
 
-const Dashboard = () => {
-  return <Header />;
-};
+const Dashboard = () => <Header />;
 
 export default Dashboard;

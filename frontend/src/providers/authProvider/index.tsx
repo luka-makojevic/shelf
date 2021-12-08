@@ -8,7 +8,7 @@ import {
   MicrosoftRegisterData,
   MicrosoftLoginData,
   LogoutData,
-} from '../../interfaces/types';
+} from '../../utils/interfaces/dataTypes';
 
 const defaultValue: ContextTypes = {
   user: null,
@@ -111,8 +111,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     onError: (error: string) => void
   ) => {
     AuthService.logout(data)
-      .then((res) => {
-        console.log(res);
+      .then(() => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         setUser(null);
@@ -120,7 +119,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         onSuccess();
       })
       .catch((err) => {
-        console.log(err.response?.data.message);
         onError(err.response?.data.message);
       });
   };

@@ -1,5 +1,5 @@
 export const theme = {
-  breakpoints: ['620px', '800px', '1200px'],
+  breakpoints: ['480px', '768px', '996px', '1200px'],
   space: [
     '0px',
     '4px',
@@ -11,7 +11,7 @@ export const theme = {
     '256px',
     '512px',
   ],
-  size:[
+  size: [
     '100px',
     '200px',
     '300px',
@@ -28,7 +28,6 @@ export const theme = {
     heading: 'inherit',
   },
 
-  // fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 96],
   fontSizes: [
     '12px',
     '14px',
