@@ -1,4 +1,3 @@
-import React from 'react';
 import { LoginFieldConfig } from '../../interfaces/types';
 import { emailRegex } from '../regex';
 

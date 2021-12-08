@@ -159,6 +159,13 @@ export interface RegisterFieldConfig {
   validations: RegisterOptions;
 }
 
+export interface AlertPorps {
+  type: string;
+  title: string;
+  message: string | undefined;
+  onClose: () => void;
+}
+
 export interface CreateShelfModalProps {
   onCloseModal: Dispatch<SetStateAction<boolean>>;
 }

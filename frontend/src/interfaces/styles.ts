@@ -67,3 +67,7 @@ export interface ButtonStyleProps
   size?: string;
   fullwidth?: boolean;
 }
+
+export interface AlertBoxProp {
+  type: string;
+}

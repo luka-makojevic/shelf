@@ -10,6 +10,8 @@ import { PasswordData, ResetPasswordFieldConfig } from '../../interfaces/types';
 import userServices from '../../services/userServices';
 import { config } from '../../validation/config/resetPasswordValidationConfig';
 import { Routes } from '../../enums/routes';
+import AlertPortal from '../../components/alert/alert';
+import { AlertMessage } from '../../enums/alertMessages';
 
 const ResetPasswordForm = () => {
   const {
@@ -45,25 +47,39 @@ const ResetPasswordForm = () => {
       .finally(() => setIsLoading(false));
   };
 
+  const handleAlertClose = () => {
+    setError('');
+  };
+
   return (
-    <Form.Base onSubmit={handleSubmit(onSubmit)}>
-      <Error>{error}</Error>
-      <PlainText color="green">{successMessage}</PlainText>
-      <InputFieldWrapper>
-        {registerFieldConfig.map((fieldConfig) => (
-          <InputField
-            key={fieldConfig.name}
-            placeholder={fieldConfig.placeholder}
-            type={fieldConfig.type}
-            error={errors[fieldConfig.name]}
-            {...register(fieldConfig.name, fieldConfig.validations)}
-          />
-        ))}
-      </InputFieldWrapper>
-      <Button spinner fullwidth isLoading={isLoading}>
-        Reset Password
-      </Button>
-    </Form.Base>
+    <>
+      {error && (
+        <AlertPortal
+          type={AlertMessage.ERRROR}
+          title="Error"
+          message={error}
+          onClose={handleAlertClose}
+        />
+      )}
+      <Form.Base onSubmit={handleSubmit(onSubmit)}>
+        <Error>{error}</Error>
+        <PlainText color="green">{successMessage}</PlainText>
+        <InputFieldWrapper>
+          {registerFieldConfig.map((fieldConfig) => (
+            <InputField
+              key={fieldConfig.name}
+              placeholder={fieldConfig.placeholder}
+              type={fieldConfig.type}
+              error={errors[fieldConfig.name]}
+              {...register(fieldConfig.name, fieldConfig.validations)}
+            />
+          ))}
+        </InputFieldWrapper>
+        <Button spinner fullwidth isLoading={isLoading}>
+          Reset Password
+        </Button>
+      </Form.Base>
+    </>
   );
 };
 

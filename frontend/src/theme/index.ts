@@ -17,7 +17,6 @@ export const theme = {
     heading: 'inherit',
   },
 
-  // fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 96],
   fontSizes: [
     '12px',
     '14px',
@@ -44,8 +43,8 @@ export const theme = {
     black: '#000',
     primary: '#006FD1',
     secondary: '#BFBFBF',
-    danger: 'red',
     shadow: '#3C4D6B',
+    danger: '#E13E3E',
     success: 'green',
     info: '#1E90FF',
   },
