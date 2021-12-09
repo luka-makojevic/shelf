@@ -29,7 +29,6 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        //Principal userPrincipal = webRequest.getUserPrincipal();
 
         String jwtToken = webRequest.getHeader(SecurityConstants.AUTHORIZATION_HEADER_STRING);
 
