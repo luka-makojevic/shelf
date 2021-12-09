@@ -5,11 +5,12 @@ import { AlertBoxProp } from '../../utils/interfaces/styles';
 
 export const AlertContainer = styled.div<AlertBoxProp>`
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 10px;
+  right: 10px;
   display: flex;
-  width: 500px;
   height: 100px;
+  width: 70%;
+  max-width: 500px;
   border-radius: 10px;
   box-shadow: 0px 0px 8px 0px ${theme.colors.shadow};
   color: ${({ type }) => {

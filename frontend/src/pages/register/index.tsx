@@ -17,9 +17,9 @@ const Register = () => (
       </Container>
       <Container background="primary" isHiddenOnSmallScreen>
         <Feature>
-          <H1>Explore new world</H1>
+          <H1>Explore a new world</H1>
           <Description>
-            Enter your personal details and start your journey with us
+            Enter your personal details and start your journey with us :)
           </Description>
         </Feature>
       </Container>

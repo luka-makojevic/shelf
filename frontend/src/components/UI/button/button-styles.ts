@@ -8,7 +8,7 @@ export const StyledButton = styled('button')<ButtonStyleProps>`
   font-family: inherit;
   border: none;
   border-radius: 999px;
-  padding: 8px 16px;
+  padding: ${theme.space.sm} ${theme.space.md};
   margin: 8px 0;
   font-size: ${theme.fontSizes.md};
   cursor: pointer;
@@ -29,7 +29,7 @@ export const StyledButton = styled('button')<ButtonStyleProps>`
   ${(props) =>
     props.size === 'small' &&
     css`
-      padding: 7px 14px;
+      padding: ${theme.space.sm} ${theme.space.md};
       font-size: ${theme.fontSizes.md};
     `}
   ${(props) =>
@@ -71,7 +71,7 @@ export const StyledLink = styled(ReachRouterLink)<ButtonStyleProps>`
   border: none;
   border-radius: 999px;
   margin: 8px 0;
-  padding: 8px 16px;
+  padding: ${theme.space.sm} ${theme.space.md};
   font-size: ${theme.fontSizes.md};
   text-decoration: none;
   text-align: center;
@@ -85,7 +85,7 @@ export const StyledLink = styled(ReachRouterLink)<ButtonStyleProps>`
   ${(props) =>
     props.size === 'small' &&
     css`
-      padding: 7px 14px;
+      padding: ${theme.space.sm} ${theme.space.md};
       font-size: ${theme.fontSizes.md};
     `}
     

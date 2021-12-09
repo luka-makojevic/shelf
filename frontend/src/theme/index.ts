@@ -45,7 +45,7 @@ export const theme = {
     black: '#000',
     primary: '#006FD1',
     secondary: '#BFBFBF',
-    shadow: '#3C4D6B',
+    shadow: '#9aa7b1',
     danger: '#E13E3E',
     success: 'green',
     info: '#1E90FF',

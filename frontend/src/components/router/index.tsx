@@ -56,14 +56,6 @@ const Router = () => {
       ),
     },
     {
-      path: '/profile',
-      element: (
-        <ProtectedRoute roles={[Role.USER, Role.ADMIN, Role.MASTER_ADMIN]}>
-          <Dashboard />
-        </ProtectedRoute>
-      ),
-    },
-    {
       path: Routes.TERMS_AND_CONDITIONS,
       element: (
         <PublicOnlyRoute>

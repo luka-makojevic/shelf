@@ -1,7 +1,7 @@
-import { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
+import { LocalStorage } from '../../../services/localStorage';
+import { useAppSelector } from '../../../store/hooks';
 import { Routes } from '../../../utils/enums/routes';
-import { AuthContext } from '../../../providers/authProvider';
 
 type ProtectedRouteProps = {
   children: JSX.Element;
@@ -9,19 +9,17 @@ type ProtectedRouteProps = {
 };
 
 const ProtectedRoute = ({ children, roles }: ProtectedRouteProps) => {
-  const { accessToken, user } = useContext(AuthContext);
-  const isLoggedIn = accessToken !== '';
-
+  const accessToken = LocalStorage.get('token');
+  const user = useAppSelector((state) => state.user.user);
+  const isLoggedIn = accessToken;
   const userHasRequiredRole = user && roles.includes(user?.role);
 
   if (!isLoggedIn) {
     return <Navigate to={Routes.HOME} />;
   }
-
-  if (isLoggedIn && !userHasRequiredRole) {
+  if (user && isLoggedIn && !userHasRequiredRole) {
     return <Navigate to={Routes.DASHBOARD} />;
   }
-
   return children;
 };
 

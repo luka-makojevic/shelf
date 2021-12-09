@@ -1,6 +1,6 @@
 export const LocalStorage = {
   get(key: string) {
-    return JSON.parse(localStorage.getItem(key) || '');
+    return localStorage.getItem(key);
   },
   set(key: string, value: string | {}) {
     localStorage.setItem(key, JSON.stringify(value));

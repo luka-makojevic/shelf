@@ -31,7 +31,7 @@ export const LandinPageContainer = styled.div<ContainerProps>`
   justify-content: center;
   height: 100%;
   width: 100%;
-  padding: 40px;
+  padding: ${theme.space.lg};
 `;
 
 export const Container = styled.div<ContainerProps>`
@@ -41,13 +41,12 @@ export const Container = styled.div<ContainerProps>`
   justify-content: center;
   height: 100%;
   width: 100%;
-  padding: 40px;
+  padding: ${theme.space.lg};
   background-color: ${({ background }) =>
     background === 'primary' && theme.colors.primary};
   @media (max-width: ${theme.breakpoints.md}) {
-    padding: 40px;
-    ${({ isHiddenOnSmallScreen }) => isHiddenOnSmallScreen && 'display: none;'}
-    height: 100vh;
+    ${({ isHiddenOnSmallScreen }) =>
+      isHiddenOnSmallScreen && 'display: none;'}/* height: 100vh;s */
   }
 `;
 
@@ -57,7 +56,7 @@ export const EmailVerificationContainer = styled.div<ContainerProps>`
   align-items: center;
   justify-content: center;
   height: 300px;
-  padding: 50px;
+  padding: ${theme.space.xl};
   border-radius: 30px;
   max-width: 500px;
   width: 100%;

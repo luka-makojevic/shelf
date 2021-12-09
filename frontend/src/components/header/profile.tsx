@@ -1,5 +1,6 @@
-import React, { useContext, useState } from 'react';
-import { AuthContext } from '../../providers/authProvider';
+import { useState } from 'react';
+import { useAuth } from '../../hooks/authHook';
+import { useAppSelector } from '../../store/hooks';
 import { PlainText, Link } from '../text/text-styles';
 import { Button } from '../UI/button';
 import { DropDown, ProfilePicture, ProfileInfoWrapper } from './header-styles';
@@ -7,7 +8,10 @@ import { DropDown, ProfilePicture, ProfileInfoWrapper } from './header-styles';
 const Profile = () => {
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
-  const { logout, user } = useContext(AuthContext);
+  const { logout } = useAuth();
+
+  const user = useAppSelector((state) => state.user.user);
+
   const data = {
     jwtRefreshToken: user?.jwtRefreshToken,
     jwtToken: user?.jwtToken,

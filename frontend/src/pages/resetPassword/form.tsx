@@ -2,8 +2,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { InputField } from '../../components/input/InputField';
-import { Error, PlainText } from '../../components/text/text-styles';
-import { Base, InputFieldWrapper } from '../../components/form/form-styles';
+import { H2 } from '../../components/text/text-styles';
+import {
+  Base,
+  FormContainer,
+  InputFieldWrapper,
+} from '../../components/form/form-styles';
 import { Button } from '../../components/UI/button';
 import {
   PasswordData,
@@ -26,7 +30,6 @@ const ResetPasswordForm = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
-  const [successMessage, setSuccessMessage] = useState<string>('');
 
   const { jwtToken } = useParams();
 
@@ -40,8 +43,7 @@ const ResetPasswordForm = () => {
 
     userServices
       .resetPassword(data)
-      .then((res) => {
-        setSuccessMessage(res.data.message);
+      .then(() => {
         navigation(Routes.LOGIN);
       })
       .catch((err) => {
@@ -55,18 +57,17 @@ const ResetPasswordForm = () => {
   };
 
   return (
-    <>
-      {error && (
-        <AlertPortal
-          type={AlertMessage.ERRROR}
-          title="Error"
-          message={error}
-          onClose={handleAlertClose}
-        />
-      )}
+    <FormContainer>
+      <H2>Reset Password</H2>
       <Base onSubmit={handleSubmit(onSubmit)}>
-        <Error>{error}</Error>
-        <PlainText color="green">{successMessage}</PlainText>
+        {error && (
+          <AlertPortal
+            type={AlertMessage.ERRROR}
+            title="Error"
+            message={error}
+            onClose={handleAlertClose}
+          />
+        )}
         <InputFieldWrapper>
           {registerFieldConfig.map((fieldConfig) => (
             <InputField
@@ -82,7 +83,7 @@ const ResetPasswordForm = () => {
           Reset Password
         </Button>
       </Base>
-    </>
+    </FormContainer>
   );
 };
 

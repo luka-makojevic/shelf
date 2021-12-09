@@ -1,13 +1,12 @@
-import { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Routes } from '../../../utils/enums/routes';
-import { AuthContext } from '../../../providers/authProvider';
+import { LocalStorage } from '../../../services/localStorage';
 
 type PublicOnlyRouteProps = { children: JSX.Element };
 
 const PublicOnlyRoute = ({ children }: PublicOnlyRouteProps) => {
-  const { accessToken } = useContext(AuthContext);
-  const isLoggedIn = accessToken !== '';
+  const accessToken = LocalStorage.get('token');
+  const isLoggedIn = accessToken;
 
   return isLoggedIn ? <Navigate to={Routes.DASHBOARD} /> : children;
 };
