@@ -4,9 +4,12 @@ import com.htec.filesystem.model.response.TextResponseMessage;
 import com.htec.filesystem.service.FileService;
 import com.htec.filesystem.service.UserAPICallService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.management.StandardEmitterMBean;
 
 @RestController
 @RequestMapping("/file")
@@ -20,7 +23,8 @@ public class FileController {
     }
 
     @PostMapping("/upload/profile/{id}")
-    public ResponseEntity saveUser(@RequestParam("image") MultipartFile multipartFile,
+    public ResponseEntity saveUser(RequestEntity<byte[]> entity,
+                                   @RequestParam("image") MultipartFile multipartFile,
                                    @PathVariable Long id) {
 
         fileService.saveUserProfilePicture(multipartFile, id);

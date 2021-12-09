@@ -6,6 +6,7 @@ import com.htec.account.dto.UserDTO;
 import com.htec.account.mapper.UserMapper;
 import com.htec.account.model.request.PasswordResetModel;
 import com.htec.account.model.request.PasswordResetRequestModel;
+import com.htec.account.model.request.UpdateUserPhotoByIdRequestModel;
 import com.htec.account.model.request.UserUpdateRequestModel;
 import com.htec.account.model.response.TextResponseMessage;
 import com.htec.account.service.UserService;

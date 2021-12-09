@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 public class UserAPICallService {
 
     RestTemplate restTemplate = new RestTemplate();
-    @Value("${baseUrl}")
+    @Value("${userServiceUrl}")
     private String host;
     private final String UPDATE_PHOTO_URL = "/users/update/photo";
 

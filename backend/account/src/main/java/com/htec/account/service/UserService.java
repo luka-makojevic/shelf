@@ -9,6 +9,7 @@ import com.htec.account.entity.UserEntity;
 import com.htec.account.exception.ExceptionSupplier;
 import com.htec.account.mapper.UserMapper;
 import com.htec.account.model.request.PasswordResetModel;
+import com.htec.account.model.request.UpdateUserPhotoByIdRequestModel;
 import com.htec.account.model.response.UserPageResponseModel;
 import com.htec.account.model.response.UserResponseModel;
 import com.htec.account.repository.mysql.PasswordResetTokenRepository;
