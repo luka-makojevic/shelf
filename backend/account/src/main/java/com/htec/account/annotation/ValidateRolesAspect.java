@@ -23,7 +23,7 @@ public class ValidateRolesAspect {
             throw ExceptionSupplier.authenticationCredentialsNotValid.get();
         }
 
-        if (!Arrays.asList(validateRoles.roles()).contains(String.valueOf(user.getRoleId()))) {
+        if (!Arrays.asList(validateRoles.roles()).contains(Roles.fromValue(user.getRoleId()))) {
             throw ExceptionSupplier.userDoesNotHavePermission.get();
         }
     }
