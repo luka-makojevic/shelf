@@ -71,7 +71,7 @@ public class BaseWdWaitHelpers {
      * Wait for element to be present
      *
      * @param locator
-     * @return Webelement after wait
+     * @return WebElement after wait
      * @author stefan.gajic
      */
     public WebElement waitForElementPresence (By locator) {

@@ -10,7 +10,7 @@ import java.io.IOException;
 public class RegistrationPage {
 
     WebDriver driver;
-    BaseWdWaitHelpers wait;
+    BaseWdWaitHelpers baseWdWaitHelpers;
     ExcelReader excelReader;
     String mail;
     String pass;
@@ -37,8 +37,9 @@ public class RegistrationPage {
     public By recordExistsMessage = By.xpath("//*[contains(text(),'Record already exists.')]");
 
 
-    public RegistrationPage(WebDriver driver) {
+    public RegistrationPage(WebDriver driver, BaseWdWaitHelpers baseWdWaitHelpers) {
         this.driver = driver;
+        this.baseWdWaitHelpers = baseWdWaitHelpers;
     }
 
     public void insertData(By locator, String data) {
@@ -47,16 +48,29 @@ public class RegistrationPage {
     }
 
     public void clickOnElement(By locator) {
-        wait = new BaseWdWaitHelpers(driver);
-        wait.waitToBeClickable(driver.findElement(locator)).click();
+        baseWdWaitHelpers.waitToBeClickable(driver.findElement(locator)).click();
     }
 
     public String getMessageText (By locator) {
-        wait = new BaseWdWaitHelpers(driver);
-        String message = wait.waitToBeVisible(locator).getText();
-        return message;
+        return baseWdWaitHelpers.waitToBeVisible(locator).getText();
     }
 
+
+    /**
+     * This method selects an element if element isn't already selected
+     *
+     * @author stefan.gajic
+     */
+    public void selectElement(By locator) {
+        boolean selected = driver.findElement(locator).isSelected();
+        if(selected==false) driver.findElement(locator).click();
+    }
+
+    /**
+     * Method for loading valid and invalid data from Excel for filling out registration form
+     *
+     * @author stefan.gajic
+     */
     public void loadDataFromExcel
             (int mailRow, int mailCell, int passRow, int passCell, int confPassRow, int confPassCell,
              int firstNameRow, int firstNameCell, int lastNameRow, int lastNameCell) throws IOException {
@@ -76,7 +90,7 @@ public class RegistrationPage {
         insertData(lastName, last);
         clickOnElement(eyeIconPass);
         clickOnElement(eyeIconConfPass);
-        clickOnElement(checkBox);
+        selectElement(checkBox);
         clickOnElement(signUpButton);
     }
 
@@ -90,4 +104,5 @@ public class RegistrationPage {
         clickOnElement(eyeIconConfPass);
         clickOnElement(signUpButton);
     }
+
 }

@@ -41,13 +41,17 @@ public class ExcelReader {
         return sheet.getLastRowNum();
     }
 
-    public int getLastRowNumberFromSheet(String sheetName)
-    {
+    public int getLastRowNumberFromSheet(String sheetName) {
         this.sheet = wb.getSheet(sheetName);
         return sheet.getLastRowNum();
     }
 
-    /**
+
+    /** Method for getting the last row number from a specific column in Excel sheet
+     *
+     * @param  sheetName
+     * @param  columnName
+     * @return int
      * @author stefan.gajic
      */
     public int getLastRowNumberFromColumn(String sheetName, String columnName) {
@@ -56,10 +60,12 @@ public class ExcelReader {
         this.sheet = wb.getSheet(sheetName);
         this.row = sheet.getRow(rowNum);
 
+        // Selects desired column by its name
         for (int i = 0; i < row.getLastCellNum(); i++) {
             if (row.getCell(i).getStringCellValue().equals(columnName)) {
                 colNum = i;}
         }
+        //Determines last row number from desired column
         for(int i = 1; i <= sheet.getLastRowNum(); i++) {
             row = sheet.getRow(i);
             if (row.getCell(colNum).getStringCellValue().equals("")) {
