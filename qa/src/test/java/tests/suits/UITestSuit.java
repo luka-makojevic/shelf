@@ -1,13 +1,14 @@
-package tests;
+package tests.suits;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+import tests.frontendTests.LoginTest;
 
 @RunWith(Suite.class)
 
 @Suite.SuiteClasses({
-        LoginTest.class,
-        ApiTest.class
+        LoginTest.class
 })
-public class JUnitTestSuite {
+
+public class UITestSuit {
 }

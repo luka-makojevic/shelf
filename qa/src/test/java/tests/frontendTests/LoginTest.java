@@ -1,4 +1,5 @@
-package tests;
+package tests.frontendTests;
+import helpers.BaseTest;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

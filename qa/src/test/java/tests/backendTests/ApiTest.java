@@ -1,4 +1,4 @@
-package tests;
+package tests.backendTests;
 
 import com.google.gson.Gson;
 import helpers.BaseHelperPropertieManager;
