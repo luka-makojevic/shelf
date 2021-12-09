@@ -24,4 +24,18 @@ public class ExceptionSupplier {
             LocalDateTime.now().format(formatter),
             ErrorMessages.BAD_REQUEST.getErrorMessage()
     );
+
+    public static final Supplier<ShelfException> couldNotFindUserById = () -> new ShelfException(
+            ErrorMessages.COULD_NOT_FIND_USER_BY_ID.getErrorMessage(),
+            HttpStatus.NOT_FOUND.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.NOT_FOUND.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> tokenHeaderNotFound = () -> new ShelfException(
+            ErrorMessages.TOKEN_HEADER_NOT_FOUND.getErrorMessage(),
+            HttpStatus.NOT_FOUND.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.NOT_FOUND.getErrorMessage()
+    );
 }

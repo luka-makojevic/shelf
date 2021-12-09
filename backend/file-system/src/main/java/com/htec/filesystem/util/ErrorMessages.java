@@ -3,6 +3,8 @@ package com.htec.filesystem.util;
 public enum ErrorMessages {
 
     COULD_NOT_SAVE_IMAGE_FILE("Could not save image file."),
+    COULD_NOT_FIND_USER_BY_ID("Record with provided id is not found."),
+    TOKEN_HEADER_NOT_FOUND("Token header not found"),
     COULD_NOT_UPDATE_USER("Could not update user."),
     BAD_REQUEST("Bad request."),
     UNAUTHORIZED("Unauthorized."),

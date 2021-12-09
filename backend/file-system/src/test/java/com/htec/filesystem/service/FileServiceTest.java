@@ -12,12 +12,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.RequestEntity;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import security.SecurityConstants;
 
 import java.nio.file.FileSystem;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -49,6 +52,11 @@ class FileServiceTest {
                 "test1.jpg".getBytes());
         FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix());
 
+        String token = "jwtToken";
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add(SecurityConstants.AUTHORIZATION_HEADER_STRING, token);
+        RequestEntity<byte[]> entity = mock(RequestEntity.class);
+
         long id = 1L;
         String fileName = "test1.jpg";
         String homePath = "/home/stefan/";
@@ -68,8 +76,8 @@ class FileServiceTest {
 
             mocked.when(() -> FileUtil.saveFile(anyString(), anyString(), any(MultipartFile.class))).then(invocationOnMock -> null);
 
-            doNothing().when(userAPICallService).updateUserPhotoById(id, localPath + fileName);
-            fileService.saveUserProfilePicture(multipartFile, id);
+            doNothing().when(userAPICallService).updateUserPhotoById(id, localPath + fileName, entity);
+            fileService.saveUserProfilePicture(multipartFile, id, entity);
 
             mocked.verify(() -> FileUtil.saveFile(anyString(), anyString(), any(MultipartFile.class)));
 
@@ -81,10 +89,15 @@ class FileServiceTest {
 
         long id = 1L;
 
+        String token = "jwtToken";
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add(SecurityConstants.AUTHORIZATION_HEADER_STRING, token);
+        RequestEntity<byte[]> entity = mock(RequestEntity.class);
+
         when(mockMultipartFile.getOriginalFilename()).thenReturn(null);
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
-            fileService.saveUserProfilePicture(mockMultipartFile, id);
+            fileService.saveUserProfilePicture(mockMultipartFile, id, entity);
         });
 
         Assertions.assertEquals("Could not save image file.", exception.getMessage());

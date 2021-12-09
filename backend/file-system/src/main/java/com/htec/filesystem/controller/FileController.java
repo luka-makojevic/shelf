@@ -9,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.management.StandardEmitterMBean;
-
 @RestController
 @RequestMapping("/file")
 public class FileController {
@@ -27,7 +25,7 @@ public class FileController {
                                    @RequestParam("image") MultipartFile multipartFile,
                                    @PathVariable Long id) {
 
-        fileService.saveUserProfilePicture(multipartFile, id);
+        fileService.saveUserProfilePicture(multipartFile, id, entity);
 
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("Image Uploaded", HttpStatus.OK.value()));
     }
