@@ -70,8 +70,6 @@ public class GatewayService {
 
         if (servletRequest != null && FILE_REQUEST_SHELF_HEADER.equals(shelfHeader)) {
 
-            Map<String, byte[]> map = new HashMap<>();
-
             MultipartHttpServletRequest multipartRequest;
 
             if (servletRequest instanceof MultipartHttpServletRequest) {
@@ -80,28 +78,36 @@ public class GatewayService {
                 throw HttpClientErrorException.create(HttpStatus.BAD_REQUEST, FILE_NOT_FOUND_MESSAGE, request.getHeaders(), null, null);
             }
 
-            Iterator<String> filesIterator = multipartRequest.getFileNames();
-
-            while (filesIterator.hasNext()) {
-
-                String tempFileName = filesIterator.next();
-
-                MultipartFile file = multipartRequest.getFile(tempFileName);
-
-                if (file != null && !file.isEmpty()) {
-                    map.put(tempFileName, file.getBytes());
-                }
-            }
+            byte[] entityBody = buildHttpEntityBody(multipartRequest);
 
             HttpHeaders headers = new HttpHeaders(filterRequestHeaders(request.getHeaders()));
 
-            ObjectMapper mapper = new ObjectMapper();
-            byte[] bytes = mapper.writeValueAsBytes(map);
-
-            return new HttpEntity<>(bytes, headers);
+            return new HttpEntity<>(entityBody, headers);
         }
 
         return request;
+    }
+
+    private byte[] buildHttpEntityBody(MultipartHttpServletRequest multipartRequest) throws IOException {
+
+        Map<String, byte[]> map = new HashMap<>();
+
+        Iterator<String> filesIterator = multipartRequest.getFileNames();
+
+        while (filesIterator.hasNext()) {
+
+            String tempFileName = filesIterator.next();
+
+            MultipartFile file = multipartRequest.getFile(tempFileName);
+
+            if (file != null && !file.isEmpty()) {
+                map.put(tempFileName, file.getBytes());
+            }
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        return mapper.writeValueAsBytes(map);
     }
 
     private ResponseEntity<byte[]> send(String apiUrl, HttpMethod httpMethod, HttpEntity<byte[]> request) {
