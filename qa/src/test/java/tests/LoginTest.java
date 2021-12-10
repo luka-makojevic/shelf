@@ -22,6 +22,15 @@ public class LoginTest extends BaseTest {
         Assert.assertEquals(driver.getCurrentUrl(), getPageUrl("dashboardPageUrl"));
     }
     @Test
+    public void userShouldBeLoggedInWithMicrosoft() throws IOException {
+        String email = excelReader.getStringData("LoginTest", 1,0);
+        String password = excelReader.getStringData("LoginTest", 1, 1);
+        loginViaMicrosft.loginAsMicrosoftUser(email, password);
+        baseWdWaitHelpers.waitUrlToBe(getPageUrl("dashboardPageUrl"));
+        Assert.assertEquals(driver.getCurrentUrl(), getPageUrl("dashboardPageUrl"));
+    }
+
+    @Test
     public void userShouldNotLoginWithInvalidEmailFormat(){
       
         for (int i = 1; i < excelReader.getLastRowNumberFromSheet("LoginTest") -2; i++) {
