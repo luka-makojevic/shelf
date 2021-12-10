@@ -5,7 +5,8 @@ import {
   MicrosoftRegisterData,
   MicrosoftLoginData,
   LogoutData,
-} from '../interfaces/types';
+} from '../interfaces/dataTypes';
+import instance from '../api/axiosInstance';
 
 const API_URL = 'http://10.10.0.136:8080/';
 
@@ -20,9 +21,7 @@ const microsoftLogin = (data: MicrosoftLoginData) =>
   axios.post(`${API_URL}login/microsoft`, data);
 
 const logout = (data: LogoutData) =>
-  axios.post(`${API_URL}auth/logout`, data, {
-    headers: { Authorization: `Bearer ${data.jwtToken}` },
-  });
+  instance.post(`${API_URL}auth/logout`, data);
 
 export default {
   register,

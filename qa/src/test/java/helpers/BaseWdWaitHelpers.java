@@ -7,6 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 
 public class BaseWdWaitHelpers {
@@ -91,4 +92,16 @@ public class BaseWdWaitHelpers {
         wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         return wait.until(ExpectedConditions.urlToBe(url));
     }
+
+    /**
+     *
+     * @param locator
+     * @return List<WebElement> after wait
+     * @author shelfsrdjan
+     */
+    public List<WebElement> waitForAllElementsToBePresence (By locator) {
+        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
+    }
+
 }

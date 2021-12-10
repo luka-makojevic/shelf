@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { ButtonProps } from '../../interfaces/types';
 import { theme } from '../../theme';
+import { ButtonProps } from '../UI/button/button.interfaces';
 
 export const Backdrop = styled.div`
   width: 100vw;
@@ -35,7 +35,7 @@ export const Header = styled.div`
   justify-content: space-between;
 
   height: 70px;
-  padding: 0 10px;
+  padding: ${theme.space.none} ${theme.space.sm};
 
   width: 100%;
   color: ${theme.colors.primary};
@@ -45,7 +45,7 @@ export const Body = styled.div`
   height: 100%;
   width: 100%;
 
-  padding: 20px;
+  padding: ${theme.space.md};
 
   display: flex;
   flex-direction: column;
@@ -56,7 +56,7 @@ export const Body = styled.div`
 `;
 
 export const Footer = styled.div`
-  padding: 0 10px;
+  padding: ${theme.space.none} ${theme.space.sm};
   margin-top: 20px;
   display: flex;
   align-items: center;
@@ -70,5 +70,5 @@ export const Footer = styled.div`
 export const Close = styled.button<ButtonProps>`
   background-color: transparent;
   border: none;
-  padding: 0;
+  padding: ${theme.space.none};
 `;
