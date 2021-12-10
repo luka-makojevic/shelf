@@ -1,48 +1,24 @@
 import styled from 'styled-components';
-import { space, layout, border } from 'styled-system';
-import { FormProps } from '../../interfaces/styles';
+import { FormProps } from '../../interfaces/propTypes';
+import { theme } from '../../theme';
 
-export const Container = styled.div<FormProps>`
+export const FormContainer = styled.div<FormProps>`
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  margin: auto 1em;
-  padding: 1em;
-  width: 100%;
-
+  margin: auto ${theme.space.lg};
+  padding: ${theme.space.md};
   border-radius: 50px;
-  border: 2px solid ${({ theme }) => theme.colors.secondary};
-
-  ${space}
-  ${layout}
+  border: 2px solid ${theme.colors.secondary};
+  max-width: 380px;
+  width: 100%;
 `;
 
 export const Base = styled.form`
   display: flex;
   flex-wrap: wrap;
   max-width: 300px;
-  padding: 10px;
-`;
-
-export const Input = styled.input<FormProps>`
-  width: 100%;
-  min-height: 45px;
-  border: 1px solid ${({ theme }) => theme.colors.secondary};
-  border-radius: 30px;
-  text-indent: 10px;
-  ${space}
-  ${border}
-
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 6px 0 ${({ theme }) => theme.colors.secondary};
-  }
-`;
-
-export const PasswordContainer = styled.div`
-  position: relative;
-  width: 100%;
+  padding: ${theme.space.sm};
 `;
 
 export const Spinner = styled.img`
@@ -88,22 +64,9 @@ export const Spinner = styled.img`
   }
 `;
 
-export const Submit = styled.button`
-  margin-top: 1em;
-  padding: 0px 20px;
-  width: 100%;
-  min-width: 250px;
-  min-height: 45px;
-  font-size: ${({ theme }) => theme.fontSizes[2]};
-  font-weight: 700;
-  color: ${({ theme }) => theme.colors.white};
-  background: #006fd1;
-  border: none;
-  border-radius: 30px;
-`;
-
 export const InputFieldWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  min-height: 75px;
 `;

@@ -1,8 +1,8 @@
 import { FaFolderOpen } from 'react-icons/fa';
-import { AddFileModalProps } from '../../interfaces/types';
 import { theme } from '../../theme';
 import { Button } from '../UI/button';
 import { Footer } from './modal-styles';
+import { AddFileModalProps } from './modal.interfaces';
 
 const AddFileModal = ({ onCloseModal }: AddFileModalProps) => {
   const handleAddFile = () => {};
@@ -13,7 +13,7 @@ const AddFileModal = ({ onCloseModal }: AddFileModalProps) => {
 
   return (
     <>
-      <FaFolderOpen size={theme.space[6]} />
+      <FaFolderOpen size={theme.size.lg} />
       <Button variant="lightBordered" onClick={handleAddFile}>
         Add files
       </Button>

@@ -14,6 +14,7 @@ instance.interceptors.request.use(
     const token = JSON.parse(localStorage.getItem('token') || '');
 
     if (token) {
+      // eslint-disable-next-line no-param-reassign
       if (config.headers) config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
@@ -25,7 +26,6 @@ instance.interceptors.response.use(
   (res) => res,
   async (err) => {
     const originalConfig = err.config;
-
     if (err.response.data.message === 'Token expired.') {
       try {
         const response = await axios.get(`${API_URL}auth/refresh/token`, {

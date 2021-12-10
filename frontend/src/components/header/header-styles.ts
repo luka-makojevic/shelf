@@ -1,23 +1,29 @@
 import styled from 'styled-components';
-import { Link as ReachRouterLink } from 'react-router-dom';
-import { space, layout } from 'styled-system';
-import { HeaderProps, ProfileProps } from '../../interfaces/styles';
+import { theme } from '../../theme';
+import {
+  HeaderContainerProps,
+  HeaderStyleProps,
+  ProfileProps,
+} from './header.interface';
 
-export const Container = styled.div`
+export const HeaderContainer = styled.div<HeaderContainerProps>`
   display: flex;
   justify-content: space-between;
   align-items: center;
   max-height: 100px;
   width: 100%;
-  position: absolute;
+  ${({ position }) => position && `position:${position};`};
   padding: 15px 20px 0 20px;
 `;
 
-export const Logo = styled.img<HeaderProps>`
+export const Logo = styled.img<HeaderStyleProps>`
   width: 70px;
-  ${layout}
-  ${space}
 `;
+
+export const ProfileInfoWrapper = styled.div`
+  margin-left: ${theme.space.md};
+`;
+
 export const DropDown = styled.div`
   position: absolute;
   display: flex;
@@ -27,7 +33,7 @@ export const DropDown = styled.div`
   align-items: center;
   top: 48px;
   right: 0px;
-  padding: 10px;
+  padding: ${theme.space.md};
   min-width: 200px;
   height: 140px;
   border-radius: 20px;
@@ -43,7 +49,7 @@ export const ProfilePicture = styled.div`
   cursor: pointer;
 `;
 
-export const Profile = styled.div<ProfileProps>`
+export const ProfileContainer = styled.div<ProfileProps>`
   position: relative;
-  ${({ hideProfile }) => hideProfile && 'display:none'}
+  ${({ hideProfile }) => hideProfile && 'display:none;'}
 `;

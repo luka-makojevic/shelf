@@ -5,7 +5,7 @@ import {
   MicrosoftRegisterData,
   MicrosoftLoginData,
   LogoutData,
-} from '../interfaces/types';
+} from '../interfaces/dataTypes';
 import instance from '../api/axiosInstance';
 
 const API_URL = 'http://10.10.0.136:8080/';

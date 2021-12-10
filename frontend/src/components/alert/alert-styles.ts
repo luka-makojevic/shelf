@@ -1,15 +1,16 @@
 import styled from 'styled-components';
-import { AlertBoxProp } from '../../interfaces/styles';
-import { ButtonProps } from '../../interfaces/types';
 import { theme } from '../../theme';
+import { ButtonProps } from '../UI/button/button.interfaces';
+import { AlertStyleProp } from './alert.interfaces';
 
-export const AlertContainer = styled.div<AlertBoxProp>`
+export const AlertContainer = styled.div<AlertStyleProp>`
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 10px;
+  right: 10px;
   display: flex;
-  width: 500px;
   height: 100px;
+  width: 70%;
+  max-width: 500px;
   border-radius: 10px;
   box-shadow: 0px 0px 8px 0px ${theme.colors.shadow};
   color: ${({ type }) => {
@@ -42,18 +43,18 @@ export const ContentContainer = styled.div`
 `;
 
 export const Title = styled.div`
-  margin-bottom: ${theme.space[2]};
-  font-size: ${theme.fontSizes[4]};
+  margin-bottom: ${theme.space.sm};
+  font-size: ${theme.fontSizes.lg};
 `;
 
 export const Message = styled.div`
-  font-size: ${theme.fontSizes[2]};
+  font-size: ${theme.fontSizes.sm};
 `;
 export const CloseContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-right: ${theme.space[3]};
+  margin-right: ${theme.space.md};
 `;
 
 export const Close = styled.button<ButtonProps>`

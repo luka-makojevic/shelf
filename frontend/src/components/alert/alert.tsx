@@ -5,17 +5,17 @@ import {
   AiOutlineCheckCircle,
   AiOutlineInfoCircle,
 } from 'react-icons/ai';
-import { AlertMessage } from '../../enums/alertMessages';
-import { AlertPorps } from '../../interfaces/types';
+import { AlertMessage } from '../../utils/enums/alertMessages';
 import { theme } from '../../theme';
 import {
   AlertContainer,
-  Close,
   Message,
   Title,
   ContentContainer,
   CloseContainer,
+  Close,
 } from './alert-styles';
+import { AlertPorps } from './alert.interfaces';
 
 const alertPortal = document.getElementById('alert-root');
 
@@ -26,19 +26,19 @@ const AlertPortal = ({ type, title, message, onClose }: AlertPorps) => {
         <Close onClick={onClose}>
           {type === AlertMessage.ERRROR && (
             <AiOutlineCloseCircle
-              size={theme.space[5]}
+              size={theme.size.md}
               color={theme.colors.danger}
             />
           )}
           {type === AlertMessage.SUCCESS && (
             <AiOutlineCheckCircle
-              size={theme.space[5]}
+              size={theme.size.md}
               color={theme.colors.success}
             />
           )}
           {type === AlertMessage.INFO && (
             <AiOutlineInfoCircle
-              size={theme.space[5]}
+              size={theme.size.md}
               color={theme.colors.info}
             />
           )}
