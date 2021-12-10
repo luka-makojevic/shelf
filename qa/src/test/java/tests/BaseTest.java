@@ -3,11 +3,11 @@ package tests;
 import helpers.BaseWdWaitHelpers;
 import helpers.BaseWebDriverManager;
 import helpers.ExcelReader;
-import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.LoginPage;
+import pages.LoginViaMicrosoft;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,6 +22,7 @@ public class BaseTest
     public ExcelReader excelReader;
     public LoginPage loginPage;
     public static Properties prop;
+    public LoginViaMicrosoft loginViaMicrosft;
 
     @Before
     public void initialize() throws IOException
@@ -32,6 +33,7 @@ public class BaseTest
         driver.manage().window().maximize();
         excelReader = new ExcelReader("src/main/resources/ExcelRead.xlsx");
         loginPage = new LoginPage(driver);
+        loginViaMicrosft = new LoginViaMicrosoft(driver, baseWdWaitHelpers);
     }
     /**
      * @author stefan.gajic
