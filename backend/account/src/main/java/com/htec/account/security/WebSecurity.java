@@ -56,8 +56,6 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_URL)
                 .permitAll()
-                .antMatchers(HttpMethod.PUT, "/users/update/photo")
-                .permitAll()
                 .antMatchers(
                         "/v2/api-docs",
                         "/swagger-resources/**",

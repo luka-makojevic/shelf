@@ -2,10 +2,11 @@ package com.htec.filesystem.service;
 
 import com.htec.filesystem.exception.ExceptionSupplier;
 import com.htec.filesystem.util.FileUtil;
-import org.springframework.http.RequestEntity;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Base64;
+import java.util.Map;
 
 @Service
 public class FileService {
@@ -17,19 +18,21 @@ public class FileService {
         this.userAPICallService = userAPICallService;
     }
 
-    public void saveUserProfilePicture(MultipartFile multipartFile, Long id, RequestEntity<byte[]> entity) {
+    public void saveUserProfilePicture(Long id, Map<String, Pair<String, String>> files) {
 
-        if (multipartFile.getOriginalFilename() == null)
+        byte[] bytes = Base64.getDecoder().decode(files.get("image").getSecond());
+
+        if (files.get("image") == null)
             throw ExceptionSupplier.couldNotSaveImage.get();
 
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        String fileName = files.get("image").getFirst();
 
         String homePath = System.getProperty("user.home");
         String localPath = "/shelf-files/user-photos/" + id + "/";
 
-        userAPICallService.updateUserPhotoById(id, localPath + fileName, entity);
+        userAPICallService.updateUserPhotoById(id, localPath + fileName);
 
         String uploadDir = homePath + localPath;
-        FileUtil.saveFile(uploadDir, fileName, multipartFile);
+        FileUtil.saveFile(uploadDir, fileName, bytes);
     }
 }

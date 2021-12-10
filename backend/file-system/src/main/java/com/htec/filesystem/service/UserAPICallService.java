@@ -1,19 +1,19 @@
 package com.htec.filesystem.service;
 
 import com.htec.filesystem.exception.ExceptionSupplier;
+import com.htec.filesystem.filters.JwtStorageFilter;
 import com.htec.filesystem.model.request.UpdateUserPhotoByIdRequestModel;
+import com.htec.filesystem.security.SecurityConstants;
 import com.htec.filesystem.util.ErrorMessages;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import security.SecurityConstants;
 
 import java.util.Objects;
 
@@ -26,19 +26,16 @@ public class UserAPICallService {
     private String host;
     private final String UPDATE_PHOTO_URL = "/users/update/photo";
 
-    public void updateUserPhotoById(Long id, String pictureName, RequestEntity<byte[]> entity) {
+    public void updateUserPhotoById(Long id, String pictureName) {
 
         try {
             UpdateUserPhotoByIdRequestModel updateUserPhotoByIdRequestModel = new UpdateUserPhotoByIdRequestModel();
             updateUserPhotoByIdRequestModel.setId(id);
             updateUserPhotoByIdRequestModel.setPictureName(pictureName);
 
-            if (entity.getHeaders().get(SecurityConstants.AUTHORIZATION_HEADER_STRING) == null)
-                throw ExceptionSupplier.tokenHeaderNotFound.get();
-
             MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
             headers.add(SecurityConstants.AUTHORIZATION_HEADER_STRING,
-                    entity.getHeaders().get(SecurityConstants.AUTHORIZATION_HEADER_STRING).toString());
+                    JwtStorageFilter.jwtThreadLocal.get());
 
             HttpEntity<UpdateUserPhotoByIdRequestModel> httpEntityRequestBody = new HttpEntity<>(updateUserPhotoByIdRequestModel, headers);
 

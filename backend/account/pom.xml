@@ -23,7 +23,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
+            <artifactId>spring-boot-starter-com.htec.filesystem.security</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -86,8 +86,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
+            <groupId>org.springframework.com.htec.filesystem.security</groupId>
+            <artifactId>spring-com.htec.filesystem.security-test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
