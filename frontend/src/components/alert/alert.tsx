@@ -9,13 +9,13 @@ import { AlertMessage } from '../../utils/enums/alertMessages';
 import { theme } from '../../theme';
 import {
   AlertContainer,
-  Close,
   Message,
   Title,
   ContentContainer,
   CloseContainer,
+  Close,
 } from './alert-styles';
-import { AlertPorps } from '../../utils/interfaces/propTypes';
+import { AlertPorps } from './alert.interfaces';
 
 const alertPortal = document.getElementById('alert-root');
 

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
+import { FormProps } from '../../interfaces/propTypes';
 import { theme } from '../../theme';
-import { FormProps } from '../../utils/interfaces/styles';
 
 export const FormContainer = styled.div<FormProps>`
   display: flex;

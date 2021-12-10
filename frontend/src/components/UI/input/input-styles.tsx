@@ -1,8 +1,9 @@
 import styled from 'styled-components';
-import { InputProps } from '../../utils/interfaces/styles';
-import { theme } from '../../theme';
 
-export const Input = styled.input<InputProps>`
+import { theme } from '../../../theme';
+import { InputStyleProps } from './input.interfaces';
+
+export const Input = styled.input<InputStyleProps>`
   width: 100%;
   min-height: 45px;
   border: 1px solid ${theme.colors.secondary};

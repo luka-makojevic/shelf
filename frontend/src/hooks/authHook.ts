@@ -9,7 +9,7 @@ import {
   MicrosoftLoginData,
   MicrosoftRegisterData,
   RegisterData,
-} from '../utils/interfaces/dataTypes';
+} from '../interfaces/dataTypes';
 
 export const useAuth = () => {
   const dispatch = useAppDispatch();

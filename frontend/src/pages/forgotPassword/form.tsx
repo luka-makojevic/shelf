@@ -5,8 +5,8 @@ import {
   FormContainer,
   InputFieldWrapper,
 } from '../../components/form/form-styles';
-import { InputField } from '../../components/input/InputField';
-import { ForgotPasswordData } from '../../utils/interfaces/dataTypes';
+import { InputField } from '../../components/UI/input/InputField';
+import { ForgotPasswordData } from '../../interfaces/dataTypes';
 import { forgotPasswordFieldConfig } from '../../utils/validation/config/forgotPasswordValidationConfig';
 import userServices from '../../services/userServices';
 import { Button } from '../../components/UI/button';

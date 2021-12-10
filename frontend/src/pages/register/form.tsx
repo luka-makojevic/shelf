@@ -6,14 +6,14 @@ import {
   FormContainer,
   InputFieldWrapper,
 } from '../../components/form/form-styles';
-import { InputField } from '../../components/input/InputField';
+import { InputField } from '../../components/UI/input/InputField';
 import {
   RegisterData,
   RegisterFormData,
   RegisterFieldConfig,
-} from '../../utils/interfaces/dataTypes';
+} from '../../interfaces/dataTypes';
 import { Error, H2, Link, PlainText } from '../../components/text/text-styles';
-import CheckBox from '../../components/checkbox/checkBox';
+import CheckBox from '../../components/UI/checkbox/checkBox';
 import { loginRequest } from '../../azure/authConfig';
 import { Button } from '../../components/UI/button';
 import AlertPortal from '../../components/alert/alert';
@@ -123,7 +123,7 @@ const RegisterForm = () => {
           ))}
           <InputFieldWrapper>
             <CheckBox
-              id="id"
+              id="termsOfServices"
               {...register('areTermsRead', {
                 required: 'This field is required',
               })}

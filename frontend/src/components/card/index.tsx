@@ -1,5 +1,5 @@
 import { CardWrapper, IconWrapper, Image, Text } from './card-styles';
-import { CardProps } from '../../utils/interfaces/propTypes';
+import { CardProps } from './card.interfaces';
 
 const Card = ({ image, text, alt }: CardProps) => (
   <CardWrapper>

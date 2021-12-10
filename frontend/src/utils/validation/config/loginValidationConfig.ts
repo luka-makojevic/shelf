@@ -1,4 +1,4 @@
-import { LoginFieldConfig } from '../../interfaces/dataTypes';
+import { LoginFieldConfig } from '../../../interfaces/dataTypes';
 import { emailRegex } from '../regex';
 
 export const loginFieldConfig: LoginFieldConfig[] = [

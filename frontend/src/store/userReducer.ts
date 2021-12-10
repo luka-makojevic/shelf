@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { UserType } from '../utils/interfaces/dataTypes';
+import { UserType } from '../interfaces/dataTypes';
 
 export const initialUserState: { user: UserType | null } = { user: null };
 

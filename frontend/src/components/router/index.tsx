@@ -1,7 +1,7 @@
 import { useRoutes } from 'react-router-dom';
 import { Role } from '../../utils/enums/roles';
 import { Routes } from '../../utils/enums/routes';
-import { RouteProps } from '../../utils/interfaces/route';
+import { RouteProps } from '../../interfaces/route';
 import Dashboard from '../../pages/dashboard';
 import ForgotPassword from '../../pages/forgotPassword';
 import Landing from '../../pages/landing';

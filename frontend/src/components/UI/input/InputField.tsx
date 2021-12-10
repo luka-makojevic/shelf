@@ -1,7 +1,7 @@
 import React, { ForwardedRef, useState } from 'react';
 import { Input, InputContainer, SeenIcon } from './input-styles';
-import { Error } from '../text/text-styles';
-import { InputFieldProps } from '../../utils/interfaces/propTypes';
+import { Error } from '../../text/text-styles';
+import { InputFieldProps } from './input.interfaces';
 
 export const InputField = React.forwardRef(
   (

@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 import { theme } from '../../theme';
-import { HeaderProps, ProfileProps } from '../../utils/interfaces/styles';
+import {
+  HeaderContainerProps,
+  HeaderStyleProps,
+  ProfileProps,
+} from './header.interface';
 
-interface Propo {
-  position?: string;
-}
-export const HeaderContainer = styled.div<Propo>`
+export const HeaderContainer = styled.div<HeaderContainerProps>`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -15,7 +16,7 @@ export const HeaderContainer = styled.div<Propo>`
   padding: 15px 20px 0 20px;
 `;
 
-export const Logo = styled.img<HeaderProps>`
+export const Logo = styled.img<HeaderStyleProps>`
   width: 70px;
 `;
 

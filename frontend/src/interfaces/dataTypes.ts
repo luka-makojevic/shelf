@@ -1,5 +1,5 @@
 import { RegisterOptions } from 'react-hook-form';
-import { Role } from '../enums/roles';
+import { Role } from '../utils/enums/roles';
 
 export interface RegisterData {
   areTermsRead?: boolean;

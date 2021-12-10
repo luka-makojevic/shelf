@@ -1,9 +1,9 @@
 import { HeaderContainer, Logo, ProfileContainer } from './header-styles';
 import { Routes } from '../../utils/enums/routes';
 import { Link } from '../text/text-styles';
-import { HeaderProps } from '../../utils/interfaces/propTypes';
 import Profile from './profile';
 import { Button } from '../UI/button';
+import { HeaderProps } from './header.interface';
 
 const Header = ({ hideProfile, position, showButtons }: HeaderProps) => (
   <HeaderContainer position={position}>

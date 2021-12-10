@@ -1,8 +1,8 @@
 import ReactDOM from 'react-dom';
 import { FaRegTimesCircle } from 'react-icons/fa';
 import { theme } from '../../theme';
-import { ModalProps } from '../../utils/interfaces/propTypes';
 import { Backdrop, ModalContainer, Header, Close, Body } from './modal-styles';
+import { ModalProps } from './modal.interfaces';
 
 const Modal = ({ onCloseModal, children, title, closeIcon }: ModalProps) => {
   const handleCloseModal = () => {

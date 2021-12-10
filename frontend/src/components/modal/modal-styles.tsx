@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { theme } from '../../theme';
-import { ButtonProps } from '../../utils/interfaces/propTypes';
+import { ButtonProps } from '../UI/button/button.interfaces';
 
 export const Backdrop = styled.div`
   width: 100vw;

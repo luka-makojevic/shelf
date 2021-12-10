@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { Link as ReachRouterLink } from 'react-router-dom';
 import { theme } from '../../../theme';
-import { ButtonStyleProps } from '../../../utils/interfaces/styles';
+import { ButtonStyleProps } from './button.interfaces';
 
 export const StyledButton = styled('button')<ButtonStyleProps>`
   appearance: none;
@@ -29,7 +29,7 @@ export const StyledButton = styled('button')<ButtonStyleProps>`
   ${(props) =>
     props.size === 'small' &&
     css`
-      padding: ${theme.space.sm} ${theme.space.md};
+      padding: ${theme.space.xs} ${theme.space.sm};
       font-size: ${theme.fontSizes.md};
     `}
   ${(props) =>

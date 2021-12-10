@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { InputField } from '../../components/input/InputField';
+import { InputField } from '../../components/UI/input/InputField';
 import { H2 } from '../../components/text/text-styles';
 import {
   Base,
@@ -12,7 +12,7 @@ import { Button } from '../../components/UI/button';
 import {
   PasswordData,
   ResetPasswordFieldConfig,
-} from '../../utils/interfaces/dataTypes';
+} from '../../interfaces/dataTypes';
 import userServices from '../../services/userServices';
 
 import AlertPortal from '../../components/alert/alert';

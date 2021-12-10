@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Link as ReachRouterLink } from 'react-router-dom';
-import { TextProps } from '../../utils/interfaces/styles';
 import { theme } from '../../theme';
+import { TextProps } from './text.interfaces';
 
 export const H1 = styled.h1<TextProps>`
   font-size: ${theme.fontSizes.xxl};

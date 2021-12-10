@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { theme } from '../../theme';
-import { ButtonProps } from '../../utils/interfaces/propTypes';
-import { AlertBoxProp } from '../../utils/interfaces/styles';
+import { ButtonProps } from '../UI/button/button.interfaces';
+import { AlertStyleProp } from './alert.interfaces';
 
-export const AlertContainer = styled.div<AlertBoxProp>`
+export const AlertContainer = styled.div<AlertStyleProp>`
   position: absolute;
   top: 10px;
   right: 10px;

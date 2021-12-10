@@ -1,6 +1,6 @@
 import React, { ForwardedRef } from 'react';
 import { Checkbox, CheckboxWrapper, Label } from './checkbox-styles';
-import { CheckBoxProps } from '../../utils/interfaces/propTypes';
+import { CheckBoxProps } from './checkbox.interfaces';
 
 const CheckBox = React.forwardRef(
   (

@@ -1,5 +1,9 @@
 import { Header } from '../../components';
 
-const Dashboard = () => <Header />;
+const Dashboard = () => (
+  <>
+    <Header />
+  </>
+);
 
 export default Dashboard;

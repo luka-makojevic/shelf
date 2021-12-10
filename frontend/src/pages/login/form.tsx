@@ -8,11 +8,11 @@ import {
   FormContainer,
   InputFieldWrapper,
 } from '../../components/form/form-styles';
-import { InputField } from '../../components/input/InputField';
+import { InputField } from '../../components/UI/input/InputField';
 import { Routes } from '../../utils/enums/routes';
 import { Button } from '../../components/UI/button';
 import { loginFieldConfig } from '../../utils/validation/config/loginValidationConfig';
-import { LoginData, LoginFieldConfig } from '../../utils/interfaces/dataTypes';
+import { LoginData, LoginFieldConfig } from '../../interfaces/dataTypes';
 import AlertPortal from '../../components/alert/alert';
 import { AlertMessage } from '../../utils/enums/alertMessages';
 import { useAppSelector } from '../../store/hooks';

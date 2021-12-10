@@ -2,7 +2,7 @@ import { UseFormWatch } from 'react-hook-form';
 import {
   RegisterFieldConfig,
   RegisterFormData,
-} from '../../interfaces/dataTypes';
+} from '../../../interfaces/dataTypes';
 import { emailRegex, passwordRegex } from '../regex';
 
 export const config = (

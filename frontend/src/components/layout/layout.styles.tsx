@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { theme } from '../../theme';
-import { ContainerProps } from '../../utils/interfaces/styles';
+import { ContainerProps } from './layout.interface';
 
 export const Wrapper = styled.div<ContainerProps>`
   display: flex;
