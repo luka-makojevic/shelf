@@ -90,7 +90,7 @@ public class GatewayService {
     }
 
     private byte[] buildHttpEntityBody(MultipartHttpServletRequest multipartRequest) throws IOException {
-
+      
         Map<String, Pair<String, byte[]>> map = new HashMap<>();
 
         Iterator<String> filesIterator = multipartRequest.getFileNames();
