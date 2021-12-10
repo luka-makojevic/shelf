@@ -29,8 +29,12 @@ public class LoginViaMicrosoft
     @FindBy(id = "idBtn_Back") WebElement noButton;
 
     public void loginAsMicrosoftUser(String username,String password) {
+
         signInWithMic.click();
+
         String oldTab = driver.getWindowHandle();
+
+        // Handling new open window(tab)
         Set<String> handles = driver.getWindowHandles();
         Iterator it = handles.iterator();
         String newHandle = null;
@@ -44,7 +48,11 @@ public class LoginViaMicrosoft
                 }
             }
         }
+
+        // Switch to the new tab
         driver.switchTo().window(newHandle);
+
+        // Actions on new tab
         baseWdWaitHelpers.waitForAllElementsToBePresence(By.className("outer"));
         email.sendKeys(username);
         baseWdWaitHelpers.waitToBeClickable(nextButton);
@@ -55,6 +63,8 @@ public class LoginViaMicrosoft
         signInButton.click();
         baseWdWaitHelpers.waitToBeClickable(noButton);
         noButton.click();
+
+        // Switch to the previous tab
         driver.switchTo().window(oldTab);
     }
 }
