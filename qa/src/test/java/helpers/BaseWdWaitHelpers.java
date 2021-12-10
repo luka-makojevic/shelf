@@ -79,9 +79,16 @@ public class BaseWdWaitHelpers {
         return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
-    public Boolean waitUrlToBe (String url) {
+    /**
+     * Wait for URL of the current page to be a specific url
+     *
+     * @param url
+     * @return Boolean after wait
+     * @author lidija.veljkovic
+     */
+
+    public Boolean  waitUrlToBe(String url){
         wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         return wait.until(ExpectedConditions.urlToBe(url));
     }
-
 }
