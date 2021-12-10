@@ -19,9 +19,9 @@ public class GatewayController {
     }
 
     @RequestMapping(value = "/**")
-    public ResponseEntity<byte[]> handle(RequestEntity<byte[]> request, HttpServletRequest multipartRequest) throws IOException {
+    public ResponseEntity<byte[]> handle(RequestEntity<byte[]> request, HttpServletRequest servletRequest) throws IOException {
 
-        return gatewayService.sendRequest(request, multipartRequest);
+        return gatewayService.sendRequest(request, servletRequest);
 
     }
 

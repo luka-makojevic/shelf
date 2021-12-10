@@ -23,6 +23,9 @@ public class GatewayService {
     public final static String SHELF_HEADER = "Shelf-Header";
     public final static String FILE_REQUEST_SHELF_HEADER = "File-request";
 
+    public final static String FILE_NOT_FOUND_MESSAGE = "File not found";
+
+
     private final Map<String, String> apiServerUrls;
 
     private final RestTemplate restTemplate;
@@ -33,7 +36,7 @@ public class GatewayService {
         this.restTemplate = restTemplate;
     }
 
-    public ResponseEntity<byte[]> sendRequest(RequestEntity<byte[]> request, HttpServletRequest multipartRequest) throws IOException {
+    public ResponseEntity<byte[]> sendRequest(RequestEntity<byte[]> request, HttpServletRequest servletRequest) throws IOException {
 
         String microserviceName = getMicroserviceName(request.getUrl().getPath());
 
@@ -50,33 +53,40 @@ public class GatewayService {
 
         String apiUrl = getApiUrl(microserviceName, request.getUrl().getPath());
 
-        HttpEntity<byte[]> forwardingRequest = buildHttpEntity(request, multipartRequest);
+        HttpEntity<byte[]> forwardingRequest;
+
+        try {
+            forwardingRequest = buildHttpEntity(request, servletRequest);
+        } catch (HttpClientErrorException e) {
+            return ResponseEntity.status(e.getStatusCode().value()).body(e.getStatusText().getBytes());
+        }
 
         return send(apiUrl, Objects.requireNonNull(request.getMethod()), forwardingRequest);
     }
 
-    private HttpEntity<byte[]> buildHttpEntity(RequestEntity<byte[]> request, HttpServletRequest multipartRequest) throws IOException {
+    private HttpEntity<byte[]> buildHttpEntity(RequestEntity<byte[]> request, HttpServletRequest servletRequest) throws IOException {
 
-        List<String> strings = request.getHeaders().get(SHELF_HEADER);
+        String shelfHeader = request.getHeaders().getFirst(SHELF_HEADER);
 
-        if (multipartRequest != null && strings != null && strings.get(0).contains(FILE_REQUEST_SHELF_HEADER)) {
+        if (servletRequest != null && FILE_REQUEST_SHELF_HEADER.equals(shelfHeader)) {
 
             Map<String, byte[]> map = new HashMap<>();
 
-            MultipartHttpServletRequest multipartReq = null;
-            if (multipartRequest instanceof MultipartHttpServletRequest) {
-                multipartReq = ((MultipartHttpServletRequest) multipartRequest);
+            MultipartHttpServletRequest multipartRequest;
+
+            if (servletRequest instanceof MultipartHttpServletRequest) {
+                multipartRequest = ((MultipartHttpServletRequest) servletRequest);
             } else {
-                return request;
+                throw HttpClientErrorException.create(HttpStatus.BAD_REQUEST, FILE_NOT_FOUND_MESSAGE, request.getHeaders(), null, null);
             }
 
-            Iterator<String> filesIterator = multipartReq.getFileNames();
+            Iterator<String> filesIterator = multipartRequest.getFileNames();
 
             while (filesIterator.hasNext()) {
 
                 String tempFileName = filesIterator.next();
 
-                MultipartFile file = multipartReq.getFile(tempFileName);
+                MultipartFile file = multipartRequest.getFile(tempFileName);
 
                 if (file != null && !file.isEmpty()) {
                     map.put(tempFileName, file.getBytes());
@@ -113,15 +123,7 @@ public class GatewayService {
 
     private HttpHeaders filterRequestHeaders(HttpHeaders headers) {
 
-        HttpHeaders newHeaders = new HttpHeaders();
-
-        for (String headerName : headers.keySet()) {
-            if (HttpHeaders.CONTENT_TYPE.equals(headerName)) {
-                continue;
-            }
-            newHeaders.put(headerName, Collections.singletonList(headers.getFirst(headerName)));
-        }
-
+        HttpHeaders newHeaders = HttpHeaders.writableHttpHeaders(headers);
         newHeaders.setContentType(MediaType.APPLICATION_JSON);
 
         return newHeaders;
