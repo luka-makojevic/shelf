@@ -40,7 +40,7 @@ class GatewayApplicationTests {
     @Test
     public void test_Ok_AccountMicroservice() throws Exception {
 
-        when(gatewayService.sendRequest(any())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
+        when(gatewayService.sendRequest(any(), any())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
         this.mockMvc.perform(get("/account/auth/authenticate"))
                 .andDo(print()).andExpect(status().is(HttpStatus.OK.value()));
@@ -50,7 +50,7 @@ class GatewayApplicationTests {
     @Test
     public void test_Forbidden_AccountMicroservice() throws Exception {
 
-        when(gatewayService.sendRequest(any())).thenReturn(new ResponseEntity<>(HttpStatus.FORBIDDEN));
+        when(gatewayService.sendRequest(any(), any())).thenReturn(new ResponseEntity<>(HttpStatus.FORBIDDEN));
 
         this.mockMvc.perform(get("/account/auth/authenticate"))
                 .andDo(print()).andExpect(status().is(HttpStatus.FORBIDDEN.value()));
@@ -60,7 +60,7 @@ class GatewayApplicationTests {
     @Test
     public void test_BadRequest_AccountMicroservice() throws Exception {
 
-        when(gatewayService.sendRequest(any())).thenReturn(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+        when(gatewayService.sendRequest(any(), any())).thenReturn(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
 
         this.mockMvc.perform(post("/account/login"))
                 .andDo(print()).andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
