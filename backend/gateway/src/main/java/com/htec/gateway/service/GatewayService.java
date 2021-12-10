@@ -2,6 +2,7 @@ package com.htec.gateway.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.util.Pair;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -90,7 +91,7 @@ public class GatewayService {
 
     private byte[] buildHttpEntityBody(MultipartHttpServletRequest multipartRequest) throws IOException {
 
-        Map<String, byte[]> map = new HashMap<>();
+        Map<String, Pair<String, byte[]>> map = new HashMap<>();
 
         Iterator<String> filesIterator = multipartRequest.getFileNames();
 
@@ -101,7 +102,7 @@ public class GatewayService {
             MultipartFile file = multipartRequest.getFile(tempFileName);
 
             if (file != null && !file.isEmpty()) {
-                map.put(tempFileName, file.getBytes());
+                map.put(tempFileName, Pair.of(file.getOriginalFilename(), file.getBytes()));
             }
         }
 
