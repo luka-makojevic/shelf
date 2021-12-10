@@ -111,7 +111,7 @@ public class GatewayServiceTest {
     }
 
     @Test
-    void sendRequest_FileRequest() throws URISyntaxException, IOException {
+    void sendRequest_FileRequest_BadRequest() throws URISyntaxException, IOException {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(GatewayService.SHELF_HEADER, GatewayService.FILE_REQUEST_SHELF_HEADER);
@@ -126,14 +126,12 @@ public class GatewayServiceTest {
 
         when(restTemplate.exchange(anyString(), eq(HttpMethod.GET), any(), eq(byte[].class)))
                 .thenReturn(new ResponseEntity<>(HttpStatus.OK));
-        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(), eq(byte[].class)))
-                .thenReturn(new ResponseEntity<>(HttpStatus.OK));
 
         ResponseEntity<byte[]> responseEntity = gatewayService.sendRequest(request, multipartRequest);
 
         verify(restTemplate, times(1)).exchange(eq(TEST_AUTH_URL), eq(HttpMethod.GET), any(), eq(byte[].class));
-        verify(restTemplate, times(1)).exchange(anyString(), eq(HttpMethod.POST), any(), eq(byte[].class));
+        verify(restTemplate, times(0)).exchange(anyString(), eq(HttpMethod.POST), any(), eq(byte[].class));
 
-        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 }
