@@ -1,167 +1,20 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useMsal } from '@azure/msal-react';
-import {
-  Base,
-  FormContainer,
-  InputFieldWrapper,
-} from '../../components/form/form-styles';
-import { InputField } from '../../components/UI/input/InputField';
-import {
-  RegisterData,
-  RegisterFormData,
-  RegisterFieldConfig,
-} from '../../interfaces/dataTypes';
-import { Error, H2, Link, PlainText } from '../../components/text/text-styles';
-import CheckBox from '../../components/UI/checkbox/checkBox';
-import { loginRequest } from '../../azure/authConfig';
-import { Button } from '../../components/UI/button';
-import AlertPortal from '../../components/alert/alert';
-import { AlertMessage } from '../../utils/enums/alertMessages';
-import { Routes } from '../../utils/enums/routes';
-import { config } from '../../utils/validation/config/registerValidationConfig';
-import { useAppSelector } from '../../store/hooks';
-import { RootState } from '../../store/store';
-import { useAuth } from '../../hooks/authHook';
+import React from 'react';
+import Form from '../../components/form';
+import { Title, PlainText, Link } from '../../components/text/text-styles';
+import { Routes } from '../../enums/routes';
+import FormValidation from './formValidation';
 
-const RegisterForm = () => {
-  const {
-    register,
-    watch,
-    reset,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<RegisterFormData>();
-  const [error, setError] = useState<string>('');
-  const [success, setSuccess] = useState<string>('');
+const RegisterForm = () => (
+  <Form>
+    <Title fontSize={[4, 5, 6]} my="10px">
+      Register
+    </Title>
+    <FormValidation />
+    <PlainText>
+      {`Already have an account?  `}
+      <Link to={Routes.LOGIN}>Sign in</Link>
+    </PlainText>
+  </Form>
+);
 
-  const { register: httpRegister, microsoftRegister } = useAuth();
-  const { instance } = useMsal();
-
-  const submitForm = ({
-    password,
-    email,
-    firstName,
-    lastName,
-  }: RegisterData) => {
-    httpRegister(
-      { password, email, firstName, lastName },
-      () => {
-        setSuccess('A verification link has been sent to your email address.');
-        setError('');
-        reset();
-      },
-      (err) => {
-        setError(err);
-        setSuccess('');
-      }
-    );
-  };
-  const registeFieldConfig: RegisterFieldConfig[] = config(watch);
-
-  const isLoading = useAppSelector((state: RootState) => state.loading.loading);
-
-  const handleMicrosoftSignUp = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
-    instance
-      .acquireTokenPopup(loginRequest)
-      .then(({ accessToken }) => {
-        microsoftRegister(
-          { bearerToken: accessToken },
-          () => {
-            setSuccess('Registered Successfully');
-            setError('');
-          },
-          (err) => {
-            setError(err);
-            setSuccess('');
-          }
-        );
-      })
-      .catch((err) => {
-        if (err.errorCode === 'user_cancelled') return;
-        setError(err.message);
-      });
-  };
-
-  const handleAlertClose = () => {
-    setError('');
-    setSuccess('');
-  };
-
-  return (
-    <FormContainer>
-      <H2>Register</H2>
-
-      <Base onSubmit={handleSubmit(submitForm)}>
-        {error && (
-          <AlertPortal
-            type={AlertMessage.ERRROR}
-            title="Error"
-            message={error}
-            onClose={handleAlertClose}
-          />
-        )}
-        {success && (
-          <AlertPortal
-            type={AlertMessage.INFO}
-            title="Info"
-            message={success}
-            onClose={handleAlertClose}
-          />
-        )}
-        <InputFieldWrapper>
-          {registeFieldConfig.map((fieldConfig: RegisterFieldConfig) => (
-            <InputField
-              key={fieldConfig.name}
-              placeholder={fieldConfig.placeholder}
-              error={errors[fieldConfig.name]}
-              type={fieldConfig.type}
-              {...register(fieldConfig.name, fieldConfig.validations)}
-            />
-          ))}
-          <InputFieldWrapper>
-            <CheckBox
-              id="termsOfServices"
-              {...register('areTermsRead', {
-                required: 'This field is required',
-              })}
-            >
-              <PlainText>
-                I accept{` `}
-                <Link to={Routes.TERMS_AND_CONDITIONS} target="_blank">
-                  Terms of Service
-                </Link>
-              </PlainText>
-            </CheckBox>
-
-            <Error>{errors.areTermsRead?.message}</Error>
-          </InputFieldWrapper>
-        </InputFieldWrapper>
-        <Button
-          spinner
-          isLoading={isLoading}
-          variant="primary"
-          fullwidth
-          size="large"
-        >
-          Sign up
-        </Button>
-        <Button
-          onClick={handleMicrosoftSignUp}
-          icon={<img src="./assets/images/microsoft-logo.png" alt="" />}
-          fullwidth
-          size="large"
-        >
-          Sign up with Microsoft
-        </Button>
-      </Base>
-      <PlainText>
-        {`Already have an account?  `}
-        <Link to={Routes.LOGIN}>Sign in</Link>
-      </PlainText>
-    </FormContainer>
-  );
-};
 export default RegisterForm;

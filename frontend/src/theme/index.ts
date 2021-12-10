@@ -1,36 +1,34 @@
 export const theme = {
-  breakpoints: {
-    sm: '480px',
-    md: '768px',
-    lg: '996px',
-    xl: '1200px',
-  },
-  space: {
-    none: '0px',
-    xs: '4px',
-    sm: '8px',
-    md: '16px',
-    lg: '32px',
-    xl: '64px',
-    xxl: '128px',
-  },
-  size: {
-    sm: '20px',
-    md: '40px',
-    lg: '80px',
-  },
+  breakpoints: ['620px', '800px', '1200px'],
+  space: [
+    '0px',
+    '4px',
+    '8px',
+    '16px',
+    '32px',
+    '64px',
+    '128px',
+    '256px',
+    '512px',
+  ],
+
   fonts: {
     body: 'Source Sans Pro, sans-serif',
     heading: 'inherit',
   },
-  fontSizes: {
-    xs: '12px',
-    sm: '14px',
-    md: '16px',
-    lg: '18px',
-    xl: '24px',
-    xxl: '64px',
-  },
+
+  // fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 96],
+  fontSizes: [
+    '12px',
+    '14px',
+    '16px',
+    '18px',
+    '20px',
+    '24px',
+    '32px',
+    '48px',
+    '64px',
+  ],
   fontWeights: {
     body: 400,
     heading: 700,
@@ -40,14 +38,71 @@ export const theme = {
     body: 1.5,
     heading: 1.125,
   },
+
   colors: {
     white: '#fff',
     black: '#000',
     primary: '#006FD1',
     secondary: '#BFBFBF',
-    shadow: '#9aa7b1',
-    danger: '#E13E3E',
+    danger: 'red',
+    shadow: '#3C4D6B',
     success: 'green',
     info: '#1E90FF',
+  },
+
+  styles: {
+    root: {
+      fontFamily: 'body',
+      lineHeight: 'body',
+      fontWeight: 'body',
+    },
+    h1: {
+      variant: 'text.heading',
+      fontSize: 5,
+    },
+    h2: {
+      variant: 'text.heading',
+      fontSize: 4,
+    },
+    h3: {
+      variant: 'text.heading',
+      fontSize: 3,
+    },
+    h4: {
+      variant: 'text.heading',
+      fontSize: 2,
+    },
+    h5: {
+      variant: 'text.heading',
+      fontSize: 1,
+    },
+    h6: {
+      variant: 'text.heading',
+      fontSize: 0,
+    },
+    pre: {
+      fontFamily: 'monospace',
+      overflowX: 'auto',
+      code: {
+        color: 'inherit',
+      },
+    },
+    code: {
+      fontFamily: 'monospace',
+      fontSize: 'inherit',
+    },
+    table: {
+      width: '100%',
+      borderCollapse: 'separate',
+      borderSpacing: 0,
+    },
+    th: {
+      textAlign: 'left',
+      borderBottomStyle: 'solid',
+    },
+    td: {
+      textAlign: 'left',
+      borderBottomStyle: 'solid',
+    },
   },
 };

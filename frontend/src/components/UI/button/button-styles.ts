@@ -1,36 +1,36 @@
 import styled, { css } from 'styled-components';
+import { variant, space, border } from 'styled-system';
 import { Link as ReachRouterLink } from 'react-router-dom';
-import { theme } from '../../../theme';
-import { ButtonStyleProps } from './button.interfaces';
+import { ButtonStyleProps } from '../../../interfaces/styles';
 
 export const StyledButton = styled('button')<ButtonStyleProps>`
   appearance: none;
   font-family: inherit;
   border: none;
   border-radius: 999px;
-  padding: ${theme.space.sm} ${theme.space.md};
+  padding: 8px 16px;
   margin: 8px 0;
-  font-size: ${theme.fontSizes.md};
+  font-size: ${({ theme }) => theme.fontSizes[2]};
   cursor: pointer;
   min-width: 90px;
 
   &:disabled,
   &[disabled] {
-    background-color: ${theme.colors.secondary};
-    color: ${theme.colors.shadow};
+    background-color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.shadow};
   }
 
   ${(props) =>
     props.size === 'large' &&
     css`
       padding: 10px 20px;
-      font-size: ${theme.fontSizes.lg};
+      font-size: ${({ theme }) => theme.fontSizes[3]};
     `}
   ${(props) =>
     props.size === 'small' &&
     css`
-      padding: ${theme.space.xs} ${theme.space.sm};
-      font-size: ${theme.fontSizes.md};
+      padding: 7px 14px;
+      font-size: ${({ theme }) => theme.fontSizes[2]};
     `}
   ${(props) =>
     props.fullwidth &&
@@ -38,27 +38,36 @@ export const StyledButton = styled('button')<ButtonStyleProps>`
       width: 100%;
     `}
 
-    ${({ variant }) => {
-    switch (variant) {
-      case 'primary':
-        return css`
-          color: white;
-          background: ${theme.colors.primary};
-        `;
-      case 'secondary':
-        return css`
-          color: white;
-          background: ${theme.colors.secondary};
-        `;
-      case 'light':
-        return css`
-          color: ${theme.colors.primary};
-          background: white;
-        `;
-      default:
-        return null;
-    }
-  }}
+  ${variant({
+    variants: {
+      primary: {
+        color: 'white',
+        bg: 'primary',
+      },
+      secondary: {
+        color: 'white',
+        bg: 'secondary',
+      },
+      light: {
+        color: 'primary',
+        bg: 'white',
+      },
+      primaryBordered: {
+        color: 'white',
+        bg: 'primary',
+        border: '1px solid',
+        borderColor: 'white',
+      },
+      lightBordered: {
+        color: 'primary',
+        bg: 'white',
+        border: '1px solid',
+        borderColor: 'primary',
+      },
+    },
+  })};
+  ${space}
+  ${border}
 `;
 export const SpinnerButton = styled(StyledButton)`
   padding: 0;
@@ -71,8 +80,8 @@ export const StyledLink = styled(ReachRouterLink)<ButtonStyleProps>`
   border: none;
   border-radius: 999px;
   margin: 8px 0;
-  padding: ${theme.space.sm} ${theme.space.md};
-  font-size: ${theme.fontSizes.md};
+  padding: 8px 16px;
+  font-size: ${({ theme }) => theme.fontSizes[2]};
   text-decoration: none;
   text-align: center;
   cursor: pointer;
@@ -80,13 +89,13 @@ export const StyledLink = styled(ReachRouterLink)<ButtonStyleProps>`
     props.size === 'large' &&
     css`
       padding: 10px 20px;
-      font-size: ${theme.fontSizes.lg};
+      font-size: ${({ theme }) => theme.fontSizes[3]};
     `}
   ${(props) =>
     props.size === 'small' &&
     css`
-      padding: ${theme.space.sm} ${theme.space.md};
-      font-size: ${theme.fontSizes.md};
+      padding: 7px 14px;
+      font-size: ${({ theme }) => theme.fontSizes[2]};
     `}
     
 
@@ -94,28 +103,24 @@ export const StyledLink = styled(ReachRouterLink)<ButtonStyleProps>`
     props.fullwidth &&
     css`
       width: 100%;
-    `}    
-    ${({ variant }) => {
-    switch (variant) {
-      case 'primary':
-        return css`
-          color: white;
-          background: ${theme.colors.primary};
-        `;
-      case 'secondary':
-        return css`
-          color: white;
-          background: ${theme.colors.secondary};
-        `;
-      case 'light':
-        return css`
-          color: ${theme.colors.primary};
-          background: white;
-        `;
-      default:
-        return null;
-    }
-  }}
+    `}
+
+${variant({
+    variants: {
+      primary: {
+        color: 'white',
+        bg: 'primary',
+      },
+      secondary: {
+        color: 'white',
+        bg: 'secondary',
+      },
+      light: {
+        color: 'primary',
+        bg: 'white',
+      },
+    },
+  })};
 `;
 
 export const IconButton = styled(StyledButton)`

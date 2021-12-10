@@ -1,44 +1,50 @@
 import styled from 'styled-components';
+import { space, typography, color, border } from 'styled-system';
 import { Link as ReachRouterLink } from 'react-router-dom';
-import { theme } from '../../theme';
-import { TextProps } from './text.interfaces';
+import { TextProps } from '../../interfaces/styles';
 
-export const H1 = styled.h1<TextProps>`
-  font-size: ${theme.fontSizes.xxl};
-  text-align: center;
+export const Title = styled.h1<TextProps>`
+  ${space}
+  ${typography}
+  ${color}
 `;
-
-export const H2 = styled.h2<TextProps>`
-  font-size: ${theme.fontSizes.xl};
-  text-align: center;
-`;
-
-export const Description = styled.p<TextProps>`
-  text-align: center;
+export const SubTitle = styled.p<TextProps>`
+  ${space}
+  ${typography}
+  ${color}
 `;
 export const AccentText = styled.p<TextProps>`
-  color: ${theme.colors.primary};
+  color: ${({ theme }) => theme.colors.primary};
+  ${space}
+  ${typography}
+  ${color}
 `;
 export const Link = styled(ReachRouterLink)<TextProps>`
-  color: ${theme.colors.primary};
+  color: ${({ theme }) => theme.colors.primary};
   text-decoration: none;
+  ${space}
+  ${typography}
+  ${color}
+  ${border}
 `;
 
 export const Error = styled.p`
   margin: 0;
-  margin-left: ${theme.space.sm};
-  color: ${theme.colors.danger};
-  font-size: ${theme.fontSizes.xs};
+  margin-left: 10px;
+  color: ${({ theme }) => theme.colors.danger};
+  font-size: ${({ theme }) => theme.fontSizes[0]};
 `;
 
 export const Success = styled.p`
   width: 100%;
   text-align: center;
-  color: ${theme.colors.success};
-  font-size: ${theme.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.success};
+  font-size: ${({ theme }) => theme.fontSizes[0]};
 `;
 
 export const PlainText = styled.p<TextProps>`
-  font-size: ${theme.fontSizes.sm};
-  margin: ${theme.space.xs} 0;
+  font-size: ${({ theme }) => theme.fontSizes[1]};
+  margin: 5px 0;
+  ${typography}
+  ${color}
 `;

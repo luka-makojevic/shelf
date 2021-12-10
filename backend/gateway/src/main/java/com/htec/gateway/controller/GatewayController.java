@@ -6,9 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-
 @RestController
 public class GatewayController {
 
@@ -19,9 +16,9 @@ public class GatewayController {
     }
 
     @RequestMapping(value = "/**")
-    public ResponseEntity<byte[]> handle(RequestEntity<byte[]> request, HttpServletRequest servletRequest) throws IOException {
+    public ResponseEntity<byte[]> handle(RequestEntity<byte[]> entity) {
 
-        return gatewayService.sendRequest(request, servletRequest);
+        return gatewayService.sendRequest(entity);
 
     }
 

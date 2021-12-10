@@ -1,6 +1,6 @@
 import { ThemeProvider } from 'styled-components';
 import { theme } from './theme';
-import Router from './components/router';
+import Router from './router';
 
 const App = () => (
   <ThemeProvider theme={theme}>

@@ -1,10 +1,9 @@
 import { useForm } from 'react-hook-form';
-import { CreateShelfData } from '../../interfaces/dataTypes';
-import { Base, InputFieldWrapper } from '../form/form-styles';
-import { InputField } from '../UI/input/InputField';
-import { ModalButtonDivider } from '../layout/layout.styles';
+import { Form } from '..';
+import { InputFieldWrapper } from '../form/form-styles';
+import { InputField } from '../input/InputField';
 import { Button } from '../UI/button';
-import { CreateShelfModalProps } from './modal.interfaces';
+import { CreateShelfData, CreateShelfModalProps } from '../../interfaces/types';
 
 const CreateShelfModal = ({ onCloseModal }: CreateShelfModalProps) => {
   const {
@@ -28,7 +27,7 @@ const CreateShelfModal = ({ onCloseModal }: CreateShelfModalProps) => {
   };
 
   return (
-    <Base onSubmit={handleSubmit(onSubmit)}>
+    <Form.Base onSubmit={handleSubmit(onSubmit)}>
       <InputFieldWrapper>
         <InputField
           placeholder="Untitled Shelf"
@@ -36,14 +35,20 @@ const CreateShelfModal = ({ onCloseModal }: CreateShelfModalProps) => {
           {...register('name', validations)}
         />
       </InputFieldWrapper>
-
-      <ModalButtonDivider>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          width: '100%',
+          marginTop: '20px',
+        }}
+      >
         <Button variant="lightBordered" onClick={handleCloseModal}>
           Cancel
         </Button>
         <Button>Create</Button>
-      </ModalButtonDivider>
-    </Base>
+      </div>
+    </Form.Base>
   );
 };
 

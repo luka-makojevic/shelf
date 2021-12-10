@@ -5,7 +5,7 @@ import {
   SpinnerButton,
 } from './button-styles';
 import { Spinner } from '../../form/form-styles';
-import { ButtonProps } from './button.interfaces';
+import { ButtonProps } from '../../../interfaces/types';
 
 export const Button = ({
   children,
