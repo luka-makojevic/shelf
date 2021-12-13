@@ -8,36 +8,43 @@ import {
   SearchInputField,
 } from './searchBar-styles';
 
-export interface SearchProps {
+interface SearchProps {
   setData: Dispatch<SetStateAction<any>>;
   data: any;
   searchKey: string;
+  placeholder?: string;
 }
 
-const SearchBar = ({ setData, data, searchKey }: SearchProps) => {
-  const [searchTerm, setSearchTerm] = useState('');
+const SearchBar = ({ setData, data, searchKey, ...restProps }: SearchProps) => {
+  const [searchInput, setSearchInput] = useState('');
 
   const handleSearchchange = (e: React.FormEvent<HTMLInputElement>) => {
-    setSearchTerm(e.currentTarget.value);
+    setSearchInput(e.currentTarget.value);
   };
 
   useEffect(() => {
-    if (!searchTerm) {
+    if (!searchInput) {
       setData(data);
     } else {
       setData(
         data.filter((item: any) =>
-          item[searchKey].toLowerCase().includes(searchTerm.toLowerCase())
+          item[searchKey]
+            .toString()
+            .toLowerCase()
+            .split(' ')
+            .join('')
+            .includes(searchInput.toLowerCase().trim().split(' ').join(''))
         )
       );
     }
-  }, [searchTerm]);
+  }, [searchInput]);
 
   return (
     <SearchInputContainer>
       <SearchInputField
+        id="searchBar"
         type="text"
-        placeholder="Search... "
+        {...restProps}
         onChange={handleSearchchange}
       />
       <SearchIconContainer>
