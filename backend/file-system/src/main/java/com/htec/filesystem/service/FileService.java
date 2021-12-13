@@ -1,10 +1,14 @@
 package com.htec.filesystem.service;
 
 import com.htec.filesystem.exception.ExceptionSupplier;
+import com.htec.filesystem.model.response.FileResponseModel;
 import com.htec.filesystem.util.FileUtil;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Base64;
 import java.util.Map;
 
@@ -34,5 +38,20 @@ public class FileService {
 
         String uploadDir = homePath + localPath;
         FileUtil.saveFile(uploadDir, fileName, bytes);
+    }
+
+    public FileResponseModel getFile(String path) throws IOException {
+
+        String homePath = System.getProperty("user.home");
+
+        byte[] imageBytes;
+        try (FileInputStream fileInputStream = new FileInputStream(homePath + "/" + path)) {
+
+            imageBytes = StreamUtils.copyToByteArray(fileInputStream);
+        } catch (IOException ex) {
+            throw ExceptionSupplier.fileNotFound.get();
+        }
+
+        return new FileResponseModel(imageBytes, path);
     }
 }

@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ImageResponseModel {
+public class FileResponseModel {
 
     private byte[] imageContent;
     private String imagePath;

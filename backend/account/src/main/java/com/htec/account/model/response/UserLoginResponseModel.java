@@ -11,9 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserLoginResponseModel {
     private Long id;
-    private String firstName;
-    private String lastName;
-    private String email;
     private String jwtToken;
     private String jwtRefreshToken;
     private Long role;

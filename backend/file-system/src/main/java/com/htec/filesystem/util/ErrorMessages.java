@@ -7,6 +7,7 @@ public enum ErrorMessages {
     TOKEN_HEADER_NOT_FOUND("Token header not found"),
     TOKEN_NOT_FOUND("Token not found"),
     COULD_NOT_UPDATE_USER("Could not update user."),
+    FILE_NOT_FOUND("File not found."),
     AUTHENTICATION_CREDENTIALS_NOT_VALID("Authentication credentials not valid."),
     BAD_REQUEST("Bad request."),
     UNAUTHORIZED("Unauthorized."),

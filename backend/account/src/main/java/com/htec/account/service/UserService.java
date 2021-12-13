@@ -64,7 +64,6 @@ public class UserService {
         this.roleRepository = roleRepository;
     }
 
-
     public UserDTO getUser(String email) {
 
         UserEntity userEntity = userRepository.findByEmail(email)
@@ -174,7 +173,7 @@ public class UserService {
                 .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         if (updateUserPhotoByIdRequestModel.getPictureName() != null)
-            user.setPictureName(updateUserPhotoByIdRequestModel.getPictureName());
+            user.setProfilePicturePath(updateUserPhotoByIdRequestModel.getPictureName());
 
         userRepository.save(user);
 

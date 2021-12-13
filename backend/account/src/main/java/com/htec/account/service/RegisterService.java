@@ -67,6 +67,7 @@ public class RegisterService {
         userEntity.setCreatedAt(LocalDateTime.now());
         userEntity.setEmailVerified(false);
         userEntity.setRole(new RoleEntity(3L));
+        userEntity.setProfilePicturePath("");
 
         String salt = tokenGenerator.generateSalt(8);
         userEntity.setSalt(salt);
