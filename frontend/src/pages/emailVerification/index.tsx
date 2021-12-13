@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, Holder } from '../../components/layout/layout.styles';
+import {
+  Container,
+  EmailVerificationContainer,
+} from '../../components/layout/layout.styles';
 import userServices from '../../services/userServices';
 import { Spinner } from '../../components/form/form-styles';
-import { Link, Title } from '../../components/text/text-styles';
-import { Routes } from '../../enums/routes';
+import { H2 } from '../../components/text/text-styles';
+import { Routes } from '../../utils/enums/routes';
 import { Button } from '../../components/UI/button';
 
 const EmailVerification = () => {
@@ -38,61 +41,45 @@ const EmailVerification = () => {
 
   const feedbackMessage = () => {
     if (isLoading) {
-      return <Spinner src="../assets/icons/loading.png" />;
+      return (
+        <Spinner src={`${process.env.PUBLIC_URL}/assets/icons/loading.png`} />
+      );
     }
     if (resendMessage) {
-      return <Title fontSize="25px">{resendMessage}</Title>;
+      return <H2>{resendMessage}</H2>;
     }
     if (confirmMessage) {
       return (
-        <>
-          <Title textAlign="center" fontSize="25px">
-            {confirmMessage}
-          </Title>
+        <EmailVerificationContainer>
+          <H2>{confirmMessage}</H2>
 
           <Button variant="light" to={Routes.LOGIN}>
             Procced to login
           </Button>
-        </>
+        </EmailVerificationContainer>
       );
     }
-    if (error) {
+    if (error === 'Token expired.') {
       return (
-        <>
-          <Title fontSize="25px">{error}</Title>
+        <EmailVerificationContainer>
+          <H2>{error}</H2>
           <Button onClick={resendEmailVerification} variant="light">
             Reset Token
           </Button>
-        </>
+        </EmailVerificationContainer>
+      );
+    }
+    if (error === 'Token not valid.') {
+      return (
+        <EmailVerificationContainer>
+          <H2>{error}</H2>
+        </EmailVerificationContainer>
       );
     }
     return null;
   };
 
-  return (
-    <Holder
-      display="flex"
-      flexDirection="column"
-      maxWidth={['300px', '500px']}
-      my={6}
-      mx="auto"
-      height="300px"
-      justifyContent="center"
-      alignItems="center"
-      bg="primary"
-      color="white"
-      borderRadius="30px"
-    >
-      <Container
-        p="70px 10px"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="space-between"
-      >
-        {feedbackMessage()}
-      </Container>
-    </Holder>
-  );
+  return <Container>{feedbackMessage()}</Container>;
 };
 
 export default EmailVerification;
