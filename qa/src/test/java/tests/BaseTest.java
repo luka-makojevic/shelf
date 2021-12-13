@@ -3,64 +3,47 @@ package tests;
 import helpers.BaseWdWaitHelpers;
 import helpers.BaseWebDriverManager;
 import helpers.ExcelReader;
-import org.junit.Before;
+import helpers.NavigateBrowserHelper;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.LoginPage;
 import pages.LoginViaMicrosoft;
+import pages.RegistrationPage;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+
 public class BaseTest
 {
-    public WebDriver driver;
-    public WebDriverWait wait;
-    public BaseWebDriverManager baseWebDriverManager;
-    public BaseWdWaitHelpers baseWdWaitHelpers;
-    public ExcelReader excelReader;
-    public LoginPage loginPage;
+    public static WebDriver driver;
     public static Properties prop;
-    public LoginViaMicrosoft loginViaMicrosft;
+    public static BaseWebDriverManager baseWebDriverManager;
+    public static BaseWdWaitHelpers baseWdWaitHelpers;
+    public static NavigateBrowserHelper navigateBrowser;
+    public static ExcelReader excelReader;
+    public static LoginPage loginPage;
+    public static LoginViaMicrosoft loginViaMicrosoft;
+    public static RegistrationPage regPage;
 
-    @Before
-    public void initialize() throws IOException
+    @BeforeClass
+    public static void initialize() throws IOException
     {
         baseWebDriverManager = new BaseWebDriverManager();
         driver = baseWebDriverManager.initializeDriver();
         baseWdWaitHelpers = new BaseWdWaitHelpers(driver);
+        navigateBrowser = new NavigateBrowserHelper(driver, prop, baseWdWaitHelpers);
         driver.manage().window().maximize();
         excelReader = new ExcelReader("src/main/resources/ExcelRead.xlsx");
         loginPage = new LoginPage(driver);
-        loginViaMicrosft = new LoginViaMicrosoft(driver, baseWdWaitHelpers);
+        loginViaMicrosoft = new LoginViaMicrosoft(driver, baseWdWaitHelpers);
+        regPage = new RegistrationPage(driver, baseWdWaitHelpers);
     }
-    /**
-     * @author stefan.gajic
-     */
-    public void navigateToPageUrl(String url) throws IOException {
-        prop = new Properties();
-        FileInputStream fis = new FileInputStream (".\\datafiles\\data.properties");
-        prop.load(fis);
-        String pageUrl = prop.getProperty(url);
-        driver.navigate().to(pageUrl);
-    }
-    /**
-     * @author stefan.gajic
-     */
-    public String getPageUrl(String url) throws IOException {
-        prop = new Properties();
-        FileInputStream fis = new FileInputStream (".\\datafiles\\data.properties");
-        prop.load(fis);
-        String pageUrl = prop.getProperty(url);
-        return pageUrl;
-    }
-/*
-    @After
-    public void testTearDown() {
+
+    @AfterClass
+    public static void testTearDown() {
         driver.close();
         driver.quit();
     }
-
- */
 }

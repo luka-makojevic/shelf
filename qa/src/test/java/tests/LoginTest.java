@@ -10,7 +10,7 @@ public class LoginTest extends BaseTest {
     @Before
     public void pageSetUp() throws IOException {
 
-        navigateToPageUrl("loginPageUrl");
+        navigateBrowser.navigateToPageUrl("loginPageUrl");
     }
     @Test
     public void userShouldBeLoggedIn() throws IOException {
@@ -18,16 +18,16 @@ public class LoginTest extends BaseTest {
         String email = excelReader.getStringData("LoginTest", 1,0);
         String password = excelReader.getStringData("LoginTest", 1, 1);
         loginPage.loginAsUser(email, password);
-        baseWdWaitHelpers.waitUrlToBe(getPageUrl("dashboardPageUrl"));
-        Assert.assertEquals(driver.getCurrentUrl(), getPageUrl("dashboardPageUrl"));
+        baseWdWaitHelpers.waitUrlToBe(navigateBrowser.getPageUrl("dashboardPageUrl"));
+        Assert.assertEquals(driver.getCurrentUrl(), navigateBrowser.getPageUrl("dashboardPageUrl"));
     }
     @Test
     public void userShouldBeLoggedInWithMicrosoft() throws IOException {
         String email = excelReader.getStringData("LoginTest", 1,0);
         String password = excelReader.getStringData("LoginTest", 1, 1);
-        loginViaMicrosft.loginAsMicrosoftUser(email, password);
-        baseWdWaitHelpers.waitUrlToBe(getPageUrl("dashboardPageUrl"));
-        Assert.assertEquals(driver.getCurrentUrl(), getPageUrl("dashboardPageUrl"));
+        loginViaMicrosoft.loginAsMicrosoftUser(email, password);
+        baseWdWaitHelpers.waitUrlToBe(navigateBrowser.getPageUrl("dashboardPageUrl"));
+        Assert.assertEquals(driver.getCurrentUrl(), navigateBrowser.getPageUrl("dashboardPageUrl"));
     }
 
     @Test
@@ -79,14 +79,14 @@ public class LoginTest extends BaseTest {
     @Test
     public void userShouldRedirectedToRegistrationPageWhenClicksSignUpButton() throws IOException {
         loginPage.clickSignUpButton();
-        baseWdWaitHelpers.waitUrlToBe(getPageUrl("registrationPageUrl"));
-        Assert.assertEquals(driver.getCurrentUrl(), getPageUrl("registrationPageUrl"));
+        baseWdWaitHelpers.waitUrlToBe(navigateBrowser.getPageUrl("registrationPageUrl"));
+        Assert.assertEquals(driver.getCurrentUrl(), navigateBrowser.getPageUrl("registrationPageUrl"));
     }
     @Test
     public void userShouldRedirectToForgotPasswordPage() throws IOException {
         loginPage.clickResetPassword();
-        baseWdWaitHelpers.waitUrlToBe(getPageUrl("forgotPassword"));
-        Assert.assertEquals(driver.getCurrentUrl(), getPageUrl("forgotPassword"));
+        baseWdWaitHelpers.waitUrlToBe(navigateBrowser.getPageUrl("forgotPassword"));
+        Assert.assertEquals(driver.getCurrentUrl(), navigateBrowser.getPageUrl("forgotPassword"));
     }
     @After
     public void deleteCookies(){
