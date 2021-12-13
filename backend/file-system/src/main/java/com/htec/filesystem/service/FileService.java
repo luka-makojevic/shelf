@@ -40,7 +40,7 @@ public class FileService {
         FileUtil.saveFile(uploadDir, fileName, bytes);
     }
 
-    public FileResponseModel getFile(String path) throws IOException {
+    public FileResponseModel getFile(String path) {
 
         String homePath = System.getProperty("user.home");
 

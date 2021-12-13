@@ -1,7 +1,5 @@
 package com.htec.filesystem.service;
 
-import com.google.common.jimfs.Configuration;
-import com.google.common.jimfs.Jimfs;
 import com.htec.filesystem.exception.ShelfException;
 import com.htec.filesystem.util.FileUtil;
 import org.junit.jupiter.api.Assertions;
@@ -13,20 +11,13 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.util.Pair;
-import org.springframework.http.RequestEntity;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
-import com.htec.filesystem.security.SecurityConstants;
-import org.springframework.data.util.Pair;
+import org.springframework.util.StreamUtils;
 
-import java.nio.file.FileSystem;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -80,5 +71,31 @@ class FileServiceTest {
         });
 
         Assertions.assertEquals("Could not save image file.", exception.getMessage());
+    }
+
+    @Test
+    void getFile() {
+        String path = "/shelf-files/user-data/6/profile-picture/profilePicture.jpg";
+
+        try (MockedStatic<StreamUtils> mocked = mockStatic(StreamUtils.class)) {
+
+            mocked.when(() -> StreamUtils.copyToByteArray(any(InputStream.class))).then(invocationOnMock -> null);
+
+            fileService.getFile(path);
+
+            mocked.verify(() -> StreamUtils.copyToByteArray(any(InputStream.class)));
+
+        }
+    }
+
+    @Test
+    void getFile_FileNotFound() {
+        String path = "test.jpg";
+
+        ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
+            fileService.getFile(path);
+        });
+
+        Assertions.assertEquals("File not found.", exception.getMessage());
     }
 }
