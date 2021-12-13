@@ -6,6 +6,7 @@ import com.htec.account.dto.UserDTO;
 import com.htec.account.mapper.UserMapper;
 import com.htec.account.model.request.PasswordResetModel;
 import com.htec.account.model.request.PasswordResetRequestModel;
+import com.htec.account.model.request.UpdateUserPhotoByIdRequestModel;
 import com.htec.account.model.request.UserUpdateRequestModel;
 import com.htec.account.model.response.TextResponseMessage;
 import com.htec.account.service.UserService;
@@ -56,5 +57,13 @@ public class UserController {
         userService.resetPassword(passwordResetModel);
 
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("User's password changed successfully", HttpStatus.OK.value()));
+    }
+
+    @PutMapping("/update/photo")
+    public ResponseEntity updateUserPhotoById(@RequestBody UpdateUserPhotoByIdRequestModel updateUserPhotoByIdRequestModel) {
+
+        userService.updateUserProfilePicture(updateUserPhotoByIdRequestModel);
+
+        return ResponseEntity.ok(userService.getUserById(updateUserPhotoByIdRequestModel.getId()));
     }
 }

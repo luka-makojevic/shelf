@@ -12,11 +12,8 @@ import java.util.List;
 @Configuration
 public class MvcConfigurer implements WebMvcConfigurer {
 
-    @Autowired
-    private UserRepository userRepository;
-
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new AuthUserArgumentResolver(userRepository));
+        resolvers.add(new AuthUserArgumentResolver());
     }
 }
