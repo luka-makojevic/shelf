@@ -43,9 +43,10 @@ public class FileService {
     public FileResponseModel getFile(String path) {
 
         String homePath = System.getProperty("user.home");
+        String folder = homePath + "/shelf-files/user-data/";
 
         byte[] imageBytes;
-        try (FileInputStream fileInputStream = new FileInputStream(homePath + "/" + path)) {
+        try (FileInputStream fileInputStream = new FileInputStream(folder + "/" + path)) {
 
             imageBytes = StreamUtils.copyToByteArray(fileInputStream);
         } catch (IOException ex) {
