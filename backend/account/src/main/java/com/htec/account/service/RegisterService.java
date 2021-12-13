@@ -30,6 +30,7 @@ public class RegisterService {
     private final EmailService emailService;
     private final MicrosoftApiService microsoftApiService;
     private final UserValidator userValidator;
+    private final Long FREE_SPACE_SIZE = 1_048_576L;
 
     private final String emailVerificationLink;
 
@@ -67,7 +68,7 @@ public class RegisterService {
         userEntity.setCreatedAt(LocalDateTime.now());
         userEntity.setEmailVerified(false);
         userEntity.setRole(new RoleEntity(3L));
-        userEntity.setFreeSpace(1_048_576L);
+        userEntity.setFreeSpace(FREE_SPACE_SIZE);
 
         String salt = tokenGenerator.generateSalt(8);
         userEntity.setSalt(salt);
@@ -94,7 +95,7 @@ public class RegisterService {
         userEntity.setCreatedAt(LocalDateTime.now());
         userEntity.setEmailVerified(true);
         userEntity.setRole(new RoleEntity(3L));
-        userEntity.setFreeSpace(1_048_576L);
+        userEntity.setFreeSpace(FREE_SPACE_SIZE);
 
         userRepository.save(userEntity);
     }
