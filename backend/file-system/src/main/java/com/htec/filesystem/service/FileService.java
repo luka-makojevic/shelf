@@ -20,15 +20,15 @@ public class FileService {
 
     public void saveUserProfilePicture(Long id, Map<String, Pair<String, String>> files) {
 
-        byte[] bytes = Base64.getDecoder().decode(files.get("image").getSecond());
-
-        if (files.get("image") == null)
+        if (files == null || files.get("image") == null)
             throw ExceptionSupplier.couldNotSaveImage.get();
+
+        byte[] bytes = Base64.getDecoder().decode(files.get("image").getSecond());
 
         String fileName = files.get("image").getFirst();
 
         String homePath = System.getProperty("user.home");
-        String localPath = "/shelf-files/user-photos/" + id + "/";
+        String localPath = "/shelf-files/user-data/" + id + "/profile-picture/";
 
         userAPICallService.updateUserPhotoById(id, localPath + fileName);
 
