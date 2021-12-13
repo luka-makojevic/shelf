@@ -16,8 +16,8 @@ public class FileController {
 
     private final FileService fileService;
 
-    FileController(FileService fileService,
-                   UserAPICallService userAPICallService) {
+    public FileController(FileService fileService,
+                          UserAPICallService userAPICallService) {
         this.fileService = fileService;
     }
 
@@ -26,10 +26,21 @@ public class FileController {
     public ResponseEntity uploadFile(@RequestBody Map<String, Pair<String, String>> files,
                                      @PathVariable Long id) {
 
-
         fileService.saveUserProfilePicture(id, files);
 
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("Image Uploaded", HttpStatus.OK.value()));
+    }
+
+    @PostMapping("/initialize/{id}")
+    public ResponseEntity initializeFolders(@PathVariable Long id) {
+
+        HttpStatus retStatus = HttpStatus.OK;
+
+        if (!fileService.initializeFolders(id)) {
+            retStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return ResponseEntity.status(retStatus).body(new TextResponseMessage("Folders created", retStatus.value()));
     }
 
 }

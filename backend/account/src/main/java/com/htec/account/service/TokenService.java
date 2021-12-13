@@ -3,6 +3,7 @@ package com.htec.account.service;
 import com.htec.account.entity.EmailVerifyTokenEntity;
 import com.htec.account.entity.UserEntity;
 import com.htec.account.exception.ExceptionSupplier;
+import com.htec.account.model.response.TextResponseMessage;
 import com.htec.account.repository.mysql.TokenRepository;
 import com.htec.account.repository.mysql.UserRepository;
 import com.htec.account.security.SecurityConstants;
@@ -10,7 +11,12 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -25,16 +31,21 @@ public class TokenService {
     public static final String EMAIL_CONFIRMED = "Email confirmed";
     public static final String TOKEN_RESENT = "Token resent";
     public final String INIT_USER_FOLDER_URL;
+    public final String DEFAULT_AVATAR_PATH = "../../default-avatar.jpq";
+
+    private RestTemplate restTemplate;
 
     @Autowired
     public TokenService(TokenRepository tokenRepository,
                         UserRepository userRepository,
                         RegisterService registerService,
-                        @Value("${initUserFolderUrl}") String initUserFolderUrl) {
+                        @Value("${initUserFolderUrl}") String initUserFolderUrl,
+                        RestTemplate restTemplate) {
         this.tokenRepository = tokenRepository;
         this.userRepository = userRepository;
         this.registerService = registerService;
         this.INIT_USER_FOLDER_URL = initUserFolderUrl;
+        this.restTemplate = restTemplate;
     }
 
     @Transactional
@@ -67,11 +78,36 @@ public class TokenService {
             throw ExceptionSupplier.tokenExpired.get();
         }
 
-        userRepository.enableUser(confirmationToken.getUser().getEmail());
+        userEntity.setEmailVerified(true);
 
         tokenRepository.delete(confirmationToken);
 
+        initializeUserFolders(userEntity);
+
+        userRepository.save(userEntity);
+
         return EMAIL_CONFIRMED;
+    }
+
+    private void initializeUserFolders(UserEntity userEntity) {
+
+        try {
+            ResponseEntity<TextResponseMessage> result = restTemplate.exchange(
+                    INIT_USER_FOLDER_URL + "/" + userEntity.getId(),
+                    HttpMethod.POST,
+                    null,
+                    TextResponseMessage.class
+            );
+
+            if (result.getStatusCode() != HttpStatus.OK) {
+                throw ExceptionSupplier.folderNotInitialized.get();
+            }
+
+            userEntity.setPictureName(DEFAULT_AVATAR_PATH);
+
+        } catch (HttpClientErrorException ex) {
+            throw ExceptionSupplier.folderNotInitialized.get();
+        }
     }
 
     @Transactional

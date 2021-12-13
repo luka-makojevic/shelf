@@ -30,7 +30,8 @@ public enum ErrorMessages {
     PAGE_NUMBER_WRONG("Page index must not be less than one."),
     SIZE_NUMBER_WRONG("Page size must not be less than one."),
     ROLE_UPDATE_FAILED("User already has that role."),
-    EMAIL_RESET_REQUEST_WAS_NOT_SENT("Email reset request was not sent");
+    EMAIL_RESET_REQUEST_WAS_NOT_SENT("Email reset request was not sent"),
+    COULD_NOT_INITIALIZE_FOLDER("Could not initialize user folder.");
 
     private String errorMessage;
 

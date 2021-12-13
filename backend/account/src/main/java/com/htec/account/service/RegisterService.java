@@ -67,6 +67,7 @@ public class RegisterService {
         userEntity.setCreatedAt(LocalDateTime.now());
         userEntity.setEmailVerified(false);
         userEntity.setRole(new RoleEntity(3L));
+        userEntity.setFreeSpace(1_048_576L);
 
         String salt = tokenGenerator.generateSalt(8);
         userEntity.setSalt(salt);
@@ -93,6 +94,7 @@ public class RegisterService {
         userEntity.setCreatedAt(LocalDateTime.now());
         userEntity.setEmailVerified(true);
         userEntity.setRole(new RoleEntity(3L));
+        userEntity.setFreeSpace(1_048_576L);
 
         userRepository.save(userEntity);
     }
