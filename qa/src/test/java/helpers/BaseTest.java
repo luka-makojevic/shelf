@@ -1,4 +1,4 @@
-package tests;
+package helpers;
 
 import helpers.BaseWdWaitHelpers;
 import helpers.BaseWebDriverManager;
