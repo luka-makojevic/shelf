@@ -125,3 +125,14 @@ export interface RegisterFieldConfig {
 export interface CreateShelfData {
   name: string;
 }
+
+export interface headerTypes {
+  header: string;
+  key: string;
+}
+
+export interface dataTypes {
+  name: string;
+  creationDate: string;
+  id: number;
+}
