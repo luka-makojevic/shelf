@@ -74,21 +74,6 @@ class FileServiceTest {
     }
 
     @Test
-    void getFile() {
-        String path = "/shelf-files/user-data/6/profile-picture/profilePicture.jpg";
-
-        try (MockedStatic<StreamUtils> mocked = mockStatic(StreamUtils.class)) {
-
-            mocked.when(() -> StreamUtils.copyToByteArray(any(InputStream.class))).then(invocationOnMock -> null);
-
-            fileService.getFile(path);
-
-            mocked.verify(() -> StreamUtils.copyToByteArray(any(InputStream.class)));
-
-        }
-    }
-
-    @Test
     void getFile_FileNotFound() {
         String path = "test.jpg";
 
