@@ -173,7 +173,7 @@ public class UserService {
                 .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         if (updateUserPhotoByIdRequestModel.getPictureName() != null)
-            user.setProfilePicturePath(updateUserPhotoByIdRequestModel.getPictureName());
+            user.setPictureName(updateUserPhotoByIdRequestModel.getPictureName());
 
         userRepository.save(user);
 

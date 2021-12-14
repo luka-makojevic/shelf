@@ -46,7 +46,7 @@ public class UserEntity {
     private Boolean emailVerified;
 
     @Column(name = "picture_name")
-    private String profilePicturePath;
+    private String pictureName;
 
     @OneToOne
     private RoleEntity role;
