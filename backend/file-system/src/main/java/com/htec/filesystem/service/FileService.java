@@ -10,6 +10,7 @@ import org.springframework.util.StreamUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.util.Base64;
 import java.util.Map;
 
@@ -17,6 +18,9 @@ import java.util.Map;
 public class FileService {
 
     private final UserAPICallService userAPICallService;
+    private final String homePath = System.getProperty("user.home");
+    private final String pathSeparator = FileSystems.getDefault().getSeparator();
+    private final String userPath = pathSeparator + "shelf-files" + pathSeparator + "user-data" + pathSeparator;
 
     public FileService(UserAPICallService userAPICallService) {
 
@@ -32,8 +36,7 @@ public class FileService {
 
         String fileName = files.get("image").getFirst();
 
-        String homePath = System.getProperty("user.home");
-        String localPath = "/shelf-files/user-data/" + id + "/profile-picture/";
+        String localPath = userPath + id + pathSeparator + "profile-picture" + pathSeparator;
 
         userAPICallService.updateUserPhotoById(id, localPath + fileName);
 
@@ -43,11 +46,10 @@ public class FileService {
 
     public FileResponseModel getFile(String path) {
 
-        String homePath = System.getProperty("user.home");
-        String folder = homePath + "/shelf-files/user-data/";
+        String folder = homePath + userPath;
 
         byte[] imageBytes;
-        try (FileInputStream fileInputStream = new FileInputStream(folder + "/" + path)) {
+        try (FileInputStream fileInputStream = new FileInputStream(folder + path)) {
 
             imageBytes = StreamUtils.copyToByteArray(fileInputStream);
         } catch (IOException ex) {
@@ -59,21 +61,19 @@ public class FileService {
 
     public boolean initializeFolders(Long id) {
 
-        String homePath = System.getProperty("user.home");
-
-        String userDataPath = homePath + "/shelf-files/user-data/" + id;
+        String userDataPath = homePath + userPath + id;
 
         if (!new File(userDataPath).mkdirs()) {
             return false;
         }
 
-        String userProfilePicturePath = userDataPath + "/profile-picture";
+        String userProfilePicturePath = userDataPath + pathSeparator + "profile-picture";
 
         if (!new File(userProfilePicturePath).mkdirs()) {
             return false;
         }
 
-        String userShelvesPath = userDataPath + "/shelves";
+        String userShelvesPath = userDataPath + pathSeparator + "shelves";
 
         return new File(userShelvesPath).mkdirs();
     }
