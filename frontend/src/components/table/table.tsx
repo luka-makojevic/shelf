@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FaCaretDown, FaCaretUp } from 'react-icons/fa';
 import CheckBox from '../UI/checkbox/checkBox';
-import { Row } from './row';
+import { DashboardTableRow } from './row';
 import { createSortingDirectons, sortColumn } from './sorter';
 import {
   ArrowContainer,
@@ -83,6 +83,15 @@ export const Table = ({ mulitSelect, data, headers }: TableProps) => {
       return <FaCaretDown />;
     return <FaCaretUp />;
   };
+  const handleOnClick = (key: string) => {
+    sortColumn(
+      key,
+      sortingDirections,
+      tableData,
+      setTableData,
+      setSortingDirections
+    );
+  };
 
   return (
     <StyledTable>
@@ -95,15 +104,7 @@ export const Table = ({ mulitSelect, data, headers }: TableProps) => {
           )}
           {headers.map(({ header, key }) => (
             <StyledTableHeader
-              onClick={() =>
-                sortColumn(
-                  key,
-                  sortingDirections,
-                  tableData,
-                  setTableData,
-                  setSortingDirections
-                )
-              }
+              onClick={() => handleOnClick(key)}
               key={`${header}`}
             >
               {header}
@@ -115,7 +116,7 @@ export const Table = ({ mulitSelect, data, headers }: TableProps) => {
       </Thead>
       <tbody>
         {tableData.map((item) => (
-          <Row
+          <DashboardTableRow
             key={`${item.name}`}
             selectedRows={selectedRows}
             setSelectedRows={setSelectedRows}

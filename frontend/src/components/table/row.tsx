@@ -17,7 +17,7 @@ interface RowProps {
   isChecked?: boolean;
 }
 
-export const Row = ({
+export const DashboardTableRow = ({
   data,
   multiSelect,
   selectedRows,
