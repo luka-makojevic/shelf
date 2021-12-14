@@ -25,6 +25,34 @@ public class ExceptionSupplier {
             ErrorMessages.BAD_REQUEST.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> couldNotUploadFile = () -> new ShelfException(
+            ErrorMessages.COULD_NOT_UPLOAD_FILE.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> fileAlreadyExists = () -> new ShelfException(
+            ErrorMessages.FILE_WITH_THE_SAME_NAME_ALREADY_EXISTS.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> noFileWithGivenId = () -> new ShelfException(
+            ErrorMessages.NO_FILE_WITH_GIVEN_ID.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> noShelfWithGivenId = () -> new ShelfException(
+            ErrorMessages.NO_SHELF_WITH_GIVEN_ID.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> couldNotFindUserById = () -> new ShelfException(
             ErrorMessages.COULD_NOT_FIND_USER_BY_ID.getErrorMessage(),
             HttpStatus.NOT_FOUND.value(),

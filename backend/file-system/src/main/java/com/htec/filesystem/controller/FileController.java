@@ -27,8 +27,8 @@ public class FileController {
 
 
     @PostMapping("/upload/profile/{id}")
-    public ResponseEntity uploadFile(@RequestBody Map<String, Pair<String, String>> files,
-                                     @PathVariable Long id) {
+    public ResponseEntity uploadProfilePicture(@RequestBody Map<String, Pair<String, String>> files,
+                                               @PathVariable Long id) {
 
         fileService.saveUserProfilePicture(id, files);
 
@@ -59,6 +59,17 @@ public class FileController {
         }
 
         return ResponseEntity.status(retStatus).body(new TextResponseMessage("Folders created", retStatus.value()));
+    }
+
+    @PostMapping("/upload/{shelfId}/{folderId}")
+    public ResponseEntity uploadFile(@RequestBody Map<String, Pair<String, String>> files,
+                                     @PathVariable Long shelfId,
+                                     @PathVariable Long folderId) {
+
+
+        fileService.saveFile(shelfId, folderId, files);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("File Uploaded", HttpStatus.OK.value()));
     }
 
 }
