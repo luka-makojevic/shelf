@@ -170,4 +170,11 @@ public class ExceptionSupplier {
             LocalDateTime.now().format(formatter),
             ErrorMessages.BAD_REQUEST.getErrorMessage()
     );
+
+    public static final Supplier<ShelfException> folderNotInitialized = () -> new ShelfException(
+            ErrorMessages.COULD_NOT_INITIALIZE_FOLDER.getErrorMessage(),
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage()
+    );
 }

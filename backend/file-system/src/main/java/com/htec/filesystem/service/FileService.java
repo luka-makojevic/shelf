@@ -5,6 +5,7 @@ import com.htec.filesystem.util.FileUtil;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.Base64;
 import java.util.Map;
 
@@ -34,5 +35,26 @@ public class FileService {
 
         String uploadDir = homePath + localPath;
         FileUtil.saveFile(uploadDir, fileName, bytes);
+    }
+
+    public boolean initializeFolders(Long id) {
+
+        String homePath = System.getProperty("user.home");
+
+        String userDataPath = homePath + "/shelf-files/user-data/" + id;
+
+        if (!new File(userDataPath).mkdirs()) {
+            return false;
+        }
+
+        String userProfilePicturePath = userDataPath + "/profile-picture";
+
+        if (!new File(userProfilePicturePath).mkdirs()) {
+            return false;
+        }
+
+        String userShelvesPath = userDataPath + "/shelves";
+
+        return new File(userShelvesPath).mkdirs();
     }
 }

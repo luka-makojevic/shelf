@@ -50,4 +50,8 @@ public class UserEntity {
 
     @OneToOne
     private RoleEntity role;
+
+    @Column(name = "free_space")
+    private Long freeSpace;
+
 }
