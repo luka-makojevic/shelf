@@ -115,15 +115,16 @@ public class FileService {
             if (!fileEntity.isFolder())
                 throw ExceptionSupplier.noFileWithGivenId.get();
 
-            localPath = userPath + fileEntity.getPath();
-            dbPath = fileEntity.getPath() + fileName;
+            dbPath = fileEntity.getPath() + fileEntity.getName() + pathSeparator;
+            localPath = userPath + dbPath;
+
         } else {
 
             localPath = userPath + shelfEntity.getUserId() + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator;
-            dbPath = shelfEntity.getUserId() + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator + fileName;
+            dbPath = shelfEntity.getUserId() + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator;
         }
 
-        if (fileRepository.findByPath(localPath + fileName).isPresent())
+        if (fileRepository.findByPathAndName(fileName, dbPath).isPresent())
             throw ExceptionSupplier.fileAlreadyExists.get();
 
         String uploadDir = homePath + localPath;

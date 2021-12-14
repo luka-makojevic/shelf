@@ -48,12 +48,12 @@ class FileServiceTest {
     void saveUserProfilePicture() {
 
         Map<String, Pair<String, String>> files = new HashMap<>();
-        files.put("image", Pair.of("test1.jpg", "content"));
+        files.put("image", Pair.of("test.jpeg", "content"));
 
         long id = 1L;
-        String fileName = "test1.jpg";
+        String fileName = "test.jpeg";
         String homePath = "/home/stefan/";
-        String localPath = "/shelf-files/user-data/" + id + "/profile-picture/";
+        String localPath = "1/profile-picture/";
         String uploadDir = homePath + localPath;
 
         try (MockedStatic<FileUtil> mocked = mockStatic(FileUtil.class)) {
@@ -79,7 +79,7 @@ class FileServiceTest {
             fileService.saveUserProfilePicture(id, files);
         });
 
-        Assertions.assertEquals(ErrorMessages.COULD_NOT_SAVE_IMAGE_FILE ,exception.getMessage());
+        Assertions.assertEquals(ErrorMessages.COULD_NOT_SAVE_IMAGE_FILE.getErrorMessage(), exception.getMessage());
     }
 
     @Test
@@ -192,7 +192,6 @@ class FileServiceTest {
 
             when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
             when(fileRepository.findById(anyLong())).thenReturn(Optional.of(fileEntity));
-
 
 
             ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
