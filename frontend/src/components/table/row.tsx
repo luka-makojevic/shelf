@@ -24,7 +24,7 @@ export const DashboardTableRow = ({
   setSelectedRows,
   isChecked,
 }: RowProps) => {
-  const handleOnChange = () => {
+  const handleChange = () => {
     const alreadySelected = selectedRows.some(
       (row: FunctionDataTypes | FileDataTypes | ShelfDataTypes) =>
         row.id === data.id
@@ -46,7 +46,7 @@ export const DashboardTableRow = ({
     <StyledRow>
       {multiSelect && (
         <StyledCell>
-          <CheckBox onChange={handleOnChange} checked={isChecked} />
+          <CheckBox onChange={handleChange} checked={isChecked} />
         </StyledCell>
       )}
       {Object.values(data).map((rowText) => (

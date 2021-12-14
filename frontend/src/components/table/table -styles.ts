@@ -33,7 +33,7 @@ export const CheckBoxTableHeader = styled.th`
   padding: ${theme.space.sm};
   width: 0;
 `;
-export const TableHeaderInner = styled.th`
+export const TableHeaderInner = styled.div`
   display: flex;
   justify-content: space-between;
 `;
