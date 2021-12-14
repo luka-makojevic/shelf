@@ -17,6 +17,5 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/*")
                 .permitAll();
-
     }
 }
