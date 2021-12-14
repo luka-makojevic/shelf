@@ -39,9 +39,9 @@ public class BaseWdWaitHelpers {
      * @return WebElement after wait
      * @author stefan.gajic
      */
-    public WebElement waitToBeVisible (WebElement locator) {
+    public WebElement waitToBeVisible (By locator) {
         wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-        return wait.until(ExpectedConditions.visibilityOfElementLocated((By) locator));
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
     /**
@@ -72,7 +72,7 @@ public class BaseWdWaitHelpers {
      * Wait for element to be present
      *
      * @param locator
-     * @return Webelement after wait
+     * @return WebElement after wait
      * @author stefan.gajic
      */
     public WebElement waitForElementPresence (By locator) {

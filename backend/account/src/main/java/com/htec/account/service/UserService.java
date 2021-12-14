@@ -1,6 +1,5 @@
 package com.htec.account.service;
 
-
 import com.htec.account.annotation.Roles;
 import com.htec.account.dto.AuthUser;
 import com.htec.account.dto.UserDTO;
@@ -10,6 +9,7 @@ import com.htec.account.entity.UserEntity;
 import com.htec.account.exception.ExceptionSupplier;
 import com.htec.account.mapper.UserMapper;
 import com.htec.account.model.request.PasswordResetModel;
+import com.htec.account.model.request.UpdateUserPhotoByIdRequestModel;
 import com.htec.account.model.response.UserPageResponseModel;
 import com.htec.account.model.response.UserResponseModel;
 import com.htec.account.repository.mysql.PasswordResetTokenRepository;
@@ -162,6 +162,19 @@ public class UserService {
         } else {
             user.setPassword(user.getPassword());
         }
+
+        userRepository.save(user);
+
+        return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
+    }
+
+    public UserResponseModel updateUserProfilePicture(UpdateUserPhotoByIdRequestModel updateUserPhotoByIdRequestModel) {
+
+        UserEntity user = userRepository.findById(updateUserPhotoByIdRequestModel.getId())
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+
+        if (updateUserPhotoByIdRequestModel.getPictureName() != null)
+            user.setPictureName(updateUserPhotoByIdRequestModel.getPictureName());
 
         userRepository.save(user);
 

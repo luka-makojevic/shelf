@@ -13,4 +13,13 @@ public enum Roles {
     Roles(Long value) {
         this.value = value;
     }
+
+    public static Roles fromValue(long value) {
+        for (Roles roles : Roles.values()) {
+            if (roles.getValue().equals(value)) {
+                return roles;
+            }
+        }
+        throw new IllegalArgumentException("Wrong value!");
+    }
 }

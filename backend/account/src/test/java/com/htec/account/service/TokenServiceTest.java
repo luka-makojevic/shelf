@@ -3,6 +3,7 @@ package com.htec.account.service;
 import com.htec.account.entity.EmailVerifyTokenEntity;
 import com.htec.account.entity.UserEntity;
 import com.htec.account.exception.ShelfException;
+import com.htec.account.model.response.TextResponseMessage;
 import com.htec.account.repository.mysql.TokenRepository;
 import com.htec.account.repository.mysql.UserRepository;
 import com.htec.account.util.ErrorMessages;
@@ -13,6 +14,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -30,6 +36,8 @@ class TokenServiceTest {
     private TokenRepository tokenRepository;
     @Mock
     private RegisterService registerService;
+    @Mock
+    private RestTemplate restTemplate;
 
     @InjectMocks
     private TokenService tokenService;
@@ -57,12 +65,15 @@ class TokenServiceTest {
 
         when(userRepository.findById(userEntity.getId())).thenReturn(Optional.of(userEntity));
         when(tokenRepository.findByToken(validTestToken)).thenReturn(Optional.of(tokenEntity));
+        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), eq(null), eq(TextResponseMessage.class))).thenReturn(
+                ResponseEntity.status(HttpStatus.OK).body((new TextResponseMessage("", HttpStatus.OK.value())))
+        );
 
         String returnValue = tokenService.confirmToken(validTestToken);
 
         verify(userRepository, times(1)).findById(any());
         verify(tokenRepository, times(1)).findByToken(validTestToken);
-        verify(userRepository, times(1)).enableUser(tokenEntity.getUser().getEmail());
+        verify(userRepository, times(1)).save(any());
         verify(tokenRepository, times(1)).delete(tokenEntity);
 
         Assertions.assertEquals(TokenService.EMAIL_CONFIRMED, returnValue);
@@ -84,7 +95,7 @@ class TokenServiceTest {
 
         verify(userRepository, times(0)).findById(any());
         verify(tokenRepository, times(0)).findByToken(invalidTestToken);
-        verify(userRepository, times(0)).enableUser(tokenEntity.getUser().getEmail());
+        verify(userRepository, times(0)).save(any());
         verify(tokenRepository, times(0)).delete(tokenEntity);
 
         Assertions.assertEquals(ErrorMessages.TOKEN_NOT_VALID.getErrorMessage(), exception.getMessage());
@@ -109,7 +120,7 @@ class TokenServiceTest {
 
         verify(userRepository, times(1)).findById(any());
         verify(tokenRepository, times(0)).findByToken(validTestToken);
-        verify(userRepository, times(0)).enableUser(tokenEntity.getUser().getEmail());
+        verify(userRepository, times(0)).save(any());
         verify(tokenRepository, times(0)).delete(tokenEntity);
 
         Assertions.assertEquals(ErrorMessages.USER_NOT_FOUND.getErrorMessage(), exception.getMessage());
@@ -134,7 +145,7 @@ class TokenServiceTest {
 
         verify(userRepository, times(1)).findById(any());
         verify(tokenRepository, times(0)).findByToken(validTestToken);
-        verify(userRepository, times(0)).enableUser(tokenEntity.getUser().getEmail());
+        verify(userRepository, times(0)).save(any());
         verify(tokenRepository, times(0)).delete(tokenEntity);
 
         Assertions.assertEquals(TokenService.EMAIL_ALREADY_CONFIRMED, returnValue);
@@ -160,7 +171,7 @@ class TokenServiceTest {
 
         verify(userRepository, times(1)).findById(any());
         verify(tokenRepository, times(1)).findByToken(unexcitingToken);
-        verify(userRepository, times(0)).enableUser(tokenEntity.getUser().getEmail());
+        verify(userRepository, times(0)).save(any());
         verify(tokenRepository, times(0)).delete(tokenEntity);
 
         Assertions.assertEquals(ErrorMessages.TOKEN_NOT_FOUND.getErrorMessage(), exception.getMessage());
@@ -186,7 +197,7 @@ class TokenServiceTest {
 
         verify(userRepository, times(1)).findById(any());
         verify(tokenRepository, times(1)).findByToken(expiredToken);
-        verify(userRepository, times(0)).enableUser(tokenEntity.getUser().getEmail());
+        verify(userRepository, times(0)).save(any());
         verify(tokenRepository, times(0)).delete(tokenEntity);
 
         Assertions.assertEquals(ErrorMessages.TOKEN_EXPIRED.getErrorMessage(), exception.getMessage());
@@ -340,6 +351,64 @@ class TokenServiceTest {
         verify(registerService, times(0)).createAndSendToken(any());
 
         Assertions.assertEquals(ErrorMessages.TOKEN_NOT_EXPIRED.getErrorMessage(), exception.getMessage());
+    }
+
+    @Test
+    void confirmToken_FolderNotInitialize() {
+
+        userEntity.setEmailVerified(false);
+
+        String validTestToken = new TokenGenerator(userRepository)
+                .generateConfirmationToken(userEntity.getId());
+
+        EmailVerifyTokenEntity tokenEntity = new EmailVerifyTokenEntity();
+        tokenEntity.setUser(userEntity);
+        tokenEntity.setToken(validTestToken);
+        tokenEntity.setExpiresAt(LocalDateTime.now().plusMinutes(2));
+
+        when(userRepository.findById(userEntity.getId())).thenReturn(Optional.of(userEntity));
+        when(tokenRepository.findByToken(validTestToken)).thenReturn(Optional.of(tokenEntity));
+        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), eq(null), eq(TextResponseMessage.class))).thenReturn(
+                ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body((new TextResponseMessage("", HttpStatus.INTERNAL_SERVER_ERROR.value())))
+        );
+
+        ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> tokenService.confirmToken(validTestToken));
+
+        verify(userRepository, times(1)).findById(any());
+        verify(tokenRepository, times(1)).findByToken(validTestToken);
+        verify(userRepository, times(0)).save(any());
+        verify(tokenRepository, times(0)).delete(tokenEntity);
+
+        Assertions.assertEquals(ErrorMessages.COULD_NOT_INITIALIZE_FOLDER.getErrorMessage(), exception.getMessage());
+    }
+
+    @Test
+    void confirmToken_FolderNotInitialize_RestTemplateException() {
+
+        userEntity.setEmailVerified(false);
+
+        String validTestToken = new TokenGenerator(userRepository)
+                .generateConfirmationToken(userEntity.getId());
+
+        EmailVerifyTokenEntity tokenEntity = new EmailVerifyTokenEntity();
+        tokenEntity.setUser(userEntity);
+        tokenEntity.setToken(validTestToken);
+        tokenEntity.setExpiresAt(LocalDateTime.now().plusMinutes(2));
+
+        when(userRepository.findById(userEntity.getId())).thenReturn(Optional.of(userEntity));
+        when(tokenRepository.findByToken(validTestToken)).thenReturn(Optional.of(tokenEntity));
+        when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), eq(null), eq(TextResponseMessage.class))).thenThrow(
+                HttpClientErrorException.class
+        );
+
+        ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> tokenService.confirmToken(validTestToken));
+
+        verify(userRepository, times(1)).findById(any());
+        verify(tokenRepository, times(1)).findByToken(validTestToken);
+        verify(userRepository, times(0)).save(any());
+        verify(tokenRepository, times(0)).delete(tokenEntity);
+
+        Assertions.assertEquals(ErrorMessages.COULD_NOT_INITIALIZE_FOLDER.getErrorMessage(), exception.getMessage());
     }
 
 }

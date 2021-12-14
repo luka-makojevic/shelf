@@ -1,24 +1,17 @@
 package com.htec.account.annotation;
 
 import com.htec.account.dto.AuthUser;
-import com.htec.account.entity.UserEntity;
 import com.htec.account.exception.ExceptionSupplier;
-import com.htec.account.repository.mysql.UserRepository;
+import com.htec.account.security.SecurityConstants;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import java.security.Principal;
-
 public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
-
-    private final UserRepository userRepository;
-
-    public AuthUserArgumentResolver(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -27,15 +20,31 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        Principal userPrincipal = webRequest.getUserPrincipal();
 
-        if (userPrincipal == null) {
+        String jwtToken = webRequest.getHeader(SecurityConstants.AUTHORIZATION_HEADER_STRING);
+
+        if (jwtToken == null)
+            throw ExceptionSupplier.tokenNotFound.get();
+
+        jwtToken = jwtToken.replace(SecurityConstants.BEARER_TOKEN_PREFIX, "");
+
+        String email;
+
+        Claims body = Jwts.parser()
+                .setSigningKey(SecurityConstants.TOKEN_SECRET)
+                .parseClaimsJws(jwtToken)
+                .getBody();
+
+        email = body
+                .getSubject();
+
+        if (email.isEmpty()) {
             throw ExceptionSupplier.authenticationCredentialsNotValid.get();
         }
 
-        UserEntity userEntity = userRepository.findByEmail(userPrincipal.getName())
-                .orElseThrow(ExceptionSupplier.authenticationCredentialsNotValid);
+        Long userId = Long.valueOf(body.getId());
+        Long roleId = body.get("role_id", Long.class);
 
-        return new AuthUser(userEntity.getId(), userEntity.getEmail(), userEntity.getRole().getId());
+        return new AuthUser(userId, email, roleId);
     }
 }
