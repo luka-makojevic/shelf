@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ForgotPasswordData, ResetPasswordData } from '../interfaces/dataTypes';
 
-const API_URL = `http://10.10.0.136:8080/`;
+const API_URL = `http://10.10.0.136:8080/account/`;
 
 const emailConfirmation = (token: string | undefined) =>
   axios.post(`${API_URL}tokens/confirmation`, { token });
