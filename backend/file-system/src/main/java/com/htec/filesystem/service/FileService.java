@@ -9,6 +9,8 @@ import org.springframework.util.StreamUtils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.File;
+
 import java.util.Base64;
 import java.util.Map;
 
@@ -54,5 +56,25 @@ public class FileService {
         }
 
         return new FileResponseModel(imageBytes, path);
+
+    public boolean initializeFolders(Long id) {
+
+        String homePath = System.getProperty("user.home");
+
+        String userDataPath = homePath + "/shelf-files/user-data/" + id;
+
+        if (!new File(userDataPath).mkdirs()) {
+            return false;
+        }
+
+        String userProfilePicturePath = userDataPath + "/profile-picture";
+
+        if (!new File(userProfilePicturePath).mkdirs()) {
+            return false;
+        }
+
+        String userShelvesPath = userDataPath + "/shelves";
+
+        return new File(userShelvesPath).mkdirs();
     }
 }
