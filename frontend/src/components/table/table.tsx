@@ -83,7 +83,7 @@ export const Table = ({ mulitSelect, data, headers }: TableProps) => {
       return <FaCaretDown />;
     return <FaCaretUp />;
   };
-  const handleOnClick = (key: string) => {
+  const handleClick = (key: string) => {
     sortColumn(
       key,
       sortingDirections,
@@ -103,7 +103,7 @@ export const Table = ({ mulitSelect, data, headers }: TableProps) => {
             </CheckBoxTableHeader>
           )}
           {headers.map(({ header, key }) => (
-            <StyledTableHeader onClick={() => handleOnClick(key)} key={header}>
+            <StyledTableHeader onClick={() => handleClick(key)} key={header}>
               <TableHeaderInner>
                 {header}
                 {sorterArrowToggle(key)}
