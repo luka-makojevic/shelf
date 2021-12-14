@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { theme } from '../../theme';
 import {
@@ -9,35 +9,36 @@ import {
 } from './searchBar-styles';
 
 interface SearchProps {
-  setData: Dispatch<SetStateAction<any>>;
-  data: any;
-  searchKey: string;
+  setData?: Dispatch<SetStateAction<any>>;
+  data?: any;
+  searchKey?: string;
   placeholder?: string;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
-const SearchBar = ({ setData, data, searchKey, ...restProps }: SearchProps) => {
-  const [searchInput, setSearchInput] = useState('');
-
+const SearchBar = ({
+  setData,
+  data,
+  searchKey,
+  onChange,
+  ...restProps
+}: SearchProps) => {
   const handleSearchchange = (e: React.FormEvent<HTMLInputElement>) => {
-    setSearchInput(e.currentTarget.value);
-  };
-
-  useEffect(() => {
-    if (!searchInput) {
-      setData(data);
-    } else {
-      setData(
-        data.filter((item: any) =>
-          item[searchKey]
-            .toString()
-            .toLowerCase()
-            .split(' ')
-            .join('')
-            .includes(searchInput.toLowerCase().trim().split(' ').join(''))
-        )
-      );
+    if (setData !== undefined && searchKey !== undefined) {
+      if (!e.currentTarget.value) {
+        setData(data);
+      } else {
+        setData(
+          data.filter((item: any) =>
+            item[searchKey]
+              .toString()
+              .toLowerCase()
+              .includes(e.currentTarget.value.toLowerCase().trim())
+          )
+        );
+      }
     }
-  }, [searchInput]);
+  };
 
   return (
     <SearchInputContainer>
@@ -45,7 +46,7 @@ const SearchBar = ({ setData, data, searchKey, ...restProps }: SearchProps) => {
         id="searchBar"
         type="text"
         {...restProps}
-        onChange={handleSearchchange}
+        onChange={data && searchKey ? handleSearchchange : onChange}
       />
       <SearchIconContainer>
         <FaSearch color={theme.colors.secondary} />
