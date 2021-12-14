@@ -7,10 +7,9 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.File;
-
 import java.util.Base64;
 import java.util.Map;
 
@@ -56,6 +55,7 @@ public class FileService {
         }
 
         return new FileResponseModel(imageBytes, path);
+    }
 
     public boolean initializeFolders(Long id) {
 
