@@ -33,7 +33,7 @@ class UserValidatorTest {
         ShelfException shelfException = assertThrows(ShelfException.class,
                 () -> userValidator.isUserValid(userDTO));
 
-        assertEquals("First name is not valid."  , shelfException.getMessage());
+        assertEquals(ErrorMessages.FIRST_NAME_NOT_VALID.getErrorMessage(), shelfException.getMessage());
     }
 
     @Test
@@ -52,7 +52,7 @@ class UserValidatorTest {
         ShelfException shelfException = assertThrows(ShelfException.class,
                 () -> userValidator.isUserValid(userDTO));
 
-        assertEquals("Last name is not valid."  , shelfException.getMessage());
+        assertEquals(ErrorMessages.LAST_NAME_NOT_VALID.getErrorMessage(), shelfException.getMessage());
     }
 
     @Test
@@ -71,7 +71,7 @@ class UserValidatorTest {
         ShelfException shelfException = assertThrows(ShelfException.class,
                 () -> userValidator.isUserValid(userDTO));
 
-        assertEquals("Email is not valid."  , shelfException.getMessage());
+        assertEquals(ErrorMessages.EMAIL_NOT_VALID.getErrorMessage(), shelfException.getMessage());
     }
 
     @Test
@@ -90,7 +90,7 @@ class UserValidatorTest {
         ShelfException shelfException = assertThrows(ShelfException.class,
                 () -> userValidator.isUserValid(userDTO));
 
-        assertEquals("Password is not valid."  , shelfException.getMessage());
+        assertEquals(ErrorMessages.PASSWORD_NOT_VALID.getErrorMessage(), shelfException.getMessage());
     }
 
 }

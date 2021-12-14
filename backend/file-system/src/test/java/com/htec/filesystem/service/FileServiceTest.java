@@ -1,6 +1,7 @@
 package com.htec.filesystem.service;
 
 import com.htec.filesystem.exception.ShelfException;
+import com.htec.filesystem.util.ErrorMessages;
 import com.htec.filesystem.util.FileUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -81,6 +82,6 @@ class FileServiceTest {
             fileService.getFile(path);
         });
 
-        Assertions.assertEquals("File not found.", exception.getMessage());
+        Assertions.assertEquals(ErrorMessages.FILE_NOT_FOUND.getErrorMessage(), exception.getMessage());
     }
 }

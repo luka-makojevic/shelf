@@ -10,6 +10,7 @@ import com.htec.account.model.response.UserPageResponseModel;
 import com.htec.account.model.response.UserResponseModel;
 import com.htec.account.repository.mysql.RoleRepository;
 import com.htec.account.repository.mysql.UserRepository;
+import com.htec.account.util.ErrorMessages;
 import com.htec.account.validator.UserValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -86,7 +87,7 @@ class UserServiceTest {
             UserResponseModel foundUser = userService.getUserById(1L);
         });
 
-        Assertions.assertEquals("Record with provided id is not found.", exception.getMessage());
+        Assertions.assertEquals(ErrorMessages.NO_RECORD_FOUND_WITH_ID.getErrorMessage(), exception.getMessage());
 
     }
 
@@ -114,7 +115,7 @@ class UserServiceTest {
             userService.getUser("");
         });
 
-        Assertions.assertEquals("Record with provided email is not found.", exception.getMessage());
+        Assertions.assertEquals(ErrorMessages.NO_RECORD_FOUND_WITH_EMAIL.getErrorMessage(), exception.getMessage());
 
     }
 
@@ -155,7 +156,7 @@ class UserServiceTest {
 
         verify(userRepository, times(0)).delete(any());
 
-        assertEquals("User does not have permission.", exception.getMessage());
+        assertEquals(ErrorMessages.USER_DOES_NOT_HAVE_PERMISSION.getErrorMessage(), exception.getMessage());
     }
 
 
@@ -195,7 +196,7 @@ class UserServiceTest {
         });
 
         verify(userRepository, times(0)).findAll(anyLong(), any(Pageable.class));
-        assertEquals("Page index must not be less than one.", exception.getMessage());
+        assertEquals(ErrorMessages.PAGE_NUMBER_WRONG.getErrorMessage(), exception.getMessage());
     }
 
     @Test
@@ -213,7 +214,7 @@ class UserServiceTest {
         });
 
         verify(userRepository, times(0)).findAll(anyLong(), any(Pageable.class));
-        assertEquals("Page size must not be less than one.", exception.getMessage());
+        assertEquals(ErrorMessages.SIZE_NUMBER_WRONG.getErrorMessage(), exception.getMessage());
     }
 
     @Test
@@ -224,6 +225,7 @@ class UserServiceTest {
         userDTO.setFirstName("Nikola");
         userDTO.setLastName("Nikolic");
         userDTO.setPassword("Asdfg.123");
+        userDTO.setPictureName("asdas.jpg");
 
         user.setSalt(String.valueOf(new Random().nextInt()));
 
@@ -257,7 +259,7 @@ class UserServiceTest {
         verify(userValidator, times(0)).isUserPasswordValid(userDTO.getPassword());
         verify(bCryptPasswordEncoder, times(0)).encode(userDTO.getPassword() + "Adasdasdas");
 
-        assertEquals("Record with provided id is not found.", exception.getMessage());
+        assertEquals(ErrorMessages.NO_RECORD_FOUND_WITH_ID.getErrorMessage(), exception.getMessage());
     }
 
     @Test
@@ -281,7 +283,7 @@ class UserServiceTest {
         verify(userRepository, times(0)).save(any());
         verify(bCryptPasswordEncoder, times(0)).encode(userDTO.getPassword() + user.getSalt());
 
-        assertEquals("Password is not valid.", exception.getMessage());
+        assertEquals(ErrorMessages.PASSWORD_NOT_VALID.getErrorMessage(), exception.getMessage());
     }
 
     @Test
@@ -327,7 +329,7 @@ class UserServiceTest {
         verify(userRepository, times(1)).findById(anyLong());
         verify(emailService, times(0)).sendEmail(anyString(), anyMap(), anyString(), anyString());
 
-        assertEquals("User already has that role.", exception.getMessage());
+        assertEquals(ErrorMessages.ROLE_UPDATE_FAILED.getErrorMessage(), exception.getMessage());
     }
 
     @Test
@@ -349,7 +351,7 @@ class UserServiceTest {
         verify(userRepository, times(1)).findById(anyLong());
         verify(emailService, times(0)).sendEmail(anyString(), anyMap(), anyString(), anyString());
 
-        assertEquals("Record with provided id is not found.", exception.getMessage());
+        assertEquals(ErrorMessages.NO_RECORD_FOUND_WITH_ID.getErrorMessage(), exception.getMessage());
     }
 
     @Test
@@ -372,6 +374,6 @@ class UserServiceTest {
         verify(userRepository, times(1)).findById(anyLong());
         verify(emailService, times(0)).sendEmail(anyString(), anyMap(), anyString(), anyString());
 
-        assertEquals("Record with provided id is not found.", exception.getMessage());
+        assertEquals(ErrorMessages.NO_RECORD_FOUND_WITH_ID.getErrorMessage(), exception.getMessage());
     }
 }
