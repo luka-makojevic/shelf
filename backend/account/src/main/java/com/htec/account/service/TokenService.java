@@ -78,11 +78,11 @@ public class TokenService {
             throw ExceptionSupplier.tokenExpired.get();
         }
 
+        initializeUserFolders(userEntity);
+
         userEntity.setEmailVerified(true);
 
         tokenRepository.delete(confirmationToken);
-
-        initializeUserFolders(userEntity);
 
         userRepository.save(userEntity);
 
