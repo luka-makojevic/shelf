@@ -85,3 +85,13 @@ export const ModalButtonDivider = styled.div`
   justify-content: space-between;
   width: 100%;
 `;
+
+export const DashboardLayout = styled.div`
+  display: flex;
+  height: calc(100vh - 60px);
+`;
+
+export const DashboardContentWrapper = styled.div`
+  height: 100%;
+  padding: ${theme.space.lg};
+`;

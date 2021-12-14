@@ -12,6 +12,10 @@ import ResetPassword from '../../pages/resetPassword';
 import TermsAndConditions from '../../pages/termsOfService';
 import ProtectedRoute from './protectedRoute';
 import PublicOnlyRoute from './publicOnlyRoute';
+import SharedShelves from '../../pages/sharedShelves';
+import Trash from '../../pages/trash';
+import Functions from '../../pages/functions';
+import Files from '../../pages/files';
 
 const Router = () => {
   const routes: RouteProps[] = [
@@ -54,6 +58,30 @@ const Router = () => {
           <Dashboard />
         </ProtectedRoute>
       ),
+      children: [
+        {
+          path: Routes.SHELVES,
+          element: <Files />,
+          children: [
+            {
+              path: Routes.FOLDERS,
+              element: <Files />,
+            },
+          ],
+        },
+        {
+          path: Routes.SHARED_SHELVES,
+          element: <SharedShelves />,
+        },
+        {
+          path: Routes.TRASH,
+          element: <Trash />,
+        },
+        {
+          path: Routes.FUNCTIONS,
+          element: <Functions />,
+        },
+      ],
     },
     {
       path: Routes.TERMS_AND_CONDITIONS,
