@@ -33,6 +33,10 @@ export const CheckBoxTableHeader = styled.th`
   padding: ${theme.space.sm};
   width: 0;
 `;
+export const TableHeaderInner = styled.th`
+  display: flex;
+  justify-content: space-between;
+`;
 
 export const StyledTable = styled.table`
   width: 100%;
@@ -49,9 +53,6 @@ export const StyledRow = styled.tr`
       border: none;
     }
   }
-`;
-export const ArrowContainer = styled.span`
-  float: right;
 `;
 
 export const ActionContainer = styled.span`

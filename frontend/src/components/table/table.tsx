@@ -4,11 +4,11 @@ import CheckBox from '../UI/checkbox/checkBox';
 import { DashboardTableRow } from './row';
 import { createSortingDirectons, sortColumn } from './sorter';
 import {
-  ArrowContainer,
   StyledTable,
   StyledTableHeader,
   Thead,
   CheckBoxTableHeader,
+  TableHeaderInner,
 } from './table -styles';
 import {
   FileDataTypes,
@@ -103,12 +103,11 @@ export const Table = ({ mulitSelect, data, headers }: TableProps) => {
             </CheckBoxTableHeader>
           )}
           {headers.map(({ header, key }) => (
-            <StyledTableHeader
-              onClick={() => handleOnClick(key)}
-              key={`${header}`}
-            >
-              {header}
-              <ArrowContainer>{sorterArrowToggle(key)}</ArrowContainer>
+            <StyledTableHeader onClick={() => handleOnClick(key)} key={header}>
+              <TableHeaderInner>
+                {header}
+                {sorterArrowToggle(key)}
+              </TableHeaderInner>
             </StyledTableHeader>
           ))}
           {!mulitSelect && <StyledTableHeader>Actions</StyledTableHeader>}
@@ -117,7 +116,7 @@ export const Table = ({ mulitSelect, data, headers }: TableProps) => {
       <tbody>
         {tableData.map((item) => (
           <DashboardTableRow
-            key={`${item.name}`}
+            key={item.name}
             selectedRows={selectedRows}
             setSelectedRows={setSelectedRows}
             multiSelect={mulitSelect}

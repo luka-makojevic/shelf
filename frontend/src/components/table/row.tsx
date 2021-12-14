@@ -50,7 +50,7 @@ export const DashboardTableRow = ({
         </StyledCell>
       )}
       {Object.values(data).map((rowText) => (
-        <StyledCell key={`${rowText}`}>{rowText}</StyledCell>
+        <StyledCell key={rowText}>{rowText}</StyledCell>
       ))}
       {!multiSelect && (
         <StyledCell>
