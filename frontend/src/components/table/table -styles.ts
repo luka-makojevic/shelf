@@ -6,7 +6,7 @@ export const Thead = styled.thead`
   padding: ${theme.space.sm} 0;
   text-align: left;
 `;
-export const StyledTableheader = styled.th`
+export const StyledTableHeader = styled.th`
   padding: ${theme.space.sm};
   user-select: none;
   cursor: pointer;
@@ -28,6 +28,12 @@ export const StyledTableheader = styled.th`
     }
   }
 `;
+
+export const CheckBoxTableHeader = styled.th`
+  padding: ${theme.space.sm};
+  width: 0;
+`;
+
 export const StyledTable = styled.table`
   width: 100%;
   border-collapse: collapse;

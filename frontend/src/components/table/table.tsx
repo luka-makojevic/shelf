@@ -6,37 +6,45 @@ import { createSortingDirectons, sortColumn } from './sorter';
 import {
   ArrowContainer,
   StyledTable,
-  StyledTableheader,
+  StyledTableHeader,
   Thead,
+  CheckBoxTableHeader,
 } from './table -styles';
-import { dataTypes, headerTypes } from '../../interfaces/dataTypes';
+import {
+  FileDataTypes,
+  FunctionDataTypes,
+  HeaderTypes,
+  ShelfDataTypes,
+  SortingDirectionTypes,
+} from '../../interfaces/dataTypes';
+import { SortingDirection } from '../../utils/enums/table';
 
-enum SortingDirection {
-  ASCENDING = 'ASCENDING',
-  DESCENDING = 'DESCENDING',
-  UNSORTED = 'UNSORTED',
-}
-
-const data: dataTypes[] = [
+const data: (FunctionDataTypes | FileDataTypes | ShelfDataTypes)[] = [
   {
     name: 'picture shelf',
-    creationDate: '11/8/1991',
+    creation_date: '11/8/1991',
     id: 2,
   },
-  { name: 'documents', creationDate: '11/1/2001', id: 1 },
-  { name: 'videos', creationDate: '11/4/2021', id: 3 },
+  { name: 'documents', creation_date: '11/1/2001', id: 1 },
+  { name: 'videos', creation_date: '11/4/2021', id: 3 },
 ];
-const headers: headerTypes[] = [
+const headers: HeaderTypes[] = [
   { header: 'Name', key: 'name' },
-  { header: 'Creation date', key: 'creationDate' },
+  { header: 'Creation date', key: 'creation_date' },
   { header: 'Id', key: 'id' },
 ];
 
 export const Table = ({ mulitSelect }: { mulitSelect?: boolean }) => {
   const [selectAll, setSelectAll] = useState<boolean>(false);
-  const [selectedRows, setSelectedRows] = useState<any>([]);
-  const [sortingDirections, setSortingDirections] = useState<any>({});
-  const [tableData, setTableData] = useState(data);
+  const [selectedRows, setSelectedRows] = useState<
+    (FunctionDataTypes | FileDataTypes | ShelfDataTypes)[]
+  >([]);
+
+  const [sortingDirections, setSortingDirections] =
+    useState<SortingDirectionTypes>({});
+
+  const [tableData, setTableData] =
+    useState<(FunctionDataTypes | FileDataTypes | ShelfDataTypes)[]>(data);
 
   const handleSelectAll = () => {
     if (selectedRows.length !== data.length) {
@@ -59,6 +67,7 @@ export const Table = ({ mulitSelect }: { mulitSelect?: boolean }) => {
   useEffect(() => {
     createSortingDirectons(headers, setSortingDirections);
   }, []);
+
   const sorterArrowToggle = (key: string) => {
     if (
       sortingDirections[key] === SortingDirection.UNSORTED ||
@@ -73,12 +82,12 @@ export const Table = ({ mulitSelect }: { mulitSelect?: boolean }) => {
       <Thead>
         <tr>
           {mulitSelect && (
-            <StyledTableheader>
+            <CheckBoxTableHeader>
               <CheckBox onChange={handleSelectAll} checked={selectAll} />
-            </StyledTableheader>
+            </CheckBoxTableHeader>
           )}
           {headers.map(({ header, key }, idx) => (
-            <StyledTableheader
+            <StyledTableHeader
               onClick={() =>
                 sortColumn(
                   key,
@@ -91,14 +100,10 @@ export const Table = ({ mulitSelect }: { mulitSelect?: boolean }) => {
               key={`${header}-${idx}`}
             >
               {header}
-              <ArrowContainer
-                style={{ display: 'flex', alignSelf: 'flex-end' }}
-              >
-                {sorterArrowToggle(key)}
-              </ArrowContainer>
-            </StyledTableheader>
+              <ArrowContainer>{sorterArrowToggle(key)}</ArrowContainer>
+            </StyledTableHeader>
           ))}
-          {!mulitSelect && <StyledTableheader>Actions</StyledTableheader>}
+          {!mulitSelect && <StyledTableHeader>Actions</StyledTableHeader>}
         </tr>
       </Thead>
       <tbody>
@@ -110,7 +115,8 @@ export const Table = ({ mulitSelect }: { mulitSelect?: boolean }) => {
             multiSelect={mulitSelect}
             data={item}
             isChecked={selectedRows.some(
-              (rowData: any) => rowData.id === item.id
+              (rowData: FunctionDataTypes | FileDataTypes | ShelfDataTypes) =>
+                rowData.id === item.id
             )}
           />
         ))}

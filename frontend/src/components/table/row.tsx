@@ -1,21 +1,18 @@
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import {
+  FileDataTypes,
+  FunctionDataTypes,
+  ShelfDataTypes,
+} from '../../interfaces/dataTypes';
 import CheckBox from '../UI/checkbox/checkBox';
 import { StyledRow, StyledCell, ActionContainer } from './table -styles';
 
 interface RowProps {
-  data: {
-    name: string;
-    creationDate: string;
-    id: number;
-  };
+  data: FunctionDataTypes | FileDataTypes | ShelfDataTypes;
   multiSelect?: boolean;
-  selectedRows: any;
+  selectedRows: (FunctionDataTypes | FileDataTypes | ShelfDataTypes)[];
   setSelectedRows: (
-    data: {
-      name: string;
-      creationDate: string;
-      id: number;
-    }[]
+    data: (FunctionDataTypes | FileDataTypes | ShelfDataTypes)[]
   ) => void;
   isChecked?: boolean;
 }
@@ -28,12 +25,20 @@ export const Row = ({
   isChecked,
 }: RowProps) => {
   const handleOnChange = () => {
-    const alreadySelected = selectedRows.some((row: any) => row.id === data.id);
+    const alreadySelected = selectedRows.some(
+      (row: FunctionDataTypes | FileDataTypes | ShelfDataTypes) =>
+        row.id === data.id
+    );
 
     if (!alreadySelected) {
       setSelectedRows([...selectedRows, data]);
     } else {
-      setSelectedRows(selectedRows.filter((row: any) => row.id !== data.id));
+      setSelectedRows(
+        selectedRows.filter(
+          (row: FunctionDataTypes | FileDataTypes | ShelfDataTypes) =>
+            row.id !== data.id
+        )
+      );
     }
   };
 

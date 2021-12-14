@@ -1,18 +1,23 @@
-import React from 'react';
-import { headerTypes } from '../../interfaces/dataTypes';
+import {
+  FileDataTypes,
+  FunctionDataTypes,
+  HeaderTypes,
+  ShelfDataTypes,
+  SorterDataTypes,
+  SortingDirectionTypes,
+} from '../../interfaces/dataTypes';
+import { SortingDirection } from '../../utils/enums/table';
 
-enum SortingDirection {
-  ASCENDING = 'ASCENDING',
-  DESCENDING = 'DESCENDING',
-  UNSORTED = 'UNSORTED',
-}
-
-const sortData = (data: any, sortKey: string, sortingDirection: string) => {
-  data.sort((a: any, b: any) => {
+const sortData = (
+  data: (FunctionDataTypes | FileDataTypes | ShelfDataTypes)[],
+  sortKey: string,
+  sortingDirection: string
+) => {
+  data.sort((a: SorterDataTypes, b: SorterDataTypes) => {
     let relevantValueA = a[sortKey];
     let relevantValueB = b[sortKey];
 
-    if (sortKey === 'creationDate') {
+    if (sortKey === 'creation_date') {
       relevantValueA = new Date(a[sortKey]).getTime();
       relevantValueB = new Date(b[sortKey]).getTime();
     }
@@ -43,28 +48,30 @@ const getNextSortingDirection = (sortingDirection: SortingDirection) => {
 
 export const sortColumn = (
   sortKey: string,
-  sortingDirections: any,
-  tableData: any,
-  setTableData: any,
-  setSortingDirections: any
+  sortingDirections: SortingDirectionTypes,
+  tableData: (FunctionDataTypes | FileDataTypes | ShelfDataTypes)[],
+  setTableData: (
+    data: (FunctionDataTypes | FileDataTypes | ShelfDataTypes)[]
+  ) => void,
+  setSortingDirections: (data: SortingDirectionTypes) => void
 ) => {
   const currentSortingDirection = sortingDirections[sortKey];
-  const newData = [...tableData];
+  const newTableData = [...tableData];
 
-  sortData(newData, sortKey, currentSortingDirection);
+  sortData(newTableData, sortKey, currentSortingDirection);
   const nextSortingDirection = getNextSortingDirection(currentSortingDirection);
   const newSortingDirections = { ...sortingDirections };
   newSortingDirections[sortKey] = nextSortingDirection;
-  setTableData(newData);
+  setTableData(newTableData);
   setSortingDirections(newSortingDirections);
 };
 
 export const createSortingDirectons = (
-  headers: headerTypes[],
-  setSortingDirections: (data: headerTypes) => void
+  headers: HeaderTypes[],
+  setSortingDirections: (data: SortingDirectionTypes) => void
 ) => {
-  const ourSortingDirections: any = {};
-  headers.forEach((header: any) => {
+  const ourSortingDirections: SortingDirectionTypes = {};
+  headers.forEach((header: HeaderTypes) => {
     ourSortingDirections[header.key] = SortingDirection.UNSORTED;
   });
   setSortingDirections(ourSortingDirections);
