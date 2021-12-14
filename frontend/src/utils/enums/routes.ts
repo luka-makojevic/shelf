@@ -7,4 +7,9 @@ export enum Routes {
   VERIFICATION = '/verification/:token',
   FORGOT_PASSWORD = '/forgot-password',
   RESET_PASSWORD = '/reset-password/:jwtToken',
+  SHARED_SHELVES = 'shared-shelves',
+  TRASH = 'trash',
+  FUNCTIONS = 'functions',
+  STATISTICS = 'statistics',
+  USERS = 'users',
 }
