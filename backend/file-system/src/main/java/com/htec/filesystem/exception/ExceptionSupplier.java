@@ -53,4 +53,11 @@ public class ExceptionSupplier {
             ErrorMessages.NOT_FOUND.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> fileNotFound = () -> new ShelfException(
+            ErrorMessages.FILE_NOT_FOUND.getErrorMessage(),
+            HttpStatus.NOT_FOUND.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.NOT_FOUND.getErrorMessage()
+    );
+
 }

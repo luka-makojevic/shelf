@@ -64,7 +64,6 @@ public class UserService {
         this.roleRepository = roleRepository;
     }
 
-
     public UserDTO getUser(String email) {
 
         UserEntity userEntity = userRepository.findByEmail(email)
