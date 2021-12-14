@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { Dispatch, SetStateAction } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import { theme } from '../../theme';
+import { theme } from '../../../theme';
 import {
   SearchIconContainer,
   SearchInputContainer,
