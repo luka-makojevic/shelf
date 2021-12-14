@@ -15,6 +15,6 @@ public class UserResponseModel {
     private String firstName;
     private String lastName;
     private String email;
-    private String profilePicturePath;
+    private String pictureName;
     private RoleEntity role;
 }
