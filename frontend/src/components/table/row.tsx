@@ -49,8 +49,8 @@ export const Row = ({
           <CheckBox onChange={handleOnChange} checked={isChecked} />
         </StyledCell>
       )}
-      {Object.values(data).map((rowText, idx) => (
-        <StyledCell key={`${rowText}-${idx}`}>{rowText}</StyledCell>
+      {Object.values(data).map((rowText) => (
+        <StyledCell key={`${rowText}`}>{rowText}</StyledCell>
       ))}
       {!multiSelect && (
         <StyledCell>

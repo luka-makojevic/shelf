@@ -19,22 +19,29 @@ import {
 } from '../../interfaces/dataTypes';
 import { SortingDirection } from '../../utils/enums/table';
 
-const data: (FunctionDataTypes | FileDataTypes | ShelfDataTypes)[] = [
-  {
-    name: 'picture shelf',
-    creation_date: '11/8/1991',
-    id: 2,
-  },
-  { name: 'documents', creation_date: '11/1/2001', id: 1 },
-  { name: 'videos', creation_date: '11/4/2021', id: 3 },
-];
-const headers: HeaderTypes[] = [
-  { header: 'Name', key: 'name' },
-  { header: 'Creation date', key: 'creation_date' },
-  { header: 'Id', key: 'id' },
-];
+// for testing puropses
+// const data: (FunctionDataTypes | FileDataTypes | ShelfDataTypes)[] = [
+//   {
+//     name: 'picture shelf',
+//     creation_date: '11/8/1991',
+//     id: 2,
+//   },
+//   { name: 'documents', creation_date: '11/1/2001', id: 1 },
+//   { name: 'videos', creation_date: '11/4/2021', id: 3 },
+// ];
+// const headers: HeaderTypes[] = [
+//   { header: 'Name', key: 'name' },
+//   { header: 'Creation date', key: 'creation_date' },
+//   { header: 'Id', key: 'id' },
+// ];
 
-export const Table = ({ mulitSelect }: { mulitSelect?: boolean }) => {
+interface TableProps {
+  mulitSelect?: boolean;
+  data: (FunctionDataTypes | FileDataTypes | ShelfDataTypes)[];
+  headers: HeaderTypes[];
+}
+
+export const Table = ({ mulitSelect, data, headers }: TableProps) => {
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const [selectedRows, setSelectedRows] = useState<
     (FunctionDataTypes | FileDataTypes | ShelfDataTypes)[]
@@ -86,7 +93,7 @@ export const Table = ({ mulitSelect }: { mulitSelect?: boolean }) => {
               <CheckBox onChange={handleSelectAll} checked={selectAll} />
             </CheckBoxTableHeader>
           )}
-          {headers.map(({ header, key }, idx) => (
+          {headers.map(({ header, key }) => (
             <StyledTableHeader
               onClick={() =>
                 sortColumn(
@@ -97,7 +104,7 @@ export const Table = ({ mulitSelect }: { mulitSelect?: boolean }) => {
                   setSortingDirections
                 )
               }
-              key={`${header}-${idx}`}
+              key={`${header}`}
             >
               {header}
               <ArrowContainer>{sorterArrowToggle(key)}</ArrowContainer>
@@ -107,9 +114,9 @@ export const Table = ({ mulitSelect }: { mulitSelect?: boolean }) => {
         </tr>
       </Thead>
       <tbody>
-        {tableData.map((item, idx) => (
+        {tableData.map((item) => (
           <Row
-            key={`${item.name}-${idx}`}
+            key={`${item.name}`}
             selectedRows={selectedRows}
             setSelectedRows={setSelectedRows}
             multiSelect={mulitSelect}
