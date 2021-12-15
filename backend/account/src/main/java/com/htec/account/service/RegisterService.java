@@ -30,7 +30,7 @@ public class RegisterService {
     private final EmailService emailService;
     private final MicrosoftApiService microsoftApiService;
     private final UserValidator userValidator;
-    private final Long FREE_SPACE_SIZE = 1_048_576L;
+    private final Long FREE_SPACE_SIZE;
 
     private final String emailVerificationLink;
 
@@ -41,7 +41,8 @@ public class RegisterService {
                            EmailService emailService,
                            MicrosoftApiService microsoftApiService,
                            UserValidator userValidator,
-                           @Value("${emailVerificationLink}") String emailVerificationLink) {
+                           @Value("${emailVerificationLink}") String emailVerificationLink,
+                           @Value("${userFreeSpace}") Long free_space_size) {
 
         this.userRepository = userRepository;
         this.confirmationTokenRepository = confirmationTokenRepository;
@@ -51,7 +52,7 @@ public class RegisterService {
         this.microsoftApiService = microsoftApiService;
         this.userValidator = userValidator;
         this.emailVerificationLink = emailVerificationLink;
-
+        this.FREE_SPACE_SIZE = free_space_size;
     }
 
     public void registerUser(UserDTO userDTO) {
