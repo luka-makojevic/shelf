@@ -19,12 +19,12 @@ public class FolderController {
         this.folderService = folderService;
     }
 
-    @PostMapping("/initialize/{id}")
-    public ResponseEntity initializeFolders(@PathVariable Long id) {
+    @PostMapping("/initialize/{userId}")
+    public ResponseEntity initializeFolders(@PathVariable Long userId) {
 
         HttpStatus retStatus = HttpStatus.OK;
 
-        if (!folderService.initializeFolders(id)) {
+        if (!folderService.initializeFolders(userId)) {
             retStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 

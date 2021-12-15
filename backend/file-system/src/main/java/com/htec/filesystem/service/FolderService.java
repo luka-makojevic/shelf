@@ -30,9 +30,9 @@ public class FolderService {
         this.fileRepository = fileRepository;
     }
 
-    public boolean initializeFolders(Long id) {
+    public boolean initializeFolders(Long userId) {
 
-        String userDataPath = homePath + userPath + id;
+        String userDataPath = homePath + userPath + userId;
 
         if (!new File(userDataPath).mkdirs()) {
             return false;
@@ -49,12 +49,12 @@ public class FolderService {
         return new File(userShelvesPath).mkdirs();
     }
 
-    public ResponseEntity<List<FileDTO>> getFiles(Long id) {
+    public ResponseEntity<List<FileDTO>> getFiles(Long folderId) {
 
         List<FileDTO> fileDTOS = new ArrayList<>();
 
-        List<FolderEntity> allFolders = folderRepository.findAllByParentFolderId(id);
-        List<FileEntity> allFiles = fileRepository.findAllByParentFolderId(id);
+        List<FolderEntity> allFolders = folderRepository.findAllByParentFolderId(folderId);
+        List<FileEntity> allFiles = fileRepository.findAllByParentFolderId(folderId);
 
         fileDTOS.addAll(FileMapper.INSTANCE.fileEntityToFileDTO(allFiles));
         fileDTOS.addAll(FileMapper.INSTANCE.folderEntityToFileDTO(allFolders));
