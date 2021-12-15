@@ -9,5 +9,8 @@ import java.util.Optional;
 public interface FileRepository extends JpaRepository<FileEntity, Long> {
 
     Optional<FileEntity> findByPath(String path);
-    List<FileEntity> findAllByShelfId(Long id);
+
+    List<FileEntity> findAllByShelfId(Long shelfId);
+
+    List<FileEntity> findAllByParentFolderId(Long folderId);
 }
