@@ -116,4 +116,18 @@ public class ExceptionSupplier {
             ErrorMessages.NOT_FOUND.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> folderNotFound = () -> new ShelfException(
+            ErrorMessages.FOLDER_NOT_FOUND.getErrorMessage(),
+            HttpStatus.NOT_FOUND.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.NOT_FOUND.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> userNotAllowed = () -> new ShelfException(
+            ErrorMessages.USER_NOT_ALLOWED.getErrorMessage(),
+            HttpStatus.FORBIDDEN.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.FORBIDDEN.getErrorMessage()
+    );
+
 }

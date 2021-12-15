@@ -77,6 +77,8 @@ public class ShelfService {
             }
 
             fileRepository.saveAll(fileEntities);
+        } else {
+            throw ExceptionSupplier.userNotAllowed.get();
         }
     }
 }
