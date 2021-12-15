@@ -25,6 +25,13 @@ public class ExceptionSupplier {
             ErrorMessages.BAD_REQUEST.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> shelfNameNotValid = () -> new ShelfException(
+            ErrorMessages.SHELF_NAME_NOT_VALID.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> couldNotUploadFile = () -> new ShelfException(
             ErrorMessages.COULD_NOT_UPLOAD_FILE.getErrorMessage(),
             HttpStatus.BAD_REQUEST.value(),
@@ -34,6 +41,13 @@ public class ExceptionSupplier {
 
     public static final Supplier<ShelfException> fileAlreadyExists = () -> new ShelfException(
             ErrorMessages.FILE_WITH_THE_SAME_NAME_ALREADY_EXISTS.getErrorMessage(),
+            HttpStatus.FORBIDDEN.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.FORBIDDEN.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> shelfAlreadyExists = () -> new ShelfException(
+            ErrorMessages.SHELF_WITH_THE_SAME_NAME_ALREADY_EXISTS.getErrorMessage(),
             HttpStatus.FORBIDDEN.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.FORBIDDEN.getErrorMessage()

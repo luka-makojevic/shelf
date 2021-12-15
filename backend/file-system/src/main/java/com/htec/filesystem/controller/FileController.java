@@ -58,5 +58,4 @@ public class FileController {
 
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("File Uploaded", HttpStatus.OK.value()));
     }
-
 }
