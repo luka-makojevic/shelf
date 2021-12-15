@@ -39,9 +39,7 @@ public class LoginTest extends BaseTest {
             String password = excelReader.getStringData("LoginTest", 1, 1);
             loginPage.loginAsUser(email, password);
         }
-        String expectedMessage = "Authentication credentials not valid";
-        String message = loginPage.errorMessage.getText();
-        Assert.assertTrue("Authentication credentials not valid", message.contains(expectedMessage));
+        Assert.assertEquals("Authentication credentials not valid", loginPage.errorMessage.getText());
     }
     @Test
     public void userShouldNotLoginWithInvalidPassword() {
@@ -52,9 +50,7 @@ public class LoginTest extends BaseTest {
             String password = excelReader.getStringData("LoginTest", i, 3);
             loginPage.loginAsUser(username, password);
         }
-        String expectedMessage = "Authentication credentials not valid";
-        String message = loginPage.errorMessage.getText();
-        Assert.assertTrue("Authentication credentials not valid", message.contains(expectedMessage));
+        Assert.assertEquals("Authentication credentials not valid", loginPage.errorMessage.getText());
     }
     @Test
     public void userShouldNotLoginWithBlankEmailField(){
