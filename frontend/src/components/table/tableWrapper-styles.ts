@@ -2,10 +2,9 @@ import styled from 'styled-components';
 import { theme } from '../../theme';
 
 export const TableContainer = styled.div`
-  margin: ${theme.space.lg};
   padding: ${theme.space.lg};
   box-shadow: 0 0 6px 0 ${theme.colors.shadow};
-
+  width: 100%;
   // regulates long text if it's inserted into the tableWrapper as child
   word-wrap: break-word;
   white-space: pre-wrap;

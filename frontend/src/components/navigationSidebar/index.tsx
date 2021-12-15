@@ -71,7 +71,7 @@ const NavigationSidebar = () => {
           <NavigationSidebarContentWrapper>
             {links.map((link) => {
               const userHasRequiredRole =
-                user && link.rolesWithAccess.includes(user?.role);
+                user && link.rolesWithAccess.includes(user?.role.id);
 
               if (user && !userHasRequiredRole) return null;
 

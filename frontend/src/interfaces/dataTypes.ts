@@ -83,7 +83,10 @@ export interface UserType {
   email: string;
   jwtToken: string;
   jwtRefreshToken: string;
-  role: Role;
+  role: {
+    id: Role;
+    name: string;
+  };
 }
 
 export interface RegisterFormData {
@@ -124,4 +127,12 @@ export interface RegisterFieldConfig {
 
 export interface CreateShelfData {
   name: string;
+}
+
+export interface ShelfDataType {
+  id: number;
+  name: string;
+  createdAt: string;
+  isDeleted: boolean;
+  userId: number;
 }

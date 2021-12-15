@@ -93,5 +93,6 @@ export const DashboardLayout = styled.div`
 
 export const DashboardContentWrapper = styled.div`
   height: 100%;
+  width: 100%;
   padding: ${theme.space.lg};
 `;

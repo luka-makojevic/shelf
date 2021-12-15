@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../hooks/authHook';
+import { LocalStorage } from '../../services/localStorage';
 import { useAppSelector } from '../../store/hooks';
 import { PlainText, Link } from '../text/text-styles';
 import { Button } from '../UI/button';
@@ -13,8 +14,8 @@ const Profile = () => {
   const user = useAppSelector((state) => state.user.user);
 
   const data = {
-    jwtRefreshToken: user?.jwtRefreshToken,
-    jwtToken: user?.jwtToken,
+    jwtRefreshToken: LocalStorage.get('refreshToken') || '',
+    jwtToken: LocalStorage.get('token') || '',
   };
 
   const handleDropdownVisibility = () => {
