@@ -79,25 +79,6 @@ public class FileService {
         return new FileResponseModel(imageBytes, path);
     }
 
-    public boolean initializeFolders(Long id) {
-
-        String userDataPath = homePath + userPath + id;
-
-        if (!new File(userDataPath).mkdirs()) {
-            return false;
-        }
-
-        String userProfilePicturePath = userDataPath + pathSeparator + "profile-picture";
-
-        if (!new File(userProfilePicturePath).mkdirs()) {
-            return false;
-        }
-
-        String userShelvesPath = userDataPath + pathSeparator + "shelves";
-
-        return new File(userShelvesPath).mkdirs();
-    }
-
     public void saveFile(Long shelfId, Long folderId, Map<String, Pair<String, String>> files) {
 
         if (files == null || files.get("file") == null)
