@@ -7,10 +7,7 @@ import com.htec.filesystem.model.response.TextResponseMessage;
 import com.htec.filesystem.service.ShelfService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/shelf")
@@ -29,6 +26,13 @@ public class ShelfController {
         shelfService.createShelf(createShelfRequestModel, authUser.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("Created shelf", HttpStatus.OK.value()));
+    }
+
+    @PutMapping("/move-to-trash/{shelfId}")
+    public ResponseEntity<TextResponseMessage> softDeleteShelf(@AuthenticationUser AuthUser user, @PathVariable Long shelfId) {
+
+        shelfService.softDeleteShelf(user, shelfId);
+        return ResponseEntity.ok().body(new TextResponseMessage("Shelf moved to trash.", HttpStatus.OK.value()));
     }
 
 }
