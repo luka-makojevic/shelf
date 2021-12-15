@@ -17,7 +17,7 @@ const sortData = (
     let relevantValueA = a[sortKey];
     let relevantValueB = b[sortKey];
 
-    if (sortKey === 'creation_date') {
+    if (sortKey === 'created_at') {
       relevantValueA = new Date(a[sortKey]).getTime();
       relevantValueB = new Date(b[sortKey]).getTime();
     }
