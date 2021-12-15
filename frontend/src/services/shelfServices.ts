@@ -4,12 +4,8 @@ const API_URL_SHELF = 'http://10.10.0.136:8080/filesystem/';
 
 const getShelves = () => instance.get(`${API_URL_SHELF}shelf`);
 
-const createShelf = (data: { shelfName: string; jwt: string | null }) =>
-  instance.post(`${API_URL_SHELF}shelf/create`, data.shelfName, {
-    headers: {
-      Authorization: `Bearer ${data.jwt}`,
-    },
-  });
+const createShelf = (shelfName: string) =>
+  instance.post(`${API_URL_SHELF}shelf/create`, shelfName);
 
 const deleteShelf = (data: { shelfId: string }) =>
   instance.put(`${API_URL_SHELF}shelf`, data);

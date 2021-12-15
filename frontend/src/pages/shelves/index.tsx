@@ -70,11 +70,11 @@ const Shelves = () => {
         title="Shelves"
         description="Shelves are the fundamental containers for data storage."
       >
+        <Button onClick={handleOpenModal}>create shelf</Button>
         {shelves.length === 0 ? (
           <p>no shelfs</p>
         ) : (
           <div>
-            <Button onClick={handleOpenModal}>create shelf</Button>
             <div>Table</div>
           </div>
         )}

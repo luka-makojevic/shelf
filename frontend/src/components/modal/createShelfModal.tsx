@@ -6,7 +6,6 @@ import { ModalButtonDivider } from '../layout/layout.styles';
 import { Button } from '../UI/button';
 import { CreateShelfModalProps } from './modal.interfaces';
 import shelfServices from '../../services/shelfServices';
-import { LocalStorage } from '../../services/localStorage';
 import { useShelf } from '../../hooks/shelfHooks';
 
 export const ROOT_FOLDER = { name: 'Root', id: null, path: [] };
@@ -24,13 +23,11 @@ const CreateShelfModal = ({ onCloseModal, onError }: CreateShelfModalProps) => {
 
   const { getShelves } = useShelf();
 
-  const jwt = LocalStorage.get('token');
-
   const onSubmit = (data: CreateShelfData) => {
     const shelfName = data.name;
 
     shelfServices
-      .createShelf({ shelfName, jwt })
+      .createShelf(shelfName)
       .then(() => {
         getShelves(
           {},
