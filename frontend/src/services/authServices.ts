@@ -19,7 +19,7 @@ const microsoftRegister = (data: MicrosoftRegisterData) =>
 const login = (data: LoginData) => loginInstance.post(`${API_URL}login`, data);
 
 const microsoftLogin = (data: MicrosoftLoginData) =>
-  axios.post(`${API_URL}login/microsoft`, data);
+  loginInstance.post(`${API_URL}login/microsoft`, data);
 
 const logout = (data: LogoutData) =>
   instance.post(`${API_URL}auth/logout`, data);
