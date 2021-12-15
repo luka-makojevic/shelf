@@ -28,7 +28,6 @@ public class ShelfController {
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("Created shelf", HttpStatus.OK.value()));
     }
 
-<<<<<<< HEAD
     @PutMapping("/move-to-trash/{shelfId}")
     public ResponseEntity<TextResponseMessage> softDeleteShelf(@AuthenticationUser AuthUser user, @PathVariable Long shelfId) {
 
@@ -36,10 +35,7 @@ public class ShelfController {
         return ResponseEntity.ok().body(new TextResponseMessage("Shelf moved to trash.", HttpStatus.OK.value()));
     }
 
-    @GetMapping("/get")
-=======
-    @GetMapping("")
->>>>>>> CU-1xpguht - Get all Shelves - removed response model
+    @GetMapping
     public ResponseEntity getAllShelves(@AuthenticationUser AuthUser authUser) {
 
         return ResponseEntity.ok(shelfService.getAllShelvesById(authUser.getId()));
