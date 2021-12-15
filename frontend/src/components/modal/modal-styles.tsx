@@ -41,6 +41,10 @@ export const Header = styled.div`
   color: ${theme.colors.primary};
 `;
 
+export const HeaderItem = styled.div`
+  margin: 0 ${theme.space.md};
+`;
+
 export const Body = styled.div`
   height: 100%;
   width: 100%;

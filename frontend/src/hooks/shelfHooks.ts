@@ -7,14 +7,15 @@ export const useShelf = () => {
   const dispatch = useAppDispatch();
 
   const getShelves = (
-    data: { userId?: number },
+    data: {},
     onSuccess: () => void,
     onError: (error: string) => void
   ) => {
     dispatch(setLoading(true));
 
     shelfServices
-      .getShelves(data)
+      .getShelves()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .then((res: any) => {
         dispatch(setShelves(res.data));
         onSuccess();

@@ -5,8 +5,12 @@ import { InputField } from '../UI/input/InputField';
 import { ModalButtonDivider } from '../layout/layout.styles';
 import { Button } from '../UI/button';
 import { CreateShelfModalProps } from './modal.interfaces';
+import shelfServices from '../../services/shelfServices';
+import { useShelf } from '../../hooks/shelfHooks';
 
-const CreateShelfModal = ({ onCloseModal }: CreateShelfModalProps) => {
+export const ROOT_FOLDER = { name: 'Root', id: null, path: [] };
+
+const CreateShelfModal = ({ onCloseModal, onError }: CreateShelfModalProps) => {
   const {
     register,
     handleSubmit,
@@ -17,33 +21,58 @@ const CreateShelfModal = ({ onCloseModal }: CreateShelfModalProps) => {
     onCloseModal(false);
   };
 
-  const onSubmit = (/* data: CreateShelfData */) => {
-    // console.log('submit', data);
+  const { getShelves } = useShelf();
+
+  const onSubmit = (data: CreateShelfData) => {
+    const shelfName = data.name;
+
+    shelfServices
+      .createShelf(shelfName)
+      .then(() => {
+        getShelves(
+          {},
+          () => {},
+          () => {}
+        );
+      })
+      .catch((err) => {
+        if (err.response.status === 500) {
+          onError('Internal server error');
+          return;
+        }
+        onError(err.response?.data?.message);
+      });
 
     onCloseModal(false);
   };
 
   const validations = {
     required: 'This field is required',
+    maxLength: {
+      value: 50,
+      message: 'Shelf name can not be longer than 50 characters',
+    },
   };
 
   return (
-    <Base onSubmit={handleSubmit(onSubmit)}>
-      <InputFieldWrapper>
-        <InputField
-          placeholder="Untitled Shelf"
-          error={errors.name}
-          {...register('name', validations)}
-        />
-      </InputFieldWrapper>
+    <>
+      <Base onSubmit={handleSubmit(onSubmit)}>
+        <InputFieldWrapper>
+          <InputField
+            placeholder="Untitled Shelf"
+            error={errors.name}
+            {...register('name', validations)}
+          />
+        </InputFieldWrapper>
 
-      <ModalButtonDivider>
-        <Button variant="lightBordered" onClick={handleCloseModal}>
-          Cancel
-        </Button>
-        <Button>Create</Button>
-      </ModalButtonDivider>
-    </Base>
+        <ModalButtonDivider>
+          <Button variant="lightBordered" onClick={handleCloseModal}>
+            Cancel
+          </Button>
+          <Button>Create</Button>
+        </ModalButtonDivider>
+      </Base>
+    </>
   );
 };
 
