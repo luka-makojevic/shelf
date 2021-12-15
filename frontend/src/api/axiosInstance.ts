@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-const API_URL = 'http://10.10.0.136:8080/';
+const API_URL = 'http://10.10.0.136:8080/account/';
 
 const instance = axios.create({
   baseURL: API_URL,

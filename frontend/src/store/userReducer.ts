@@ -1,8 +1,15 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { UserType } from '../interfaces/dataTypes';
+import { LocalStorage } from '../services/localStorage';
 
-export const initialUserState: { user: UserType | null } = { user: null };
+const localUser = LocalStorage.get('user')
+  ? JSON.parse(LocalStorage.get('user') || '')
+  : null;
+
+export const initialUserState: { user: UserType | null } = {
+  user: localUser || null,
+};
 
 const userSlice = createSlice({
   name: 'user',

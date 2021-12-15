@@ -12,7 +12,7 @@ const ProtectedRoute = ({ children, roles }: ProtectedRouteProps) => {
   const accessToken = LocalStorage.get('token');
   const user = useAppSelector((state) => state.user.user);
   const isLoggedIn = accessToken;
-  const userHasRequiredRole = user && roles.includes(user?.role);
+  const userHasRequiredRole = user && roles.includes(user?.role.id);
 
   if (!isLoggedIn) {
     return <Navigate to={Routes.HOME} />;
