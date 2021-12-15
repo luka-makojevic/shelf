@@ -1,10 +1,12 @@
 package com.htec.filesystem.service;
 
 import com.htec.filesystem.annotation.AuthUser;
+import com.htec.filesystem.dto.ShelfDTO;
 import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ExceptionSupplier;
+import com.htec.filesystem.mapper.FileMapper;
 import com.htec.filesystem.model.request.CreateShelfRequestModel;
 import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FolderRepository;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -80,5 +83,19 @@ public class ShelfService {
         }
 
         fileRepository.saveAll(fileEntities);
+    }
+
+    public List<ShelfDTO> getAllShelvesById(Long userId) {
+
+        List<ShelfDTO> dtoShelves = new ArrayList<>();
+
+        List<ShelfEntity> entityShelves = shelfRepository.findAllById(userId);
+
+        for (ShelfEntity shelfEntity : entityShelves) {
+
+            ShelfDTO shelfDto = FileMapper.INSTANCE.shelfEntityToShelfDto(shelfEntity);
+            dtoShelves.add(shelfDto);
+        }
+        return dtoShelves;
     }
 }
