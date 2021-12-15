@@ -35,7 +35,7 @@ class UserValidatorTest {
         ShelfException shelfException = assertThrows(ShelfException.class,
                 () -> userValidator.isUserValid(userDTO));
 
-        Assertions.assertEquals(ErrorMessages.FIRST_NAME_NOT_VALID.getErrorMessage(), shelfException.getMessage());
+        assertEquals(ErrorMessages.FIRST_NAME_NOT_VALID.getErrorMessage(), shelfException.getMessage());
     }
 
     @Test
