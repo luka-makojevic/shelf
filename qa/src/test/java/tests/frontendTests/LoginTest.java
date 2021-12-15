@@ -30,32 +30,31 @@ public class LoginTest extends BaseTest {
         baseWdWaitHelpers.waitUrlToBe(navigateBrowser.getPageUrl("dashboardPageUrl"));
         Assert.assertEquals(driver.getCurrentUrl(), navigateBrowser.getPageUrl("dashboardPageUrl"));
     }
-
     @Test
     public void userShouldNotLoginWithInvalidEmailFormat(){
-      
+
         for (int i = 1; i < excelReader.getLastRowNumberFromSheet("LoginTest") -2; i++) {
 
             String email = excelReader.getStringData("LoginTest", i, 2);
             String password = excelReader.getStringData("LoginTest", 1, 1);
             loginPage.loginAsUser(email, password);
-            String expectedMessage = "Authentication credentials not valid.";
-            String message = loginPage.invalidEmailMessage.getText();
-            Assert.assertTrue("Invalid email format", message.contains(expectedMessage));
         }
+        String expectedMessage = "Authentication credentials not valid";
+        String message = loginPage.errorMessage.getText();
+        Assert.assertTrue("Authentication credentials not valid", message.contains(expectedMessage));
     }
     @Test
     public void userShouldNotLoginWithInvalidPassword() {
 
         for (int i = 1; i < excelReader.getLastRowNumberFromSheet("LoginTest") + 1; i++) {
-          
+
             String username = excelReader.getStringData("LoginTest", 1, 0);
             String password = excelReader.getStringData("LoginTest", i, 3);
             loginPage.loginAsUser(username, password);
         }
-        String expectedMessage = "Authentication credentials not valid.";
-        String message = loginPage.invalidPasswordMessage.getText();
-        Assert.assertTrue("Authentication credentials not valid.", message.contains(expectedMessage));
+        String expectedMessage = "Authentication credentials not valid";
+        String message = loginPage.errorMessage.getText();
+        Assert.assertTrue("Authentication credentials not valid", message.contains(expectedMessage));
     }
     @Test
     public void userShouldNotLoginWithBlankEmailField(){
