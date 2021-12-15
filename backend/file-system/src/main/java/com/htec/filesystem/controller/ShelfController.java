@@ -35,4 +35,12 @@ public class ShelfController {
         return ResponseEntity.ok().body(new TextResponseMessage("Shelf moved to trash.", HttpStatus.OK.value()));
     }
 
+    @GetMapping("/get")
+    public ResponseEntity getAllShelves(@AuthenticationUser AuthUser authUser) {
+
+        shelfService.getShelvesById(authUser.getId());
+
+        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("Created shelf", HttpStatus.OK.value()));
+    }
+
 }
