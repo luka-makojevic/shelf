@@ -21,9 +21,8 @@ public class ShelfService {
         this.fileSystemValidator = fileSystemValidator;
     }
 
-    public void createShelf(CreateShelfRequestModel createShelfRequestModel) {
+    public void createShelf(CreateShelfRequestModel createShelfRequestModel, Long userId) {
 
-        Long userId = createShelfRequestModel.getUserId();
         String shelfName = createShelfRequestModel.getShelfName();
 
         fileSystemValidator.isShelfNameValid(shelfName);

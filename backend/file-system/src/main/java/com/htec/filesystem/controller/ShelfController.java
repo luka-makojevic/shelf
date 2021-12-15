@@ -1,5 +1,7 @@
 package com.htec.filesystem.controller;
 
+import com.htec.filesystem.annotation.AuthUser;
+import com.htec.filesystem.annotation.AuthenticationUser;
 import com.htec.filesystem.model.request.CreateShelfRequestModel;
 import com.htec.filesystem.model.response.TextResponseMessage;
 import com.htec.filesystem.service.FolderService;
@@ -22,10 +24,11 @@ public class ShelfController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity createShelf(@RequestBody CreateShelfRequestModel createShelfRequestModel) {
+    public ResponseEntity createShelf(@RequestBody CreateShelfRequestModel createShelfRequestModel,
+                                      @AuthenticationUser AuthUser authUser) {
 
 
-        shelfService.createShelf(createShelfRequestModel);
+        shelfService.createShelf(createShelfRequestModel, authUser.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("Created shelf", HttpStatus.OK.value()));
     }

@@ -11,6 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CreateShelfRequestModel {
 
-    private Long userId;
     private String shelfName;
 }

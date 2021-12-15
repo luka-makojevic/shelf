@@ -1,8 +1,10 @@
-package com.htec.account.util;
+package com.htec.account.validator;
 
 import com.htec.account.exception.ShelfException;
 import com.htec.account.dto.UserDTO;
+import com.htec.account.util.ErrorMessages;
 import com.htec.account.validator.UserValidator;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +35,7 @@ class UserValidatorTest {
         ShelfException shelfException = assertThrows(ShelfException.class,
                 () -> userValidator.isUserValid(userDTO));
 
-        assertEquals(ErrorMessages.FIRST_NAME_NOT_VALID.getErrorMessage(), shelfException.getMessage());
+        Assertions.assertEquals(ErrorMessages.FIRST_NAME_NOT_VALID.getErrorMessage(), shelfException.getMessage());
     }
 
     @Test
