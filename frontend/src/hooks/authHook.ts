@@ -17,7 +17,7 @@ export const useAuth = () => {
   const login = (
     data: LoginData,
     onSuccess: () => void,
-    onError: (error: string) => void
+    onError: () => void
   ) => {
     dispatch(setLoading(true));
 
@@ -35,9 +35,9 @@ export const useAuth = () => {
           onSuccess();
         }
       })
-      .catch((err) => {
+      .catch(() => {
         dispatch(removeUser());
-        onError(err.response?.data.message);
+        onError();
       })
       .finally(() => dispatch(setLoading(false)));
   };
