@@ -146,7 +146,7 @@ export interface HeaderTypes {
 export interface ShelfTableDataTypes {
   [key: string]: string | number;
   name: string;
-  creation_date: string;
+  creation_at: string;
   id: number;
 }
 export interface FileTableDataTypes {

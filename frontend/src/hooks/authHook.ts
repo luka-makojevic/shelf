@@ -57,13 +57,11 @@ export const useAuth = () => {
       .microsoftLogin(data)
       .then((res) => {
         if (res.data.jwtToken) {
-          localStorage.setItem('user', JSON.stringify(res.data));
           localStorage.setItem('token', JSON.stringify(res.data.jwtToken));
           localStorage.setItem(
             'refreshToken',
             JSON.stringify(res.data.jwtRefreshToken)
           );
-          dispatch(setUser(res.data));
           onSuccess();
         }
       })
@@ -71,7 +69,13 @@ export const useAuth = () => {
         dispatch(removeUser());
         onError(err.response?.data.message);
       })
-      .finally(() => dispatch(setLoading(false)));
+      .finally(() => {
+        dispatch(setLoading(false));
+        const user = LocalStorage.get('user')
+          ? JSON.parse(LocalStorage.get('user') || '')
+          : null;
+        dispatch(setUser(user));
+      });
   };
 
   const register = (
