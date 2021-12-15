@@ -25,11 +25,14 @@ public class FileEntity {
 
     private String path;
 
-    @Column(name = "is_folder")
-    private boolean isFolder;
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
 
     @Column(name = "shelf_id")
     private Long shelfId;
+
+    @Column(name = "parent_folder_id")
+    private Long parentFolderId;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

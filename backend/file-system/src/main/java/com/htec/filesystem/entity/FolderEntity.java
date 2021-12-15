@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "shelf")
-public class ShelfEntity {
+@Table(name = "folder")
+public class FolderEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,11 +22,16 @@ public class ShelfEntity {
 
     private String name;
 
-    @Column(name = "user_id")
-    private Long userId;
+    private String path;
 
     @Column(name = "is_deleted")
     private boolean isDeleted;
+
+    @Column(name = "shelf_id")
+    private Long shelfId;
+
+    @Column(name = "parent_folder_id")
+    private Long parentFolderId;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

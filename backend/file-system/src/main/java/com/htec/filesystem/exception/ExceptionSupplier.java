@@ -34,9 +34,9 @@ public class ExceptionSupplier {
 
     public static final Supplier<ShelfException> fileAlreadyExists = () -> new ShelfException(
             ErrorMessages.FILE_WITH_THE_SAME_NAME_ALREADY_EXISTS.getErrorMessage(),
-            HttpStatus.BAD_REQUEST.value(),
+            HttpStatus.FORBIDDEN.value(),
             LocalDateTime.now().format(formatter),
-            ErrorMessages.BAD_REQUEST.getErrorMessage()
+            ErrorMessages.FORBIDDEN.getErrorMessage()
     );
 
     public static final Supplier<ShelfException> noFileWithGivenId = () -> new ShelfException(
@@ -46,11 +46,18 @@ public class ExceptionSupplier {
             ErrorMessages.BAD_REQUEST.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> noFolderWithGivenId = () -> new ShelfException(
+            ErrorMessages.NO_FOLDER_WITH_GIVEN_ID.getErrorMessage(),
+            HttpStatus.NOT_FOUND.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.NOT_FOUND.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> noShelfWithGivenId = () -> new ShelfException(
             ErrorMessages.NO_SHELF_WITH_GIVEN_ID.getErrorMessage(),
-            HttpStatus.BAD_REQUEST.value(),
+            HttpStatus.NOT_FOUND.value(),
             LocalDateTime.now().format(formatter),
-            ErrorMessages.BAD_REQUEST.getErrorMessage()
+            ErrorMessages.NOT_FOUND.getErrorMessage()
     );
 
     public static final Supplier<ShelfException> couldNotFindUserById = () -> new ShelfException(

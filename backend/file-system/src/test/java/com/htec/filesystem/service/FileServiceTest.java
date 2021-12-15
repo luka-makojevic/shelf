@@ -1,9 +1,11 @@
 package com.htec.filesystem.service;
 
 import com.htec.filesystem.entity.FileEntity;
+import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ShelfException;
 import com.htec.filesystem.repository.FileRepository;
+import com.htec.filesystem.repository.FolderRepository;
 import com.htec.filesystem.repository.ShelfRepository;
 import com.htec.filesystem.util.ErrorMessages;
 import com.htec.filesystem.util.FileUtil;
@@ -32,6 +34,9 @@ class FileServiceTest {
 
     @Mock
     FileRepository fileRepository;
+
+    @Mock
+    FolderRepository folderRepository;
 
     @Mock
     ShelfRepository shelfRepository;
@@ -99,7 +104,7 @@ class FileServiceTest {
         shelfEntity.setId(1l);
 
         FileEntity fileEntity = new FileEntity();
-        fileEntity.setFolder(false);
+        fileEntity.setDeleted(false);
         fileEntity.setShelfId(1l);
         fileEntity.setId(1l);
 
@@ -149,7 +154,7 @@ class FileServiceTest {
         shelfEntity.setId(1l);
 
         FileEntity fileEntity = new FileEntity();
-        fileEntity.setFolder(false);
+        fileEntity.setDeleted(false);
         fileEntity.setShelfId(1l);
         fileEntity.setId(1l);
 
@@ -166,7 +171,7 @@ class FileServiceTest {
     }
 
     @Test
-    void saveFile_NoFileWithGivenId() {
+    void saveFile_NoFolderWithGivenId() {
 
         long shelfId = 1;
         long folderId = 1;
@@ -181,24 +186,24 @@ class FileServiceTest {
         shelfEntity.setUserId(2l);
         shelfEntity.setId(1l);
 
-        FileEntity fileEntity = new FileEntity();
-        fileEntity.setFolder(false);
-        fileEntity.setShelfId(1l);
-        fileEntity.setId(1l);
+        FolderEntity folderEntity = new FolderEntity();
+        folderEntity.setDeleted(false);
+        folderEntity.setShelfId(1l);
+        folderEntity.setId(1l);
 
         try (MockedStatic<FileUtil> mocked = mockStatic(FileUtil.class)) {
 
             mocked.when(() -> FileUtil.saveFile(anyString(), anyString(), any(byte[].class))).then(invocationOnMock -> null);
 
             when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
-            when(fileRepository.findById(anyLong())).thenReturn(Optional.of(fileEntity));
+            when(folderRepository.findById(folderEntity.getId())).thenReturn(Optional.empty());
 
 
             ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
                 fileService.saveFile(shelfId, folderId, files);
             });
 
-            Assertions.assertEquals(ErrorMessages.NO_FILE_WITH_GIVEN_ID.getErrorMessage(), exception.getMessage());
+            Assertions.assertEquals(ErrorMessages.NO_FOLDER_WITH_GIVEN_ID.getErrorMessage(), exception.getMessage());
         }
     }
 
@@ -208,8 +213,9 @@ class FileServiceTest {
         String filePath = "shelf-files/user-data/2/shelves/1/";
         String fileName = "test.jpg";
         long shelfId = 1;
+        long folderId = 1;
 
-        fileService.saveFileIntoDB(filePath, fileName, shelfId);
+        fileService.saveFileIntoDB(filePath, fileName, shelfId, folderId);
 
         verify(fileRepository, times(1)).save(any());
     }
