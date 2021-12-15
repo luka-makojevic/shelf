@@ -117,4 +117,27 @@ class ShelfServiceTest {
 
         assertEquals(ErrorMessages.SHELF_NOT_FOUND.getErrorMessage(), exception.getMessage());
     }
+
+    @Test
+    void softDeleteShelf_idsNotEquals() {
+
+        user.setId(1L);
+        shelf.setId(1L);
+        shelf.setUserId(2L);
+
+        when(shelfRepository.findById(shelf.getId())).thenReturn(Optional.of(shelf));
+
+        ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
+            shelfService.softDeleteShelf(user, shelf.getId());
+        });
+
+        verify(shelfRepository, times(1)).findById(shelf.getId());
+        verify(folderRepository, times(0)).findAllByShelfId(shelf.getId());
+        verify(fileRepository, times(0)).findAllByShelfId(shelf.getId());
+        verify(shelfRepository, times(0)).save(shelf);
+        verify(folderRepository, times(0)).save(folder);
+        verify(fileRepository, times(0)).save(file);
+
+        assertEquals(ErrorMessages.USER_NOT_ALLOWED.getErrorMessage(), exception.getMessage());
+    }
 }

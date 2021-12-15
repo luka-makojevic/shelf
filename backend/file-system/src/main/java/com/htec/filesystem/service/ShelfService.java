@@ -59,26 +59,26 @@ public class ShelfService {
         ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
                 .orElseThrow(ExceptionSupplier.shelfNotFound);
 
+        if (!Objects.equals(shelfEntity.getUserId(), user.getId())) {
+            throw ExceptionSupplier.userNotAllowed.get();
+        }
+
         List<FolderEntity> folderEntities = folderRepository.findAllByShelfId(shelfId);
         List<FileEntity> fileEntities = fileRepository.findAllByShelfId(shelfId);
 
-        if (Objects.equals(shelfEntity.getUserId(), user.getId())) {
-            shelfEntity.setDeleted(true);
-            shelfRepository.save(shelfEntity);
+        shelfEntity.setDeleted(true);
+        shelfRepository.save(shelfEntity);
 
-            for (FolderEntity folderEntity : folderEntities) {
-                folderEntity.setDeleted(true);
-            }
-
-            folderRepository.saveAll(folderEntities);
-
-            for (FileEntity fileEntity : fileEntities) {
-                fileEntity.setDeleted(true);
-            }
-
-            fileRepository.saveAll(fileEntities);
-        } else {
-            throw ExceptionSupplier.userNotAllowed.get();
+        for (FolderEntity folderEntity : folderEntities) {
+            folderEntity.setDeleted(true);
         }
+
+        folderRepository.saveAll(folderEntities);
+
+        for (FileEntity fileEntity : fileEntities) {
+            fileEntity.setDeleted(true);
+        }
+
+        fileRepository.saveAll(fileEntities);
     }
 }
