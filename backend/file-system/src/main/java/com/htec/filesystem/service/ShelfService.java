@@ -56,8 +56,6 @@ public class ShelfService {
         shelfRepository.save(shelfEntity);
     }
 
-<<<<<<<HEAD
-
     @Transactional
     public void softDeleteShelf(AuthUser user, Long shelfId) {
 
@@ -87,20 +85,17 @@ public class ShelfService {
         fileRepository.saveAll(fileEntities);
     }
 
-    public void getShelvesById(Long userId) {
-=======
-        public List<ShelfDTO> getAllShelvesById (Long userId){
->>>>>>>CU - 1 xpguht - Get all Shelves -removed response model
+    public List<ShelfDTO> getAllShelvesById(Long userId) {
 
-            List<ShelfDTO> dtoShelves = new ArrayList<>();
+        List<ShelfDTO> dtoShelves = new ArrayList<>();
 
-            List<ShelfEntity> entityShelves = shelfRepository.findAllById(userId);
+        List<ShelfEntity> entityShelves = shelfRepository.findAllById(userId);
 
-            for (ShelfEntity shelfEntity : entityShelves) {
+        for (ShelfEntity shelfEntity : entityShelves) {
 
-                ShelfDTO shelfDto = FileMapper.INSTANCE.shelfEntityToShelfDto(shelfEntity);
-                dtoShelves.add(shelfDto);
-            }
-            return dtoShelves;
+            ShelfDTO shelfDto = FileMapper.INSTANCE.shelfEntityToShelfDto(shelfEntity);
+            dtoShelves.add(shelfDto);
         }
+        return dtoShelves;
     }
+}
