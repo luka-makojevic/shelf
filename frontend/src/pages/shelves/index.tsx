@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import TableWrapper from '../../components/table/TableWrapper';
-// import { useShelf } from '../../hooks/shelfHooks';
+import { useShelf } from '../../hooks/shelfHooks';
+import { HeaderTypes } from '../../interfaces/dataTypes';
 import { useAppSelector } from '../../store/hooks';
 import AlertPortal from '../../components/alert/alert';
 import Modal from '../../components/modal';
@@ -29,11 +30,11 @@ const Shelves = () => {
   // const [shelvesForTable, setShelvesForTable] = useState<any>();
 
   // useEffect(() => {
+  //  makeHeaders();
   //   const newShelves = shelves.map((shelf) => ({
   //     name: shelf.name,
   //     id: shelf.id,
   //   }));
-
   //   setShelvesForTable(newShelves);
   // }, [shelves]);
 

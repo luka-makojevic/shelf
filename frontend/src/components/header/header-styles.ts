@@ -14,6 +14,9 @@ export const HeaderContainer = styled.div<HeaderContainerProps>`
   width: 100%;
   ${({ position }) => position && `position:${position};`};
   padding: 15px 20px 0 20px;
+  @media (max-width: ${theme.breakpoints.md}) {
+    position: static;
+  }
 `;
 
 export const Logo = styled.img<HeaderStyleProps>`

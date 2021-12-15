@@ -19,10 +19,9 @@ public class LoginPage {
     @FindBy(css = "form button") WebElement signInButton;
     @FindBy(css = "[href='/register']") WebElement signUpButton;
     @FindBy(linkText = "Reset password") WebElement resetPassword;
-    public @FindBy(xpath = "//*[contains(text(),'Invalid email format')]") WebElement invalidEmailMessage;
-    public @FindBy(xpath = "//*[contains(text(),'Password must have at least 8 characters')]") WebElement invalidPasswordMessage;
-    public @FindBy(xpath = "//*[@name='email']/following-sibling::div[text()='This field is required']") WebElement blankEmailFieldMessage;
-    public @FindBy(xpath = "//*[@name='password']/following-sibling::div[text()='This field is required']") WebElement blankPasswordFieldMessage;
+    public @FindBy(xpath = "//*[contains(text(),'Authentication credentials not valid')]") WebElement errorMessage;
+    public @FindBy(xpath = "//*[@name='email']/following-sibling::p[text()='This field is required']") WebElement blankEmailFieldMessage;
+    public @FindBy(xpath = "//*[@name='password']/following-sibling::p[text()='This field is required']") WebElement blankPasswordFieldMessage;
 
     /**
      * @author lidija.veljkovic

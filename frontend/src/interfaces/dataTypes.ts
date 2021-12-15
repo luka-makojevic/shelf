@@ -146,14 +146,14 @@ export interface HeaderTypes {
 export interface ShelfTableDataTypes {
   [key: string]: string | number;
   name: string;
-  creation_date: string;
+  created_at: string;
   id: number;
 }
 export interface FileTableDataTypes {
   [key: string]: string | number;
   name: string;
   size: number;
-  creation_date: string;
+  created_at: string;
   id: number;
 }
 export interface FunctionTableDataTypes {
