@@ -62,7 +62,6 @@ public class FolderService {
         fileDTOS.removeIf(FileDTO::isDeleted);
 
         return ResponseEntity.status(HttpStatus.OK).body(fileDTOS);
-
     }
 
 }

@@ -30,6 +30,7 @@ public class FolderController {
 
         return ResponseEntity.status(retStatus).body(new TextResponseMessage("Folders created", retStatus.value()));
     }
+
     @GetMapping("/get/{folderId}")
     public ResponseEntity<List<FileDTO>> getFiles(@PathVariable Long folderId) {
 

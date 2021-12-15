@@ -40,7 +40,7 @@ class FolderServiceTest {
 
         ResponseEntity<List<FileDTO>> files = folderService.getFiles(testFolderId);
 
-        Assertions.assertEquals(0 , Objects.requireNonNull(files.getBody()).size());
+        Assertions.assertEquals(0, Objects.requireNonNull(files.getBody()).size());
     }
 
     @Test
@@ -49,7 +49,7 @@ class FolderServiceTest {
         Long testFolderId = 1L;
 
         when(folderRepository.findAllByParentFolderId(1L)).thenReturn(
-                new ArrayList<FolderEntity>(){
+                new ArrayList<FolderEntity>() {
                     {
                         add(new FolderEntity());
                         add(new FolderEntity());
@@ -58,7 +58,7 @@ class FolderServiceTest {
                 }
         );
         when(fileRepository.findAllByParentFolderId(1L)).thenReturn(
-                new ArrayList<FileEntity>(){
+                new ArrayList<FileEntity>() {
                     {
                         add(new FileEntity());
                         add(new FileEntity());
@@ -68,9 +68,8 @@ class FolderServiceTest {
 
         ResponseEntity<List<FileDTO>> files = folderService.getFiles(testFolderId);
 
-        Assertions.assertEquals(5 , Objects.requireNonNull(files.getBody()).size());
+        Assertions.assertEquals(5, Objects.requireNonNull(files.getBody()).size());
     }
-
 
     @Test
     void getFiles_NotEmptyListWithDeletedFile() {
@@ -78,7 +77,7 @@ class FolderServiceTest {
         Long testFolderId = 1L;
 
         when(folderRepository.findAllByParentFolderId(1L)).thenReturn(
-                new ArrayList<FolderEntity>(){
+                new ArrayList<FolderEntity>() {
                     {
                         add(new FolderEntity());
                         add(new FolderEntity());
@@ -87,7 +86,7 @@ class FolderServiceTest {
                 }
         );
         when(fileRepository.findAllByParentFolderId(1L)).thenReturn(
-                new ArrayList<FileEntity>(){
+                new ArrayList<FileEntity>() {
                     {
                         FileEntity deletedFile = new FileEntity();
                         deletedFile.setDeleted(true);
@@ -99,7 +98,7 @@ class FolderServiceTest {
 
         ResponseEntity<List<FileDTO>> files = folderService.getFiles(testFolderId);
 
-        Assertions.assertEquals(4 , Objects.requireNonNull(files.getBody()).size());
+        Assertions.assertEquals(4, Objects.requireNonNull(files.getBody()).size());
     }
 
     @Test
@@ -108,14 +107,14 @@ class FolderServiceTest {
         Long testFolderId = 1L;
 
         when(folderRepository.findAllByParentFolderId(1L)).thenReturn(
-                new ArrayList<FolderEntity>(){
+                new ArrayList<FolderEntity>() {
                     {
                         add(new FolderEntity());
                     }
                 }
         );
         when(fileRepository.findAllByParentFolderId(1L)).thenReturn(
-                new ArrayList<FileEntity>(){
+                new ArrayList<FileEntity>() {
                     {
                         add(new FileEntity());
                     }
@@ -125,7 +124,7 @@ class FolderServiceTest {
         ResponseEntity<List<FileDTO>> files = folderService.getFiles(testFolderId);
 
         Assertions.assertEquals(2, Objects.requireNonNull(files.getBody()).size());
-        Assertions.assertEquals(false , Objects.requireNonNull(files.getBody()).get(0).isFolder());
-        Assertions.assertEquals(true , Objects.requireNonNull(files.getBody()).get(1).isFolder());
+        Assertions.assertEquals(false, Objects.requireNonNull(files.getBody()).get(0).isFolder());
+        Assertions.assertEquals(true, Objects.requireNonNull(files.getBody()).get(1).isFolder());
     }
 }
