@@ -40,8 +40,8 @@ const LoginForm = () => {
       () => {
         navigation(Routes.DASHBOARD);
       },
-      (err: string) => {
-        setError(err);
+      () => {
+        setError('Authentication credentials not valid');
       }
     );
   };
@@ -64,7 +64,7 @@ const LoginForm = () => {
       })
       .catch((err) => {
         if (err.errorCode === 'user_cancelled') return;
-        setError(err.message);
+        setError('Authentication credentials not valid');
       });
   };
 
