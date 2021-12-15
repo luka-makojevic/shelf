@@ -1,6 +1,7 @@
 package com.htec.filesystem.annotation;
 
 import com.htec.filesystem.exception.ExceptionSupplier;
+import com.htec.filesystem.security.SecurityConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.core.MethodParameter;
@@ -8,7 +9,6 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import com.htec.filesystem.security.SecurityConstants;
 
 public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
 
