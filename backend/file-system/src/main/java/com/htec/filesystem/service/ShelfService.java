@@ -8,7 +8,6 @@ import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ExceptionSupplier;
 import com.htec.filesystem.mapper.FileMapper;
 import com.htec.filesystem.model.request.CreateShelfRequestModel;
-import com.htec.filesystem.model.response.GetAllShelvesResponseModel;
 import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FolderRepository;
 import com.htec.filesystem.repository.ShelfRepository;
@@ -57,6 +56,8 @@ public class ShelfService {
         shelfRepository.save(shelfEntity);
     }
 
+<<<<<<<HEAD
+
     @Transactional
     public void softDeleteShelf(AuthUser user, Long shelfId) {
 
@@ -87,18 +88,19 @@ public class ShelfService {
     }
 
     public void getShelvesById(Long userId) {
+=======
+        public List<ShelfDTO> getAllShelvesById (Long userId){
+>>>>>>>CU - 1 xpguht - Get all Shelves -removed response model
 
-        GetAllShelvesResponseModel<ShelfDTO> getAllShelvesResponseModel = new GetAllShelvesResponseModel<>();
-        List<ShelfDTO> dtoShelves = new ArrayList<>();
+            List<ShelfDTO> dtoShelves = new ArrayList<>();
 
-        List<ShelfEntity> entityShelves = shelfRepository.findAllById(userId);
+            List<ShelfEntity> entityShelves = shelfRepository.findAllById(userId);
 
-        for (ShelfEntity shelfEntity : entityShelves) {
+            for (ShelfEntity shelfEntity : entityShelves) {
 
-            ShelfDTO shelfDto = FileMapper.INSTANCE.shelfEntityToShelfDto(shelfEntity);
-            dtoShelves.add(shelfDto);
+                ShelfDTO shelfDto = FileMapper.INSTANCE.shelfEntityToShelfDto(shelfEntity);
+                dtoShelves.add(shelfDto);
+            }
+            return dtoShelves;
         }
-
-        getAllShelvesResponseModel.setShelves(dtoShelves);
     }
-}

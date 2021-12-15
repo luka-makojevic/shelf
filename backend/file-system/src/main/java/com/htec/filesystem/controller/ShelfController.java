@@ -38,9 +38,7 @@ public class ShelfController {
     @GetMapping("/get")
     public ResponseEntity getAllShelves(@AuthenticationUser AuthUser authUser) {
 
-        shelfService.getShelvesById(authUser.getId());
-
-        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("Created shelf", HttpStatus.OK.value()));
+        return ResponseEntity.ok(shelfService.getAllShelvesById(authUser.getId()));
     }
 
 }
