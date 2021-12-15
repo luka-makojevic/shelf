@@ -1,13 +1,13 @@
 package com.htec.filesystem.controller;
 
+import com.htec.filesystem.dto.FileDTO;
 import com.htec.filesystem.model.response.TextResponseMessage;
 import com.htec.filesystem.service.FolderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/folder")
@@ -30,5 +30,12 @@ public class FolderController {
 
         return ResponseEntity.status(retStatus).body(new TextResponseMessage("Folders created", retStatus.value()));
     }
+    @GetMapping("/get/{folderId}")
+    public ResponseEntity<List<FileDTO>> getFiles(@PathVariable Long folderId) {
+
+        return folderService.getFiles(folderId);
+
+    }
+
 
 }

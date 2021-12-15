@@ -21,7 +21,7 @@ public class FileDTO {
     private LocalDateTime updatedAt;
 
     private boolean isDeleted;
-    private boolean isFolder;
+    private boolean folder;
 
     private Long shelfId;
     private Long parentFolderId;
