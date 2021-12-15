@@ -1,15 +1,15 @@
 import {
-  FileDataTypes,
-  FunctionDataTypes,
+  FileTableDataTypes,
+  FunctionTableDataTypes,
   HeaderTypes,
-  ShelfDataTypes,
+  ShelfTableDataTypes,
   SorterDataTypes,
   SortingDirectionTypes,
 } from '../../interfaces/dataTypes';
 import { SortingDirection } from '../../utils/enums/table';
 
 const sortData = (
-  data: (FunctionDataTypes | FileDataTypes | ShelfDataTypes)[],
+  data: (FunctionTableDataTypes | FileTableDataTypes | ShelfTableDataTypes)[],
   sortKey: string,
   sortingDirection: string
 ) => {
@@ -49,9 +49,13 @@ const getNextSortingDirection = (sortingDirection: SortingDirection) => {
 export const sortColumn = (
   sortKey: string,
   sortingDirections: SortingDirectionTypes,
-  tableData: (FunctionDataTypes | FileDataTypes | ShelfDataTypes)[],
+  tableData: (
+    | FunctionTableDataTypes
+    | FileTableDataTypes
+    | ShelfTableDataTypes
+  )[],
   setTableData: (
-    data: (FunctionDataTypes | FileDataTypes | ShelfDataTypes)[]
+    data: (FunctionTableDataTypes | FileTableDataTypes | ShelfTableDataTypes)[]
   ) => void,
   setSortingDirections: (data: SortingDirectionTypes) => void
 ) => {

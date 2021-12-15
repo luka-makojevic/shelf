@@ -11,10 +11,10 @@ import {
   TableHeaderInner,
 } from './table -styles';
 import {
-  FileDataTypes,
-  FunctionDataTypes,
+  FileTableDataTypes,
+  FunctionTableDataTypes,
   HeaderTypes,
-  ShelfDataTypes,
+  ShelfTableDataTypes,
   SortingDirectionTypes,
 } from '../../interfaces/dataTypes';
 import { SortingDirection } from '../../utils/enums/table';
@@ -37,21 +37,23 @@ import { SortingDirection } from '../../utils/enums/table';
 
 interface TableProps {
   mulitSelect?: boolean;
-  data: (FunctionDataTypes | FileDataTypes | ShelfDataTypes)[];
+  data: (FunctionTableDataTypes | FileTableDataTypes | ShelfTableDataTypes)[];
   headers: HeaderTypes[];
 }
 
 export const Table = ({ mulitSelect, data, headers }: TableProps) => {
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const [selectedRows, setSelectedRows] = useState<
-    (FunctionDataTypes | FileDataTypes | ShelfDataTypes)[]
+    (FunctionTableDataTypes | FileTableDataTypes | ShelfTableDataTypes)[]
   >([]);
 
   const [sortingDirections, setSortingDirections] =
     useState<SortingDirectionTypes>({});
 
   const [tableData, setTableData] =
-    useState<(FunctionDataTypes | FileDataTypes | ShelfDataTypes)[]>(data);
+    useState<
+      (FunctionTableDataTypes | FileTableDataTypes | ShelfTableDataTypes)[]
+    >(data);
 
   const handleSelectAll = () => {
     if (selectedRows.length !== data.length) {
@@ -122,8 +124,12 @@ export const Table = ({ mulitSelect, data, headers }: TableProps) => {
             multiSelect={mulitSelect}
             data={item}
             isChecked={selectedRows.some(
-              (rowData: FunctionDataTypes | FileDataTypes | ShelfDataTypes) =>
-                rowData.id === item.id
+              (
+                rowData:
+                  | FunctionTableDataTypes
+                  | FileTableDataTypes
+                  | ShelfTableDataTypes
+              ) => rowData.id === item.id
             )}
           />
         ))}

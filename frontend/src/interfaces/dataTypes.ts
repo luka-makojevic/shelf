@@ -132,20 +132,20 @@ export interface HeaderTypes {
   key: string;
 }
 
-export interface ShelfDataTypes {
+export interface ShelfTableDataTypes {
   [key: string]: string | number;
   name: string;
   creation_date: string;
   id: number;
 }
-export interface FileDataTypes {
+export interface FileTableDataTypes {
   [key: string]: string | number;
   name: string;
   size: number;
   creation_date: string;
   id: number;
 }
-export interface FunctionDataTypes {
+export interface FunctionTableDataTypes {
   [key: string]: string | number;
   name: string;
   last_modified: string;

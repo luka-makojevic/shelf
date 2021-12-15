@@ -1,18 +1,22 @@
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import {
-  FileDataTypes,
-  FunctionDataTypes,
-  ShelfDataTypes,
+  FileTableDataTypes,
+  FunctionTableDataTypes,
+  ShelfTableDataTypes,
 } from '../../interfaces/dataTypes';
 import CheckBox from '../UI/checkbox/checkBox';
 import { StyledRow, StyledCell, ActionContainer } from './table -styles';
 
 interface RowProps {
-  data: FunctionDataTypes | FileDataTypes | ShelfDataTypes;
+  data: FunctionTableDataTypes | FileTableDataTypes | ShelfTableDataTypes;
   multiSelect?: boolean;
-  selectedRows: (FunctionDataTypes | FileDataTypes | ShelfDataTypes)[];
+  selectedRows: (
+    | FunctionTableDataTypes
+    | FileTableDataTypes
+    | ShelfTableDataTypes
+  )[];
   setSelectedRows: (
-    data: (FunctionDataTypes | FileDataTypes | ShelfDataTypes)[]
+    data: (FunctionTableDataTypes | FileTableDataTypes | ShelfTableDataTypes)[]
   ) => void;
   isChecked?: boolean;
 }
@@ -24,10 +28,12 @@ export const DashboardTableRow = ({
   setSelectedRows,
   isChecked,
 }: RowProps) => {
+  
   const handleChange = () => {
     const alreadySelected = selectedRows.some(
-      (row: FunctionDataTypes | FileDataTypes | ShelfDataTypes) =>
-        row.id === data.id
+      (
+        row: FunctionTableDataTypes | FileTableDataTypes | ShelfTableDataTypes
+      ) => row.id === data.id
     );
 
     if (!alreadySelected) {
@@ -35,8 +41,12 @@ export const DashboardTableRow = ({
     } else {
       setSelectedRows(
         selectedRows.filter(
-          (row: FunctionDataTypes | FileDataTypes | ShelfDataTypes) =>
-            row.id !== data.id
+          (
+            row:
+              | FunctionTableDataTypes
+              | FileTableDataTypes
+              | ShelfTableDataTypes
+          ) => row.id !== data.id
         )
       );
     }
