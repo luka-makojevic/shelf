@@ -1,7 +1,13 @@
 package com.htec.filesystem.service;
 
+import com.htec.filesystem.entity.FileEntity;
+import com.htec.filesystem.entity.FolderEntity;
+import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ExceptionSupplier;
 import com.htec.filesystem.model.response.FileResponseModel;
+import com.htec.filesystem.repository.FileRepository;
+import com.htec.filesystem.repository.FolderRepository;
+import com.htec.filesystem.repository.ShelfRepository;
 import com.htec.filesystem.util.FileUtil;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -11,6 +17,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.FileSystems;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Map;
 
@@ -18,13 +25,24 @@ import java.util.Map;
 public class FileService {
 
     private final UserAPICallService userAPICallService;
+
     private final String homePath = System.getProperty("user.home");
     private final String pathSeparator = FileSystems.getDefault().getSeparator();
     private final String userPath = pathSeparator + "shelf-files" + pathSeparator + "user-data" + pathSeparator;
 
-    public FileService(UserAPICallService userAPICallService) {
+    private final FileRepository fileRepository;
+    private final FolderRepository folderRepository;
+    private final ShelfRepository shelfRepository;
+
+    public FileService(UserAPICallService userAPICallService,
+                       FileRepository fileRepository,
+                       FolderRepository folderRepository,
+                       ShelfRepository shelfRepository) {
 
         this.userAPICallService = userAPICallService;
+        this.fileRepository = fileRepository;
+        this.folderRepository = folderRepository;
+        this.shelfRepository = shelfRepository;
     }
 
     public void saveUserProfilePicture(Long id, Map<String, Pair<String, String>> files) {
@@ -38,7 +56,9 @@ public class FileService {
 
         String localPath = userPath + id + pathSeparator + "profile-picture" + pathSeparator;
 
-        userAPICallService.updateUserPhotoById(id, localPath + fileName);
+        String dbPath = id + pathSeparator + "profile-picture" + pathSeparator + fileName;
+
+        userAPICallService.updateUserPhotoById(id, dbPath);
 
         String uploadDir = homePath + localPath;
         FileUtil.saveFile(uploadDir, fileName, bytes);
@@ -59,22 +79,54 @@ public class FileService {
         return new FileResponseModel(imageBytes, path);
     }
 
-    public boolean initializeFolders(Long id) {
+    public void saveFile(Long shelfId, Long folderId, Map<String, Pair<String, String>> files) {
 
-        String userDataPath = homePath + userPath + id;
+        if (files == null || files.get("file") == null)
+            throw ExceptionSupplier.couldNotUploadFile.get();
 
-        if (!new File(userDataPath).mkdirs()) {
-            return false;
+        byte[] bytes = Base64.getDecoder().decode(files.get("file").getSecond());
+
+        String fileName = files.get("file").getFirst();
+        String localPath;
+        String dbPath;
+
+        ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
+                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+
+        if (folderId != 0) {
+
+            FolderEntity folderEntity = folderRepository.findById(folderId)
+                    .orElseThrow(ExceptionSupplier.noFolderWithGivenId);
+
+            dbPath = folderEntity.getPath() + pathSeparator + fileName;
+            localPath = userPath + folderEntity.getPath() + pathSeparator;
+
+        } else {
+
+            localPath = userPath + shelfEntity.getUserId() + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator;
+            dbPath = shelfEntity.getUserId() + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator + fileName;
         }
 
-        String userProfilePicturePath = userDataPath + pathSeparator + "profile-picture";
+        if (fileRepository.findByPath(dbPath).isPresent())
+            throw ExceptionSupplier.fileAlreadyExists.get();
 
-        if (!new File(userProfilePicturePath).mkdirs()) {
-            return false;
-        }
+        String uploadDir = homePath + localPath;
+        FileUtil.saveFile(uploadDir, fileName, bytes);
+        saveFileIntoDB(dbPath, fileName, shelfId, folderId);
+    }
 
-        String userShelvesPath = userDataPath + pathSeparator + "shelves";
+    public void saveFileIntoDB(String filePath, String fileName, long shelfId, long folderId) {
 
-        return new File(userShelvesPath).mkdirs();
+        FileEntity fileEntity = new FileEntity();
+
+        fileEntity.setName(fileName);
+        fileEntity.setPath(filePath);
+        fileEntity.setShelfId(shelfId);
+        if (folderId != 0)
+            fileEntity.setParentFolderId(folderId);
+
+        fileEntity.setDeleted(false);
+        fileEntity.setCreatedAt(LocalDateTime.now());
+        fileRepository.save(fileEntity);
     }
 }

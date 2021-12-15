@@ -8,6 +8,7 @@ import com.htec.account.mapper.UserMapper;
 import com.htec.account.model.response.UserRegisterMicrosoftResponseModel;
 import com.htec.account.repository.mysql.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,13 +33,17 @@ public class LoginService implements UserDetailsService {
 
     private final MicrosoftApiService microsoftApiService;
 
+    private final Long FREE_SPACE_SIZE;
+
     @Autowired
     LoginService(UserRepository userRepository,
                  AuthenticationManager authenticationManager,
-                 MicrosoftApiService microsoftApiService) {
+                 MicrosoftApiService microsoftApiService,
+                 @Value("${userFreeSpace}") Long free_space_size) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
         this.microsoftApiService = microsoftApiService;
+        this.FREE_SPACE_SIZE = free_space_size;
     }
 
     @Override
@@ -90,6 +95,7 @@ public class LoginService implements UserDetailsService {
             userEntity.setCreatedAt(LocalDateTime.now());
             userEntity.setEmailVerified(true);
             userEntity.setRole(new RoleEntity(3L));
+            userEntity.setFreeSpace(FREE_SPACE_SIZE);
 
             userRepository.save(userEntity);
 

@@ -1,5 +1,6 @@
 import { RegisterOptions } from 'react-hook-form';
 import { Role } from '../utils/enums/roles';
+import { SortingDirection } from '../utils/enums/table';
 
 export interface RegisterData {
   areTermsRead?: boolean;
@@ -135,4 +136,39 @@ export interface ShelfDataType {
   createdAt: string;
   isDeleted: boolean;
   userId: number;
+}
+
+export interface HeaderTypes {
+  header: string;
+  key: string;
+}
+
+export interface ShelfTableDataTypes {
+  [key: string]: string | number;
+  name: string;
+  creation_date: string;
+  id: number;
+}
+export interface FileTableDataTypes {
+  [key: string]: string | number;
+  name: string;
+  size: number;
+  creation_date: string;
+  id: number;
+}
+export interface FunctionTableDataTypes {
+  [key: string]: string | number;
+  name: string;
+  last_modified: string;
+  description: string;
+  runtime: string;
+  id: number;
+}
+
+export interface SortingDirectionTypes {
+  [name: string]: SortingDirection;
+}
+
+export interface SorterDataTypes {
+  [key: string]: string | number;
 }
