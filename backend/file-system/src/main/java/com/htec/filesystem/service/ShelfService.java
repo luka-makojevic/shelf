@@ -64,23 +64,11 @@ public class ShelfService {
                 throw ExceptionSupplier.userNotAllowed.get();
             }
 
-            List<FolderEntity> folderEntities = folderRepository.findAllByShelfId(shelfEntity.getId());
-            List<FileEntity> fileEntities = fileRepository.findAllByShelfId(shelfEntity.getId());
+            folderRepository.updateIsDeletedByShelfId(shelfEntity.getId());
+            fileRepository.updateIsDeletedByShelfId(shelfEntity.getId());
 
             shelfEntity.setDeleted(true);
             shelfRepository.save(shelfEntity);
-
-            for (FolderEntity folderEntity : folderEntities) {
-                folderEntity.setDeleted(true);
-            }
-
-            folderRepository.saveAll(folderEntities);
-
-            for (FileEntity fileEntity : fileEntities) {
-                fileEntity.setDeleted(true);
-            }
-
-            fileRepository.saveAll(fileEntities);
         }
     }
 }

@@ -50,8 +50,6 @@ class ShelfServiceTest {
     ShelfEntity shelf;
     FolderEntity folder;
     FileEntity file;
-    List<FolderEntity> folderEntities;
-    List<FileEntity> fileEntities;
     List<ShelfEntity> shelfEntities;
     List<Long> shelfIds;
 
@@ -62,8 +60,6 @@ class ShelfServiceTest {
         folder = new FolderEntity();
         file = new FileEntity();
         shelfIds = new ArrayList<>();
-        folderEntities = new ArrayList<>();
-        fileEntities = new ArrayList<>();
         shelfEntities = new ArrayList<>();
     }
 
@@ -84,21 +80,15 @@ class ShelfServiceTest {
         shelf.setId(1L);
         shelf.setUserId(user.getId());
         shelfEntities.add(shelf);
-        folderEntities.add(folder);
-        fileEntities.add(file);
         shelfIds.add(1L);
 
         when(shelfRepository.findById(shelfIds.get(0))).thenReturn(Optional.of(shelf));
 
-        when(folderRepository.findAllByShelfId(shelf.getId())).thenReturn(folderEntities);
-
-        when(fileRepository.findAllByShelfId(shelf.getId())).thenReturn(fileEntities);
-
         shelfService.softDeleteShelf(user, shelfIds);
 
         verify(shelfRepository, times(1)).save(shelf);
-        verify(folderRepository, times(1)).saveAll(folderEntities);
-        verify(fileRepository, times(1)).saveAll(fileEntities);
+        verify(folderRepository, times(1)).updateIsDeletedByShelfId(shelf.getId());
+        verify(fileRepository, times(1)).updateIsDeletedByShelfId(shelf.getId());
     }
 
     @Test
