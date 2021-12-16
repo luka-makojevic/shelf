@@ -53,8 +53,11 @@ public class FolderService {
 
         List<FileDTO> fileDTOS = new ArrayList<>();
 
-        List<FolderEntity> allFolders = folderRepository.findAllByUserIdAndParentFolderId(userId, folderId, false);
-        List<FileEntity> allFiles = fileRepository.findAllByUserIdAndParentFolderId(userId, folderId, false);
+        List<FolderEntity> allFolders = folderRepository
+                .findAllByUserIdAndParentFolderId(userId, folderId, false);
+
+        List<FileEntity> allFiles = fileRepository
+                .findAllByUserIdAndParentFolderId(userId, folderId, false);
 
         fileDTOS.addAll(FileMapper.INSTANCE.fileEntityToFileDTO(allFiles));
         fileDTOS.addAll(FileMapper.INSTANCE.folderEntityToFileDTO(allFolders));

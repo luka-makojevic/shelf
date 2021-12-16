@@ -36,8 +36,10 @@ class FolderServiceTest {
         Long testUserId = 1L;
         Long testFolderId = 1L;
 
-        when(folderRepository.findAllByUserIdAndParentFolderId(testUserId, testFolderId, false)).thenReturn(new ArrayList<>());
-        when(fileRepository.findAllByUserIdAndParentFolderId(testUserId, testFolderId, false)).thenReturn(new ArrayList<>());
+        when(folderRepository.findAllByUserIdAndParentFolderId(testUserId, testFolderId, false))
+                .thenReturn(new ArrayList<>());
+        when(fileRepository.findAllByUserIdAndParentFolderId(testUserId, testFolderId, false))
+                .thenReturn(new ArrayList<>());
 
         ResponseEntity<List<FileDTO>> files = folderService.getFiles(testUserId, testFolderId);
 
