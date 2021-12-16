@@ -15,8 +15,7 @@ export const useShelf = () => {
 
     shelfServices
       .getShelves()
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((res: any) => {
+      .then((res) => {
         dispatch(setShelves(res.data));
         onSuccess();
       })

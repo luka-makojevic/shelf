@@ -146,14 +146,14 @@ export interface HeaderTypes {
 export interface ShelfTableDataTypes {
   [key: string]: string | number;
   name: string;
-  created_at: string;
+  createdAt: string;
   id: number;
 }
 export interface FileTableDataTypes {
   [key: string]: string | number;
   name: string;
   size: number;
-  created_at: string;
+  createdAt: string;
   id: number;
 }
 export interface FunctionTableDataTypes {
@@ -164,6 +164,11 @@ export interface FunctionTableDataTypes {
   runtime: string;
   id: number;
 }
+
+export type TableDataTypes =
+  | FunctionTableDataTypes
+  | FileTableDataTypes
+  | ShelfTableDataTypes;
 
 export interface SortingDirectionTypes {
   [name: string]: SortingDirection;

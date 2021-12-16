@@ -1,24 +1,26 @@
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import {
   FileTableDataTypes,
   FunctionTableDataTypes,
   ShelfTableDataTypes,
+  TableDataTypes,
 } from '../../interfaces/dataTypes';
+import { theme } from '../../theme';
 import CheckBox from '../UI/checkbox/checkBox';
 import { StyledRow, StyledCell, ActionContainer } from './table -styles';
 
 interface RowProps {
-  data: FunctionTableDataTypes | FileTableDataTypes | ShelfTableDataTypes;
+  data: TableDataTypes;
   multiSelect?: boolean;
   selectedRows: (
     | FunctionTableDataTypes
     | FileTableDataTypes
     | ShelfTableDataTypes
   )[];
-  setSelectedRows: (
-    data: (FunctionTableDataTypes | FileTableDataTypes | ShelfTableDataTypes)[]
-  ) => void;
+  setSelectedRows: (data: TableDataTypes[]) => void;
   isChecked?: boolean;
+  path: string;
 }
 
 export const DashboardTableRow = ({
@@ -27,13 +29,13 @@ export const DashboardTableRow = ({
   selectedRows,
   setSelectedRows,
   isChecked,
+  path,
 }: RowProps) => {
-  
+  const navigation = useNavigate();
+
   const handleChange = () => {
     const alreadySelected = selectedRows.some(
-      (
-        row: FunctionTableDataTypes | FileTableDataTypes | ShelfTableDataTypes
-      ) => row.id === data.id
+      (row: TableDataTypes) => row.id === data.id
     );
 
     if (!alreadySelected) {
@@ -52,6 +54,20 @@ export const DashboardTableRow = ({
     }
   };
 
+  const CellWithHandler = ({
+    rowText,
+    pathName,
+  }: {
+    rowText: string | number;
+    pathName: string;
+  }) => {
+    const handleClick = () => {
+      navigation(pathName);
+    };
+
+    return <StyledCell onClick={handleClick}>{rowText}</StyledCell>;
+  };
+
   return (
     <StyledRow>
       {multiSelect && (
@@ -59,15 +75,22 @@ export const DashboardTableRow = ({
           <CheckBox onChange={handleChange} checked={isChecked} />
         </StyledCell>
       )}
-      {Object.values(data).map((rowText) => (
-        <StyledCell key={rowText}>{rowText}</StyledCell>
-      ))}
+      {Object.values(data).map((rowText) => {
+        if (rowText === data.id) return null;
+        return (
+          <CellWithHandler
+            key={rowText}
+            rowText={rowText}
+            pathName={`${path}${data.id}`}
+          />
+        );
+      })}
       {!multiSelect && (
         <StyledCell>
           <ActionContainer>
-            <FaTrash />
+            <FaTrash fill={theme.colors.danger} />
           </ActionContainer>
-          <FaEdit />
+          <FaEdit fill={theme.colors.black} />
         </StyledCell>
       )}
     </StyledRow>

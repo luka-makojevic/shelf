@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Table } from '../../components/table/table';
 import TableWrapper from '../../components/table/TableWrapper';
 import { useShelf } from '../../hooks/shelfHooks';
-import { HeaderTypes } from '../../interfaces/dataTypes';
+import { TableDataTypes } from '../../interfaces/dataTypes';
 import { useAppSelector } from '../../store/hooks';
 import AlertPortal from '../../components/alert/alert';
 import Modal from '../../components/modal';
 import CreateShelfModal from '../../components/modal/createShelfModal';
 import { Button } from '../../components/UI/button';
 import { AlertMessage } from '../../utils/enums/alertMessages';
+import { Description } from '../../components/text/text-styles';
 
 const Shelves = () => {
   const shelves = useAppSelector((state) => state.shelf.shelves);
@@ -23,32 +25,36 @@ const Shelves = () => {
     setError('');
   };
 
-  // const user = useAppSelector((state) => state.user.user);
+  const user = useAppSelector((state) => state.user.user);
 
-  // const { getShelves } = useShelf();
+  const { getShelves } = useShelf();
 
-  // const [shelvesForTable, setShelvesForTable] = useState<any>();
+  const [shelvesForTable, setShelvesForTable] = useState<TableDataTypes[]>([]);
 
-  // useEffect(() => {
-  //  makeHeaders();
-  //   const newShelves = shelves.map((shelf) => ({
-  //     name: shelf.name,
-  //     id: shelf.id,
-  //   }));
-  //   setShelvesForTable(newShelves);
-  // }, [shelves]);
+  useEffect(() => {
+    getShelves(
+      { userId: user?.id },
+      () => {},
+      (err: string) => {
+        setError(err);
+      }
+    );
+  }, []);
 
-  // useEffect(() => {
-  //   getShelves(
-  //     { userId: user?.id },
-  //     () => {
-  //       console.log('success');
-  //     },
-  //     (err: string) => {
-  //       console.log(err, 'error');
-  //     }
-  //   );
-  // }, []);
+  useEffect(() => {
+    const newShelves = shelves.map((shelf) => ({
+      name: shelf.name,
+      createdAt: new Date(shelf.createdAt).toLocaleDateString('en-US'),
+      id: shelf.id,
+    }));
+
+    setShelvesForTable(newShelves);
+  }, [shelves]);
+
+  const headers = [
+    { header: 'Name', key: 'name' },
+    { header: 'Creation date', key: 'createdAt' },
+  ];
 
   return (
     <>
@@ -63,7 +69,6 @@ const Shelves = () => {
       {openModal && (
         <Modal title="Create shelf" onCloseModal={setOpenModal} closeIcon>
           <CreateShelfModal onCloseModal={setOpenModal} onError={setError} />
-          {/* <AddFileModal onCloseModal={setOpenModal} /> */}
         </Modal>
       )}
 
@@ -71,13 +76,18 @@ const Shelves = () => {
         title="Shelves"
         description="Shelves are the fundamental containers for data storage."
       >
-        <Button onClick={handleOpenModal}>create shelf</Button>
+        <div>
+          <Button onClick={handleOpenModal}>Create shelf</Button>
+        </div>
         {shelves.length === 0 ? (
-          <p>no shelfs</p>
+          <Description>No shelves</Description>
         ) : (
-          <div>
-            <div>Table</div>
-          </div>
+          <Table
+            setTableData={setShelvesForTable}
+            data={shelvesForTable}
+            headers={headers}
+            path="shelves/"
+          />
         )}
       </TableWrapper>
     </>

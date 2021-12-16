@@ -46,12 +46,17 @@ export const StyledCell = styled.td`
   border-bottom: 1px solid #d0d0d0;
   padding: ${theme.space.sm};
   border-collapse: collapse;
+  cursor: pointer;
 `;
 export const StyledRow = styled.tr`
   &:last-child {
     ${StyledCell} {
       border: none;
     }
+  }
+
+  &:hover {
+    color: ${theme.colors.primary};
   }
 `;
 
