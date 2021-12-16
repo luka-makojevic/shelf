@@ -63,7 +63,7 @@ public class ShelfService {
             throw ExceptionSupplier.userNotAllowed.get();
         }
 
-        shelfRepository.updateIsDeletedByIdAndUserId(shelfIds);
+        shelfRepository.updateIsDeletedByIds(shelfIds);
         folderRepository.updateIsDeletedByShelfId(shelfIds);
         fileRepository.updateIsDeletedByShelfId(shelfIds);
     }
