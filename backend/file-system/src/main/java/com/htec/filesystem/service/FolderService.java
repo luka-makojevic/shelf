@@ -104,8 +104,10 @@ public class FolderService {
         FolderEntity folderEntity = new FolderEntity();
         folderEntity.setName(name);
         folderEntity.setPath(path);
+
         if (parentFolderId != 0)
             folderEntity.setParentFolderId(parentFolderId);
+
         folderEntity.setShelfId(shelfId);
         folderEntity.setDeleted(false);
         folderEntity.setCreatedAt(LocalDateTime.now());
