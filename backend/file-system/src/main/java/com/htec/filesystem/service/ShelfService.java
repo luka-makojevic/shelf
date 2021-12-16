@@ -1,8 +1,6 @@
 package com.htec.filesystem.service;
 
 import com.htec.filesystem.annotation.AuthUser;
-import com.htec.filesystem.entity.FileEntity;
-import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ExceptionSupplier;
 import com.htec.filesystem.model.request.CreateShelfRequestModel;
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class ShelfService {
@@ -56,19 +53,13 @@ public class ShelfService {
     @Transactional
     public void softDeleteShelf(AuthUser user, List<Long> shelfIds) {
 
-        for (Long shelfId : shelfIds) {
-            ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
-                    .orElseThrow(ExceptionSupplier.shelfNotFound);
-
-            if (!Objects.equals(shelfEntity.getUserId(), user.getId())) {
-                throw ExceptionSupplier.userNotAllowed.get();
-            }
-
-            folderRepository.updateIsDeletedByShelfId(shelfEntity.getId());
-            fileRepository.updateIsDeletedByShelfId(shelfEntity.getId());
-
-            shelfEntity.setDeleted(true);
-            shelfRepository.save(shelfEntity);
+        List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserIdAndShelfId(user.getId(), shelfIds);
+        if (shelfEntities.size() != shelfIds.size()) {
+            throw ExceptionSupplier.userNotAllowed.get();
         }
+        shelfRepository.updateAllByIdAndUserId(shelfIds);
+
+        folderRepository.updateIsDeletedByShelfId(shelfIds);
+        fileRepository.updateIsDeletedByShelfId(shelfIds);
     }
 }

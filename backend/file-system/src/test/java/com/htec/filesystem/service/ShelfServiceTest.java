@@ -82,35 +82,13 @@ class ShelfServiceTest {
         shelfEntities.add(shelf);
         shelfIds.add(1L);
 
-        when(shelfRepository.findById(shelfIds.get(0))).thenReturn(Optional.of(shelf));
+        when(shelfRepository.findAllByUserIdAndShelfId(user.getId(), shelfIds)).thenReturn(shelfEntities);
 
         shelfService.softDeleteShelf(user, shelfIds);
 
-        verify(shelfRepository, times(1)).save(shelf);
-        verify(folderRepository, times(1)).updateIsDeletedByShelfId(shelf.getId());
-        verify(fileRepository, times(1)).updateIsDeletedByShelfId(shelf.getId());
-    }
-
-    @Test
-    void softDeleteShelf_shelfNotFound() {
-
-        user.setId(1L);
-        shelf.setId(1L);
-        shelf.setUserId(user.getId());
-        shelfIds.add(1L);
-
-        when(shelfRepository.findById(shelfIds.get(0))).thenReturn(Optional.empty());
-
-        ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
-            shelfService.softDeleteShelf(user, shelfIds);
-        });
-
-        verify(shelfRepository, times(1)).findById(shelf.getId());
-        verify(folderRepository, times(0)).updateIsDeletedByShelfId(shelf.getId());
-        verify(fileRepository, times(0)).updateIsDeletedByShelfId(shelf.getId());
-        verify(shelfRepository, times(0)).save(shelf);
-
-        assertEquals(ErrorMessages.SHELF_NOT_FOUND.getErrorMessage(), exception.getMessage());
+        verify(shelfRepository, times(1)).findAllByUserIdAndShelfId(user.getId(), shelfIds);
+        verify(folderRepository, times(1)).updateIsDeletedByShelfId(shelfIds);
+        verify(fileRepository, times(1)).updateIsDeletedByShelfId(shelfIds);
     }
 
     @Test
@@ -121,15 +99,14 @@ class ShelfServiceTest {
         shelf.setUserId(2L);
         shelfIds.add(1L);
 
-        when(shelfRepository.findById(shelfIds.get(0))).thenReturn(Optional.of(shelf));
+        when(shelfRepository.findAllByUserIdAndShelfId(user.getId(), shelfIds)).thenReturn(shelfEntities);
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
             shelfService.softDeleteShelf(user, shelfIds);
         });
 
-        verify(shelfRepository, times(1)).findById(shelf.getId());
-        verify(folderRepository, times(0)).updateIsDeletedByShelfId(shelf.getId());
-        verify(fileRepository, times(0)).updateIsDeletedByShelfId(shelf.getId());
+        verify(folderRepository, times(0)).updateIsDeletedByShelfId(shelfIds);
+        verify(fileRepository, times(0)).updateIsDeletedByShelfId(shelfIds);
         verify(shelfRepository, times(0)).save(shelf);
 
         assertEquals(ErrorMessages.USER_NOT_ALLOWED.getErrorMessage(), exception.getMessage());
