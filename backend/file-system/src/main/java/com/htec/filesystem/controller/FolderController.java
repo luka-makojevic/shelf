@@ -3,6 +3,7 @@ package com.htec.filesystem.controller;
 import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.annotation.AuthenticationUser;
 import com.htec.filesystem.dto.FileDTO;
+import com.htec.filesystem.model.request.CreateFolderRequestModel;
 import com.htec.filesystem.model.response.TextResponseMessage;
 import com.htec.filesystem.service.FolderService;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,17 @@ public class FolderController {
     public ResponseEntity<List<FileDTO>> getFiles(@AuthenticationUser AuthUser user, @PathVariable Long folderId) {
 
         return folderService.getFiles(user.getId(), folderId);
+    }
 
+    @PostMapping("/create")
+    public ResponseEntity createFolder(@RequestBody CreateFolderRequestModel createFolderRequestModel, @AuthenticationUser AuthUser authUser) {
+
+        HttpStatus retStatus = HttpStatus.OK;
+
+        if (!folderService.createFolder(createFolderRequestModel, authUser.getId())) {
+            retStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return ResponseEntity.status(retStatus).body(new TextResponseMessage("Folder created", retStatus.value()));
     }
 }

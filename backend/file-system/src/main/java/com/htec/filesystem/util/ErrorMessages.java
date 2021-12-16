@@ -6,6 +6,7 @@ public enum ErrorMessages {
     SHELF_NAME_NOT_VALID("Shelf name is not in a valid format."),
     COULD_NOT_UPLOAD_FILE("Could not upload file."),
     FILE_WITH_THE_SAME_NAME_ALREADY_EXISTS("File with the same name already exists."),
+    FOLDER_WITH_THE_SAME_NAME_ALREADY_EXISTS("Folder with the same name already exists."),
     SHELF_WITH_THE_SAME_NAME_ALREADY_EXISTS("Shelf with the same name already exists."),
     NO_FILE_WITH_GIVEN_ID("There is no file with the provided id."),
     NO_FOLDER_WITH_GIVEN_ID("There is no folder with the provided id."),
