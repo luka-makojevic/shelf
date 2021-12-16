@@ -74,7 +74,6 @@ public class FolderService {
         Long shelfId = createFolderRequestModel.getShelfId();
         String folderName = createFolderRequestModel.getFolderName();
         String fileSystemPath = homePath + userPath;
-        ;
         String dbPath;
 
 
