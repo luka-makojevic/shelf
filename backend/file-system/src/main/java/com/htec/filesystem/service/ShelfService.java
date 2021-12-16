@@ -42,7 +42,7 @@ public class ShelfService {
 
         fileSystemValidator.isShelfNameValid(shelfName);
 
-        if (shelfRepository.findByName(shelfName).isPresent())
+        if (shelfRepository.findByNameAndUserId(shelfName, userId).isPresent())
             throw ExceptionSupplier.shelfAlreadyExists.get();
 
         ShelfEntity shelfEntity = new ShelfEntity();
@@ -80,5 +80,17 @@ public class ShelfService {
             dtoShelves.add(shelfDto);
         }
         return dtoShelves;
+    }
+
+    @Transactional
+    public void hardDeleteShelf(List<Long> shelfIdList, Long userId) {
+
+        List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserIdAndIdIn(userId, shelfIdList);
+
+        if (!shelfEntities.stream().map(ShelfEntity::getId).collect(Collectors.toList()).containsAll(shelfIdList)) {
+            throw ExceptionSupplier.userNotAllowed.get();
+        }
+
+        shelfRepository.deleteByIdIn(shelfIdList);
     }
 }

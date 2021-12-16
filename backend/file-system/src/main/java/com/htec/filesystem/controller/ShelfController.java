@@ -42,4 +42,12 @@ public class ShelfController {
 
         return ResponseEntity.ok(shelfService.getAllShelvesById(authUser.getId()));
     }
+
+    @DeleteMapping
+    public ResponseEntity deleteShelf(@AuthenticationUser AuthUser authUser,
+                                      @RequestBody List<Long> shelfIdList) {
+
+        shelfService.hardDeleteShelf(shelfIdList, authUser.getId());
+        return ResponseEntity.ok().body(new TextResponseMessage("Successfully deleted shelves.", HttpStatus.OK.value()));
+    }
 }
