@@ -16,7 +16,7 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
 
     @Modifying
     @Query("UPDATE FileEntity f SET f.isDeleted = true WHERE f.shelfId IN (?1)")
-    void updateIsDeletedByShelfId(List<Long> shelfIds);
+    void updateIsDeletedByShelfIds(List<Long> shelfIds);
 
     List<FileEntity> findAllByParentFolderId(Long folderId);
 

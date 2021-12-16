@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,15 +57,15 @@ public class ShelfService {
     @Transactional
     public void softDeleteShelf(AuthUser user, List<Long> shelfIds) {
 
-        List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserIdAndShelfId(user.getId(), shelfIds);
+        List<ShelfEntity> shelfEntities = shelfRepository.findAllByIdAndUserIdIn(user.getId(), shelfIds);
 
         if (!shelfEntities.stream().map(ShelfEntity::getId).collect(Collectors.toList()).containsAll(shelfIds)) {
             throw ExceptionSupplier.userNotAllowed.get();
         }
 
         shelfRepository.updateIsDeletedByIds(shelfIds);
-        folderRepository.updateIsDeletedByShelfId(shelfIds);
-        fileRepository.updateIsDeletedByShelfId(shelfIds);
+        folderRepository.updateIsDeletedByShelfIds(shelfIds);
+        fileRepository.updateIsDeletedByShelfIds(shelfIds);
     }
 
     public List<ShelfDTO> getAllShelvesById(Long userId) {

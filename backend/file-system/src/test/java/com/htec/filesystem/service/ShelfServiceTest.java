@@ -21,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -86,13 +85,13 @@ class ShelfServiceTest {
         shelfEntities.add(shelf);
         shelfIds.add(1L);
 
-        when(shelfRepository.findAllByUserIdAndShelfId(user.getId(), shelfIds)).thenReturn(shelfEntities);
+        when(shelfRepository.findAllByIdAndUserIdIn(user.getId(), shelfIds)).thenReturn(shelfEntities);
 
         shelfService.softDeleteShelf(user, shelfIds);
 
-        verify(shelfRepository, times(1)).findAllByUserIdAndShelfId(user.getId(), shelfIds);
-        verify(folderRepository, times(1)).updateIsDeletedByShelfId(shelfIds);
-        verify(fileRepository, times(1)).updateIsDeletedByShelfId(shelfIds);
+        verify(shelfRepository, times(1)).findAllByIdAndUserIdIn(user.getId(), shelfIds);
+        verify(folderRepository, times(1)).updateIsDeletedByShelfIds(shelfIds);
+        verify(fileRepository, times(1)).updateIsDeletedByShelfIds(shelfIds);
     }
 
     @Test
@@ -103,14 +102,14 @@ class ShelfServiceTest {
         shelf.setUserId(2L);
         shelfIds.add(1L);
 
-        when(shelfRepository.findAllByUserIdAndShelfId(user.getId(), shelfIds)).thenReturn(shelfEntities);
+        when(shelfRepository.findAllByIdAndUserIdIn(user.getId(), shelfIds)).thenReturn(shelfEntities);
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
             shelfService.softDeleteShelf(user, shelfIds);
         });
 
-        verify(folderRepository, times(0)).updateIsDeletedByShelfId(shelfIds);
-        verify(fileRepository, times(0)).updateIsDeletedByShelfId(shelfIds);
+        verify(folderRepository, times(0)).updateIsDeletedByShelfIds(shelfIds);
+        verify(fileRepository, times(0)).updateIsDeletedByShelfIds(shelfIds);
         verify(shelfRepository, times(0)).save(shelf);
 
         assertEquals(ErrorMessages.USER_NOT_ALLOWED.getErrorMessage(), exception.getMessage());
