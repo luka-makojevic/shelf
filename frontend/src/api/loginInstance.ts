@@ -11,20 +11,14 @@ const loginInstance = axios.create({
 });
 
 loginInstance.interceptors.response.use(
-  async (res: any) => {
+  async (res) => {
     const resConfig = res.config;
-
-    console.log('intercept res');
 
     const user = LocalStorage.get('user')
       ? JSON.parse(LocalStorage.get('user') || '')
       : null;
 
-    console.log(user);
-
     if (!user) {
-      console.log('getting user');
-      console.log(res);
       try {
         const response = await axios.get(`${API_URL}users/${res.data.id}`, {
           headers: {
@@ -34,7 +28,6 @@ loginInstance.interceptors.response.use(
 
         const userData = response.data;
         localStorage.setItem('user', JSON.stringify(userData));
-        console.log(userData);
 
         return await loginInstance(resConfig);
       } catch (_error) {
