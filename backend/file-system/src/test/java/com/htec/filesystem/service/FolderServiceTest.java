@@ -33,12 +33,15 @@ class FolderServiceTest {
     @Test
     void getFiles_EmptyList() {
 
+        Long testUserId = 1L;
         Long testFolderId = 1L;
 
-        when(folderRepository.findAllByParentFolderId(1L)).thenReturn(new ArrayList<>());
-        when(fileRepository.findAllByParentFolderId(1L)).thenReturn(new ArrayList<>());
+        when(folderRepository.findAllByUserIdAndParentFolderId(testUserId, testFolderId, false))
+                .thenReturn(new ArrayList<>());
+        when(fileRepository.findAllByUserIdAndParentFolderId(testUserId, testFolderId, false))
+                .thenReturn(new ArrayList<>());
 
-        ResponseEntity<List<FileDTO>> files = folderService.getFiles(testFolderId);
+        ResponseEntity<List<FileDTO>> files = folderService.getFiles(testUserId, testFolderId);
 
         Assertions.assertEquals(0, Objects.requireNonNull(files.getBody()).size());
     }
@@ -46,9 +49,10 @@ class FolderServiceTest {
     @Test
     void getFiles_NotEmptyList() {
 
+        Long testUserId = 1L;
         Long testFolderId = 1L;
 
-        when(folderRepository.findAllByParentFolderId(1L)).thenReturn(
+        when(folderRepository.findAllByUserIdAndParentFolderId(testUserId, testFolderId, false)).thenReturn(
                 new ArrayList<FolderEntity>() {
                     {
                         add(new FolderEntity());
@@ -57,7 +61,7 @@ class FolderServiceTest {
                     }
                 }
         );
-        when(fileRepository.findAllByParentFolderId(1L)).thenReturn(
+        when(fileRepository.findAllByUserIdAndParentFolderId(testUserId, testFolderId, false)).thenReturn(
                 new ArrayList<FileEntity>() {
                     {
                         add(new FileEntity());
@@ -66,54 +70,25 @@ class FolderServiceTest {
                 }
         );
 
-        ResponseEntity<List<FileDTO>> files = folderService.getFiles(testFolderId);
+        ResponseEntity<List<FileDTO>> files = folderService.getFiles(testUserId, testFolderId);
 
         Assertions.assertEquals(5, Objects.requireNonNull(files.getBody()).size());
     }
 
     @Test
-    void getFiles_NotEmptyListWithDeletedFile() {
-
-        Long testFolderId = 1L;
-
-        when(folderRepository.findAllByParentFolderId(1L)).thenReturn(
-                new ArrayList<FolderEntity>() {
-                    {
-                        add(new FolderEntity());
-                        add(new FolderEntity());
-                        add(new FolderEntity());
-                    }
-                }
-        );
-        when(fileRepository.findAllByParentFolderId(1L)).thenReturn(
-                new ArrayList<FileEntity>() {
-                    {
-                        FileEntity deletedFile = new FileEntity();
-                        deletedFile.setDeleted(true);
-                        add(deletedFile);
-                        add(new FileEntity());
-                    }
-                }
-        );
-
-        ResponseEntity<List<FileDTO>> files = folderService.getFiles(testFolderId);
-
-        Assertions.assertEquals(4, Objects.requireNonNull(files.getBody()).size());
-    }
-
-    @Test
     void getFiles_FileFolderType() {
 
+        Long testUserId = 1L;
         Long testFolderId = 1L;
 
-        when(folderRepository.findAllByParentFolderId(1L)).thenReturn(
+        when(folderRepository.findAllByUserIdAndParentFolderId(testUserId, testFolderId, false)).thenReturn(
                 new ArrayList<FolderEntity>() {
                     {
                         add(new FolderEntity());
                     }
                 }
         );
-        when(fileRepository.findAllByParentFolderId(1L)).thenReturn(
+        when(fileRepository.findAllByUserIdAndParentFolderId(testUserId, testFolderId, false)).thenReturn(
                 new ArrayList<FileEntity>() {
                     {
                         add(new FileEntity());
@@ -121,7 +96,7 @@ class FolderServiceTest {
                 }
         );
 
-        ResponseEntity<List<FileDTO>> files = folderService.getFiles(testFolderId);
+        ResponseEntity<List<FileDTO>> files = folderService.getFiles(testUserId, testFolderId);
 
         Assertions.assertEquals(2, Objects.requireNonNull(files.getBody()).size());
         Assertions.assertEquals(false, Objects.requireNonNull(files.getBody()).get(0).isFolder());
