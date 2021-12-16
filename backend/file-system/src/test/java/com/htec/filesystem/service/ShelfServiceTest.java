@@ -52,6 +52,8 @@ class ShelfServiceTest {
     FileEntity file;
     List<FolderEntity> folderEntities;
     List<FileEntity> fileEntities;
+    List<ShelfEntity> shelfEntities;
+    List<Long> shelfIds;
 
     @BeforeEach
     void setUp() {
@@ -59,8 +61,10 @@ class ShelfServiceTest {
         shelf = new ShelfEntity();
         folder = new FolderEntity();
         file = new FileEntity();
+        shelfIds = new ArrayList<>();
         folderEntities = new ArrayList<>();
         fileEntities = new ArrayList<>();
+        shelfEntities = new ArrayList<>();
     }
 
     @Test
@@ -79,16 +83,18 @@ class ShelfServiceTest {
         user.setId(1L);
         shelf.setId(1L);
         shelf.setUserId(user.getId());
+        shelfEntities.add(shelf);
         folderEntities.add(folder);
         fileEntities.add(file);
+        shelfIds.add(1L);
 
-        when(shelfRepository.findById(shelf.getId())).thenReturn(Optional.of(shelf));
+        when(shelfRepository.findById(shelfIds.get(0))).thenReturn(Optional.of(shelf));
 
         when(folderRepository.findAllByShelfId(shelf.getId())).thenReturn(folderEntities);
 
         when(fileRepository.findAllByShelfId(shelf.getId())).thenReturn(fileEntities);
 
-        shelfService.softDeleteShelf(user, shelf.getId());
+        shelfService.softDeleteShelf(user, shelfIds);
 
         verify(shelfRepository, times(1)).save(shelf);
         verify(folderRepository, times(1)).saveAll(folderEntities);
@@ -101,11 +107,12 @@ class ShelfServiceTest {
         user.setId(1L);
         shelf.setId(1L);
         shelf.setUserId(user.getId());
+        shelfIds.add(1L);
 
-        when(shelfRepository.findById(shelf.getId())).thenReturn(Optional.empty());
+        when(shelfRepository.findById(shelfIds.get(0))).thenReturn(Optional.empty());
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
-            shelfService.softDeleteShelf(user, shelf.getId());
+            shelfService.softDeleteShelf(user, shelfIds);
         });
 
         verify(shelfRepository, times(1)).findById(shelf.getId());
@@ -124,11 +131,12 @@ class ShelfServiceTest {
         user.setId(1L);
         shelf.setId(1L);
         shelf.setUserId(2L);
+        shelfIds.add(1L);
 
-        when(shelfRepository.findById(shelf.getId())).thenReturn(Optional.of(shelf));
+        when(shelfRepository.findById(shelfIds.get(0))).thenReturn(Optional.of(shelf));
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
-            shelfService.softDeleteShelf(user, shelf.getId());
+            shelfService.softDeleteShelf(user, shelfIds);
         });
 
         verify(shelfRepository, times(1)).findById(shelf.getId());

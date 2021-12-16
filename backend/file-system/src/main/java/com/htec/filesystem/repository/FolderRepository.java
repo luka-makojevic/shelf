@@ -8,7 +8,5 @@ import java.util.Optional;
 
 public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
 
-    Optional<FolderEntity> findById(long id);
-
     List<FolderEntity> findAllByShelfId(Long id);
 }

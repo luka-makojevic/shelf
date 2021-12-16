@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -54,31 +55,33 @@ public class ShelfService {
     }
 
     @Transactional
-    public void softDeleteShelf(AuthUser user, Long shelfId) {
+    public void softDeleteShelf(AuthUser user, List<Long> shelfIds) {
 
-        ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
-                .orElseThrow(ExceptionSupplier.shelfNotFound);
+        for (Long shelfId : shelfIds) {
+            ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
+                    .orElseThrow(ExceptionSupplier.shelfNotFound);
 
-        if (!Objects.equals(shelfEntity.getUserId(), user.getId())) {
-            throw ExceptionSupplier.userNotAllowed.get();
+            if (!Objects.equals(shelfEntity.getUserId(), user.getId())) {
+                throw ExceptionSupplier.userNotAllowed.get();
+            }
+
+            List<FolderEntity> folderEntities = folderRepository.findAllByShelfId(shelfEntity.getId());
+            List<FileEntity> fileEntities = fileRepository.findAllByShelfId(shelfEntity.getId());
+
+            shelfEntity.setDeleted(true);
+            shelfRepository.save(shelfEntity);
+
+            for (FolderEntity folderEntity : folderEntities) {
+                folderEntity.setDeleted(true);
+            }
+
+            folderRepository.saveAll(folderEntities);
+
+            for (FileEntity fileEntity : fileEntities) {
+                fileEntity.setDeleted(true);
+            }
+
+            fileRepository.saveAll(fileEntities);
         }
-
-        List<FolderEntity> folderEntities = folderRepository.findAllByShelfId(shelfId);
-        List<FileEntity> fileEntities = fileRepository.findAllByShelfId(shelfId);
-
-        shelfEntity.setDeleted(true);
-        shelfRepository.save(shelfEntity);
-
-        for (FolderEntity folderEntity : folderEntities) {
-            folderEntity.setDeleted(true);
-        }
-
-        folderRepository.saveAll(folderEntities);
-
-        for (FileEntity fileEntity : fileEntities) {
-            fileEntity.setDeleted(true);
-        }
-
-        fileRepository.saveAll(fileEntities);
     }
 }
