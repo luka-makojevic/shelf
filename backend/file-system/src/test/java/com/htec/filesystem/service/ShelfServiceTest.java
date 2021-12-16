@@ -106,11 +106,9 @@ class ShelfServiceTest {
         });
 
         verify(shelfRepository, times(1)).findById(shelf.getId());
-        verify(folderRepository, times(0)).findAllByShelfId(shelf.getId());
-        verify(fileRepository, times(0)).findAllByShelfId(shelf.getId());
+        verify(folderRepository, times(0)).updateIsDeletedByShelfId(shelf.getId());
+        verify(fileRepository, times(0)).updateIsDeletedByShelfId(shelf.getId());
         verify(shelfRepository, times(0)).save(shelf);
-        verify(folderRepository, times(0)).save(folder);
-        verify(fileRepository, times(0)).save(file);
 
         assertEquals(ErrorMessages.SHELF_NOT_FOUND.getErrorMessage(), exception.getMessage());
     }
@@ -130,11 +128,9 @@ class ShelfServiceTest {
         });
 
         verify(shelfRepository, times(1)).findById(shelf.getId());
-        verify(folderRepository, times(0)).findAllByShelfId(shelf.getId());
-        verify(fileRepository, times(0)).findAllByShelfId(shelf.getId());
+        verify(folderRepository, times(0)).updateIsDeletedByShelfId(shelf.getId());
+        verify(fileRepository, times(0)).updateIsDeletedByShelfId(shelf.getId());
         verify(shelfRepository, times(0)).save(shelf);
-        verify(folderRepository, times(0)).save(folder);
-        verify(fileRepository, times(0)).save(file);
 
         assertEquals(ErrorMessages.USER_NOT_ALLOWED.getErrorMessage(), exception.getMessage());
     }
