@@ -39,7 +39,7 @@ export const Container = styled.div<ContainerProps>`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  height: 100vh;
   width: 100%;
   padding: ${theme.space.lg};
   background-color: ${({ background }) =>
@@ -47,6 +47,9 @@ export const Container = styled.div<ContainerProps>`
   @media (max-width: ${theme.breakpoints.md}) {
     ${({ isHiddenOnSmallScreen }) =>
       isHiddenOnSmallScreen && 'display: none;'}/* height: 100vh;s */
+  }
+  @media (max-width: ${theme.breakpoints.sm}) {
+    height: 100%;
   }
 `;
 

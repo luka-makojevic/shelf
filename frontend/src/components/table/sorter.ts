@@ -5,11 +5,12 @@ import {
   ShelfTableDataTypes,
   SorterDataTypes,
   SortingDirectionTypes,
+  TableDataTypes,
 } from '../../interfaces/dataTypes';
 import { SortingDirection } from '../../utils/enums/table';
 
 const sortData = (
-  data: (FunctionTableDataTypes | FileTableDataTypes | ShelfTableDataTypes)[],
+  data: TableDataTypes[],
   sortKey: string,
   sortingDirection: string
 ) => {
@@ -17,7 +18,7 @@ const sortData = (
     let relevantValueA = a[sortKey];
     let relevantValueB = b[sortKey];
 
-    if (sortKey === 'creation_date') {
+    if (sortKey === 'createdAt') {
       relevantValueA = new Date(a[sortKey]).getTime();
       relevantValueB = new Date(b[sortKey]).getTime();
     }
@@ -54,9 +55,7 @@ export const sortColumn = (
     | FileTableDataTypes
     | ShelfTableDataTypes
   )[],
-  setTableData: (
-    data: (FunctionTableDataTypes | FileTableDataTypes | ShelfTableDataTypes)[]
-  ) => void,
+  setTableData: (data: TableDataTypes[]) => void,
   setSortingDirections: (data: SortingDirectionTypes) => void
 ) => {
   const currentSortingDirection = sortingDirections[sortKey];

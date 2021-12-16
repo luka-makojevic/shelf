@@ -11,18 +11,9 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FileDTO {
+public class ShelfDTO {
+
     private Long id;
     private String name;
-    private String path;
-
     private LocalDateTime createdAt;
-    private LocalDateTime deletedAt;
-    private LocalDateTime updatedAt;
-
-    private boolean isDeleted;
-    private boolean folder;
-
-    private Long shelfId;
-    private Long parentFolderId;
 }

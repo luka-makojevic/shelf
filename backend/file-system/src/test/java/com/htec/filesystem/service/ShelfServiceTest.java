@@ -52,6 +52,8 @@ class ShelfServiceTest {
     FileEntity file;
     List<ShelfEntity> shelfEntities;
     List<Long> shelfIds;
+    List<FolderEntity> folderEntities;
+    List<FileEntity> fileEntities;
 
     @BeforeEach
     void setUp() {
@@ -61,6 +63,8 @@ class ShelfServiceTest {
         file = new FileEntity();
         shelfIds = new ArrayList<>();
         shelfEntities = new ArrayList<>();
+        folderEntities = new ArrayList<>();
+        fileEntities = new ArrayList<>();
     }
 
     @Test

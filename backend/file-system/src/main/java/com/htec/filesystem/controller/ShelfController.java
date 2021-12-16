@@ -37,4 +37,9 @@ public class ShelfController {
         return ResponseEntity.ok().body(new TextResponseMessage("Shelf moved to trash.", HttpStatus.OK.value()));
     }
 
+    @GetMapping
+    public ResponseEntity getAllShelves(@AuthenticationUser AuthUser authUser) {
+
+        return ResponseEntity.ok(shelfService.getAllShelvesById(authUser.getId()));
+    }
 }

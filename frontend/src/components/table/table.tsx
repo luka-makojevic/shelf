@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { FaCaretDown, FaCaretUp } from 'react-icons/fa';
 import CheckBox from '../UI/checkbox/checkBox';
 import { DashboardTableRow } from './row';
@@ -16,44 +16,30 @@ import {
   HeaderTypes,
   ShelfTableDataTypes,
   SortingDirectionTypes,
+  TableDataTypes,
 } from '../../interfaces/dataTypes';
 import { SortingDirection } from '../../utils/enums/table';
 
-// for testing puropses
-// const data: (FunctionDataTypes | FileDataTypes | ShelfDataTypes)[] = [
-//   {
-//     name: 'picture shelf',
-//     creation_date: '11/8/1991',
-//     id: 2,
-//   },
-//   { name: 'documents', creation_date: '11/1/2001', id: 1 },
-//   { name: 'videos', creation_date: '11/4/2021', id: 3 },
-// ];
-// const headers: HeaderTypes[] = [
-//   { header: 'Name', key: 'name' },
-//   { header: 'Creation date', key: 'creation_date' },
-//   { header: 'Id', key: 'id' },
-// ];
-
 interface TableProps {
   mulitSelect?: boolean;
-  data: (FunctionTableDataTypes | FileTableDataTypes | ShelfTableDataTypes)[];
+  data: TableDataTypes[];
   headers: HeaderTypes[];
+  setTableData: Dispatch<SetStateAction<TableDataTypes[]>>;
+  path: string;
 }
 
-export const Table = ({ mulitSelect, data, headers }: TableProps) => {
+export const Table = ({
+  mulitSelect,
+  data,
+  headers,
+  setTableData,
+  path,
+}: TableProps) => {
   const [selectAll, setSelectAll] = useState<boolean>(false);
-  const [selectedRows, setSelectedRows] = useState<
-    (FunctionTableDataTypes | FileTableDataTypes | ShelfTableDataTypes)[]
-  >([]);
+  const [selectedRows, setSelectedRows] = useState<TableDataTypes[]>([]);
 
   const [sortingDirections, setSortingDirections] =
     useState<SortingDirectionTypes>({});
-
-  const [tableData, setTableData] =
-    useState<
-      (FunctionTableDataTypes | FileTableDataTypes | ShelfTableDataTypes)[]
-    >(data);
 
   const handleSelectAll = () => {
     if (selectedRows.length !== data.length) {
@@ -89,7 +75,7 @@ export const Table = ({ mulitSelect, data, headers }: TableProps) => {
     sortColumn(
       key,
       sortingDirections,
-      tableData,
+      data,
       setTableData,
       setSortingDirections
     );
@@ -116,13 +102,14 @@ export const Table = ({ mulitSelect, data, headers }: TableProps) => {
         </tr>
       </Thead>
       <tbody>
-        {tableData.map((item) => (
+        {data.map((item) => (
           <DashboardTableRow
             key={item.name}
             selectedRows={selectedRows}
             setSelectedRows={setSelectedRows}
             multiSelect={mulitSelect}
             data={item}
+            path={path}
             isChecked={selectedRows.some(
               (
                 rowData:

@@ -7,15 +7,15 @@ export const useShelf = () => {
   const dispatch = useAppDispatch();
 
   const getShelves = (
-    data: { userId?: number },
+    data: {},
     onSuccess: () => void,
     onError: (error: string) => void
   ) => {
     dispatch(setLoading(true));
 
     shelfServices
-      .getShelves(data)
-      .then((res: any) => {
+      .getShelves()
+      .then((res) => {
         dispatch(setShelves(res.data));
         onSuccess();
       })

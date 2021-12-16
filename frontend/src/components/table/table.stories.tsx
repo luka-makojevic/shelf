@@ -4,15 +4,15 @@ import { Table } from './table';
 const data = [
   {
     name: 'picture shelf',
-    creation_date: '11/8/1991',
+    createdAt: '11/8/1991',
     id: 2,
   },
-  { name: 'documents', creation_date: '11/1/2001', id: 1 },
-  { name: 'videos', creation_date: '11/4/2021', id: 3 },
+  { name: 'documents', createdAt: '11/1/2001', id: 1 },
+  { name: 'videos', createdAt: '11/4/2021', id: 3 },
 ];
 const headers = [
   { header: 'Name', key: 'name' },
-  { header: 'Creation date', key: 'creation_date' },
+  { header: 'Creation date', key: 'createdAt' },
   { header: 'Id', key: 'id' },
 ];
 
