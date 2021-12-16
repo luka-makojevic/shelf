@@ -46,6 +46,13 @@ public class ExceptionSupplier {
             ErrorMessages.FORBIDDEN.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> folderAlreadyExists = () -> new ShelfException(
+            ErrorMessages.FOLDER_WITH_THE_SAME_NAME_ALREADY_EXISTS.getErrorMessage(),
+            HttpStatus.FORBIDDEN.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.FORBIDDEN.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> shelfAlreadyExists = () -> new ShelfException(
             ErrorMessages.SHELF_WITH_THE_SAME_NAME_ALREADY_EXISTS.getErrorMessage(),
             HttpStatus.FORBIDDEN.value(),
