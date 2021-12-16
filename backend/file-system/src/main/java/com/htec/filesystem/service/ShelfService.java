@@ -2,8 +2,6 @@ package com.htec.filesystem.service;
 
 import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.dto.ShelfDTO;
-import com.htec.filesystem.entity.FileEntity;
-import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ExceptionSupplier;
 import com.htec.filesystem.mapper.FileMapper;
@@ -18,8 +16,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class ShelfService {
@@ -61,10 +58,10 @@ public class ShelfService {
     public void softDeleteShelf(AuthUser user, List<Long> shelfIds) {
 
         List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserIdAndShelfId(user.getId(), shelfIds);
-        if (shelfEntities.size() != shelfIds.size()) {
+        if (!shelfEntities.stream().map(ShelfEntity::getId).collect(Collectors.toList()).containsAll(shelfIds)) {
             throw ExceptionSupplier.userNotAllowed.get();
         }
-        shelfRepository.updateAllByIdAndUserId(shelfIds);
+        shelfRepository.updateIsDeletedByIdAndUserId(shelfIds);
 
         folderRepository.updateIsDeletedByShelfId(shelfIds);
         fileRepository.updateIsDeletedByShelfId(shelfIds);
