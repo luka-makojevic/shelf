@@ -2,8 +2,6 @@ package com.htec.filesystem.service;
 
 import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.dto.ShelfDTO;
-import com.htec.filesystem.entity.FileEntity;
-import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ExceptionSupplier;
 import com.htec.filesystem.mapper.FileMapper;
@@ -18,7 +16,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class ShelfService {
@@ -57,32 +55,17 @@ public class ShelfService {
     }
 
     @Transactional
-    public void softDeleteShelf(AuthUser user, Long shelfId) {
+    public void softDeleteShelf(AuthUser user, List<Long> shelfIds) {
 
-        ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
-                .orElseThrow(ExceptionSupplier.shelfNotFound);
+        List<ShelfEntity> shelfEntities = shelfRepository.findAllByIdAndUserIdIn(user.getId(), shelfIds);
 
-        if (!Objects.equals(shelfEntity.getUserId(), user.getId())) {
+        if (!shelfEntities.stream().map(ShelfEntity::getId).collect(Collectors.toList()).containsAll(shelfIds)) {
             throw ExceptionSupplier.userNotAllowed.get();
         }
 
-        List<FolderEntity> folderEntities = folderRepository.findAllByShelfId(shelfId);
-        List<FileEntity> fileEntities = fileRepository.findAllByShelfId(shelfId);
-
-        shelfEntity.setDeleted(true);
-        shelfRepository.save(shelfEntity);
-
-        for (FolderEntity folderEntity : folderEntities) {
-            folderEntity.setDeleted(true);
-        }
-
-        folderRepository.saveAll(folderEntities);
-
-        for (FileEntity fileEntity : fileEntities) {
-            fileEntity.setDeleted(true);
-        }
-
-        fileRepository.saveAll(fileEntities);
+        shelfRepository.updateIsDeletedByIds(shelfIds);
+        folderRepository.updateIsDeletedByShelfIds(shelfIds);
+        fileRepository.updateIsDeletedByShelfIds(shelfIds);
     }
 
     public List<ShelfDTO> getAllShelvesById(Long userId) {

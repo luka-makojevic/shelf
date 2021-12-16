@@ -21,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -50,6 +49,8 @@ class ShelfServiceTest {
     ShelfEntity shelf;
     FolderEntity folder;
     FileEntity file;
+    List<ShelfEntity> shelfEntities;
+    List<Long> shelfIds;
     List<FolderEntity> folderEntities;
     List<FileEntity> fileEntities;
 
@@ -59,6 +60,8 @@ class ShelfServiceTest {
         shelf = new ShelfEntity();
         folder = new FolderEntity();
         file = new FileEntity();
+        shelfIds = new ArrayList<>();
+        shelfEntities = new ArrayList<>();
         folderEntities = new ArrayList<>();
         fileEntities = new ArrayList<>();
     }
@@ -79,43 +82,16 @@ class ShelfServiceTest {
         user.setId(1L);
         shelf.setId(1L);
         shelf.setUserId(user.getId());
-        folderEntities.add(folder);
-        fileEntities.add(file);
+        shelfEntities.add(shelf);
+        shelfIds.add(1L);
 
-        when(shelfRepository.findById(shelf.getId())).thenReturn(Optional.of(shelf));
+        when(shelfRepository.findAllByIdAndUserIdIn(user.getId(), shelfIds)).thenReturn(shelfEntities);
 
-        when(folderRepository.findAllByShelfId(shelf.getId())).thenReturn(folderEntities);
+        shelfService.softDeleteShelf(user, shelfIds);
 
-        when(fileRepository.findAllByShelfId(shelf.getId())).thenReturn(fileEntities);
-
-        shelfService.softDeleteShelf(user, shelf.getId());
-
-        verify(shelfRepository, times(1)).save(shelf);
-        verify(folderRepository, times(1)).saveAll(folderEntities);
-        verify(fileRepository, times(1)).saveAll(fileEntities);
-    }
-
-    @Test
-    void softDeleteShelf_shelfNotFound() {
-
-        user.setId(1L);
-        shelf.setId(1L);
-        shelf.setUserId(user.getId());
-
-        when(shelfRepository.findById(shelf.getId())).thenReturn(Optional.empty());
-
-        ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
-            shelfService.softDeleteShelf(user, shelf.getId());
-        });
-
-        verify(shelfRepository, times(1)).findById(shelf.getId());
-        verify(folderRepository, times(0)).findAllByShelfId(shelf.getId());
-        verify(fileRepository, times(0)).findAllByShelfId(shelf.getId());
-        verify(shelfRepository, times(0)).save(shelf);
-        verify(folderRepository, times(0)).save(folder);
-        verify(fileRepository, times(0)).save(file);
-
-        assertEquals(ErrorMessages.SHELF_NOT_FOUND.getErrorMessage(), exception.getMessage());
+        verify(shelfRepository, times(1)).findAllByIdAndUserIdIn(user.getId(), shelfIds);
+        verify(folderRepository, times(1)).updateIsDeletedByShelfIds(shelfIds);
+        verify(fileRepository, times(1)).updateIsDeletedByShelfIds(shelfIds);
     }
 
     @Test
@@ -124,19 +100,17 @@ class ShelfServiceTest {
         user.setId(1L);
         shelf.setId(1L);
         shelf.setUserId(2L);
+        shelfIds.add(1L);
 
-        when(shelfRepository.findById(shelf.getId())).thenReturn(Optional.of(shelf));
+        when(shelfRepository.findAllByIdAndUserIdIn(user.getId(), shelfIds)).thenReturn(shelfEntities);
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
-            shelfService.softDeleteShelf(user, shelf.getId());
+            shelfService.softDeleteShelf(user, shelfIds);
         });
 
-        verify(shelfRepository, times(1)).findById(shelf.getId());
-        verify(folderRepository, times(0)).findAllByShelfId(shelf.getId());
-        verify(fileRepository, times(0)).findAllByShelfId(shelf.getId());
+        verify(folderRepository, times(0)).updateIsDeletedByShelfIds(shelfIds);
+        verify(fileRepository, times(0)).updateIsDeletedByShelfIds(shelfIds);
         verify(shelfRepository, times(0)).save(shelf);
-        verify(folderRepository, times(0)).save(folder);
-        verify(fileRepository, times(0)).save(file);
 
         assertEquals(ErrorMessages.USER_NOT_ALLOWED.getErrorMessage(), exception.getMessage());
     }

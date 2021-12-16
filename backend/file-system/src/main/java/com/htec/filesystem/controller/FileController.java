@@ -35,14 +35,14 @@ public class FileController {
     }
 
     @GetMapping("/download/**")
-    public ResponseEntity<byte[]> getFile(RequestEntity<byte[]> request) throws IOException {
+    public ResponseEntity<byte[]> getFile(RequestEntity<byte[]> request) {
 
         FileResponseModel fileResponseModel = fileService.getFile(FileUtil.getFilePath(request.getUrl().getPath()));
         return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).body(fileResponseModel.getImageContent());
     }
 
     @GetMapping("/preview/**")
-    public ResponseEntity<byte[]> getImage(RequestEntity<byte[]> request) throws IOException {
+    public ResponseEntity<byte[]> getImage(RequestEntity<byte[]> request) {
 
         FileResponseModel fileResponseModel = fileService.getFile(FileUtil.getFilePath(request.getUrl().getPath()));
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(fileResponseModel.getImageContent());

@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/shelf")
 public class ShelfController {
@@ -28,10 +30,10 @@ public class ShelfController {
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("Created shelf", HttpStatus.OK.value()));
     }
 
-    @PutMapping("/move-to-trash/{shelfId}")
-    public ResponseEntity<TextResponseMessage> softDeleteShelf(@AuthenticationUser AuthUser user, @PathVariable Long shelfId) {
+    @PutMapping("/move-to-trash")
+    public ResponseEntity<TextResponseMessage> softDeleteShelf(@AuthenticationUser AuthUser user, @RequestBody List<Long> shelfIds) {
 
-        shelfService.softDeleteShelf(user, shelfId);
+        shelfService.softDeleteShelf(user, shelfIds);
         return ResponseEntity.ok().body(new TextResponseMessage("Shelf moved to trash.", HttpStatus.OK.value()));
     }
 
@@ -40,5 +42,4 @@ public class ShelfController {
 
         return ResponseEntity.ok(shelfService.getAllShelvesById(authUser.getId()));
     }
-
 }
