@@ -58,11 +58,12 @@ public class ShelfService {
     public void softDeleteShelf(AuthUser user, List<Long> shelfIds) {
 
         List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserIdAndShelfId(user.getId(), shelfIds);
+
         if (!shelfEntities.stream().map(ShelfEntity::getId).collect(Collectors.toList()).containsAll(shelfIds)) {
             throw ExceptionSupplier.userNotAllowed.get();
         }
-        shelfRepository.updateIsDeletedByIdAndUserId(shelfIds);
 
+        shelfRepository.updateIsDeletedByIdAndUserId(shelfIds);
         folderRepository.updateIsDeletedByShelfId(shelfIds);
         fileRepository.updateIsDeletedByShelfId(shelfIds);
     }
