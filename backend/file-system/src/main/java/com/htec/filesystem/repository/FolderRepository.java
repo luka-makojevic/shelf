@@ -26,6 +26,4 @@ public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
     List<FolderEntity> findAllByUserIdAndParentFolderId(Long userId, Long folderId, Boolean isDeleted);
 
     Optional<FolderEntity> findByPath(String path);
-
-    void deleteByIdIn(List<Long> shelfIds);
 }
