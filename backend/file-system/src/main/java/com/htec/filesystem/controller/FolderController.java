@@ -1,5 +1,7 @@
 package com.htec.filesystem.controller;
 
+import com.htec.filesystem.annotation.AuthUser;
+import com.htec.filesystem.annotation.AuthenticationUser;
 import com.htec.filesystem.dto.FileDTO;
 import com.htec.filesystem.model.response.TextResponseMessage;
 import com.htec.filesystem.service.FolderService;
@@ -31,12 +33,10 @@ public class FolderController {
         return ResponseEntity.status(retStatus).body(new TextResponseMessage("Folders created", retStatus.value()));
     }
 
-    @GetMapping("/get/{folderId}")
-    public ResponseEntity<List<FileDTO>> getFiles(@PathVariable Long folderId) {
+    @GetMapping("/{folderId}")
+    public ResponseEntity<List<FileDTO>> getFiles(@AuthenticationUser AuthUser user, @PathVariable Long folderId) {
 
-        return folderService.getFiles(folderId);
+        return folderService.getFiles(user.getId(), folderId);
 
     }
-
-
 }

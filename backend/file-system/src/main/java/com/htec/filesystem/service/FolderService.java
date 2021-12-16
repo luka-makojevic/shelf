@@ -49,19 +49,16 @@ public class FolderService {
         return new File(userShelvesPath).mkdirs();
     }
 
-    public ResponseEntity<List<FileDTO>> getFiles(Long folderId) {
+    public ResponseEntity<List<FileDTO>> getFiles(Long userId, Long folderId) {
 
         List<FileDTO> fileDTOS = new ArrayList<>();
 
-        List<FolderEntity> allFolders = folderRepository.findAllByParentFolderId(folderId);
-        List<FileEntity> allFiles = fileRepository.findAllByParentFolderId(folderId);
+        List<FolderEntity> allFolders = folderRepository.findAllByUserIdAndParentFolderId(userId, folderId, false);
+        List<FileEntity> allFiles = fileRepository.findAllByUserIdAndParentFolderId(userId, folderId, false);
 
         fileDTOS.addAll(FileMapper.INSTANCE.fileEntityToFileDTO(allFiles));
         fileDTOS.addAll(FileMapper.INSTANCE.folderEntityToFileDTO(allFolders));
 
-        fileDTOS.removeIf(FileDTO::isDeleted);
-
         return ResponseEntity.status(HttpStatus.OK).body(fileDTOS);
     }
-
 }
