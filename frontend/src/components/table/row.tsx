@@ -1,11 +1,6 @@
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import {
-  FileTableDataTypes,
-  FunctionTableDataTypes,
-  ShelfTableDataTypes,
-  TableDataTypes,
-} from '../../interfaces/dataTypes';
+import { TableDataTypes } from '../../interfaces/dataTypes';
 import { theme } from '../../theme';
 import CheckBox from '../UI/checkbox/checkBox';
 import { StyledRow, StyledCell, ActionContainer } from './table -styles';
@@ -13,14 +8,11 @@ import { StyledRow, StyledCell, ActionContainer } from './table -styles';
 interface RowProps {
   data: TableDataTypes;
   multiSelect?: boolean;
-  selectedRows: (
-    | FunctionTableDataTypes
-    | FileTableDataTypes
-    | ShelfTableDataTypes
-  )[];
+  selectedRows: TableDataTypes[];
   setSelectedRows: (data: TableDataTypes[]) => void;
   isChecked?: boolean;
   path: string;
+  onDelete: (shelf: TableDataTypes) => void;
 }
 
 export const DashboardTableRow = ({
@@ -30,6 +22,7 @@ export const DashboardTableRow = ({
   setSelectedRows,
   isChecked,
   path,
+  onDelete,
 }: RowProps) => {
   const navigation = useNavigate();
 
@@ -42,14 +35,7 @@ export const DashboardTableRow = ({
       setSelectedRows([...selectedRows, data]);
     } else {
       setSelectedRows(
-        selectedRows.filter(
-          (
-            row:
-              | FunctionTableDataTypes
-              | FileTableDataTypes
-              | ShelfTableDataTypes
-          ) => row.id !== data.id
-        )
+        selectedRows.filter((row: TableDataTypes) => row.id !== data.id)
       );
     }
   };
@@ -66,6 +52,10 @@ export const DashboardTableRow = ({
     };
 
     return <StyledCell onClick={handleClick}>{rowText}</StyledCell>;
+  };
+
+  const handleDelete = () => {
+    onDelete(data);
   };
 
   return (
@@ -88,7 +78,7 @@ export const DashboardTableRow = ({
       {!multiSelect && (
         <StyledCell>
           <ActionContainer>
-            <FaTrash fill={theme.colors.danger} />
+            <FaTrash fill={theme.colors.danger} onClick={handleDelete} />
           </ActionContainer>
           <FaEdit fill={theme.colors.black} />
         </StyledCell>

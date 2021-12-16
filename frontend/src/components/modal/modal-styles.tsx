@@ -13,6 +13,8 @@ export const Backdrop = styled.div`
   align-items: center;
 
   background: rgba(46, 52, 66, 0.6);
+
+  z-index: 9999;
 `;
 
 export const ModalContainer = styled.div`
@@ -75,4 +77,9 @@ export const Close = styled.button<ButtonProps>`
   background-color: transparent;
   border: none;
   padding: ${theme.space.none};
+`;
+
+export const DeleteModalBody = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
