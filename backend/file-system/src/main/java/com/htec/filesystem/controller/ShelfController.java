@@ -30,7 +30,7 @@ public class ShelfController {
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("Created shelf", HttpStatus.OK.value()));
     }
 
-    @PutMapping("/move-to-trash/")
+    @PutMapping("/move-to-trash")
     public ResponseEntity<TextResponseMessage> softDeleteShelf(@AuthenticationUser AuthUser user, @RequestBody List<Long> shelfIds) {
 
         shelfService.softDeleteShelf(user, shelfIds);
