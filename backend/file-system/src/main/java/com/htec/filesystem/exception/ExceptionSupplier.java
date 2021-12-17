@@ -137,4 +137,11 @@ public class ExceptionSupplier {
             ErrorMessages.FORBIDDEN.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> shelfWithProvidedIdNotFound = () -> new ShelfException(
+            ErrorMessages.SHELF_WITH_PROVIDED_ID_NOT_FOUND.getErrorMessage(),
+            HttpStatus.NOT_FOUND.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.NOT_FOUND.getErrorMessage()
+    );
+
 }

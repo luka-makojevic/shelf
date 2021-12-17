@@ -16,6 +16,7 @@ public enum ErrorMessages {
     TOKEN_NOT_FOUND("Token not found"),
     COULD_NOT_UPDATE_USER("Could not update user."),
     FILE_NOT_FOUND("File not found."),
+    SHELF_WITH_PROVIDED_ID_NOT_FOUND("There is no shelf with provided id."),
     SHELF_NOT_FOUND("Shelf not found."),
     FOLDER_NOT_FOUND("Folder not found."),
     USER_NOT_ALLOWED("You are not allowed to delete this shelf."),

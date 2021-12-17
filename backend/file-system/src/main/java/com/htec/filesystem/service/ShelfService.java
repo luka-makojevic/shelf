@@ -10,9 +10,13 @@ import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FolderRepository;
 import com.htec.filesystem.repository.ShelfRepository;
 import com.htec.filesystem.validator.FileSystemValidator;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +29,10 @@ public class ShelfService {
     private final FolderRepository folderRepository;
     private final FileRepository fileRepository;
     private final FileSystemValidator fileSystemValidator;
+
+    private final String homePath = System.getProperty("user.home");
+    private final String pathSeparator = FileSystems.getDefault().getSeparator();
+    private final String userPath = pathSeparator + "shelf-files" + pathSeparator + "user-data" + pathSeparator;
 
     public ShelfService(ShelfRepository shelfRepository,
                         FolderRepository folderRepository,
@@ -55,17 +63,21 @@ public class ShelfService {
     }
 
     @Transactional
-    public void softDeleteShelf(AuthUser user, List<Long> shelfIds) {
+    public void updateIsDeletedShelf(AuthUser user, List<Long> shelfIds, boolean delete) {
 
-        List<ShelfEntity> shelfEntities = shelfRepository.findAllByIdAndUserIdIn(user.getId(), shelfIds);
+        List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserIdAndIdIn(user.getId(), shelfIds);
+
+        if (shelfEntities.size() != shelfIds.size()) {
+            throw ExceptionSupplier.shelfWithProvidedIdNotFound.get();
+        }
 
         if (!shelfEntities.stream().map(ShelfEntity::getId).collect(Collectors.toList()).containsAll(shelfIds)) {
             throw ExceptionSupplier.userNotAllowed.get();
         }
 
-        shelfRepository.updateIsDeletedByIds(shelfIds);
-        folderRepository.updateIsDeletedByShelfIds(shelfIds);
-        fileRepository.updateIsDeletedByShelfIds(shelfIds);
+        shelfRepository.updateIsDeletedByIds(delete, shelfIds);
+        folderRepository.updateIsDeletedByShelfIds(delete, shelfIds);
+        fileRepository.updateIsDeletedByShelfIds(delete, shelfIds);
     }
 
     public List<ShelfDTO> getAllShelvesById(Long userId) {
@@ -83,14 +95,22 @@ public class ShelfService {
     }
 
     @Transactional
-    public void hardDeleteShelf(List<Long> shelfIdList, Long userId) {
+    public void hardDeleteShelf(Long shelfId, Long userId) {
 
-        List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserIdAndIdIn(userId, shelfIdList);
+        ShelfEntity shelfEntity = shelfRepository.findById(shelfId).orElseThrow(ExceptionSupplier.noShelfWithGivenId);
 
-        if (!shelfEntities.stream().map(ShelfEntity::getId).collect(Collectors.toList()).containsAll(shelfIdList)) {
+        if (shelfEntity.getUserId() != userId)
             throw ExceptionSupplier.userNotAllowed.get();
+
+        String shelfPath = homePath + userPath + userId + pathSeparator+ "shelves" + pathSeparator + shelfId;
+
+        try {
+            FileUtils.deleteDirectory(new File(shelfPath));
+            shelfRepository.deleteById(shelfId);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        shelfRepository.deleteByIdIn(shelfIdList);
+
     }
 }

@@ -33,7 +33,7 @@ public class ShelfController {
     @PutMapping("/move-to-trash")
     public ResponseEntity<TextResponseMessage> softDeleteShelf(@AuthenticationUser AuthUser user, @RequestBody List<Long> shelfIds) {
 
-        shelfService.softDeleteShelf(user, shelfIds);
+        shelfService.updateIsDeletedShelf(user, shelfIds, true);
         return ResponseEntity.ok().body(new TextResponseMessage("Shelf moved to trash.", HttpStatus.OK.value()));
     }
 
@@ -43,11 +43,11 @@ public class ShelfController {
         return ResponseEntity.ok(shelfService.getAllShelvesById(authUser.getId()));
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{shelfId}")
     public ResponseEntity deleteShelf(@AuthenticationUser AuthUser authUser,
-                                      @RequestBody List<Long> shelfIdList) {
+                                      @PathVariable Long shelfId) {
 
-        shelfService.hardDeleteShelf(shelfIdList, authUser.getId());
+        shelfService.hardDeleteShelf(shelfId, authUser.getId());
         return ResponseEntity.ok().body(new TextResponseMessage("Successfully deleted shelves.", HttpStatus.OK.value()));
     }
 }
