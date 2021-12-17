@@ -74,6 +74,11 @@ const Shelves = () => {
     setSelectedShelf(shelf);
   };
 
+  const message =
+    shelves.length === 0
+      ? 'No shelves have been created yet'
+      : 'Sorry, no matching results found';
+
   return (
     <>
       {error && (
@@ -112,8 +117,8 @@ const Shelves = () => {
           />
           <Button onClick={handleOpenModal}>Create shelf</Button>
         </div>
-        {shelves.length === 0 ? (
-          <Description>No shelves</Description>
+        {shelves.length === 0 || filteredShelves.length === 0 ? (
+          <Description>{message}</Description>
         ) : (
           <Table
             setTableData={setFilteredShelves}
