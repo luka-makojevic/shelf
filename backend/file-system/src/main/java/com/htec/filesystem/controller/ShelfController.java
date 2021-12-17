@@ -25,9 +25,13 @@ public class ShelfController {
     public ResponseEntity createShelf(@RequestBody CreateShelfRequestModel createShelfRequestModel,
                                       @AuthenticationUser AuthUser authUser) {
 
-        shelfService.createShelf(createShelfRequestModel, authUser.getId());
+        HttpStatus retStatus = HttpStatus.OK;
 
-        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("Created shelf", HttpStatus.OK.value()));
+        if (!shelfService.createShelf(createShelfRequestModel, authUser.getId())) {
+            retStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return ResponseEntity.status(retStatus).body(new TextResponseMessage("Shelf created", retStatus.value()));
     }
 
     @PutMapping("/move-to-trash")

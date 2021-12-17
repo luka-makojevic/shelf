@@ -44,9 +44,10 @@ public class ShelfService {
         this.fileSystemValidator = fileSystemValidator;
     }
 
-    public void createShelf(CreateShelfRequestModel createShelfRequestModel, Long userId) {
+    public boolean createShelf(CreateShelfRequestModel createShelfRequestModel, Long userId) {
 
         String shelfName = createShelfRequestModel.getShelfName();
+
 
         fileSystemValidator.isShelfNameValid(shelfName);
 
@@ -59,7 +60,14 @@ public class ShelfService {
         shelfEntity.setDeleted(false);
         shelfEntity.setCreatedAt(LocalDateTime.now());
 
-        shelfRepository.save(shelfEntity);
+
+        ShelfEntity savedEntity = shelfRepository.save(shelfEntity);
+
+        Long shelfId = savedEntity.getId();
+
+        String shelfPath = homePath + userPath + userId + pathSeparator + "shelves" + pathSeparator + shelfId;
+
+        return new File(shelfPath).mkdirs();
     }
 
     @Transactional
@@ -102,13 +110,13 @@ public class ShelfService {
         if (shelfEntity.getUserId() != userId)
             throw ExceptionSupplier.userNotAllowed.get();
 
-        String shelfPath = homePath + userPath + userId + pathSeparator+ "shelves" + pathSeparator + shelfId;
+        String shelfPath = homePath + userPath + userId + pathSeparator + "shelves" + pathSeparator + shelfId;
 
         try {
             FileUtils.deleteDirectory(new File(shelfPath));
             shelfRepository.deleteById(shelfId);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw ExceptionSupplier.couldNotDeleteShelf.get();
         }
 
 
