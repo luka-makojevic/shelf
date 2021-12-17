@@ -30,4 +30,21 @@ export const NavigationSidebarToggleButton = styled.button`
   color: ${theme.colors.primary};
   font-size: ${theme.fontSizes.xl};
   cursor: pointer;
+
+  span {
+    display: none;
+    position: absolute;
+    top: 0px;
+    left: ${theme.space.lg};
+
+    background-color: ${theme.colors.white};
+    border: 1px solid ${theme.colors.primary};
+    font-size: ${theme.fontSizes.sm};
+
+    padding: ${theme.space.xs};
+  }
+
+  &:hover span {
+    display: block;
+  }
 `;

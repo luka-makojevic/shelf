@@ -66,6 +66,7 @@ const NavigationSidebar = () => {
       <NavigationSidebarInnerWrapper>
         <NavigationSidebarToggleButton onClick={handleNavigationSidebarToggle}>
           {isOpen ? <FaAngleDoubleLeft /> : <FaAngleDoubleRight />}
+          <span>{isOpen ? 'Collapse' : 'Expand'}</span>
         </NavigationSidebarToggleButton>
         {isOpen && (
           <NavigationSidebarContentWrapper>
