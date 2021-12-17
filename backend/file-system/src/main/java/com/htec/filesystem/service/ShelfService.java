@@ -55,7 +55,7 @@ public class ShelfService {
     }
 
     @Transactional
-    public void updateIsDeletedShelf(AuthUser user, List<Long> shelfIds, boolean isDeleted) {
+    public void updateIsDeletedShelf(AuthUser user, List<Long> shelfIds, boolean delete) {
 
         List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserIdAndIdIn(user.getId(), shelfIds);
 
@@ -67,9 +67,9 @@ public class ShelfService {
             throw ExceptionSupplier.userNotAllowed.get();
         }
 
-        shelfRepository.updateIsDeletedByIds(isDeleted, shelfIds);
-        folderRepository.updateIsDeletedByShelfIds(isDeleted, shelfIds);
-        fileRepository.updateIsDeletedByShelfIds(isDeleted, shelfIds);
+        shelfRepository.updateIsDeletedByIds(delete, shelfIds);
+        folderRepository.updateIsDeletedByShelfIds(delete, shelfIds);
+        fileRepository.updateIsDeletedByShelfIds(delete, shelfIds);
     }
 
     public List<ShelfDTO> getAllShelvesById(Long userId) {
