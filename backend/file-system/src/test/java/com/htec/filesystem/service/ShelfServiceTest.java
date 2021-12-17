@@ -141,7 +141,8 @@ class ShelfServiceTest {
         user.setId(1L);
         shelf.setId(1L);
         shelf.setUserId(2L);
-        shelfIds.add(1L);
+        shelfIds.add(3L);
+        shelfEntities.add(shelf);
         boolean isDeleted = true;
 
         when(shelfRepository.findAllByUserIdAndIdIn(user.getId(), shelfIds)).thenReturn(shelfEntities);
@@ -150,6 +151,7 @@ class ShelfServiceTest {
             shelfService.updateIsDeletedShelf(user, shelfIds, isDeleted);
         });
 
+        verify(shelfRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), shelfIds);
         verify(folderRepository, times(0)).updateIsDeletedByShelfIds(isDeleted, shelfIds);
         verify(fileRepository, times(0)).updateIsDeletedByShelfIds(isDeleted, shelfIds);
         verify(shelfRepository, times(0)).save(shelf);
