@@ -55,17 +55,21 @@ public class ShelfService {
     }
 
     @Transactional
-    public void softDeleteShelf(AuthUser user, List<Long> shelfIds) {
+    public void updateIsDeletedShelf(AuthUser user, List<Long> shelfIds, boolean delete) {
 
-        List<ShelfEntity> shelfEntities = shelfRepository.findAllByIdAndUserIdIn(user.getId(), shelfIds);
+        List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserIdAndIdIn(user.getId(), shelfIds);
+
+        if (shelfEntities.size() != shelfIds.size()) {
+            throw ExceptionSupplier.shelfWithProvidedIdNotFound.get();
+        }
 
         if (!shelfEntities.stream().map(ShelfEntity::getId).collect(Collectors.toList()).containsAll(shelfIds)) {
             throw ExceptionSupplier.userNotAllowed.get();
         }
 
-        shelfRepository.updateIsDeletedByIds(shelfIds);
-        folderRepository.updateIsDeletedByShelfIds(shelfIds);
-        fileRepository.updateIsDeletedByShelfIds(shelfIds);
+        shelfRepository.updateIsDeletedByIds(delete, shelfIds);
+        folderRepository.updateIsDeletedByShelfIds(delete, shelfIds);
+        fileRepository.updateIsDeletedByShelfIds(delete, shelfIds);
     }
 
     public List<ShelfDTO> getAllShelvesById(Long userId) {

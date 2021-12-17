@@ -33,7 +33,7 @@ public class ShelfController {
     @PutMapping("/move-to-trash")
     public ResponseEntity<TextResponseMessage> softDeleteShelf(@AuthenticationUser AuthUser user, @RequestBody List<Long> shelfIds) {
 
-        shelfService.softDeleteShelf(user, shelfIds);
+        shelfService.updateIsDeletedShelf(user, shelfIds, true);
         return ResponseEntity.ok().body(new TextResponseMessage("Shelf moved to trash.", HttpStatus.OK.value()));
     }
 
