@@ -10,9 +10,13 @@ import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FolderRepository;
 import com.htec.filesystem.repository.ShelfRepository;
 import com.htec.filesystem.validator.FileSystemValidator;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +29,10 @@ public class ShelfService {
     private final FolderRepository folderRepository;
     private final FileRepository fileRepository;
     private final FileSystemValidator fileSystemValidator;
+
+    private final String homePath = System.getProperty("user.home");
+    private final String pathSeparator = FileSystems.getDefault().getSeparator();
+    private final String userPath = pathSeparator + "shelf-files" + pathSeparator + "user-data" + pathSeparator;
 
     public ShelfService(ShelfRepository shelfRepository,
                         FolderRepository folderRepository,
@@ -42,7 +50,7 @@ public class ShelfService {
 
         fileSystemValidator.isShelfNameValid(shelfName);
 
-        if (shelfRepository.findByName(shelfName).isPresent())
+        if (shelfRepository.findByNameAndUserId(shelfName, userId).isPresent())
             throw ExceptionSupplier.shelfAlreadyExists.get();
 
         ShelfEntity shelfEntity = new ShelfEntity();
@@ -84,5 +92,25 @@ public class ShelfService {
             dtoShelves.add(shelfDto);
         }
         return dtoShelves;
+    }
+
+    @Transactional
+    public void hardDeleteShelf(Long shelfId, Long userId) {
+
+        ShelfEntity shelfEntity = shelfRepository.findById(shelfId).orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+
+        if (shelfEntity.getUserId() != userId)
+            throw ExceptionSupplier.userNotAllowed.get();
+
+        String shelfPath = homePath + userPath + userId + pathSeparator+ "shelves" + pathSeparator + shelfId;
+
+        try {
+            FileUtils.deleteDirectory(new File(shelfPath));
+            shelfRepository.deleteById(shelfId);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }

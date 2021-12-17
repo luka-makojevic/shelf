@@ -1,6 +1,7 @@
 package com.htec.filesystem.repository;
 
 import com.htec.filesystem.entity.FileEntity;
+import com.htec.filesystem.entity.FolderEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +14,8 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
     Optional<FileEntity> findByPath(String path);
 
     List<FileEntity> findAllByShelfId(Long shelfId);
+
+    List<FileEntity> findAllByShelfIdIn(List<Long> shelfId);
 
     @Modifying
     @Query("UPDATE FileEntity f SET f.isDeleted = ?1 WHERE f.shelfId IN (?2)")
