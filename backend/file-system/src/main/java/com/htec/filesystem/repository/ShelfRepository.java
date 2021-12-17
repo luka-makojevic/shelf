@@ -14,7 +14,7 @@ public interface ShelfRepository extends JpaRepository<ShelfEntity, Long> {
 
     @Modifying
     @Query("UPDATE ShelfEntity sh SET sh.isDeleted = ?1 WHERE sh.id IN (?2)")
-    void updateIsDeletedByIds(boolean isDeleted, List<Long> shelfIds);
+    void updateIsDeletedByIds(boolean delete, List<Long> shelfIds);
 
     @Query("SELECT s FROM ShelfEntity s WHERE s.userId = ?1 AND s.isDeleted = 0")
     List<ShelfEntity> findAllById(Long userId);

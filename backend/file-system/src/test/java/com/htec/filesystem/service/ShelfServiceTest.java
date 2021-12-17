@@ -84,15 +84,15 @@ class ShelfServiceTest {
         shelf.setUserId(user.getId());
         shelfEntities.add(shelf);
         shelfIds.add(1L);
-        boolean isDeleted = true;
+        boolean delete = true;
 
         when(shelfRepository.findAllByUserIdAndIdIn(user.getId(), shelfIds)).thenReturn(shelfEntities);
 
-        shelfService.updateIsDeletedShelf(user, shelfIds, isDeleted);
+        shelfService.updateIsDeletedShelf(user, shelfIds, delete);
 
         verify(shelfRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), shelfIds);
-        verify(folderRepository, times(1)).updateIsDeletedByShelfIds(isDeleted, shelfIds);
-        verify(fileRepository, times(1)).updateIsDeletedByShelfIds(isDeleted, shelfIds);
+        verify(folderRepository, times(1)).updateIsDeletedByShelfIds(delete, shelfIds);
+        verify(fileRepository, times(1)).updateIsDeletedByShelfIds(delete, shelfIds);
     }
 
     @Test
@@ -103,15 +103,15 @@ class ShelfServiceTest {
         shelf.setUserId(user.getId());
         shelfEntities.add(shelf);
         shelfIds.add(1L);
-        boolean isDeleted = false;
+        boolean delete = false;
 
         when(shelfRepository.findAllByUserIdAndIdIn(user.getId(), shelfIds)).thenReturn(shelfEntities);
 
-        shelfService.updateIsDeletedShelf(user, shelfIds, isDeleted);
+        shelfService.updateIsDeletedShelf(user, shelfIds, delete);
 
         verify(shelfRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), shelfIds);
-        verify(folderRepository, times(1)).updateIsDeletedByShelfIds(isDeleted, shelfIds);
-        verify(fileRepository, times(1)).updateIsDeletedByShelfIds(isDeleted, shelfIds);
+        verify(folderRepository, times(1)).updateIsDeletedByShelfIds(delete, shelfIds);
+        verify(fileRepository, times(1)).updateIsDeletedByShelfIds(delete, shelfIds);
     }
 
     @Test
@@ -121,15 +121,15 @@ class ShelfServiceTest {
         shelf.setId(1L);
         shelf.setUserId(2L);
         shelfIds.add(1L);
-        boolean isDeleted = true;
+        boolean delete = true;
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
-            shelfService.updateIsDeletedShelf(user, shelfIds, isDeleted);
+            shelfService.updateIsDeletedShelf(user, shelfIds, delete);
         });
 
         verify(shelfRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), shelfIds);
-        verify(folderRepository, times(0)).updateIsDeletedByShelfIds(isDeleted, shelfIds);
-        verify(fileRepository, times(0)).updateIsDeletedByShelfIds(isDeleted, shelfIds);
+        verify(folderRepository, times(0)).updateIsDeletedByShelfIds(delete, shelfIds);
+        verify(fileRepository, times(0)).updateIsDeletedByShelfIds(delete, shelfIds);
         verify(shelfRepository, times(0)).save(shelf);
 
         assertEquals(ErrorMessages.SHELF_WITH_PROVIDED_ID_NOT_FOUND.getErrorMessage(), exception.getMessage());
@@ -143,17 +143,17 @@ class ShelfServiceTest {
         shelf.setUserId(2L);
         shelfIds.add(3L);
         shelfEntities.add(shelf);
-        boolean isDeleted = true;
+        boolean delete = true;
 
         when(shelfRepository.findAllByUserIdAndIdIn(user.getId(), shelfIds)).thenReturn(shelfEntities);
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
-            shelfService.updateIsDeletedShelf(user, shelfIds, isDeleted);
+            shelfService.updateIsDeletedShelf(user, shelfIds, delete);
         });
 
         verify(shelfRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), shelfIds);
-        verify(folderRepository, times(0)).updateIsDeletedByShelfIds(isDeleted, shelfIds);
-        verify(fileRepository, times(0)).updateIsDeletedByShelfIds(isDeleted, shelfIds);
+        verify(folderRepository, times(0)).updateIsDeletedByShelfIds(delete, shelfIds);
+        verify(fileRepository, times(0)).updateIsDeletedByShelfIds(delete, shelfIds);
         verify(shelfRepository, times(0)).save(shelf);
 
         assertEquals(ErrorMessages.USER_NOT_ALLOWED.getErrorMessage(), exception.getMessage());
