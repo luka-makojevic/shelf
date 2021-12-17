@@ -11,10 +11,7 @@ import {
   TableHeaderInner,
 } from './table -styles';
 import {
-  FileTableDataTypes,
-  FunctionTableDataTypes,
   HeaderTypes,
-  ShelfTableDataTypes,
   SortingDirectionTypes,
   TableDataTypes,
 } from '../../interfaces/dataTypes';
@@ -26,6 +23,7 @@ interface TableProps {
   headers: HeaderTypes[];
   setTableData: Dispatch<SetStateAction<TableDataTypes[]>>;
   path: string;
+  onDelete: (shelf: TableDataTypes) => void;
 }
 
 export const Table = ({
@@ -34,6 +32,7 @@ export const Table = ({
   headers,
   setTableData,
   path,
+  onDelete,
 }: TableProps) => {
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const [selectedRows, setSelectedRows] = useState<TableDataTypes[]>([]);
@@ -110,13 +109,9 @@ export const Table = ({
             multiSelect={mulitSelect}
             data={item}
             path={path}
+            onDelete={onDelete}
             isChecked={selectedRows.some(
-              (
-                rowData:
-                  | FunctionTableDataTypes
-                  | FileTableDataTypes
-                  | ShelfTableDataTypes
-              ) => rowData.id === item.id
+              (rowData: TableDataTypes) => rowData.id === item.id
             )}
           />
         ))}

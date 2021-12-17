@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../hooks/authHook';
 import { LocalStorage } from '../../services/localStorage';
 import { useAppSelector } from '../../store/hooks';
@@ -29,12 +29,32 @@ const Profile = () => {
       () => {}
     );
   };
+  const dropDownRef = useRef<HTMLDivElement>(null);
+  const profileRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        dropDownRef.current &&
+        profileRef.current &&
+        event.target instanceof Node &&
+        !dropDownRef.current.contains(event.target) &&
+        !profileRef.current.contains(event.target)
+      ) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, [dropDownRef, profileRef]);
 
   return (
     <>
-      <ProfilePicture onClick={handleDropdownVisibility} />
+      <ProfilePicture ref={profileRef} onClick={handleDropdownVisibility} />
       {showDropdown && (
-        <DropDown>
+        <DropDown ref={dropDownRef}>
           <div>
             <ProfilePicture />
           </div>

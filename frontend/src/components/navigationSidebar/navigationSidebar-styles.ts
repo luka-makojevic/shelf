@@ -12,6 +12,7 @@ export const NavigationSidebarOuterWrapper = styled.div`
 export const NavigationSidebarInnerWrapper = styled.div`
   position: relative;
   height: 100%;
+  z-index: 1;
 `;
 
 export const NavigationSidebarContentWrapper = styled.nav`
