@@ -11,16 +11,20 @@ import com.htec.filesystem.repository.FolderRepository;
 import com.htec.filesystem.repository.ShelfRepository;
 import com.htec.filesystem.util.ErrorMessages;
 import com.htec.filesystem.validator.FileSystemValidator;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -157,5 +161,27 @@ class ShelfServiceTest {
         verify(shelfRepository, times(0)).save(shelf);
 
         assertEquals(ErrorMessages.USER_NOT_ALLOWED.getErrorMessage(), exception.getMessage());
+    }
+
+    @Test
+    void hardDeleteShelf() {
+
+        Long shelfId = 1L;
+        Long userId = 2L;
+
+        ShelfEntity shelfEntity = new ShelfEntity();
+        shelfEntity.setUserId(userId);
+
+        when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
+
+        try (MockedStatic<FileUtils> mocked = mockStatic(FileUtils.class)) {
+
+
+            shelfService.hardDeleteShelf(shelfId, userId);
+
+            mocked.verify(() -> FileUtils.deleteDirectory(any(File.class)));
+
+        }
+
     }
 }
