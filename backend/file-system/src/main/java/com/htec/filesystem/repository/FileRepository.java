@@ -17,9 +17,9 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
 
     @Query("SELECT f " +
             "FROM FileEntity f JOIN ShelfEntity s ON (f.shelfId = s.id)" +
-            "WHERE s.userId = ?1 AND f.parentFolderId = ?2 AND f.isDeleted = ?3")
-    List<FileEntity> findAllByUserIdAndParentFolderId(Long userId, Long folderId, Boolean isDeleted);
+            "WHERE s.userId = :userId AND f.parentFolderId = :folderId AND f.isDeleted = :deleted")
+    List<FileEntity> findAllByUserIdAndParentFolderId(Long userId, Long folderId, Boolean deleted);
 
-    @Query("UPDATE FileEntity f SET f.isDeleted = ?1 WHERE f.path LIKE ?2")
-    void updateIsDeletedByPath(Boolean idDeleted, String path);
+    @Query("UPDATE FileEntity f SET f.isDeleted = :deleted WHERE f.parentFolderId IN (:folderIdsToBeDeleted)")
+    void updateDeletedByParentFolderIds(Boolean deleted, List<Long> folderIdsToBeDeleted);
 }

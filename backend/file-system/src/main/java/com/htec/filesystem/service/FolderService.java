@@ -8,6 +8,7 @@ import com.htec.filesystem.exception.ExceptionSupplier;
 import com.htec.filesystem.mapper.FileMapper;
 import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FolderRepository;
+import com.htec.filesystem.repository.TreeRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class FolderService {
@@ -28,10 +30,14 @@ public class FolderService {
 
     private final FolderRepository folderRepository;
     private final FileRepository fileRepository;
+    private final TreeRepository treeRepository;
 
-    public FolderService(FolderRepository folderRepository, FileRepository fileRepository) {
+    public FolderService(FolderRepository folderRepository,
+                         FileRepository fileRepository,
+                         TreeRepository treeRepository) {
         this.folderRepository = folderRepository;
         this.fileRepository = fileRepository;
+        this.treeRepository = treeRepository;
     }
 
     public boolean initializeFolders(Long userId) {
@@ -69,23 +75,18 @@ public class FolderService {
         return ResponseEntity.status(HttpStatus.OK).body(fileDTOS);
     }
 
-    public void updateIsDeleted(AuthUser user, @RequestBody List<Long> folderIds, Boolean isDeleted) {
+    public void updateDeleted(AuthUser user, @RequestBody List<Long> folderIds, Boolean isDeleted) {
 
-        List<FolderEntity> folderEntites = folderRepository.findByUserIdAndFolderId(user.getId(), folderIds);
+        List<FolderEntity> folderEntities = folderRepository.findByUserIdAndFolderId(user.getId(), folderIds);
 
-        if (!folderEntites.stream().map(FolderEntity::getId).collect(Collectors.toList()).containsAll(folderIds)) {
+        if (!folderEntities.stream().map(FolderEntity::getId).collect(Collectors.toList()).containsAll(folderIds)) {
             throw ExceptionSupplier.userNotAllowed.get();
         }
 
-//        if (isDeleted.equals(folderEntity.isDeleted())) {
-//            if (isDeleted.equals(true)) {
-//                throw ExceptionSupplier.folderAlreadyDeleted.get();
-//            }
-//            throw ExceptionSupplier.folderAlreadyRecovered.get();
-//        }
+        List<Long> folderIdsToBeDeleted = folderEntities.stream().map(FolderEntity::getId).collect(Collectors.toList());
 
-//        folderRepository.updateIsDeletedByPath(isDeleted, folderEntity.getPath() + pathSeparator + folderEntity.getName());
-//
-//        fileRepository.updateIsDeletedByPath(isDeleted, folderEntity.getPath() + pathSeparator + folderEntity.getName());
+        folderRepository.updateDeletedByParentFolderIds(isDeleted, folderIdsToBeDeleted);
+
+        fileRepository.updateDeletedByParentFolderIds(isDeleted, folderIdsToBeDeleted);
     }
 }

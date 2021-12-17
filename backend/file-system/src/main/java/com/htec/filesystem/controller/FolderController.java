@@ -45,7 +45,7 @@ public class FolderController {
     @PutMapping("/move-to-trash")
     public ResponseEntity<TextResponseMessage> moveToTrash(@AuthenticationUser AuthUser user, @RequestBody List<Long> folderIds) {
 
-        folderService.updateIsDeleted(user, folderIds, true);
+        folderService.updateDeleted(user, folderIds, true);
 
         return ResponseEntity.ok().body(new TextResponseMessage(FOLDERS_MOVED_TO_TRASH, HttpStatus.OK.value()));
     }
@@ -53,7 +53,7 @@ public class FolderController {
     @PutMapping("/recover")
     public ResponseEntity<TextResponseMessage> recover(@AuthenticationUser AuthUser user, @RequestBody List<Long> folderIds) {
 
-        folderService.updateIsDeleted(user, folderIds, false);
+        folderService.updateDeleted(user, folderIds, false);
 
         return ResponseEntity.ok().body(new TextResponseMessage(FOLDERS_MOVED_TO_TRASH, HttpStatus.OK.value()));
     }
