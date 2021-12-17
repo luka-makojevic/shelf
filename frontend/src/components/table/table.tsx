@@ -9,6 +9,7 @@ import {
   Thead,
   CheckBoxTableHeader,
   TableHeaderInner,
+  StyledTableContainer,
 } from './table -styles';
 import {
   HeaderTypes,
@@ -23,7 +24,8 @@ interface TableProps {
   headers: HeaderTypes[];
   setTableData: Dispatch<SetStateAction<TableDataTypes[]>>;
   path: string;
-  onDelete: (shelf: TableDataTypes) => void;
+  onDelete?: (shelf: TableDataTypes) => void;
+  onEdit?: (data: TableDataTypes) => void;
 }
 
 export const Table = ({
@@ -33,6 +35,7 @@ export const Table = ({
   setTableData,
   path,
   onDelete,
+  onEdit,
 }: TableProps) => {
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const [selectedRows, setSelectedRows] = useState<TableDataTypes[]>([]);
@@ -81,41 +84,44 @@ export const Table = ({
   };
 
   return (
-    <StyledTable>
-      <Thead>
-        <tr>
-          {mulitSelect && (
-            <CheckBoxTableHeader>
-              <CheckBox onChange={handleSelectAll} checked={selectAll} />
-            </CheckBoxTableHeader>
-          )}
-          {headers.map(({ header, key }) => (
-            <StyledTableHeader onClick={() => handleClick(key)} key={header}>
-              <TableHeaderInner>
-                {header}
-                {sorterArrowToggle(key)}
-              </TableHeaderInner>
-            </StyledTableHeader>
-          ))}
-          {!mulitSelect && <StyledTableHeader>Actions</StyledTableHeader>}
-        </tr>
-      </Thead>
-      <tbody>
-        {data.map((item) => (
-          <DashboardTableRow
-            key={item.name}
-            selectedRows={selectedRows}
-            setSelectedRows={setSelectedRows}
-            multiSelect={mulitSelect}
-            data={item}
-            path={path}
-            onDelete={onDelete}
-            isChecked={selectedRows.some(
-              (rowData: TableDataTypes) => rowData.id === item.id
+    <StyledTableContainer>
+      <StyledTable>
+        <Thead>
+          <tr>
+            {mulitSelect && (
+              <CheckBoxTableHeader>
+                <CheckBox onChange={handleSelectAll} checked={selectAll} />
+              </CheckBoxTableHeader>
             )}
-          />
-        ))}
-      </tbody>
-    </StyledTable>
+            {headers.map(({ header, key }) => (
+              <StyledTableHeader onClick={() => handleClick(key)} key={header}>
+                <TableHeaderInner>
+                  {header}
+                  {sorterArrowToggle(key)}
+                </TableHeaderInner>
+              </StyledTableHeader>
+            ))}
+            {!mulitSelect && <StyledTableHeader>Actions</StyledTableHeader>}
+          </tr>
+        </Thead>
+        <tbody>
+          {data.map((item) => (
+            <DashboardTableRow
+              key={item.name}
+              selectedRows={selectedRows}
+              setSelectedRows={setSelectedRows}
+              multiSelect={mulitSelect}
+              data={item}
+              path={path}
+              onDelete={onDelete}
+              onEdit={onEdit}
+              isChecked={selectedRows.some(
+                (rowData: TableDataTypes) => rowData.id === item.id
+              )}
+            />
+          ))}
+        </tbody>
+      </StyledTable>
+    </StyledTableContainer>
   );
 };

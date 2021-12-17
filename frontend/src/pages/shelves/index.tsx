@@ -67,11 +67,18 @@ const Shelves = () => {
 
   const handleModalClose = () => {
     setDeleteModalOpen(false);
+    setSelectedShelf(null);
+    setOpenModal(false);
   };
 
   const handleDelete = (shelf: TableDataTypes) => {
     setDeleteModalOpen(true);
     setSelectedShelf(shelf);
+  };
+
+  const handleEdit = (shelf: TableDataTypes) => {
+    setSelectedShelf(shelf);
+    setOpenModal(true);
   };
 
   const message =
@@ -90,8 +97,16 @@ const Shelves = () => {
         />
       )}
       {openModal && (
-        <Modal title="Create shelf" onCloseModal={setOpenModal} closeIcon>
-          <CreateShelfModal onCloseModal={setOpenModal} onError={setError} />
+        <Modal
+          title={selectedShelf ? 'Rename shelf' : 'Create shelf'}
+          onCloseModal={handleModalClose}
+          closeIcon
+        >
+          <CreateShelfModal
+            onCloseModal={handleModalClose}
+            onError={setError}
+            shelf={selectedShelf}
+          />
         </Modal>
       )}
       {deleteModalOpen && (
@@ -126,6 +141,7 @@ const Shelves = () => {
             headers={headers}
             path="shelves/"
             onDelete={handleDelete}
+            onEdit={handleEdit}
           />
         )}
       </TableWrapper>

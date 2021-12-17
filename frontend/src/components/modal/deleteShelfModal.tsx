@@ -20,7 +20,7 @@ const DeleteShelfModal = ({
   const handleDeleteShelf = () => {
     if (shelf) {
       shelfServices
-        .deleteShelf(shelf.id)
+        .deleteShelf([shelf.id])
         .then(() => {
           getShelves(
             {},

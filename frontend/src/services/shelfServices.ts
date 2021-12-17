@@ -7,10 +7,10 @@ const getShelves = () => instance.get(`${API_URL_SHELF}shelf`);
 const createShelf = (shelfName: string) =>
   instance.post(`${API_URL_SHELF}shelf/create`, shelfName);
 
-const deleteShelf = (shelfId: number) =>
-  instance.put(`${API_URL_SHELF}shelf/move-to-trash/${shelfId}`);
+const deleteShelf = (shelfIds: number[]) =>
+  instance.put(`${API_URL_SHELF}shelf/move-to-trash`, shelfIds);
 
-const editShelf = (id: string, data: string) =>
+const editShelf = (id: number, data: string) =>
   instance.post(`${API_URL_SHELF}${id}`, data);
 
 export default { getShelves, createShelf, deleteShelf, editShelf };
