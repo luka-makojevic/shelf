@@ -10,12 +10,16 @@ import { useShelf } from '../../hooks/shelfHooks';
 
 export const ROOT_FOLDER = { name: 'Root', id: null, path: [] };
 
-const CreateShelfModal = ({ onCloseModal, onError }: CreateShelfModalProps) => {
+const CreateShelfModal = ({
+  onCloseModal,
+  onError,
+  shelf,
+}: CreateShelfModalProps) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateShelfData>({});
+  } = useForm<CreateShelfData>({ defaultValues: { name: shelf?.name } });
 
   const handleCloseModal = () => {
     onCloseModal(false);
@@ -26,22 +30,26 @@ const CreateShelfModal = ({ onCloseModal, onError }: CreateShelfModalProps) => {
   const onSubmit = (data: CreateShelfData) => {
     const shelfName = data.name;
 
-    shelfServices
-      .createShelf(shelfName)
-      .then(() => {
-        getShelves(
-          {},
-          () => {},
-          () => {}
-        );
-      })
-      .catch((err) => {
-        if (err.response.status === 500) {
-          onError('Internal server error');
-          return;
-        }
-        onError(err.response?.data?.message);
-      });
+    if (!shelf) {
+      shelfServices
+        .createShelf(shelfName)
+        .then(() => {
+          getShelves(
+            {},
+            () => {},
+            () => {}
+          );
+        })
+        .catch((err) => {
+          if (err.response.status === 500) {
+            onError('Internal server error');
+            return;
+          }
+          onError(err.response?.data?.message);
+        });
+    } else {
+      // TODO Connect EditShelf
+    }
 
     onCloseModal(false);
   };
@@ -59,7 +67,7 @@ const CreateShelfModal = ({ onCloseModal, onError }: CreateShelfModalProps) => {
       <Base onSubmit={handleSubmit(onSubmit)}>
         <InputFieldWrapper>
           <InputField
-            placeholder="Untitled Shelf"
+            placeholder={shelf ? 'New shelf name' : 'Untitled Shelf'}
             error={errors.name}
             {...register('name', validations)}
           />
@@ -69,7 +77,7 @@ const CreateShelfModal = ({ onCloseModal, onError }: CreateShelfModalProps) => {
           <Button variant="lightBordered" onClick={handleCloseModal}>
             Cancel
           </Button>
-          <Button>Create</Button>
+          <Button>{shelf ? 'Update' : 'Create'}</Button>
         </ModalButtonDivider>
       </Base>
     </>

@@ -5,6 +5,9 @@ export const Thead = styled.thead`
   background: ${theme.colors.secondary};
   padding: ${theme.space.sm} 0;
   text-align: left;
+
+  position: sticky;
+  top: 0;
 `;
 export const StyledTableHeader = styled.th`
   padding: ${theme.space.sm};
@@ -36,6 +39,11 @@ export const CheckBoxTableHeader = styled.th`
 export const TableHeaderInner = styled.div`
   display: flex;
   justify-content: space-between;
+`;
+
+export const StyledTableContainer = styled.div`
+  max-height: 280px;
+  overflow-y: auto;
 `;
 
 export const StyledTable = styled.table`

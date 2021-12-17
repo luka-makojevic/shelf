@@ -13,6 +13,8 @@ export const AlertContainer = styled.div<AlertStyleProp>`
   max-width: 500px;
   border-radius: 10px;
   box-shadow: 0px 0px 8px 0px ${theme.colors.shadow};
+  z-index: 10;
+
   color: ${({ type }) => {
     if (type === 'error') {
       return theme.colors.danger;

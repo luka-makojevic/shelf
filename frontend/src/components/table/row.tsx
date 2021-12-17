@@ -12,7 +12,8 @@ interface RowProps {
   setSelectedRows: (data: TableDataTypes[]) => void;
   isChecked?: boolean;
   path: string;
-  onDelete: (shelf: TableDataTypes) => void;
+  onDelete?: (shelf: TableDataTypes) => void;
+  onEdit?: (data: TableDataTypes) => void;
 }
 
 export const DashboardTableRow = ({
@@ -23,6 +24,7 @@ export const DashboardTableRow = ({
   isChecked,
   path,
   onDelete,
+  onEdit,
 }: RowProps) => {
   const navigation = useNavigate();
 
@@ -55,7 +57,11 @@ export const DashboardTableRow = ({
   };
 
   const handleDelete = () => {
-    onDelete(data);
+    if (onDelete) onDelete(data);
+  };
+
+  const handleEdit = () => {
+    if (onEdit) onEdit(data);
   };
 
   return (
@@ -80,7 +86,7 @@ export const DashboardTableRow = ({
           <ActionContainer>
             <FaTrash fill={theme.colors.danger} onClick={handleDelete} />
           </ActionContainer>
-          <FaEdit fill={theme.colors.black} />
+          <FaEdit fill={theme.colors.black} onClick={handleEdit} />
         </StyledCell>
       )}
     </StyledRow>
