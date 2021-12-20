@@ -26,9 +26,7 @@ public enum ErrorMessages {
     BAD_REQUEST("Bad request."),
     UNAUTHORIZED("Unauthorized."),
     NOT_FOUND("Not found."),
-    FORBIDDEN("Forbidden."),
-    FOLDER_ALREADY_DELETED("Folder already deleted."),
-    FOLDER_ALREADY_RECOVERED("Folder already recovered.");
+    FORBIDDEN("Forbidden.");
 
     private String errorMessage;
 
