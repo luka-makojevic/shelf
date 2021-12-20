@@ -12,6 +12,7 @@ import AlertPortal from '../../components/alert/alert';
 import { AlertMessage } from '../../utils/enums/alertMessages';
 import { FileDataType, TableDataTypes } from '../../interfaces/dataTypes';
 import { useAppSelector } from '../../store/hooks';
+import { Description } from '../../components/text/text-styles';
 
 const headers = [
   {
@@ -72,8 +73,11 @@ const Trash = () => {
   const trashData = useAppSelector((state) => state.trash.trashData);
   const [filteredData, setFilteredData] = useState<TableDataTypes[]>([]);
   const [tableData, setTableData] = useState<TableDataTypes[]>([]);
-
   const [error, setError] = useState('');
+  const message =
+    data.length === 0 // replace data with trashData
+      ? 'Trash is empty'
+      : 'Sorry, no matching results found :(';
 
   const { getTrash } = useTrash();
 
@@ -132,14 +136,18 @@ const Trash = () => {
             <Button onClick={handleEmptyTrash}>Empty Trash</Button>
           </ButtonActionsBox>
         </ActionsBox>
-        <Table
-          setTableData={setFilteredData}
-          data={filteredData}
-          headers={headers}
-          path="trash/"
-          onDelete={handleDelete}
-          onEdit={handleEdit}
-        />
+        {data.length === 0 || filteredData.length === 0 ? ( // replace data with trashData
+          <Description>{message}</Description>
+        ) : (
+          <Table
+            setTableData={setFilteredData}
+            data={filteredData}
+            headers={headers}
+            path="trash/"
+            onDelete={handleDelete}
+            onEdit={handleEdit}
+          />
+        )}
       </TableWrapper>
     </>
   );
