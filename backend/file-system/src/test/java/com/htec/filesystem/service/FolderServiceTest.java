@@ -1,7 +1,7 @@
 package com.htec.filesystem.service;
 
 import com.htec.filesystem.annotation.AuthUser;
-import com.htec.filesystem.dto.FileDTO;
+import com.htec.filesystem.dto.ShelfItemDTO;
 import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.exception.ShelfException;
@@ -57,7 +57,7 @@ class FolderServiceTest {
         when(fileRepository.findAllByUserIdAndParentFolderIdAndIsDeleted(testUserId, testFolderId, false))
                 .thenReturn(new ArrayList<>());
 
-        ResponseEntity<List<FileDTO>> files = folderService.getFiles(testUserId, testFolderId);
+        ResponseEntity<List<ShelfItemDTO>> files = folderService.getFiles(testUserId, testFolderId);
 
         Assertions.assertEquals(0, Objects.requireNonNull(files.getBody()).size());
     }
@@ -86,7 +86,7 @@ class FolderServiceTest {
                 }
         );
 
-        ResponseEntity<List<FileDTO>> files = folderService.getFiles(testUserId, testFolderId);
+        ResponseEntity<List<ShelfItemDTO>> files = folderService.getFiles(testUserId, testFolderId);
 
         Assertions.assertEquals(5, Objects.requireNonNull(files.getBody()).size());
     }
@@ -112,7 +112,7 @@ class FolderServiceTest {
                 }
         );
 
-        ResponseEntity<List<FileDTO>> files = folderService.getFiles(testUserId, testFolderId);
+        ResponseEntity<List<ShelfItemDTO>> files = folderService.getFiles(testUserId, testFolderId);
 
         Assertions.assertEquals(2, Objects.requireNonNull(files.getBody()).size());
         Assertions.assertFalse(Objects.requireNonNull(files.getBody()).get(0).isFolder());

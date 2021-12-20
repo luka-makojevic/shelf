@@ -2,7 +2,7 @@ package com.htec.filesystem.controller;
 
 import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.annotation.AuthenticationUser;
-import com.htec.filesystem.dto.FileDTO;
+import com.htec.filesystem.dto.ShelfItemDTO;
 import com.htec.filesystem.model.request.CreateFolderRequestModel;
 import com.htec.filesystem.model.response.TextResponseMessage;
 import com.htec.filesystem.service.FolderService;
@@ -39,7 +39,7 @@ public class FolderController {
     }
 
     @GetMapping("/{folderId}")
-    public ResponseEntity<List<FileDTO>> getFiles(@AuthenticationUser AuthUser user, @PathVariable Long folderId) {
+    public ResponseEntity<List<ShelfItemDTO>> getFiles(@AuthenticationUser AuthUser user, @PathVariable Long folderId) {
         return folderService.getFiles(user.getId(), folderId);
     }
 

@@ -1,7 +1,7 @@
 package com.htec.filesystem.mapper;
 
-import com.htec.filesystem.dto.FileDTO;
 import com.htec.filesystem.dto.ShelfDTO;
+import com.htec.filesystem.dto.ShelfItemDTO;
 import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
@@ -18,13 +18,15 @@ public interface FileMapper {
 
     ShelfDTO shelfEntityToShelfDto(ShelfEntity shelfEntity);
 
+    List<ShelfDTO> shelfEntitiesToShelfDTOs(List<ShelfEntity> shelfEntities);
+
     @Mapping(target = "folder", constant = "false")
-    FileDTO fileEntityToFileDTO(FileEntity fileEntity);
+    ShelfItemDTO fileEntityToShelfItemDTO(FileEntity fileEntity);
 
     @Mapping(target = "folder", constant = "true")
-    FileDTO folderEntityToFileDTO(FolderEntity folderEntity);
+    ShelfItemDTO folderEntityToShelfItemDTO(FolderEntity folderEntity);
 
-    List<FileDTO> fileEntitiesToFileDTOs(List<FileEntity> fileEntities);
+    List<ShelfItemDTO> fileEntitiesToShelfItemDTOs(List<FileEntity> fileEntities);
 
-    List<FileDTO> folderEntitiesToFileDTOs(List<FolderEntity> folderEntities);
+    List<ShelfItemDTO> folderEntitiesToShelfItemDTOs(List<FolderEntity> folderEntities);
 }

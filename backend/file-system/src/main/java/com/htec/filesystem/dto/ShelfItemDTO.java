@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FileDTO {
+public class ShelfItemDTO {
     private Long id;
     private String name;
     private String path;
