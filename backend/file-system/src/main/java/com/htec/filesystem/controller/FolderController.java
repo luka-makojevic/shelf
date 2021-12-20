@@ -68,6 +68,6 @@ public class FolderController {
 
         folderService.updateDeleted(user.getId(), folderIds, false);
 
-        return ResponseEntity.ok().body(new TextResponseMessage(FOLDERS_MOVED_TO_TRASH, HttpStatus.OK.value()));
+        return ResponseEntity.ok().body(new TextResponseMessage(FOLDERS_RECOVERED_FROM_TRASH, HttpStatus.OK.value()));
     }
 }
