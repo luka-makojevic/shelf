@@ -6,7 +6,7 @@ import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ShelfException;
-import com.htec.filesystem.mapper.FileMapper;
+import com.htec.filesystem.mapper.ShelfItemMapper;
 import com.htec.filesystem.model.request.CreateShelfRequestModel;
 import com.htec.filesystem.model.request.ShelfEditRequestModel;
 import com.htec.filesystem.repository.FileRepository;
@@ -208,15 +208,15 @@ class ShelfServiceTest {
         folderList.add(folderEntity);
 
         List<ShelfItemDTO> dtoList = new ArrayList<>();
-        dtoList.addAll(FileMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileList));
-        dtoList.addAll(FileMapper.INSTANCE.folderEntitiesToShelfItemDTOs(folderList));
+        dtoList.addAll(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileList));
+        dtoList.addAll(ShelfItemMapper.INSTANCE.folderEntitiesToShelfItemDTOs(folderList));
 
 
         when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
         when(fileRepository.findAllByShelfIdAndParentFolderIdIsNull(anyLong())).thenReturn(fileList);
         when(folderRepository.findAllByShelfIdAndParentFolderIdIsNull(anyLong())).thenReturn(folderList);
 
-        List<ShelfItemDTO> returnFileDtos = shelfService.getShelfContent(shelfId, userId);
+        List<ShelfItemDTO> returnFileDtos = shelfService.getShelfContent(shelfId, userId).getShelfItems();
 
         assertEquals(dtoList.size(), returnFileDtos.size());
     }

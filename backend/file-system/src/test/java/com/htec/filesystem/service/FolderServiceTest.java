@@ -5,6 +5,7 @@ import com.htec.filesystem.dto.ShelfItemDTO;
 import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.exception.ShelfException;
+import com.htec.filesystem.model.response.ShelfContentResponseModel;
 import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FileTreeRepository;
 import com.htec.filesystem.repository.FolderRepository;
@@ -57,9 +58,9 @@ class FolderServiceTest {
         when(fileRepository.findAllByUserIdAndParentFolderIdAndIsDeleted(testUserId, testFolderId, false))
                 .thenReturn(new ArrayList<>());
 
-        ResponseEntity<List<ShelfItemDTO>> files = folderService.getFiles(testUserId, testFolderId);
+        ResponseEntity<ShelfContentResponseModel> files = folderService.getFiles(testUserId, testFolderId);
 
-        Assertions.assertEquals(0, Objects.requireNonNull(files.getBody()).size());
+        Assertions.assertEquals(0, Objects.requireNonNull(files.getBody()).getShelfItems().size());
     }
 
     @Test
@@ -86,9 +87,9 @@ class FolderServiceTest {
                 }
         );
 
-        ResponseEntity<List<ShelfItemDTO>> files = folderService.getFiles(testUserId, testFolderId);
+        ResponseEntity<ShelfContentResponseModel> files = folderService.getFiles(testUserId, testFolderId);
 
-        Assertions.assertEquals(5, Objects.requireNonNull(files.getBody()).size());
+        Assertions.assertEquals(5, Objects.requireNonNull(files.getBody()).getShelfItems().size());
     }
 
     @Test
@@ -112,11 +113,11 @@ class FolderServiceTest {
                 }
         );
 
-        ResponseEntity<List<ShelfItemDTO>> files = folderService.getFiles(testUserId, testFolderId);
+        ResponseEntity<ShelfContentResponseModel> files = folderService.getFiles(testUserId, testFolderId);
 
-        Assertions.assertEquals(2, Objects.requireNonNull(files.getBody()).size());
-        Assertions.assertFalse(Objects.requireNonNull(files.getBody()).get(0).isFolder());
-        Assertions.assertTrue(Objects.requireNonNull(files.getBody()).get(1).isFolder());
+        Assertions.assertEquals(2, Objects.requireNonNull(files.getBody()).getShelfItems().size());
+        Assertions.assertFalse(Objects.requireNonNull(files.getBody()).getShelfItems().get(0).isFolder());
+        Assertions.assertTrue(Objects.requireNonNull(files.getBody()).getShelfItems().get(1).isFolder());
     }
 
     @Test

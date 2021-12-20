@@ -1,15 +1,17 @@
 package com.htec.filesystem.service;
 
 import com.htec.filesystem.annotation.AuthUser;
+import com.htec.filesystem.dto.BreadCrumbDTO;
 import com.htec.filesystem.dto.ShelfDTO;
 import com.htec.filesystem.dto.ShelfItemDTO;
 import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ExceptionSupplier;
-import com.htec.filesystem.mapper.FileMapper;
+import com.htec.filesystem.mapper.ShelfItemMapper;
 import com.htec.filesystem.model.request.CreateShelfRequestModel;
 import com.htec.filesystem.model.request.ShelfEditRequestModel;
+import com.htec.filesystem.model.response.ShelfContentResponseModel;
 import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FolderRepository;
 import com.htec.filesystem.repository.ShelfRepository;
@@ -96,7 +98,7 @@ public class ShelfService {
 
         List<ShelfEntity> entityShelves = shelfRepository.findAllById(userId);
 
-        return FileMapper.INSTANCE.shelfEntitiesToShelfDTOs(entityShelves);
+        return ShelfItemMapper.INSTANCE.shelfEntitiesToShelfDTOs(entityShelves);
     }
 
     @Transactional
@@ -118,7 +120,7 @@ public class ShelfService {
         }
     }
 
-    public List<ShelfItemDTO> getShelfContent(Long shelfId, Long userId) {
+    public ShelfContentResponseModel getShelfContent(Long shelfId, Long userId) {
 
         ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
                 .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
@@ -126,15 +128,18 @@ public class ShelfService {
         if (!Objects.equals(shelfEntity.getUserId(), userId))
             throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
 
-        List<ShelfItemDTO> dtoFiles = new ArrayList<>();
+        List<ShelfItemDTO> dtoItems = new ArrayList<>();
 
         List<FileEntity> fileEntities = fileRepository.findAllByShelfIdAndParentFolderIdIsNull(shelfId);
         List<FolderEntity> folderEntities = folderRepository.findAllByShelfIdAndParentFolderIdIsNull(shelfId);
 
-        dtoFiles.addAll(FileMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
-        dtoFiles.addAll(FileMapper.INSTANCE.folderEntitiesToShelfItemDTOs(folderEntities));
+        dtoItems.addAll(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
+        dtoItems.addAll(ShelfItemMapper.INSTANCE.folderEntitiesToShelfItemDTOs(folderEntities));
 
-        return dtoFiles;
+        List<BreadCrumbDTO> breadCrumbDTOS = new ArrayList<>();
+        breadCrumbDTOS.add(new BreadCrumbDTO(shelfEntity.getName(), 0L));
+
+        return new ShelfContentResponseModel(breadCrumbDTOS, dtoItems);
     }
 
     public void updateShelfName(ShelfEditRequestModel shelfEditRequestModel, Long userId) {

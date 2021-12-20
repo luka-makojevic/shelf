@@ -2,8 +2,10 @@ package com.htec.filesystem.controller;
 
 import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.annotation.AuthenticationUser;
+import com.htec.filesystem.dto.ShelfDTO;
 import com.htec.filesystem.model.request.CreateShelfRequestModel;
 import com.htec.filesystem.model.request.ShelfEditRequestModel;
+import com.htec.filesystem.model.response.ShelfContentResponseModel;
 import com.htec.filesystem.model.response.TextResponseMessage;
 import com.htec.filesystem.service.ShelfService;
 import org.springframework.http.HttpStatus;
@@ -43,13 +45,13 @@ public class ShelfController {
     }
 
     @GetMapping
-    public ResponseEntity getAllShelves(@AuthenticationUser AuthUser authUser) {
+    public ResponseEntity<List<ShelfDTO>> getAllShelves(@AuthenticationUser AuthUser authUser) {
 
         return ResponseEntity.ok(shelfService.getAllShelvesById(authUser.getId()));
     }
 
     @DeleteMapping("/{shelfId}")
-    public ResponseEntity deleteShelf(@AuthenticationUser AuthUser authUser,
+    public ResponseEntity<TextResponseMessage> deleteShelf(@AuthenticationUser AuthUser authUser,
                                       @PathVariable Long shelfId) {
 
         shelfService.hardDeleteShelf(shelfId, authUser.getId());
@@ -57,7 +59,7 @@ public class ShelfController {
     }
 
     @GetMapping("/{shelfId}")
-    public ResponseEntity getFirstLevelContent(@AuthenticationUser AuthUser authUser, @PathVariable Long shelfId) {
+    public ResponseEntity<ShelfContentResponseModel> getFirstLevelContent(@AuthenticationUser AuthUser authUser, @PathVariable Long shelfId) {
 
         return ResponseEntity.ok(shelfService.getShelfContent(shelfId, authUser.getId()));
     }

@@ -4,6 +4,7 @@ import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.annotation.AuthenticationUser;
 import com.htec.filesystem.dto.ShelfItemDTO;
 import com.htec.filesystem.model.request.CreateFolderRequestModel;
+import com.htec.filesystem.model.response.ShelfContentResponseModel;
 import com.htec.filesystem.model.response.TextResponseMessage;
 import com.htec.filesystem.service.FolderService;
 import org.springframework.http.HttpStatus;
@@ -39,7 +40,7 @@ public class FolderController {
     }
 
     @GetMapping("/{folderId}")
-    public ResponseEntity<List<ShelfItemDTO>> getFiles(@AuthenticationUser AuthUser user, @PathVariable Long folderId) {
+    public ResponseEntity<ShelfContentResponseModel> getFiles(@AuthenticationUser AuthUser user, @PathVariable Long folderId) {
         return folderService.getFiles(user.getId(), folderId);
     }
 

@@ -1,11 +1,15 @@
 package com.htec.filesystem.service;
 
+import com.htec.filesystem.dto.BreadCrumbDTO;
 import com.htec.filesystem.dto.ShelfItemDTO;
 import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
+import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ExceptionSupplier;
-import com.htec.filesystem.mapper.FileMapper;
+import com.htec.filesystem.mapper.BreadCrumbsMapper;
+import com.htec.filesystem.mapper.ShelfItemMapper;
 import com.htec.filesystem.model.request.CreateFolderRequestModel;
+import com.htec.filesystem.model.response.ShelfContentResponseModel;
 import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FileTreeRepository;
 import com.htec.filesystem.repository.FolderRepository;
@@ -63,9 +67,9 @@ public class FolderService {
         return new File(userShelvesPath).mkdirs();
     }
 
-    public ResponseEntity<List<ShelfItemDTO>> getFiles(Long userId, Long folderId) {
+    public ResponseEntity<ShelfContentResponseModel> getFiles(Long userId, Long folderId) {
 
-        List<ShelfItemDTO> fileDTOS = new ArrayList<>();
+        List<ShelfItemDTO> itemDTOs = new ArrayList<>();
 
         List<FolderEntity> allFolders = folderRepository
                 .findAllByUserIdAndParentFolderIdAndIsDeleted(userId, folderId, false);
@@ -73,10 +77,27 @@ public class FolderService {
         List<FileEntity> allFiles = fileRepository
                 .findAllByUserIdAndParentFolderIdAndIsDeleted(userId, folderId, false);
 
-        fileDTOS.addAll(FileMapper.INSTANCE.fileEntitiesToShelfItemDTOs(allFiles));
-        fileDTOS.addAll(FileMapper.INSTANCE.folderEntitiesToShelfItemDTOs(allFolders));
+        itemDTOs.addAll(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(allFiles));
+        itemDTOs.addAll(ShelfItemMapper.INSTANCE.folderEntitiesToShelfItemDTOs(allFolders));
 
-        return ResponseEntity.status(HttpStatus.OK).body(fileDTOS);
+        List<BreadCrumbDTO> breadCrumbDTOS = generateBreadCrumbs(folderId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ShelfContentResponseModel(breadCrumbDTOS, itemDTOs));
+    }
+
+    private List<BreadCrumbDTO> generateBreadCrumbs(Long folderId) {
+
+        List<BreadCrumbDTO> breadCrumbs = new ArrayList<>();
+
+        ShelfEntity shelfEntity = folderRepository.getShelfByFolderId(folderId).get();
+
+        breadCrumbs.add(new BreadCrumbDTO(shelfEntity.getName(), 0L));
+
+        List<FolderEntity> folderUpStreamTree = folderTreeRepository.getFolderUpStreamTree(folderId, false);
+
+        breadCrumbs.addAll(BreadCrumbsMapper.INSTANCE.folderEntitiesToBreadCrumbDTOs(folderUpStreamTree));
+
+        return breadCrumbs;
     }
 
     public boolean createFolder(CreateFolderRequestModel createFolderRequestModel, Long userId) {
