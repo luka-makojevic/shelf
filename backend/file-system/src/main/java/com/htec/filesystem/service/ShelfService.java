@@ -1,8 +1,8 @@
 package com.htec.filesystem.service;
 
 import com.htec.filesystem.annotation.AuthUser;
-import com.htec.filesystem.dto.FileDTO;
 import com.htec.filesystem.dto.ShelfDTO;
+import com.htec.filesystem.dto.ShelfItemDTO;
 import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
@@ -93,16 +93,10 @@ public class ShelfService {
 
     public List<ShelfDTO> getAllShelvesById(Long userId) {
 
-        List<ShelfDTO> dtoShelves = new ArrayList<>();
 
         List<ShelfEntity> entityShelves = shelfRepository.findAllById(userId);
 
-        for (ShelfEntity shelfEntity : entityShelves) {
-
-            ShelfDTO shelfDto = FileMapper.INSTANCE.shelfEntityToShelfDto(shelfEntity);
-            dtoShelves.add(shelfDto);
-        }
-        return dtoShelves;
+        return FileMapper.INSTANCE.shelfEntitiesToShelfDTOs(entityShelves);
     }
 
     @Transactional
@@ -123,20 +117,20 @@ public class ShelfService {
         }
     }
 
-    public List<FileDTO> getShelfContent(Long shelfId, Long userId) {
+    public List<ShelfItemDTO> getShelfContent(Long shelfId, Long userId) {
 
         ShelfEntity shelfEntity = shelfRepository.findById(shelfId).orElseThrow(ExceptionSupplier.noShelfWithGivenId);
 
         if (!Objects.equals(shelfEntity.getUserId(), userId))
             throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
 
-        List<FileDTO> dtoFiles = new ArrayList<>();
+        List<ShelfItemDTO> dtoFiles = new ArrayList<>();
 
         List<FileEntity> fileEntities = fileRepository.findAllByShelfIdAndParentFolderIdIsNull(shelfId);
         List<FolderEntity> folderEntities = folderRepository.findAllByShelfIdAndParentFolderIdIsNull(shelfId);
 
-        dtoFiles.addAll(FileMapper.INSTANCE.fileEntitiesToFileDTOs(fileEntities));
-        dtoFiles.addAll(FileMapper.INSTANCE.folderEntitiesToFileDTOs(folderEntities));
+        dtoFiles.addAll(FileMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
+        dtoFiles.addAll(FileMapper.INSTANCE.folderEntitiesToShelfItemDTOs(folderEntities));
 
         return dtoFiles;
     }

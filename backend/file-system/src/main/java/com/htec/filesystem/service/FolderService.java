@@ -1,6 +1,6 @@
 package com.htec.filesystem.service;
 
-import com.htec.filesystem.dto.FileDTO;
+import com.htec.filesystem.dto.ShelfItemDTO;
 import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.exception.ExceptionSupplier;
@@ -63,9 +63,9 @@ public class FolderService {
         return new File(userShelvesPath).mkdirs();
     }
 
-    public ResponseEntity<List<FileDTO>> getFiles(Long userId, Long folderId) {
+    public ResponseEntity<List<ShelfItemDTO>> getFiles(Long userId, Long folderId) {
 
-        List<FileDTO> fileDTOS = new ArrayList<>();
+        List<ShelfItemDTO> fileDTOS = new ArrayList<>();
 
         List<FolderEntity> allFolders = folderRepository
                 .findAllByUserIdAndParentFolderIdAndIsDeleted(userId, folderId, false);
@@ -73,8 +73,8 @@ public class FolderService {
         List<FileEntity> allFiles = fileRepository
                 .findAllByUserIdAndParentFolderIdAndIsDeleted(userId, folderId, false);
 
-        fileDTOS.addAll(FileMapper.INSTANCE.fileEntitiesToFileDTOs(allFiles));
-        fileDTOS.addAll(FileMapper.INSTANCE.folderEntitiesToFileDTOs(allFolders));
+        fileDTOS.addAll(FileMapper.INSTANCE.fileEntitiesToShelfItemDTOs(allFiles));
+        fileDTOS.addAll(FileMapper.INSTANCE.folderEntitiesToShelfItemDTOs(allFolders));
 
         return ResponseEntity.status(HttpStatus.OK).body(fileDTOS);
     }
