@@ -138,6 +138,16 @@ export interface ShelfDataType {
   userId: number;
 }
 
+export interface FileDataType {
+  id: number;
+  name: string;
+  createdAt: string;
+  isDeleted: boolean;
+  userId: number;
+  folder: boolean;
+  size: number;
+}
+
 export interface HeaderTypes {
   header: string;
   key: string;
@@ -151,6 +161,7 @@ export interface ShelfTableDataTypes {
 }
 export interface FileTableDataTypes {
   [key: string]: string | number;
+  folder: number;
   name: string;
   size: number;
   createdAt: string;

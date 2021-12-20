@@ -1,9 +1,20 @@
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import {
+  FaEdit,
+  FaFile,
+  FaFolder,
+  FaTrash,
+  FaTrashRestore,
+} from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { TableDataTypes } from '../../interfaces/dataTypes';
-import { theme } from '../../theme';
 import CheckBox from '../UI/checkbox/checkBox';
-import { StyledRow, StyledCell, ActionContainer } from './table -styles';
+import {
+  StyledRow,
+  StyledCell,
+  ActionContainer,
+  DeleteActionContainer,
+  IconContainer,
+} from './table -styles';
 
 interface RowProps {
   data: TableDataTypes;
@@ -64,6 +75,8 @@ export const DashboardTableRow = ({
     if (onEdit) onEdit(data);
   };
 
+  const handleRestore = () => {};
+
   return (
     <StyledRow>
       {multiSelect && (
@@ -71,8 +84,21 @@ export const DashboardTableRow = ({
           <CheckBox onChange={handleChange} checked={isChecked} />
         </StyledCell>
       )}
+
       {Object.values(data).map((rowText) => {
-        if (rowText === data.id) return null;
+        if (rowText === data.id || rowText === data.folder) return null;
+        if (path === 'trash/') {
+          return (
+            // if it's in trash, there should be no navigation handled, only display of cells
+            <StyledCell key={rowText}>
+              <IconContainer>
+                {data.name === rowText &&
+                  (data.folder ? <FaFolder /> : <FaFile />)}
+              </IconContainer>
+              {rowText}
+            </StyledCell>
+          );
+        }
         return (
           <CellWithHandler
             key={rowText}
@@ -83,10 +109,17 @@ export const DashboardTableRow = ({
       })}
       {!multiSelect && (
         <StyledCell>
+          <DeleteActionContainer>
+            <FaTrash onClick={handleDelete} />
+          </DeleteActionContainer>
+
           <ActionContainer>
-            <FaTrash fill={theme.colors.danger} onClick={handleDelete} />
+            {path === 'trash/' ? (
+              <FaTrashRestore onClick={handleRestore} />
+            ) : (
+              <FaEdit onClick={handleEdit} />
+            )}
           </ActionContainer>
-          <FaEdit fill={theme.colors.black} onClick={handleEdit} />
         </StyledCell>
       )}
     </StyledRow>

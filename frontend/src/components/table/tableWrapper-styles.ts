@@ -22,6 +22,22 @@ export const TableDescription = styled.div`
 export const TableContent = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+export const ActionsBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
   margin-top: ${theme.space.lg};
+`;
+
+export const ButtonActionsBox = styled.div`
+  display: flex;
+  width: 50%;
+  justify-content: end;
+
+  button {
+    margin-left: 10px;
+  }
 `;

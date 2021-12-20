@@ -42,7 +42,7 @@ export const TableHeaderInner = styled.div`
 `;
 
 export const StyledTableContainer = styled.div`
-  max-height: 280px;
+  height: 650px;
   overflow-y: auto;
 `;
 
@@ -64,10 +64,26 @@ export const StyledRow = styled.tr`
   }
 
   &:hover {
-    color: ${theme.colors.primary};
+    background-color: ${theme.colors.hoverRow};
   }
 `;
 
 export const ActionContainer = styled.span`
+  margin-right: ${theme.space.sm};
+
+  &:hover {
+    color: ${theme.colors.primary};
+  }
+`;
+
+export const DeleteActionContainer = styled.span`
+  margin-right: ${theme.space.sm};
+
+  &:hover {
+    color: ${theme.colors.danger};
+  }
+`;
+
+export const IconContainer = styled.span`
   margin-right: ${theme.space.sm};
 `;
