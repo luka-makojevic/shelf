@@ -177,3 +177,17 @@ export interface SortingDirectionTypes {
 export interface SorterDataTypes {
   [key: string]: string | number;
 }
+
+export interface FileDataType {
+  id: number;
+  name: string;
+  path: string;
+  createdAt: number;
+  folder: boolean;
+  shelfId: number;
+  parentFolderId: number;
+}
+export interface PathHistoryDataType {
+  name: string;
+  id: number;
+}
