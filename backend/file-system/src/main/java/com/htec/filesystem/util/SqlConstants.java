@@ -35,7 +35,7 @@ public class SqlConstants {
                     "   UNION" +
                     "   SELECT     fl.*" +
                     "   FROM       down_stream_tree INNER JOIN file fl " +
-                    "   ON fl.parent_folder_id = down_stream_tree.id" +
+                    "   ON         fl.parent_folder_id = down_stream_tree.id" +
                     "   WHERE      fl.is_deleted = :deleted" +
                     ")" +
                     "SELECT * FROM down_stream_tree " +
