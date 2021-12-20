@@ -5,26 +5,16 @@ import com.htec.filesystem.dto.FileDTO;
 import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.exception.ShelfException;
-<<<<<<< HEAD
-import com.htec.filesystem.model.request.CreateFolderRequestModel;
-=======
->>>>>>> CU-1xpd34y - Soft Delete folder
 import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FileTreeRepository;
 import com.htec.filesystem.repository.FolderRepository;
-<<<<<<< HEAD
-import com.htec.filesystem.util.ErrorMessages;
-import com.htec.filesystem.util.FileUtil;
-=======
 import com.htec.filesystem.repository.FolderTreeRepository;
 import com.htec.filesystem.util.ErrorMessages;
->>>>>>> CU-1xpd34y - Soft Delete folder
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
@@ -32,17 +22,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-<<<<<<< HEAD
-import java.util.Optional;
-
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
-=======
 import java.util.stream.Collectors;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
->>>>>>> CU-1xpd34y - Soft Delete folder
 
 @ExtendWith(MockitoExtension.class)
 class FolderServiceTest {
@@ -179,7 +162,7 @@ class FolderServiceTest {
         when(folderTreeRepository.getFolderDownStreamTrees(testFolderIds, false)).thenReturn(folderEntities);
         when(fileTreeRepository.getFileDownStreamTrees(testFolderIds, false)).thenReturn(fileEntities);
 
-        folderService.updateDeleted(testAuthUser, testFolderIds, true);
+        folderService.updateDeleted(testAuthUser.getId(), testFolderIds, true);
 
         verify(folderRepository, times(1)).findByUserIdAndFolderId(testAuthUser.getId(), testFolderIds);
         verify(folderTreeRepository, times(1)).getFolderDownStreamTrees(testFolderIds, false);
@@ -241,7 +224,7 @@ class FolderServiceTest {
         when(folderTreeRepository.getFolderDownStreamTrees(testFolderIds, false)).thenReturn(folderEntities);
         when(fileTreeRepository.getFileDownStreamTrees(testFolderIds, false)).thenReturn(fileEntities);
 
-        folderService.updateDeleted(testAuthUser, testFolderIds, true);
+        folderService.updateDeleted(testAuthUser.getId(), testFolderIds, true);
 
         verify(folderRepository, times(1)).findByUserIdAndFolderId(testAuthUser.getId(), testFolderIds);
         verify(folderTreeRepository, times(1)).getFolderDownStreamTrees(testFolderIds, false);
@@ -264,7 +247,7 @@ class FolderServiceTest {
         when(folderRepository.findByUserIdAndFolderId(testAuthUser.getId(), testFolderIds)).thenReturn(new ArrayList<>());
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
-            folderService.updateDeleted(testAuthUser, testFolderIds, true);
+            folderService.updateDeleted(testAuthUser.getId(), testFolderIds, true);
         });
 
         verify(folderRepository, times(1)).findByUserIdAndFolderId(testAuthUser.getId(), testFolderIds);
@@ -281,8 +264,8 @@ class FolderServiceTest {
 
         String name = "folder1";
         String path = "shelf-files/user-data/2/shelves/1/folder1";
-        Long shelfId =1L;
-        Long parentFolderId=0L;
+        Long shelfId = 1L;
+        Long parentFolderId = 0L;
 
         folderService.createFolderInDb(name, path, shelfId, parentFolderId);
 

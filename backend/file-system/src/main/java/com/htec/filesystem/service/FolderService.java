@@ -30,7 +30,6 @@ public class FolderService {
 
     private final FolderRepository folderRepository;
     private final FileRepository fileRepository;
-
     private final FolderTreeRepository folderTreeRepository;
     private final FileTreeRepository fileTreeRepository;
 
@@ -132,6 +131,13 @@ public class FolderService {
     }
 
     public void updateDeleted(Long userId, List<Long> folderIds, Boolean deleted) {
+
+        List<FolderEntity> folderEntities = folderRepository.findByUserIdAndFolderId(userId, folderIds);
+
+        if (!folderEntities.stream().map(FolderEntity::getId).collect(Collectors.toList()).containsAll(folderIds)) {
+            throw ExceptionSupplier.userNotAllowed.get();
+        }
+
         List<FolderEntity> downStreamFolders = folderTreeRepository.getFolderDownStreamTrees(folderIds, !deleted);
 
         List<Long> downStreamFoldersIds = downStreamFolders.stream().map(FolderEntity::getId).collect(Collectors.toList());

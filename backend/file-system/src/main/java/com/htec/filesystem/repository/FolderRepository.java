@@ -14,6 +14,7 @@ public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
 
     List<FolderEntity> findAllByShelfId(Long shelfId);
 
+
     List<FolderEntity> findAllByShelfIdIn(List<Long> shelfId);
 
     @Modifying

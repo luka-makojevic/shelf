@@ -18,6 +18,10 @@ public class FolderController {
 
     private final FolderService folderService;
 
+    private final String FOLDERS_CREATED = "Folders created";
+    private final String FOLDERS_MOVED_TO_TRASH = "Folder moved to trash";
+    private final String FOLDERS_RECOVERED_FROM_TRASH = "Folders recovered from trash";
+
     public FolderController(FolderService folderService) {
         this.folderService = folderService;
     }
@@ -31,12 +35,11 @@ public class FolderController {
             retStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
-        return ResponseEntity.status(retStatus).body(new TextResponseMessage("Folders created", retStatus.value()));
+        return ResponseEntity.status(retStatus).body(new TextResponseMessage(FOLDERS_CREATED, retStatus.value()));
     }
 
     @GetMapping("/{folderId}")
     public ResponseEntity<List<FileDTO>> getFiles(@AuthenticationUser AuthUser user, @PathVariable Long folderId) {
-
         return folderService.getFiles(user.getId(), folderId);
     }
 
@@ -50,5 +53,21 @@ public class FolderController {
         }
 
         return ResponseEntity.status(retStatus).body(new TextResponseMessage("Folder created", retStatus.value()));
+    }
+
+    @PutMapping("/move-to-trash")
+    public ResponseEntity<TextResponseMessage> moveToTrash(@AuthenticationUser AuthUser user, @RequestBody List<Long> folderIds) {
+
+        folderService.updateDeleted(user.getId(), folderIds, true);
+
+        return ResponseEntity.ok().body(new TextResponseMessage(FOLDERS_MOVED_TO_TRASH, HttpStatus.OK.value()));
+    }
+
+    @PutMapping("/recover")
+    public ResponseEntity<TextResponseMessage> recover(@AuthenticationUser AuthUser user, @RequestBody List<Long> folderIds) {
+
+        folderService.updateDeleted(user.getId(), folderIds, false);
+
+        return ResponseEntity.ok().body(new TextResponseMessage(FOLDERS_MOVED_TO_TRASH, HttpStatus.OK.value()));
     }
 }

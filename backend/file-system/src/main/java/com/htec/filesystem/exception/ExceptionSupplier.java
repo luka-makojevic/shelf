@@ -151,4 +151,17 @@ public class ExceptionSupplier {
             ErrorMessages.NOT_FOUND.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> folderAlreadyDeleted = () -> new ShelfException(
+            ErrorMessages.FOLDER_ALREADY_DELETED.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> folderAlreadyRecovered = () -> new ShelfException(
+            ErrorMessages.FOLDER_ALREADY_RECOVERED.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
 }
