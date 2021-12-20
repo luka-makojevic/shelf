@@ -4,6 +4,7 @@ import com.htec.filesystem.entity.FileEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -26,15 +27,19 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
     @Query("SELECT f " +
             "FROM FileEntity f JOIN ShelfEntity s ON (f.shelfId = s.id)" +
             "WHERE s.userId = :userId AND f.parentFolderId = :folderId AND f.isDeleted = :deleted")
-    List<FileEntity> findAllByUserIdAndParentFolderId(Long userId, Long folderId, Boolean deleted);
+    List<FileEntity> findAllByUserIdAndParentFolderId(@Param("userId") Long userId,
+                                                      @Param("folderId") Long folderId,
+                                                      @Param("deleted")Boolean deleted);
 
     @Transactional
     @Modifying
     @Query("UPDATE FileEntity f SET f.isDeleted = :deleted WHERE f.parentFolderId IN (:folderIdsToBeDeleted)")
-    void updateDeletedByParentFolderIds(Boolean deleted, List<Long> folderIdsToBeDeleted);
+    void updateDeletedByParentFolderIds(@Param("deleted")Boolean deleted,
+                                        List<Long> folderIdsToBeDeleted);
 
     @Transactional
     @Modifying
     @Query("UPDATE FileEntity f SET f.isDeleted = :deleted WHERE f.id IN (:fileIdsToBeDeleted)")
-    void updateDeletedByFileIds(Boolean deleted, List<Long> fileIdsToBeDeleted);
+    void updateDeletedByFileIds(@Param("deleted") Boolean deleted,
+                                List<Long> fileIdsToBeDeleted);
 }
