@@ -256,7 +256,7 @@ class FolderServiceTest {
         verify(folderRepository, times(0)).updateDeletedByFolderIds(true, testFolderIds);
         verify(fileRepository, times(0)).updateDeletedByFileIds(true, testFolderIds);
 
-        Assertions.assertEquals(ErrorMessages.USER_NOT_ALLOWED.getErrorMessage(), exception.getMessage());
+        Assertions.assertEquals(ErrorMessages.USER_NOT_ALLOWED_TO_DELETE_FOLDER.getErrorMessage(), exception.getMessage());
     }
 
     @Test

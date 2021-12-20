@@ -135,7 +135,7 @@ public class FolderService {
         List<FolderEntity> folderEntities = folderRepository.findByUserIdAndFolderIds(userId, folderIds);
 
         if (!folderEntities.stream().map(FolderEntity::getId).collect(Collectors.toList()).containsAll(folderIds)) {
-            throw ExceptionSupplier.userNotAllowed.get();
+            throw ExceptionSupplier.userNotAllowedToDeleteFolder.get();
         }
 
         List<FolderEntity> downStreamFolders = folderTreeRepository.getFolderDownStreamTrees(folderIds, !deleted);

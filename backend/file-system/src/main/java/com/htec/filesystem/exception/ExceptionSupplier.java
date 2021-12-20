@@ -144,6 +144,13 @@ public class ExceptionSupplier {
             ErrorMessages.FORBIDDEN.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> userNotAllowedToDeleteFolder = () -> new ShelfException(
+            ErrorMessages.USER_NOT_ALLOWED_TO_DELETE_FOLDER.getErrorMessage(),
+            HttpStatus.FORBIDDEN.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.FORBIDDEN.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> userNotAllowedToAccessShelf = () -> new ShelfException(
             ErrorMessages.USER_NOT_ALLOWED_TO_ACCESS_THIS_SHELF.getErrorMessage(),
             HttpStatus.FORBIDDEN.value(),
