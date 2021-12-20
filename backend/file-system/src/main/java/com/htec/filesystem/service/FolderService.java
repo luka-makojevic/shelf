@@ -67,10 +67,10 @@ public class FolderService {
         List<FileDTO> fileDTOS = new ArrayList<>();
 
         List<FolderEntity> allFolders = folderRepository
-                .findAllByUserIdAndParentFolderId(userId, folderId, false);
+                .findAllByUserIdAndParentFolderIdAndIsDeleted(userId, folderId, false);
 
         List<FileEntity> allFiles = fileRepository
-                .findAllByUserIdAndParentFolderId(userId, folderId, false);
+                .findAllByUserIdAndParentFolderIdAndIsDeleted(userId, folderId, false);
 
         fileDTOS.addAll(FileMapper.INSTANCE.fileEntityToFileDTO(allFiles));
         fileDTOS.addAll(FileMapper.INSTANCE.folderEntityToFileDTO(allFolders));
@@ -109,10 +109,10 @@ public class FolderService {
     public void createFolderInDb(String name, String path, Long shelfId, Long parentFolderId) {
 
         if (parentFolderId == 0) {
-            if (folderRepository.findByNameAndParentFolderId(name, null).isPresent())
+            if (folderRepository.findByNameAndParentFolderIdAndIsDeleted(name, null).isPresent())
                 throw ExceptionSupplier.folderAlreadyExists.get();
         } else {
-            if (folderRepository.findByNameAndParentFolderId(name, parentFolderId).isPresent())
+            if (folderRepository.findByNameAndParentFolderIdAndIsDeleted(name, parentFolderId).isPresent())
                 throw ExceptionSupplier.folderAlreadyExists.get();
         }
 
@@ -132,7 +132,7 @@ public class FolderService {
 
     public void updateDeleted(Long userId, List<Long> folderIds, Boolean deleted) {
 
-        List<FolderEntity> folderEntities = folderRepository.findByUserIdAndFolderId(userId, folderIds);
+        List<FolderEntity> folderEntities = folderRepository.findByUserIdAndFolderIds(userId, folderIds);
 
         if (!folderEntities.stream().map(FolderEntity::getId).collect(Collectors.toList()).containsAll(folderIds)) {
             throw ExceptionSupplier.userNotAllowed.get();

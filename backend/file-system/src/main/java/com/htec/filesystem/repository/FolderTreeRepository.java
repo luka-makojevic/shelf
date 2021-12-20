@@ -11,8 +11,10 @@ import java.util.List;
 public interface FolderTreeRepository extends JpaRepository<FolderEntity, Long> {
 
     @Query(value = SqlConstants.FOLDER_DOWN_STREAM_TREE_QUERY_SQL, nativeQuery = true)
-    List<FolderEntity> getFolderDownStreamTrees(@Param("folderIds") List<Long> folderIds, Boolean deleted);
+    List<FolderEntity> getFolderDownStreamTrees(@Param("folderIds") List<Long> folderIds,
+                                                @Param("deleted") Boolean deleted);
 
     @Query(value = SqlConstants.FOLDER_UP_STREAM_TREE_QUERY_SQL, nativeQuery = true)
-    List<FolderEntity> getFolderUpStreamTree(Long folderId, Boolean deleted);
+    List<FolderEntity> getFolderUpStreamTree(@Param("folderId") Long folderId,
+                                             @Param("deleted") Boolean deleted);
 }

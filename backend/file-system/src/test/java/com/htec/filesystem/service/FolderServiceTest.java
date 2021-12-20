@@ -52,9 +52,9 @@ class FolderServiceTest {
         Long testUserId = 1L;
         Long testFolderId = 1L;
 
-        when(folderRepository.findAllByUserIdAndParentFolderId(testUserId, testFolderId, false))
+        when(folderRepository.findAllByUserIdAndParentFolderIdAndIsDeleted(testUserId, testFolderId, false))
                 .thenReturn(new ArrayList<>());
-        when(fileRepository.findAllByUserIdAndParentFolderId(testUserId, testFolderId, false))
+        when(fileRepository.findAllByUserIdAndParentFolderIdAndIsDeleted(testUserId, testFolderId, false))
                 .thenReturn(new ArrayList<>());
 
         ResponseEntity<List<FileDTO>> files = folderService.getFiles(testUserId, testFolderId);
@@ -68,7 +68,7 @@ class FolderServiceTest {
         Long testUserId = 1L;
         Long testFolderId = 1L;
 
-        when(folderRepository.findAllByUserIdAndParentFolderId(testUserId, testFolderId, false)).thenReturn(
+        when(folderRepository.findAllByUserIdAndParentFolderIdAndIsDeleted(testUserId, testFolderId, false)).thenReturn(
                 new ArrayList<FolderEntity>() {
                     {
                         add(new FolderEntity());
@@ -77,7 +77,7 @@ class FolderServiceTest {
                     }
                 }
         );
-        when(fileRepository.findAllByUserIdAndParentFolderId(testUserId, testFolderId, false)).thenReturn(
+        when(fileRepository.findAllByUserIdAndParentFolderIdAndIsDeleted(testUserId, testFolderId, false)).thenReturn(
                 new ArrayList<FileEntity>() {
                     {
                         add(new FileEntity());
@@ -97,14 +97,14 @@ class FolderServiceTest {
         Long testUserId = 1L;
         Long testFolderId = 1L;
 
-        when(folderRepository.findAllByUserIdAndParentFolderId(testUserId, testFolderId, false)).thenReturn(
+        when(folderRepository.findAllByUserIdAndParentFolderIdAndIsDeleted(testUserId, testFolderId, false)).thenReturn(
                 new ArrayList<FolderEntity>() {
                     {
                         add(new FolderEntity());
                     }
                 }
         );
-        when(fileRepository.findAllByUserIdAndParentFolderId(testUserId, testFolderId, false)).thenReturn(
+        when(fileRepository.findAllByUserIdAndParentFolderIdAndIsDeleted(testUserId, testFolderId, false)).thenReturn(
                 new ArrayList<FileEntity>() {
                     {
                         add(new FileEntity());
@@ -150,7 +150,7 @@ class FolderServiceTest {
 
         List<Long> downStreamFilesIds = fileEntities.stream().map(FileEntity::getId).collect(Collectors.toList());
 
-        when(folderRepository.findByUserIdAndFolderId(testAuthUser.getId(), testFolderIds)).thenReturn(
+        when(folderRepository.findByUserIdAndFolderIds(testAuthUser.getId(), testFolderIds)).thenReturn(
                 new ArrayList<FolderEntity>() {
                     {
                         FolderEntity folderEntity = new FolderEntity();
@@ -164,7 +164,7 @@ class FolderServiceTest {
 
         folderService.updateDeleted(testAuthUser.getId(), testFolderIds, true);
 
-        verify(folderRepository, times(1)).findByUserIdAndFolderId(testAuthUser.getId(), testFolderIds);
+        verify(folderRepository, times(1)).findByUserIdAndFolderIds(testAuthUser.getId(), testFolderIds);
         verify(folderTreeRepository, times(1)).getFolderDownStreamTrees(testFolderIds, false);
         verify(fileTreeRepository, times(1)).getFileDownStreamTrees(testFolderIds, false);
         verify(folderRepository, times(1)).updateDeletedByFolderIds(true, downStreamFoldersIds);
@@ -204,7 +204,7 @@ class FolderServiceTest {
 
         List<Long> downStreamFilesIds = fileEntities.stream().map(FileEntity::getId).collect(Collectors.toList());
 
-        when(folderRepository.findByUserIdAndFolderId(testAuthUser.getId(), testFolderIds)).thenReturn(
+        when(folderRepository.findByUserIdAndFolderIds(testAuthUser.getId(), testFolderIds)).thenReturn(
                 new ArrayList<FolderEntity>() {
                     {
                         FolderEntity folderEntity = new FolderEntity();
@@ -226,7 +226,7 @@ class FolderServiceTest {
 
         folderService.updateDeleted(testAuthUser.getId(), testFolderIds, true);
 
-        verify(folderRepository, times(1)).findByUserIdAndFolderId(testAuthUser.getId(), testFolderIds);
+        verify(folderRepository, times(1)).findByUserIdAndFolderIds(testAuthUser.getId(), testFolderIds);
         verify(folderTreeRepository, times(1)).getFolderDownStreamTrees(testFolderIds, false);
         verify(fileTreeRepository, times(1)).getFileDownStreamTrees(testFolderIds, false);
         verify(folderRepository, times(1)).updateDeletedByFolderIds(true, downStreamFoldersIds);
@@ -244,13 +244,13 @@ class FolderServiceTest {
         AuthUser testAuthUser = new AuthUser();
         testAuthUser.setId(testUserId);
 
-        when(folderRepository.findByUserIdAndFolderId(testAuthUser.getId(), testFolderIds)).thenReturn(new ArrayList<>());
+        when(folderRepository.findByUserIdAndFolderIds(testAuthUser.getId(), testFolderIds)).thenReturn(new ArrayList<>());
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
             folderService.updateDeleted(testAuthUser.getId(), testFolderIds, true);
         });
 
-        verify(folderRepository, times(1)).findByUserIdAndFolderId(testAuthUser.getId(), testFolderIds);
+        verify(folderRepository, times(1)).findByUserIdAndFolderIds(testAuthUser.getId(), testFolderIds);
         verify(folderTreeRepository, times(0)).getFolderDownStreamTrees(testFolderIds, false);
         verify(fileTreeRepository, times(0)).getFileDownStreamTrees(testFolderIds, false);
         verify(folderRepository, times(0)).updateDeletedByFolderIds(true, testFolderIds);

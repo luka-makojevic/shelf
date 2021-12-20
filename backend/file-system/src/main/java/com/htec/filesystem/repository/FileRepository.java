@@ -19,27 +19,28 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
     List<FileEntity> findAllByShelfIdIn(List<Long> shelfId);
 
     @Modifying
-    @Query("UPDATE FileEntity f SET f.isDeleted = ?1 WHERE f.shelfId IN (?2)")
-    void updateIsDeletedByShelfIds(boolean delete, List<Long> shelfIds);
+    @Query("UPDATE FileEntity f SET f.isDeleted = :delete WHERE f.shelfId IN (:shelfIds)")
+    void updateIsDeletedByShelfIds(@Param("deleted") Boolean delete,
+                                   @Param("shelfIds") List<Long> shelfIds);
 
     List<FileEntity> findAllByParentFolderId(Long folderId);
 
     @Query("SELECT f " +
             "FROM FileEntity f JOIN ShelfEntity s ON (f.shelfId = s.id)" +
             "WHERE s.userId = :userId AND f.parentFolderId = :folderId AND f.isDeleted = :deleted")
-    List<FileEntity> findAllByUserIdAndParentFolderId(@Param("userId") Long userId,
-                                                      @Param("folderId") Long folderId,
-                                                      @Param("deleted")Boolean deleted);
+    List<FileEntity> findAllByUserIdAndParentFolderIdAndIsDeleted(@Param("userId") Long userId,
+                                                                  @Param("folderId") Long folderId,
+                                                                  @Param("deleted") Boolean deleted);
 
     @Transactional
     @Modifying
     @Query("UPDATE FileEntity f SET f.isDeleted = :deleted WHERE f.parentFolderId IN (:folderIdsToBeDeleted)")
-    void updateDeletedByParentFolderIds(@Param("deleted")Boolean deleted,
-                                        List<Long> folderIdsToBeDeleted);
+    void updateDeletedByParentFolderIds(@Param("deleted") Boolean deleted,
+                                        @Param("folderIdsToBeDeleted") List<Long> folderIdsToBeDeleted);
 
     @Transactional
     @Modifying
     @Query("UPDATE FileEntity f SET f.isDeleted = :deleted WHERE f.id IN (:fileIdsToBeDeleted)")
     void updateDeletedByFileIds(@Param("deleted") Boolean deleted,
-                                List<Long> fileIdsToBeDeleted);
+                                @Param("fileIdsToBeDeleted") List<Long> fileIdsToBeDeleted);
 }

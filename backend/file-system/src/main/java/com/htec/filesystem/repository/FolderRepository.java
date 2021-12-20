@@ -19,30 +19,36 @@ public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
     List<FolderEntity> findAllByShelfIdIn(List<Long> shelfId);
 
     @Modifying
-    @Query("UPDATE FolderEntity f SET f.isDeleted = ?1 WHERE f.shelfId IN (?2)")
-    void updateIsDeletedByShelfIds(boolean delete, List<Long> shelfIds);
+    @Query("UPDATE FolderEntity f SET f.isDeleted = :deleted WHERE f.shelfId IN (:shelfIds)")
+    void updateIsDeletedByShelfIds(@Param("deleted") Boolean delete,
+                                   @Param("shelfIds") List<Long> shelfIds);
 
     List<FolderEntity> findAllByParentFolderId(Long folderId);
 
     @Query("SELECT f " +
             "FROM FolderEntity f JOIN ShelfEntity s ON (f.shelfId = s.id)" +
             "WHERE s.userId = :userId AND f.parentFolderId = :folderId AND f.isDeleted = :deleted")
-    List<FolderEntity> findAllByUserIdAndParentFolderId(Long userId, Long folderId, @Param("deleted") Boolean deleted);
+    List<FolderEntity> findAllByUserIdAndParentFolderIdAndIsDeleted(@Param("userId") Long userId,
+                                                                    @Param("folderId") Long folderId,
+                                                                    @Param("deleted") Boolean deleted);
 
-    Optional<FolderEntity> findByNameAndParentFolderId(String name, Long parentFolderId);
+    Optional<FolderEntity> findByNameAndParentFolderIdAndIsDeleted(String name, Long parentFolderId);
 
     @Query("SELECT f " +
             "FROM FolderEntity f JOIN ShelfEntity s ON (f.shelfId = s.id)" +
             "WHERE s.userId = :userId AND f.id IN (:folderIds)")
-    List<FolderEntity> findByUserIdAndFolderId(@Param("userId") Long userId, List<Long> folderIds);
+    List<FolderEntity> findByUserIdAndFolderIds(@Param("userId") Long userId,
+                                                @Param("folderIds") List<Long> folderIds);
 
     @Transactional
     @Modifying
     @Query("UPDATE FolderEntity f SET f.isDeleted = :deleted WHERE f.parentFolderId IN (:folderIdsToBeDeleted)")
-    void updateDeletedByParentFolderIds(@Param("deleted") Boolean deleted, List<Long> folderIdsToBeDeleted);
+    void updateDeletedByParentFolderIds(@Param("deleted") Boolean deleted,
+                                        @Param("folderIdsToBeDeleted") List<Long> folderIdsToBeDeleted);
 
     @Transactional
     @Modifying
     @Query("UPDATE FolderEntity f SET f.isDeleted = :deleted WHERE f.id IN (:folderIdsToBeDeleted)")
-    void updateDeletedByFolderIds(@Param("deleted") Boolean deleted, List<Long> folderIdsToBeDeleted);
+    void updateDeletedByFolderIds(@Param("deleted") Boolean deleted,
+                                  @Param("folderIdsToBeDeleted") List<Long> folderIdsToBeDeleted);
 }
