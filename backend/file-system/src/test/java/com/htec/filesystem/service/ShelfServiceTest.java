@@ -163,7 +163,7 @@ class ShelfServiceTest {
         verify(fileRepository, times(0)).updateIsDeletedByShelfIds(delete, shelfIds);
         verify(shelfRepository, times(0)).save(shelf);
 
-        assertEquals(ErrorMessages.USER_NOT_ALLOWED.getErrorMessage(), exception.getMessage());
+        assertEquals(ErrorMessages.USER_NOT_ALLOWED_TO_DELETE_SHELF.getErrorMessage(), exception.getMessage());
     }
 
     @Test

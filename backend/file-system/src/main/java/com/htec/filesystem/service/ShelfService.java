@@ -1,7 +1,10 @@
 package com.htec.filesystem.service;
 
 import com.htec.filesystem.annotation.AuthUser;
+import com.htec.filesystem.dto.FileDTO;
 import com.htec.filesystem.dto.ShelfDTO;
+import com.htec.filesystem.entity.FileEntity;
+import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ExceptionSupplier;
 import com.htec.filesystem.mapper.FileMapper;
@@ -79,7 +82,7 @@ public class ShelfService {
         }
 
         if (!shelfEntities.stream().map(ShelfEntity::getId).collect(Collectors.toList()).containsAll(shelfIds)) {
-            throw ExceptionSupplier.userNotAllowed.get();
+            throw ExceptionSupplier.userNotAllowedToDeleteShelf.get();
         }
 
         shelfRepository.updateIsDeletedByIds(delete, shelfIds);
@@ -107,7 +110,7 @@ public class ShelfService {
         ShelfEntity shelfEntity = shelfRepository.findById(shelfId).orElseThrow(ExceptionSupplier.noShelfWithGivenId);
 
         if (shelfEntity.getUserId() != userId)
-            throw ExceptionSupplier.userNotAllowed.get();
+            throw ExceptionSupplier.userNotAllowedToDeleteShelf.get();
 
         String shelfPath = homePath + userPath + userId + pathSeparator + "shelves" + pathSeparator + shelfId;
 
@@ -117,7 +120,31 @@ public class ShelfService {
         } catch (IOException e) {
             throw ExceptionSupplier.couldNotDeleteShelf.get();
         }
+    }
 
+    public List<FileDTO> getShelfContent(Long shelfId, Long userId) {
 
+        ShelfEntity shelfEntity = shelfRepository.findById(shelfId).orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+
+        if(shelfEntity.getUserId() != userId)
+            throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
+
+        List<FileDTO> dtoFiles = new ArrayList<>();
+
+        List<FileEntity> fileEntities = fileRepository.findAllByShelfIdAndParentFolderIdIsNull(shelfId);
+        List<FolderEntity> folderEntities = folderRepository.findAllByShelfIdAndParentFolderIdIsNull(shelfId);
+
+        for (FolderEntity folderEntity : folderEntities) {
+
+            FileDTO fileDto = FileMapper.INSTANCE.folderEntityToFileDTO(folderEntity);
+            dtoFiles.add(fileDto);
+        }
+
+        for (FileEntity fileEntity : fileEntities) {
+
+            FileDTO fileDto = FileMapper.INSTANCE.fileEntityToFileDTO(fileEntity);
+            dtoFiles.add(fileDto);
+        }
+        return dtoFiles;
     }
 }
