@@ -23,6 +23,7 @@ import java.nio.file.FileSystems;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -126,7 +127,7 @@ public class ShelfService {
 
         ShelfEntity shelfEntity = shelfRepository.findById(shelfId).orElseThrow(ExceptionSupplier.noShelfWithGivenId);
 
-        if(shelfEntity.getUserId() != userId)
+        if (!Objects.equals(shelfEntity.getUserId(), userId))
             throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
 
         List<FileDTO> dtoFiles = new ArrayList<>();
@@ -134,17 +135,9 @@ public class ShelfService {
         List<FileEntity> fileEntities = fileRepository.findAllByShelfIdAndParentFolderIdIsNull(shelfId);
         List<FolderEntity> folderEntities = folderRepository.findAllByShelfIdAndParentFolderIdIsNull(shelfId);
 
-        for (FolderEntity folderEntity : folderEntities) {
+        dtoFiles.addAll(FileMapper.INSTANCE.fileEntitiesToFileDTOs(fileEntities));
+        dtoFiles.addAll(FileMapper.INSTANCE.folderEntitiesToFileDTOs(folderEntities));
 
-            FileDTO fileDto = FileMapper.INSTANCE.folderEntityToFileDTO(folderEntity);
-            dtoFiles.add(fileDto);
-        }
-
-        for (FileEntity fileEntity : fileEntities) {
-
-            FileDTO fileDto = FileMapper.INSTANCE.fileEntityToFileDTO(fileEntity);
-            dtoFiles.add(fileDto);
-        }
         return dtoFiles;
     }
 }

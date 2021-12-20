@@ -19,12 +19,12 @@ public interface FileMapper {
     ShelfDTO shelfEntityToShelfDto(ShelfEntity shelfEntity);
 
     @Mapping(target = "folder", constant = "false")
-    FileDTO fileEntityToFileDTO(FileEntity fileEntity);
+    FileDTO fileEntitiesToFileDTOs(FileEntity fileEntity);
 
     @Mapping(target = "folder", constant = "true")
-    FileDTO folderEntityToFileDTO(FolderEntity folderEntity);
+    FileDTO folderEntitiesToFileDTOs(FolderEntity folderEntity);
 
-    List<FileDTO> fileEntityToFileDTO(List<FileEntity> fileEntities);
+    List<FileDTO> fileEntitiesToFileDTOs(List<FileEntity> fileEntities);
 
-    List<FileDTO> folderEntityToFileDTO(List<FolderEntity> folderEntities);
+    List<FileDTO> folderEntitiesToFileDTOs(List<FolderEntity> folderEntities);
 }

@@ -1,10 +1,12 @@
 package com.htec.filesystem.service;
 
 import com.htec.filesystem.annotation.AuthUser;
+import com.htec.filesystem.dto.FileDTO;
 import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ShelfException;
+import com.htec.filesystem.mapper.FileMapper;
 import com.htec.filesystem.model.request.CreateShelfRequestModel;
 import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FolderRepository;
@@ -185,6 +187,56 @@ class ShelfServiceTest {
             mocked.verify(() -> FileUtils.deleteDirectory(any(File.class)));
 
         }
+    }
 
+    @Test
+    void getShelfContent() {
+
+        Long shelfId = 15L;
+        Long userId = 1L;
+
+        ShelfEntity shelfEntity = new ShelfEntity();
+        shelfEntity.setUserId(userId);
+
+
+
+        FileEntity fileEntity = new FileEntity();
+        List<FileEntity> fileList = new ArrayList<>();
+        fileList.add(fileEntity);
+
+        FolderEntity folderEntity = new FolderEntity();
+        List<FolderEntity> folderList = new ArrayList<>();
+        folderList.add(folderEntity);
+
+        List<FileDTO> dtoList = new ArrayList<>();
+        dtoList.addAll(FileMapper.INSTANCE.fileEntitiesToFileDTOs(fileList));
+        dtoList.addAll(FileMapper.INSTANCE.folderEntitiesToFileDTOs(folderList));
+
+
+        when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
+        when(fileRepository.findAllByShelfIdAndParentFolderIdIsNull(anyLong())).thenReturn(fileList);
+        when(folderRepository.findAllByShelfIdAndParentFolderIdIsNull(anyLong())).thenReturn(folderList);
+
+        List<FileDTO> returnFileDtos = shelfService.getShelfContent(shelfId, userId);
+
+        assertEquals(dtoList.size(), returnFileDtos.size());
+    }
+
+    @Test
+    void getShelfContent_UserNotAllowedToAccessShelf() {
+
+        Long shelfId = 15L;
+        Long userId = 1L;
+
+        ShelfEntity shelfEntity = new ShelfEntity();
+        shelfEntity.setUserId(3L);
+
+        when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
+
+        ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
+            shelfService.getShelfContent(shelfId, userId);
+        });
+
+        assertEquals(ErrorMessages.USER_NOT_ALLOWED_TO_ACCESS_THIS_SHELF.getErrorMessage(), exception.getMessage());
     }
 }
