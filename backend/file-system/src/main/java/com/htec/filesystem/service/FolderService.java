@@ -13,6 +13,7 @@ import com.htec.filesystem.repository.FolderTreeRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.nio.file.FileSystems;
@@ -130,6 +131,7 @@ public class FolderService {
         folderRepository.save(folderEntity);
     }
 
+    @Transactional
     public void updateDeleted(Long userId, List<Long> folderIds, Boolean deleted) {
 
         List<FolderEntity> folderEntities = folderRepository.findByUserIdAndFolderIds(userId, folderIds);

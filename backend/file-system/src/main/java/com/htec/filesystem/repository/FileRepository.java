@@ -32,13 +32,11 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
                                                                   @Param("folderId") Long folderId,
                                                                   @Param("deleted") Boolean deleted);
 
-    @Transactional
     @Modifying
     @Query("UPDATE FileEntity f SET f.isDeleted = :deleted WHERE f.parentFolderId IN (:folderIdsToBeDeleted)")
     void updateDeletedByParentFolderIds(@Param("deleted") Boolean deleted,
                                         @Param("folderIdsToBeDeleted") List<Long> folderIdsToBeDeleted);
 
-    @Transactional
     @Modifying
     @Query("UPDATE FileEntity f SET f.isDeleted = :deleted WHERE f.id IN (:fileIdsToBeDeleted)")
     void updateDeletedByFileIds(@Param("deleted") Boolean deleted,
