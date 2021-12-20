@@ -7,16 +7,20 @@ import com.htec.filesystem.exception.ExceptionSupplier;
 import com.htec.filesystem.mapper.FileMapper;
 import com.htec.filesystem.model.request.CreateFolderRequestModel;
 import com.htec.filesystem.repository.FileRepository;
+import com.htec.filesystem.repository.FileTreeRepository;
 import com.htec.filesystem.repository.FolderRepository;
+import com.htec.filesystem.repository.FolderTreeRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.nio.file.FileSystems;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FolderService {
@@ -27,10 +31,17 @@ public class FolderService {
 
     private final FolderRepository folderRepository;
     private final FileRepository fileRepository;
+    private final FolderTreeRepository folderTreeRepository;
+    private final FileTreeRepository fileTreeRepository;
 
-    public FolderService(FolderRepository folderRepository, FileRepository fileRepository) {
+    public FolderService(FolderRepository folderRepository,
+                         FileRepository fileRepository,
+                         FolderTreeRepository folderTreeRepository,
+                         FileTreeRepository fileTreeRepository) {
         this.folderRepository = folderRepository;
         this.fileRepository = fileRepository;
+        this.folderTreeRepository = folderTreeRepository;
+        this.fileTreeRepository = fileTreeRepository;
     }
 
     public boolean initializeFolders(Long userId) {
@@ -57,10 +68,10 @@ public class FolderService {
         List<FileDTO> fileDTOS = new ArrayList<>();
 
         List<FolderEntity> allFolders = folderRepository
-                .findAllByUserIdAndParentFolderId(userId, folderId, false);
+                .findAllByUserIdAndParentFolderIdAndIsDeleted(userId, folderId, false);
 
         List<FileEntity> allFiles = fileRepository
-                .findAllByUserIdAndParentFolderId(userId, folderId, false);
+                .findAllByUserIdAndParentFolderIdAndIsDeleted(userId, folderId, false);
 
         fileDTOS.addAll(FileMapper.INSTANCE.fileEntitiesToFileDTOs(allFiles));
         fileDTOS.addAll(FileMapper.INSTANCE.folderEntitiesToFileDTOs(allFolders));
@@ -118,5 +129,27 @@ public class FolderService {
         folderEntity.setCreatedAt(LocalDateTime.now());
 
         folderRepository.save(folderEntity);
+    }
+
+    @Transactional
+    public void updateDeleted(Long userId, List<Long> folderIds, Boolean deleted) {
+
+        List<FolderEntity> folderEntities = folderRepository.findByUserIdAndFolderIds(userId, folderIds);
+
+        if (!folderEntities.stream().map(FolderEntity::getId).collect(Collectors.toList()).containsAll(folderIds)) {
+            throw ExceptionSupplier.userNotAllowedToDeleteFolder.get();
+        }
+
+        List<FolderEntity> downStreamFolders = folderTreeRepository.getFolderDownStreamTrees(folderIds, !deleted);
+
+        List<Long> downStreamFoldersIds = downStreamFolders.stream().map(FolderEntity::getId).collect(Collectors.toList());
+
+        List<FileEntity> downStreamFiles = fileTreeRepository.getFileDownStreamTrees(folderIds, !deleted);
+
+        List<Long> downStreamFilesIds = downStreamFiles.stream().map(FileEntity::getId).collect(Collectors.toList());
+
+        folderRepository.updateDeletedByFolderIds(deleted, downStreamFoldersIds);
+
+        fileRepository.updateDeletedByFileIds(deleted, downStreamFilesIds);
     }
 }

@@ -22,6 +22,7 @@ public enum ErrorMessages {
     SHELF_NOT_FOUND("Shelf not found."),
     FOLDER_NOT_FOUND("Folder not found."),
     USER_NOT_ALLOWED_TO_DELETE_SHELF("You are not allowed to delete this shelf."),
+    USER_NOT_ALLOWED_TO_DELETE_FOLDER("You are not allowed to delete this folder."),
     USER_NOT_ALLOWED_TO_ACCESS_THIS_SHELF("You are not allowed to access this shelf."),
     AUTHENTICATION_CREDENTIALS_NOT_VALID("Authentication credentials not valid."),
     BAD_REQUEST("Bad request."),
