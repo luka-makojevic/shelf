@@ -60,7 +60,6 @@ public class ShelfService {
         shelfEntity.setDeleted(false);
         shelfEntity.setCreatedAt(LocalDateTime.now());
 
-
         ShelfEntity savedEntity = shelfRepository.save(shelfEntity);
 
         Long shelfId = savedEntity.getId();

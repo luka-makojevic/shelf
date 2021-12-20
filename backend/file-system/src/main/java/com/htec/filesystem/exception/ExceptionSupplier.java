@@ -41,9 +41,9 @@ public class ExceptionSupplier {
 
     public static final Supplier<ShelfException> couldNotDeleteShelf = () -> new ShelfException(
             ErrorMessages.COULD_NOT_DELETE_SHELF.getErrorMessage(),
-            HttpStatus.BAD_REQUEST.value(),
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
             LocalDateTime.now().format(formatter),
-            ErrorMessages.BAD_REQUEST.getErrorMessage()
+            ErrorMessages.INTERNAL_SERVER_ERROR_.getErrorMessage()
     );
 
     public static final Supplier<ShelfException> fileAlreadyExists = () -> new ShelfException(
