@@ -1,4 +1,4 @@
-import { ChangeEventHandler } from 'react';
+import { ChangeEventHandler, FocusEventHandler } from 'react';
 import { FieldError } from 'react-hook-form';
 import { InputFieldType } from '../../../interfaces/dataTypes';
 
@@ -13,4 +13,6 @@ export type InputFieldProps = {
   error?: FieldError;
   type?: InputFieldType;
   value?: string;
+  onFocus?: FocusEventHandler;
+  onBlur?: FocusEventHandler;
 };
