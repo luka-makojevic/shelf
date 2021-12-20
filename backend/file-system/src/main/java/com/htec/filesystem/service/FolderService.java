@@ -109,10 +109,10 @@ public class FolderService {
     public void createFolderInDb(String name, String path, Long shelfId, Long parentFolderId) {
 
         if (parentFolderId == 0) {
-            if (folderRepository.findByNameAndParentFolderIdAndIsDeleted(name, null).isPresent())
+            if (folderRepository.findByNameAndParentFolderId(name, null).isPresent())
                 throw ExceptionSupplier.folderAlreadyExists.get();
         } else {
-            if (folderRepository.findByNameAndParentFolderIdAndIsDeleted(name, parentFolderId).isPresent())
+            if (folderRepository.findByNameAndParentFolderId(name, parentFolderId).isPresent())
                 throw ExceptionSupplier.folderAlreadyExists.get();
         }
 

@@ -32,7 +32,7 @@ public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
                                                                     @Param("folderId") Long folderId,
                                                                     @Param("deleted") Boolean deleted);
 
-    Optional<FolderEntity> findByNameAndParentFolderIdAndIsDeleted(String name, Long parentFolderId);
+    Optional<FolderEntity> findByNameAndParentFolderId(String name, Long parentFolderId);
 
     @Query("SELECT f " +
             "FROM FolderEntity f JOIN ShelfEntity s ON (f.shelfId = s.id)" +
