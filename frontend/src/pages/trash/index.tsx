@@ -38,6 +38,9 @@ const data: FileDataType[] = [
     size: 33,
     isDeleted: true,
     userId: 40,
+    shelfId: 1,
+    parentFolderId: 2,
+    path: '',
   },
   {
     name: 'Folder 2',
@@ -47,6 +50,9 @@ const data: FileDataType[] = [
     size: 33,
     isDeleted: true,
     userId: 40,
+    shelfId: 1,
+    parentFolderId: 2,
+    path: '',
   },
   {
     name: 'Folder 63',
@@ -56,6 +62,9 @@ const data: FileDataType[] = [
     size: 33,
     isDeleted: true,
     userId: 40,
+    shelfId: 1,
+    parentFolderId: 2,
+    path: '',
   },
 ];
 

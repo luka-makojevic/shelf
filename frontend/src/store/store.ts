@@ -3,6 +3,8 @@ import loadingReducer from './loadingReducer';
 import userReducer from './userReducer';
 import shelfReducer from './shelfReducer';
 import trashReducer from './trashReducer';
+import fileReducer from './fileReducer';
+import pathHistoryReducer from './pathHistory';
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +12,8 @@ export const store = configureStore({
     loading: loadingReducer,
     shelf: shelfReducer,
     trash: trashReducer,
+    file: fileReducer,
+    pathHistory: pathHistoryReducer,
   },
 });
 export type AppDispatch = typeof store.dispatch;
