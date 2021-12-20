@@ -4,6 +4,7 @@ import userReducer from './userReducer';
 import shelfReducer from './shelfReducer';
 import fileReducer from './fileReducer';
 import pathHistoryReducer from './pathHistory';
+import sharedReducer from './sharedReducer';
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     loading: loadingReducer,
     shelf: shelfReducer,
     file: fileReducer,
+    shared: sharedReducer,
     pathHistory: pathHistoryReducer,
   },
 });

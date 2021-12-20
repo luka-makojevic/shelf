@@ -1,6 +1,8 @@
+// import { useEffect, useState } from 'react';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { TableDataTypes } from '../../interfaces/dataTypes';
+import { TableDataTypes, UserType } from '../../interfaces/dataTypes';
+// import userServices from '../../services/userServices';
 import { theme } from '../../theme';
 import CheckBox from '../UI/checkbox/checkBox';
 import { StyledRow, StyledCell, ActionContainer } from './table -styles';
@@ -42,6 +44,24 @@ export const DashboardTableRow = ({
     }
   };
 
+  // const [user, setUser] = useState<UserType>();
+
+  // NE RADI JER JE OVO IZ ADMIN SERVIC-A I OBIVAN USER NEMA PERMISSION DA DOBIJE USER-A
+  // useEffect(() => {
+  //   console.log('ok');
+  //   if (path === 'shared/') {
+  //     userServices
+  //       .getUserById(data.sharedBy)
+  //       .then((res) => {
+  //         setUser(res.data);
+  //         console.log('ok');
+  //       })
+  //       .catch((err) => {
+  //         console.log(err.response.data.message);
+  //       });
+  //   }
+  // }, []);
+
   const CellWithHandler = ({
     rowText,
     pathName,
@@ -73,6 +93,10 @@ export const DashboardTableRow = ({
       )}
       {Object.values(data).map((rowText) => {
         if (rowText === data.id) return null;
+        // if (rowText === user?.id) {
+        //   console.log(user.email);
+        //   return <StyledCell>{user.email}</StyledCell>;
+        // }
         return (
           <CellWithHandler
             key={rowText}

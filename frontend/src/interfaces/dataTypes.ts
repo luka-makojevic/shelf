@@ -156,6 +156,15 @@ export interface FileTableDataTypes {
   createdAt: string;
   id: number;
 }
+
+export interface SharedTableDataTypes {
+  [key: string]: string | number;
+  name: string;
+  sharedBy: number;
+  createdAt: string;
+  id: number;
+}
+
 export interface FunctionTableDataTypes {
   [key: string]: string | number;
   name: string;
@@ -168,7 +177,8 @@ export interface FunctionTableDataTypes {
 export type TableDataTypes =
   | FunctionTableDataTypes
   | FileTableDataTypes
-  | ShelfTableDataTypes;
+  | ShelfTableDataTypes
+  | SharedTableDataTypes;
 
 export interface SortingDirectionTypes {
   [name: string]: SortingDirection;
@@ -182,11 +192,29 @@ export interface FileDataType {
   id: number;
   name: string;
   path: string;
-  createdAt: number;
+  createdAt: string;
   folder: boolean;
   shelfId: number;
   parentFolderId: number;
+  size: number;
+  userId: number;
+  isDeleted: boolean;
 }
+
+export interface SharedFilesDataType {
+  id: number;
+  name: string;
+  path: string;
+  createdAt: string;
+  folder: boolean;
+  shelfId: number;
+  parentFolderId: number;
+  size: number;
+  userId: number;
+  isDeleted: boolean;
+  sharedBy: number;
+}
+
 export interface PathHistoryDataType {
   name: string;
   id: number;
