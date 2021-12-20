@@ -22,9 +22,9 @@ public interface FileMapper {
     FileDTO fileEntityToFileDTO(FileEntity fileEntity);
 
     @Mapping(target = "folder", constant = "true")
-    FileDTO fileEntityToFileDTO(FolderEntity folderEntity);
+    FileDTO folderEntityToFileDTO(FolderEntity folderEntity);
 
-    List<FileDTO> fileEntityToFileDTO(List<FileEntity> fileEntities);
+    List<FileDTO> fileEntitiesToFileDTOs(List<FileEntity> fileEntities);
 
-    List<FileDTO> folderEntityToFileDTO(List<FolderEntity> folderEntities);
+    List<FileDTO> folderEntitiesToFileDTOs(List<FolderEntity> folderEntities);
 }

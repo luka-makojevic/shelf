@@ -1,7 +1,6 @@
 package com.htec.filesystem.repository;
 
 import com.htec.filesystem.entity.FileEntity;
-import com.htec.filesystem.entity.FolderEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -27,4 +26,6 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
             "FROM FileEntity f JOIN ShelfEntity s ON (f.shelfId = s.id)" +
             "WHERE s.userId = ?1 AND f.parentFolderId = ?2 AND f.isDeleted = ?3")
     List<FileEntity> findAllByUserIdAndParentFolderId(Long userId, Long folderId, Boolean isDeleted);
+
+    List<FileEntity> findAllByShelfIdAndParentFolderIdIsNull(Long shelfId);
 }
