@@ -137,8 +137,15 @@ public class ExceptionSupplier {
             ErrorMessages.NOT_FOUND.getErrorMessage()
     );
 
-    public static final Supplier<ShelfException> userNotAllowed = () -> new ShelfException(
-            ErrorMessages.USER_NOT_ALLOWED.getErrorMessage(),
+    public static final Supplier<ShelfException> userNotAllowedToDeleteShelf = () -> new ShelfException(
+            ErrorMessages.USER_NOT_ALLOWED_TO_DELETE_SHELF.getErrorMessage(),
+            HttpStatus.FORBIDDEN.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.FORBIDDEN.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> userNotAllowedToAccessShelf = () -> new ShelfException(
+            ErrorMessages.USER_NOT_ALLOWED_TO_ACCESS_THIS_SHELF.getErrorMessage(),
             HttpStatus.FORBIDDEN.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.FORBIDDEN.getErrorMessage()
