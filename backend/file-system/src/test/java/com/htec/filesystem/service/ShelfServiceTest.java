@@ -76,8 +76,11 @@ class ShelfServiceTest {
         CreateShelfRequestModel createShelfRequestModel = new CreateShelfRequestModel("test");
         Long userId = 2L;
 
+        when(shelfRepository.save(any(ShelfEntity.class))).thenReturn(new ShelfEntity());
+
         shelfService.createShelf(createShelfRequestModel, userId);
-        verify(shelfRepository, times(1)).save(any());
+
+        verify(shelfRepository, times(1)).save(any(ShelfEntity.class));
     }
 
     @Test
