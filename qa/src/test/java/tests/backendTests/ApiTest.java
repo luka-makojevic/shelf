@@ -1,17 +1,17 @@
 package tests.backendTests;
 
 import com.google.gson.Gson;
-import helpers.BaseHelperPropertieManager;
-import helpers.ExcelReader;
-import helpers.RestHelpers;
-import helpers.RestFunctionHelpers;
+import db.SheldDBServer;
+import helpers.*;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.junit.AfterClass;
 import org.junit.Test;
 import pages.User;
-
 import java.io.IOException;
+import java.sql.*;
+
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
@@ -71,56 +71,87 @@ public class ApiTest {
             System.out.println("---------------------------------");
         }
     }
-        @Test
-        public void apiGetUserById() throws IOException
-        {
-            User user = new User();
-            user.setValuesForValidUserToLogin(user.email, user.password);
-            Gson gson = new Gson();
-            String parsedJson = gson.toJson(user);
 
-            RestFunctionHelpers restFunctionHelpers = new RestFunctionHelpers();
-            Response response = restFunctionHelpers.generateToken(parsedJson);
-            String tokenGenerated = response.jsonPath().get("jwtToken");
-            Integer id = response.jsonPath().get("id");
+    @Test
+    public void apiGetUserById() throws IOException
+    {
+        User user = new User();
+        user.setValuesForValidUserToLogin(user.email, user.password);
+        Gson gson = new Gson();
+        String parsedJson = gson.toJson(user);
 
-            // Sending Get request
-            restFunctionHelpers = new RestFunctionHelpers();
-            response = restFunctionHelpers.sendingGetReqWithGeneratedToken(tokenGenerated, id);
+        RestFunctionHelpers restFunctionHelpers = new RestFunctionHelpers();
+        Response response = restFunctionHelpers.generateToken(parsedJson);
+        String tokenGenerated = response.jsonPath().get("jwtToken");
+        Integer id = response.jsonPath().get("id");
 
-            //Assertions
-            assertEquals(id.toString(),response.jsonPath().get("id").toString());
-            assertEquals("Srdjan", response.jsonPath().get("firstName").toString());
-            assertEquals("Rados", response.jsonPath().get("lastName").toString());
-            assertEquals("srdjan.rados@htecgroup.com", response.jsonPath().get("email").toString());
-            assertEquals("{id=3, name=user}", response.jsonPath().get("role").toString());
+        // Sending Get request
+        restFunctionHelpers = new RestFunctionHelpers();
+        response = restFunctionHelpers.sendingGetReqWithGeneratedToken(tokenGenerated, id);
+
+        //Assertions
+        assertEquals(id.toString(),response.jsonPath().get("id").toString());
+        assertEquals("Srdjan", response.jsonPath().get("firstName").toString());
+        assertEquals("Rados", response.jsonPath().get("lastName").toString());
+        assertEquals("srdjan.rados@htecgroup.com", response.jsonPath().get("email").toString());
+        assertEquals("{id=3, name=user}", response.jsonPath().get("role").toString());
+    }
+
+    @Test
+    public void apiUpdateUserById() throws IOException
+    {
+        User user = new User();
+        user.setValuesForValidUserToLogin(user.email, user.password);
+        Gson gson = new Gson();
+        String parsedJson = gson.toJson(user);
+
+        RestFunctionHelpers restFunctionHelpers = new RestFunctionHelpers();
+        Response response = restFunctionHelpers.generateToken(parsedJson);
+        String tokenGenerated = response.jsonPath().get("jwtToken");
+        Integer id = response.jsonPath().get("id");
+
+        // Sending Update request
+        user = new User();
+        user.setValuesForUpdatingUser(user.firstName, user.lastName, user.password);
+        gson = new Gson();
+        parsedJson = gson.toJson(user);
+        restFunctionHelpers = new RestFunctionHelpers();
+        response = restFunctionHelpers.sendingPutReqWithGeneratedToken(parsedJson,tokenGenerated, id);
+
+        //Assertions
+        assertEquals(id.toString(),response.jsonPath().get("id").toString());
+        assertEquals("Srdjan1", response.jsonPath().get("firstName").toString());
+        assertEquals("Rados1", response.jsonPath().get("lastName").toString());
+        assertEquals("{id=3, name=user}", response.jsonPath().get("role").toString());
+    }
+
+    @AfterClass
+    public static void setUp() throws SQLException, ClassNotFoundException
+    {
+        // Data
+        String email = "srdjan.rados@htecgroup.com";
+
+        SheldDBServer sheldDBServer = new SheldDBServer();
+        String query = "SELECT * FROM shelf.user WHERE shelf.user.email='srdjan.rados@htecgroup.com'";
+        ResultSet rs = sheldDBServer.testDB(query);
+        String table = null;
+
+        boolean status = false;
+
+        while (rs.next()){
+            table = rs.getString("email");
+            System.out.println("table:"+table);
+            if (email.equals(table)) {
+                sheldDBServer = new SheldDBServer();
+                String sql = "DELETE FROM shelf.user WHERE shelf.user.email='srdjan.rados@htecgroup.com'";
+                sheldDBServer.deleteQuery(sql);
+                status = true;
+                break;
+            }
+            if(status == false)
+            {
+                System.out.println("Record not found");
+            }
         }
-
-        @Test
-        public void apiUpdateUserById() throws IOException
-        {
-            User user = new User();
-            user.setValuesForValidUserToLogin(user.email, user.password);
-            Gson gson = new Gson();
-            String parsedJson = gson.toJson(user);
-
-            RestFunctionHelpers restFunctionHelpers = new RestFunctionHelpers();
-            Response response = restFunctionHelpers.generateToken(parsedJson);
-            String tokenGenerated = response.jsonPath().get("jwtToken");
-            Integer id = response.jsonPath().get("id");
-
-            // Sending Update request
-            user = new User();
-            user.setValuesForUpdatingUser(user.firstName, user.lastName, user.password);
-            gson = new Gson();
-            parsedJson = gson.toJson(user);
-            restFunctionHelpers = new RestFunctionHelpers();
-            response = restFunctionHelpers.sendingPutReqWithGeneratedToken(parsedJson,tokenGenerated, id);
-
-            //Assertions
-            assertEquals(id.toString(),response.jsonPath().get("id").toString());
-            assertEquals("Srdjan1", response.jsonPath().get("firstName").toString());
-            assertEquals("Rados1", response.jsonPath().get("lastName").toString());
-            assertEquals("{id=3, name=user}", response.jsonPath().get("role").toString());
-        }
+    }
 }
