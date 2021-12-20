@@ -1,14 +1,24 @@
 package com.htec.filesystem.service;
 
+import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.dto.FileDTO;
 import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.exception.ShelfException;
+<<<<<<< HEAD
 import com.htec.filesystem.model.request.CreateFolderRequestModel;
+=======
+>>>>>>> CU-1xpd34y - Soft Delete folder
 import com.htec.filesystem.repository.FileRepository;
+import com.htec.filesystem.repository.FileTreeRepository;
 import com.htec.filesystem.repository.FolderRepository;
+<<<<<<< HEAD
 import com.htec.filesystem.util.ErrorMessages;
 import com.htec.filesystem.util.FileUtil;
+=======
+import com.htec.filesystem.repository.FolderTreeRepository;
+import com.htec.filesystem.util.ErrorMessages;
+>>>>>>> CU-1xpd34y - Soft Delete folder
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,11 +32,17 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+<<<<<<< HEAD
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
+=======
+import java.util.stream.Collectors;
+
+import static org.mockito.Mockito.*;
+>>>>>>> CU-1xpd34y - Soft Delete folder
 
 @ExtendWith(MockitoExtension.class)
 class FolderServiceTest {
@@ -36,6 +52,10 @@ class FolderServiceTest {
 
     @Mock
     private FileRepository fileRepository;
+    @Mock
+    private FolderTreeRepository folderTreeRepository;
+    @Mock
+    private FileTreeRepository fileTreeRepository;
 
     @Mock
     private File file;
@@ -112,8 +132,148 @@ class FolderServiceTest {
         ResponseEntity<List<FileDTO>> files = folderService.getFiles(testUserId, testFolderId);
 
         Assertions.assertEquals(2, Objects.requireNonNull(files.getBody()).size());
-        Assertions.assertEquals(false, Objects.requireNonNull(files.getBody()).get(0).isFolder());
-        Assertions.assertEquals(true, Objects.requireNonNull(files.getBody()).get(1).isFolder());
+        Assertions.assertFalse(Objects.requireNonNull(files.getBody()).get(0).isFolder());
+        Assertions.assertTrue(Objects.requireNonNull(files.getBody()).get(1).isFolder());
+    }
+
+    @Test
+    void uploadDeleted() {
+
+        Long testUserId = 1L;
+
+        List<Long> testFolderIds = new ArrayList<>();
+        testFolderIds.add(1L);
+
+        AuthUser testAuthUser = new AuthUser();
+        testAuthUser.setId(testUserId);
+
+        ArrayList<FolderEntity> folderEntities = new ArrayList<FolderEntity>() {
+            {
+                FolderEntity folderEntity = new FolderEntity();
+                folderEntity.setId(1L);
+                add(folderEntity);
+            }
+        };
+
+        ArrayList<FileEntity> fileEntities = new ArrayList<FileEntity>() {
+            {
+                FileEntity folderEntity = new FileEntity();
+                folderEntity.setId(1L);
+                add(folderEntity);
+            }
+        };
+
+        List<Long> downStreamFoldersIds = folderEntities.stream().map(FolderEntity::getId).collect(Collectors.toList());
+
+        List<Long> downStreamFilesIds = fileEntities.stream().map(FileEntity::getId).collect(Collectors.toList());
+
+        when(folderRepository.findByUserIdAndFolderId(testAuthUser.getId(), testFolderIds)).thenReturn(
+                new ArrayList<FolderEntity>() {
+                    {
+                        FolderEntity folderEntity = new FolderEntity();
+                        folderEntity.setId(1L);
+                        add(folderEntity);
+                    }
+                }
+        );
+        when(folderTreeRepository.getFolderDownStreamTrees(testFolderIds, false)).thenReturn(folderEntities);
+        when(fileTreeRepository.getFileDownStreamTrees(testFolderIds, false)).thenReturn(fileEntities);
+
+        folderService.updateDeleted(testAuthUser, testFolderIds, true);
+
+        verify(folderRepository, times(1)).findByUserIdAndFolderId(testAuthUser.getId(), testFolderIds);
+        verify(folderTreeRepository, times(1)).getFolderDownStreamTrees(testFolderIds, false);
+        verify(fileTreeRepository, times(1)).getFileDownStreamTrees(testFolderIds, false);
+        verify(folderRepository, times(1)).updateDeletedByFolderIds(true, downStreamFoldersIds);
+        verify(fileRepository, times(1)).updateDeletedByFileIds(true, downStreamFilesIds);
+    }
+
+    @Test
+    void uploadDeleted_Multiple() {
+
+        Long testUserId = 1L;
+
+        List<Long> testFolderIds = new ArrayList<>();
+        testFolderIds.add(1L);
+        testFolderIds.add(2L);
+        testFolderIds.add(3L);
+
+        AuthUser testAuthUser = new AuthUser();
+        testAuthUser.setId(testUserId);
+
+        ArrayList<FolderEntity> folderEntities = new ArrayList<FolderEntity>() {
+            {
+                FolderEntity folderEntity = new FolderEntity();
+                folderEntity.setId(1L);
+                add(folderEntity);
+            }
+        };
+
+        ArrayList<FileEntity> fileEntities = new ArrayList<FileEntity>() {
+            {
+                FileEntity folderEntity = new FileEntity();
+                folderEntity.setId(1L);
+                add(folderEntity);
+            }
+        };
+
+        List<Long> downStreamFoldersIds = folderEntities.stream().map(FolderEntity::getId).collect(Collectors.toList());
+
+        List<Long> downStreamFilesIds = fileEntities.stream().map(FileEntity::getId).collect(Collectors.toList());
+
+        when(folderRepository.findByUserIdAndFolderId(testAuthUser.getId(), testFolderIds)).thenReturn(
+                new ArrayList<FolderEntity>() {
+                    {
+                        FolderEntity folderEntity = new FolderEntity();
+                        folderEntity.setId(1L);
+                        add(folderEntity);
+
+                        folderEntity = new FolderEntity();
+                        folderEntity.setId(2L);
+                        add(folderEntity);
+
+                        folderEntity = new FolderEntity();
+                        folderEntity.setId(3L);
+                        add(folderEntity);
+                    }
+                }
+        );
+        when(folderTreeRepository.getFolderDownStreamTrees(testFolderIds, false)).thenReturn(folderEntities);
+        when(fileTreeRepository.getFileDownStreamTrees(testFolderIds, false)).thenReturn(fileEntities);
+
+        folderService.updateDeleted(testAuthUser, testFolderIds, true);
+
+        verify(folderRepository, times(1)).findByUserIdAndFolderId(testAuthUser.getId(), testFolderIds);
+        verify(folderTreeRepository, times(1)).getFolderDownStreamTrees(testFolderIds, false);
+        verify(fileTreeRepository, times(1)).getFileDownStreamTrees(testFolderIds, false);
+        verify(folderRepository, times(1)).updateDeletedByFolderIds(true, downStreamFoldersIds);
+        verify(fileRepository, times(1)).updateDeletedByFileIds(true, downStreamFilesIds);
+    }
+
+    @Test
+    void uploadDeleted_UserNotAllowed() {
+
+        Long testUserId = 1L;
+
+        List<Long> testFolderIds = new ArrayList<>();
+        testFolderIds.add(1L);
+
+        AuthUser testAuthUser = new AuthUser();
+        testAuthUser.setId(testUserId);
+
+        when(folderRepository.findByUserIdAndFolderId(testAuthUser.getId(), testFolderIds)).thenReturn(new ArrayList<>());
+
+        ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
+            folderService.updateDeleted(testAuthUser, testFolderIds, true);
+        });
+
+        verify(folderRepository, times(1)).findByUserIdAndFolderId(testAuthUser.getId(), testFolderIds);
+        verify(folderTreeRepository, times(0)).getFolderDownStreamTrees(testFolderIds, false);
+        verify(fileTreeRepository, times(0)).getFileDownStreamTrees(testFolderIds, false);
+        verify(folderRepository, times(0)).updateDeletedByFolderIds(true, testFolderIds);
+        verify(fileRepository, times(0)).updateDeletedByFileIds(true, testFolderIds);
+
+        Assertions.assertEquals(ErrorMessages.USER_NOT_ALLOWED.getErrorMessage(), exception.getMessage());
     }
 
     @Test
