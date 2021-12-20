@@ -18,6 +18,7 @@ public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
     @Modifying
     @Query("UPDATE FolderEntity f SET f.isDeleted = ?1 WHERE f.shelfId IN (?2)")
     void updateIsDeletedByShelfIds(boolean delete, List<Long> shelfIds);
+
     List<FolderEntity> findAllByParentFolderId(Long folderId);
 
     @Query("SELECT f " +
@@ -25,5 +26,5 @@ public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
             "WHERE s.userId = ?1 AND f.parentFolderId = ?2 AND f.isDeleted = ?3")
     List<FolderEntity> findAllByUserIdAndParentFolderId(Long userId, Long folderId, Boolean isDeleted);
 
-    Optional<FolderEntity> findByPath(String path);
+    Optional<FolderEntity> findByNameAndParentFolderId(String name, Long parentFolderId);
 }

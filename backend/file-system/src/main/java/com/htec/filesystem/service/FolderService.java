@@ -98,8 +98,13 @@ public class FolderService {
 
     public void createFolderInDb(String name, String path, Long shelfId, Long parentFolderId) {
 
-        if (folderRepository.findByPath(path).isPresent())
-            throw ExceptionSupplier.folderAlreadyExists.get();
+        if (parentFolderId == 0) {
+            if (folderRepository.findByNameAndParentFolderId(name, null).isPresent())
+                throw ExceptionSupplier.folderAlreadyExists.get();
+        } else {
+            if (folderRepository.findByNameAndParentFolderId(name, parentFolderId).isPresent())
+                throw ExceptionSupplier.folderAlreadyExists.get();
+        }
 
         FolderEntity folderEntity = new FolderEntity();
         folderEntity.setName(name);
