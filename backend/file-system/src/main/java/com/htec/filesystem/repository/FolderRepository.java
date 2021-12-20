@@ -41,13 +41,11 @@ public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
     List<FolderEntity> findByUserIdAndFolderIds(@Param("userId") Long userId,
                                                 @Param("folderIds") List<Long> folderIds);
 
-    @Transactional
     @Modifying
     @Query("UPDATE FolderEntity f SET f.isDeleted = :deleted WHERE f.parentFolderId IN (:folderIdsToBeDeleted)")
     void updateDeletedByParentFolderIds(@Param("deleted") Boolean deleted,
                                         @Param("folderIdsToBeDeleted") List<Long> folderIdsToBeDeleted);
 
-    @Transactional
     @Modifying
     @Query("UPDATE FolderEntity f SET f.isDeleted = :deleted WHERE f.id IN (:folderIdsToBeDeleted)")
     void updateDeletedByFolderIds(@Param("deleted") Boolean deleted,
