@@ -24,7 +24,7 @@ public interface FileMapper {
     @Mapping(target = "folder", constant = "true")
     FileDTO folderEntityToFileDTO(FolderEntity folderEntity);
 
-    List<FileDTO> fileEntityToFileDTO(List<FileEntity> fileEntities);
+    List<FileDTO> fileEntitiesToFileDTOs(List<FileEntity> fileEntities);
 
-    List<FileDTO> folderEntityToFileDTO(List<FolderEntity> folderEntities);
+    List<FileDTO> folderEntitiesToFileDTOs(List<FolderEntity> folderEntities);
 }

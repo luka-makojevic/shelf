@@ -209,8 +209,8 @@ class ShelfServiceTest {
         folderList.add(folderEntity);
 
         List<FileDTO> dtoList = new ArrayList<>();
-        dtoList.addAll(FileMapper.INSTANCE.fileEntityToFileDTO(fileList));
-        dtoList.addAll(FileMapper.INSTANCE.folderEntityToFileDTO(folderList));
+        dtoList.addAll(FileMapper.INSTANCE.fileEntitiesToFileDTOs(fileList));
+        dtoList.addAll(FileMapper.INSTANCE.folderEntitiesToFileDTOs(folderList));
 
 
         when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
