@@ -62,8 +62,8 @@ public class FolderService {
         List<FileEntity> allFiles = fileRepository
                 .findAllByUserIdAndParentFolderId(userId, folderId, false);
 
-        fileDTOS.addAll(FileMapper.INSTANCE.fileEntitiesToFileDTOs(allFiles));
-        fileDTOS.addAll(FileMapper.INSTANCE.folderEntitiesToFileDTOs(allFolders));
+        fileDTOS.addAll(FileMapper.INSTANCE.fileEntityToFileDTO(allFiles));
+        fileDTOS.addAll(FileMapper.INSTANCE.folderEntityToFileDTO(allFolders));
 
         return ResponseEntity.status(HttpStatus.OK).body(fileDTOS);
     }

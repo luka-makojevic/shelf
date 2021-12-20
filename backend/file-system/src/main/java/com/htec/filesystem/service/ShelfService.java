@@ -135,8 +135,8 @@ public class ShelfService {
         List<FileEntity> fileEntities = fileRepository.findAllByShelfIdAndParentFolderIdIsNull(shelfId);
         List<FolderEntity> folderEntities = folderRepository.findAllByShelfIdAndParentFolderIdIsNull(shelfId);
 
-        dtoFiles.addAll(FileMapper.INSTANCE.fileEntitiesToFileDTOs(fileEntities));
-        dtoFiles.addAll(FileMapper.INSTANCE.folderEntitiesToFileDTOs(folderEntities));
+        dtoFiles.addAll(FileMapper.INSTANCE.fileEntityToFileDTO(fileEntities));
+        dtoFiles.addAll(FileMapper.INSTANCE.folderEntityToFileDTO(folderEntities));
 
         return dtoFiles;
     }
