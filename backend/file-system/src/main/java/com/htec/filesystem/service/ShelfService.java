@@ -9,6 +9,7 @@ import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ExceptionSupplier;
 import com.htec.filesystem.mapper.FileMapper;
 import com.htec.filesystem.model.request.CreateShelfRequestModel;
+import com.htec.filesystem.model.request.ShelfEditRequestModel;
 import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FolderRepository;
 import com.htec.filesystem.repository.ShelfRepository;
@@ -51,7 +52,6 @@ public class ShelfService {
     public boolean createShelf(CreateShelfRequestModel createShelfRequestModel, Long userId) {
 
         String shelfName = createShelfRequestModel.getShelfName();
-
 
         fileSystemValidator.isShelfNameValid(shelfName);
 
@@ -102,7 +102,8 @@ public class ShelfService {
     @Transactional
     public void hardDeleteShelf(Long shelfId, Long userId) {
 
-        ShelfEntity shelfEntity = shelfRepository.findById(shelfId).orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+        ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
+                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
 
         if (shelfEntity.getUserId() != userId)
             throw ExceptionSupplier.userNotAllowedToDeleteShelf.get();
@@ -119,7 +120,8 @@ public class ShelfService {
 
     public List<ShelfItemDTO> getShelfContent(Long shelfId, Long userId) {
 
-        ShelfEntity shelfEntity = shelfRepository.findById(shelfId).orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+        ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
+                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
 
         if (!Objects.equals(shelfEntity.getUserId(), userId))
             throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
@@ -133,5 +135,29 @@ public class ShelfService {
         dtoFiles.addAll(FileMapper.INSTANCE.folderEntitiesToShelfItemDTOs(folderEntities));
 
         return dtoFiles;
+    }
+
+    public void updateShelfName(ShelfEditRequestModel shelfEditRequestModel, Long userId) {
+
+        String shelfName = shelfEditRequestModel.getShelfName();
+        Long shelfId = shelfEditRequestModel.getShelfId();
+
+        fileSystemValidator.isShelfNameValid(shelfName);
+
+        ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
+                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+
+        List<ShelfEntity> shelfList = shelfRepository.findAllByUserIdAndIsDeletedFalse(userId);
+
+        if(shelfList.stream().map(ShelfEntity::getName).collect(Collectors.toList()).contains(shelfName))
+            throw ExceptionSupplier.shelfAlreadyExists.get();
+
+        if (!Objects.equals(shelfEntity.getUserId(), userId))
+            throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
+
+        if (!shelfEntity.getName().equals(shelfName))
+            shelfEntity.setName(shelfName);
+
+        shelfRepository.save(shelfEntity);
     }
 }
