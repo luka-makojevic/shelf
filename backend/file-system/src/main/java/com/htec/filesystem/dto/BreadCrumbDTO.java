@@ -5,14 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ShelfDTO {
-    private Long id;
-    private String name;
-    private LocalDateTime createdAt;
+public class BreadCrumbDTO {
+    private String folderName;
+    private Long folderId;
 }
