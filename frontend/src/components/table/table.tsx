@@ -22,10 +22,11 @@ interface TableProps {
   mulitSelect?: boolean;
   data: TableDataTypes[];
   headers: HeaderTypes[];
-  setTableData: Dispatch<SetStateAction<TableDataTypes[]>>;
+  setTableData: (data: TableDataTypes[]) => void;
   path: string;
   onDelete?: (shelf: TableDataTypes) => void;
   onEdit?: (data: TableDataTypes) => void;
+  getSelectedRows?: (data: TableDataTypes[]) => void;
 }
 
 export const Table = ({
@@ -36,10 +37,10 @@ export const Table = ({
   path,
   onDelete,
   onEdit,
+  getSelectedRows,
 }: TableProps) => {
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const [selectedRows, setSelectedRows] = useState<TableDataTypes[]>([]);
-
   const [sortingDirections, setSortingDirections] =
     useState<SortingDirectionTypes>({});
 
@@ -56,8 +57,11 @@ export const Table = ({
   useEffect(() => {
     if (selectedRows.length !== data.length) {
       setSelectAll(false);
-    } else {
+    } else if (data.length !== 0) {
       setSelectAll(true);
+    }
+    if (getSelectedRows) {
+      getSelectedRows(selectedRows);
     }
   }, [selectedRows]);
 
@@ -101,7 +105,7 @@ export const Table = ({
                 </TableHeaderInner>
               </StyledTableHeader>
             ))}
-            {!mulitSelect && <StyledTableHeader>Actions</StyledTableHeader>}
+            <StyledTableHeader>Actions</StyledTableHeader>
           </tr>
         </Thead>
         <tbody>

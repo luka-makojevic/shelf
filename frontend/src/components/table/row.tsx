@@ -1,9 +1,9 @@
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaFolder, FaFile } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { TableDataTypes } from '../../interfaces/dataTypes';
 import { theme } from '../../theme';
 import CheckBox from '../UI/checkbox/checkBox';
-import { StyledRow, StyledCell, ActionContainer } from './table -styles';
+import { StyledRow, StyledCell, IconContainer } from './table -styles';
 
 interface RowProps {
   data: TableDataTypes;
@@ -46,14 +46,23 @@ export const DashboardTableRow = ({
     rowText,
     pathName,
   }: {
-    rowText: string | number;
+    rowText: string | number | boolean;
     pathName: string;
   }) => {
     const handleClick = () => {
-      navigation(pathName);
+      if (data.folder || data.folder === undefined) navigation(pathName);
     };
 
-    return <StyledCell onClick={handleClick}>{rowText}</StyledCell>;
+    return (
+      <StyledCell onClick={handleClick}>
+        {data.folder !== undefined && (
+          <IconContainer>
+            {rowText === data.name && (data.folder ? <FaFolder /> : <FaFile />)}
+          </IconContainer>
+        )}
+        {rowText}
+      </StyledCell>
+    );
   };
 
   const handleDelete = () => {
@@ -72,7 +81,13 @@ export const DashboardTableRow = ({
         </StyledCell>
       )}
       {Object.values(data).map((rowText) => {
-        if (rowText === data.id) return null;
+        if (
+          rowText === data.id ||
+          rowText === data.folder ||
+          typeof rowText === 'boolean'
+        )
+          return null;
+
         return (
           <CellWithHandler
             key={rowText}
@@ -83,10 +98,15 @@ export const DashboardTableRow = ({
       })}
       {!multiSelect && (
         <StyledCell>
-          <ActionContainer>
+          <IconContainer>
             <FaTrash fill={theme.colors.danger} onClick={handleDelete} />
-          </ActionContainer>
+          </IconContainer>
           <FaEdit fill={theme.colors.black} onClick={handleEdit} />
+        </StyledCell>
+      )}
+      {multiSelect && (
+        <StyledCell>
+          <FaEdit fill={theme.colors.black} />
         </StyledCell>
       )}
     </StyledRow>

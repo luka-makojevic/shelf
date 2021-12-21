@@ -41,7 +41,6 @@ const Shelves = () => {
 
   useEffect(() => {
     getShelves(
-      { userId: user?.id },
       () => {},
       (err: string) => {
         setError(err);
