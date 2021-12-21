@@ -1,5 +1,7 @@
 package com.htec.filesystem.controller;
 
+import com.htec.filesystem.annotation.AuthUser;
+import com.htec.filesystem.annotation.AuthenticationUser;
 import com.htec.filesystem.model.response.FileResponseModel;
 import com.htec.filesystem.model.response.TextResponseMessage;
 import com.htec.filesystem.service.FileService;
@@ -11,7 +13,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -57,5 +59,12 @@ public class FileController {
         fileService.saveFile(shelfId, folderId, files);
 
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("File Uploaded", HttpStatus.OK.value()));
+    }
+
+    @PutMapping("/move-to-trash")
+    public ResponseEntity<TextResponseMessage> softDeleteFile(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) {
+
+        fileService.updateDeletedFiles(user, fileIds, true);
+        return ResponseEntity.ok().body(new TextResponseMessage("File/s moved to trash.", HttpStatus.OK.value()));
     }
 }
