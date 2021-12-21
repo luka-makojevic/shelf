@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,13 +38,20 @@ public class FolderService {
     private final FolderRepository folderRepository;
     private final FileRepository fileRepository;
     private final FolderTreeRepository folderTreeRepository;
+    private final FileTreeRepository fileTreeRepository;
+
+    private final FileService fileService;
 
     public FolderService(FolderRepository folderRepository,
                          FileRepository fileRepository,
-                         FolderTreeRepository folderTreeRepository) {
+                         FolderTreeRepository folderTreeRepository,
+                         FileTreeRepository fileTreeRepository,
+                         FileService fileService) {
         this.folderRepository = folderRepository;
         this.fileRepository = fileRepository;
         this.folderTreeRepository = folderTreeRepository;
+        this.fileTreeRepository = fileTreeRepository;
+        this.fileService = fileService;
     }
 
     public boolean initializeFolders(Long userId) {
@@ -153,7 +161,7 @@ public class FolderService {
     }
 
     @Transactional
-    public void updateDeleted(Long userId, List<Long> folderIds, Boolean deleted) {
+    public void updateDeletedFolders(Long userId, List<Long> folderIds, Boolean deleted) {
 
         List<FolderEntity> folderEntities = folderRepository.findByUserIdAndFolderIds(userId, folderIds);
 
@@ -168,5 +176,27 @@ public class FolderService {
         folderRepository.updateDeletedByFolderIds(deleted, downStreamFoldersIds);
 
         fileRepository.updateDeletedByParentFolderIds(deleted, downStreamFoldersIds);
+
+        List<FileEntity> downStreamFiles = fileTreeRepository.getFileDownStreamTrees(folderIds, !deleted);
+
+        if (deleted) {
+            moveToTrash(downStreamFolders);
+//            fileService.moveToTrash(downStreamFiles);
+        } else {
+            recover(downStreamFolders);
+//            fileService.recover(downStreamFiles);
+        }
+    }
+
+    private void moveToTrash(List<FolderEntity> folders) {
+        for (FolderEntity folderEntity : folders) {
+            UUID uuid = UUID.randomUUID();
+            String uuidAsString = uuid.toString();
+            folderEntity.setName(folderEntity.getName() + "_" + uuidAsString);
+        }
+    }
+
+    private void recover(List<FolderEntity> folders) {
+
     }
 }
