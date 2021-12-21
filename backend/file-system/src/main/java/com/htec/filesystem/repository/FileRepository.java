@@ -44,12 +44,12 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
     List<FileEntity> findAllByShelfIdAndParentFolderIdIsNull(Long shelfId);
 
     @Query("SELECT f FROM FileEntity f INNER JOIN ShelfEntity sh " +
-            "ON (f.shelfId = sh.id) WHERE sh.userId =: userId AND f.id IN (:fileIds)")
+            "ON (f.shelfId = sh.id) WHERE sh.userId = :userId AND f.id IN (:fileIds) AND f.isDeleted = false")
     List<FileEntity> findAllByUserIdAndIdIn(@Param("userId") Long userId,
                                             @Param("fileIds")List<Long> fileIds);
 
     @Modifying
-    @Query("UPDATE FileEntity f SET f.isDeleted =: delete WHERE f.id IN (:fileIds)")
+    @Query("UPDATE FileEntity f SET f.isDeleted = :delete WHERE f.id IN (:fileIds)")
     void updateIsDeletedByIds(@Param("delete") boolean delete,
                               @Param("fileIds") List<Long> fileIds);
 }

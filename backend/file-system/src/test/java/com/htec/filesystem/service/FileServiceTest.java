@@ -230,7 +230,7 @@ class FileServiceTest {
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
                 () -> fileService.getFile(path));
 
-        assertEquals(ErrorMessages.FILES_NOT_FOUND.getErrorMessage(), exception.getMessage());
+        assertEquals(ErrorMessages.FILE_NOT_FOUND.getErrorMessage(), exception.getMessage());
     }
 
     @Test
@@ -303,6 +303,6 @@ class FileServiceTest {
         verify(fileRepository, times(0)).saveAll(fileEntities);
         verify(fileRepository, times(0)).updateIsDeletedByIds(delete, fileIds);
 
-        assertEquals(ErrorMessages.FILE_NOT_FOUND.getErrorMessage(), exception.getMessage());
+        assertEquals(ErrorMessages.USER_NOT_ALLOWED_TO_DELETE_FILE.getErrorMessage(), exception.getMessage());
     }
 }
