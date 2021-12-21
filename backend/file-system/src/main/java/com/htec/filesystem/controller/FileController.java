@@ -51,7 +51,7 @@ public class FileController {
     }
 
     @PostMapping("/upload/{shelfId}/{folderId}")
-    public ResponseEntity uploadFile(@RequestBody Map<String, Pair<String, String>> files,
+    public ResponseEntity<TextResponseMessage> uploadFile(@RequestBody Map<String, Pair<String, String>> files,
                                      @PathVariable Long shelfId,
                                      @PathVariable Long folderId) {
 

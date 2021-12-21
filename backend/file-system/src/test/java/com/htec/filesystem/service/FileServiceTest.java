@@ -134,7 +134,7 @@ class FileServiceTest {
         long shelfId = 1;
         long folderId = 1;
 
-        Map<String, Pair<String, String>> files = new HashMap<>();
+        Map<String, Pair<String, String>> files = null;
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
                 () -> fileService.saveFile(shelfId, folderId, files));

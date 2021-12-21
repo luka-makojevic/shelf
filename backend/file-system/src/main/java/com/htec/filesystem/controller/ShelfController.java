@@ -65,7 +65,7 @@ public class ShelfController {
     }
 
     @PutMapping("/rename")
-    public ResponseEntity updateShelfName(@AuthenticationUser AuthUser authUser, @RequestBody ShelfEditRequestModel shelfEditRequestModel) {
+    public ResponseEntity<TextResponseMessage> updateShelfName(@AuthenticationUser AuthUser authUser, @RequestBody ShelfEditRequestModel shelfEditRequestModel) {
 
         shelfService.updateShelfName(shelfEditRequestModel, authUser.getId());
 
