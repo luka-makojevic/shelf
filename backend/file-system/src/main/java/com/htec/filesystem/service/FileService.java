@@ -135,7 +135,8 @@ public class FileService {
     }
 
     @Transactional
-    public void updateDeletedMultipleFiles(AuthUser user, List<Long> fileIds, boolean delete) {
+    public void updateDeletedFiles(AuthUser user, List<Long> fileIds, boolean delete) {
+
         List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds, !delete);
 
         if (fileEntities.size() != fileIds.size()) {
@@ -149,7 +150,7 @@ public class FileService {
         for (FileEntity fileEntity : fileEntities) {
             UUID uuid = UUID.randomUUID();
             String uuidAsString = uuid.toString();
-            fileEntity.setName(uuidAsString + "_" + fileEntity.getName());
+            fileEntity.setName(fileEntity.getName() + "_" + uuidAsString);
         }
 
         fileRepository.saveAll(fileEntities);

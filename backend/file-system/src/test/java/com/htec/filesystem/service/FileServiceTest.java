@@ -242,7 +242,7 @@ class FileServiceTest {
 
         when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds, false)).thenReturn(fileEntities);
 
-        fileService.updateDeletedMultipleFiles(user, fileIds, delete);
+        fileService.updateDeletedFiles(user, fileIds, delete);
 
         verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds, false);
         verify(fileRepository, times(1)).saveAll(fileEntities);
@@ -259,7 +259,7 @@ class FileServiceTest {
 
         when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds, true)).thenReturn(fileEntities);
 
-        fileService.updateDeletedMultipleFiles(user, fileIds, delete);
+        fileService.updateDeletedFiles(user, fileIds, delete);
 
         verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds, true);
         verify(fileRepository, times(1)).saveAll(fileEntities);
@@ -275,7 +275,7 @@ class FileServiceTest {
         boolean delete = true;
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
-                () -> fileService.updateDeletedMultipleFiles(user, fileIds, delete));
+                () -> fileService.updateDeletedFiles(user, fileIds, delete));
 
         verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds, false);
         verify(fileRepository, times(0)).saveAll(fileEntities);
@@ -296,7 +296,7 @@ class FileServiceTest {
         when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds, false)).thenReturn(fileEntities);
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
-                () -> fileService.updateDeletedMultipleFiles(user, fileIds, delete));
+                () -> fileService.updateDeletedFiles(user, fileIds, delete));
 
         verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds, false);
         verify(fileRepository, times(0)).saveAll(fileEntities);

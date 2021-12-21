@@ -13,7 +13,6 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +64,7 @@ public class FileController {
     @PutMapping("/move-to-trash")
     public ResponseEntity<TextResponseMessage> softDeleteFile(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) {
 
-        fileService.updateDeletedMultipleFiles(user, fileIds, true);
+        fileService.updateDeletedFiles(user, fileIds, true);
         return ResponseEntity.ok().body(new TextResponseMessage("File/s moved to trash.", HttpStatus.OK.value()));
     }
 }
