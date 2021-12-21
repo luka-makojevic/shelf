@@ -43,5 +43,4 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
                                 @Param("fileIdsToBeDeleted") List<Long> fileIdsToBeDeleted);
 
     List<FileEntity> findAllByShelfIdAndParentFolderIdIsNull(Long shelfId);
-
 }

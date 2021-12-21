@@ -137,7 +137,7 @@ public class ShelfService {
         dtoItems.addAll(ShelfItemMapper.INSTANCE.folderEntitiesToShelfItemDTOs(folderEntities));
 
         List<BreadCrumbDTO> breadCrumbDTOS = new ArrayList<>();
-        breadCrumbDTOS.add(new BreadCrumbDTO(shelfEntity.getName(), 0L));
+        breadCrumbDTOS.add(new BreadCrumbDTO(shelfEntity.getName(), shelfEntity.getId()));
 
         return new ShelfContentResponseModel(breadCrumbDTOS, dtoItems);
     }

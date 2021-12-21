@@ -114,12 +114,14 @@ public class GatewayService {
     private ResponseEntity<byte[]> send(String apiUrl, HttpMethod httpMethod, HttpEntity<byte[]> request) {
 
         try {
-            return restTemplate.exchange(
+            ResponseEntity<byte[]> exchange = restTemplate.exchange(
                     apiUrl,
                     httpMethod,
                     request,
                     byte[].class
             );
+
+            return ResponseEntity.status(exchange.getStatusCode()).body(exchange.getBody());
         } catch (HttpClientErrorException ex) {
 
             return ResponseEntity.status(ex.getStatusCode())

@@ -23,6 +23,7 @@ import java.io.File;
 import java.nio.file.FileSystems;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,16 +37,13 @@ public class FolderService {
     private final FolderRepository folderRepository;
     private final FileRepository fileRepository;
     private final FolderTreeRepository folderTreeRepository;
-    private final FileTreeRepository fileTreeRepository;
 
     public FolderService(FolderRepository folderRepository,
                          FileRepository fileRepository,
-                         FolderTreeRepository folderTreeRepository,
-                         FileTreeRepository fileTreeRepository) {
+                         FolderTreeRepository folderTreeRepository) {
         this.folderRepository = folderRepository;
         this.fileRepository = fileRepository;
         this.folderTreeRepository = folderTreeRepository;
-        this.fileTreeRepository = fileTreeRepository;
     }
 
     public boolean initializeFolders(Long userId) {
@@ -87,15 +85,17 @@ public class FolderService {
 
     private List<BreadCrumbDTO> generateBreadCrumbs(Long folderId) {
 
-        List<BreadCrumbDTO> breadCrumbs = new ArrayList<>();
-
-        ShelfEntity shelfEntity = folderRepository.getShelfByFolderId(folderId).get();
-
-        breadCrumbs.add(new BreadCrumbDTO(shelfEntity.getName(), 0L));
-
         List<FolderEntity> folderUpStreamTree = folderTreeRepository.getFolderUpStreamTree(folderId, false);
 
-        breadCrumbs.addAll(BreadCrumbsMapper.INSTANCE.folderEntitiesToBreadCrumbDTOs(folderUpStreamTree));
+        List<BreadCrumbDTO> breadCrumbs = new ArrayList<>(
+                BreadCrumbsMapper.INSTANCE.folderEntitiesToBreadCrumbDTOs(folderUpStreamTree));
+
+        Collections.reverse(breadCrumbs);
+
+        ShelfEntity shelfEntity = folderRepository.getShelfByFolderId(folderId)
+                .orElseThrow(ExceptionSupplier.shelfNotFound);
+
+        breadCrumbs.add(0, new BreadCrumbDTO(shelfEntity.getName(), shelfEntity.getId()));
 
         return breadCrumbs;
     }
@@ -165,12 +165,8 @@ public class FolderService {
 
         List<Long> downStreamFoldersIds = downStreamFolders.stream().map(FolderEntity::getId).collect(Collectors.toList());
 
-        List<FileEntity> downStreamFiles = fileTreeRepository.getFileDownStreamTrees(folderIds, !deleted);
-
-        List<Long> downStreamFilesIds = downStreamFiles.stream().map(FileEntity::getId).collect(Collectors.toList());
-
         folderRepository.updateDeletedByFolderIds(deleted, downStreamFoldersIds);
 
-        fileRepository.updateDeletedByFileIds(deleted, downStreamFilesIds);
+        fileRepository.updateDeletedByParentFolderIds(deleted, downStreamFoldersIds);
     }
 }
