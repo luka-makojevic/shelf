@@ -233,7 +233,7 @@ class FileServiceTest {
     }
 
     @Test
-    void updateDeletedFileTrue() {
+    void updateDeletedFilesTrue() {
         user.setId(1L);
         file.setId(1L);
         fileEntities.add(file);
@@ -250,7 +250,7 @@ class FileServiceTest {
     }
 
     @Test
-    void updateDeletedFileFalse() {
+    void updateDeletedFilesFalse() {
         user.setId(1L);
         file.setId(1L);
         fileEntities.add(file);
@@ -267,7 +267,7 @@ class FileServiceTest {
     }
 
     @Test
-    void updateDeletedFile_idsNotFound() {
+    void updateDeletedFiles_idsNotFound() {
 
         user.setId(1L);
         file.setId(1L);
@@ -285,7 +285,7 @@ class FileServiceTest {
     }
 
     @Test
-    void softDeleteFile_idsNotEquals() {
+    void softDeleteFiles_idsNotEquals() {
 
         user.setId(1L);
         file.setId(1L);
