@@ -3,6 +3,7 @@ package com.htec.filesystem.controller;
 import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.annotation.AuthenticationUser;
 import com.htec.filesystem.model.request.CreateShelfRequestModel;
+import com.htec.filesystem.model.request.ShelfEditRequestModel;
 import com.htec.filesystem.model.response.TextResponseMessage;
 import com.htec.filesystem.service.ShelfService;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class ShelfController {
         this.shelfService = shelfService;
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity createShelf(@RequestBody CreateShelfRequestModel createShelfRequestModel,
                                       @AuthenticationUser AuthUser authUser) {
 
@@ -60,4 +61,13 @@ public class ShelfController {
 
         return ResponseEntity.ok(shelfService.getShelfContent(shelfId, authUser.getId()));
     }
+
+    @PutMapping("/rename")
+    public ResponseEntity updateShelfName(@AuthenticationUser AuthUser authUser, @RequestBody ShelfEditRequestModel shelfEditRequestModel) {
+
+        shelfService.updateShelfName(shelfEditRequestModel, authUser.getId());
+
+        return ResponseEntity.ok().body(new TextResponseMessage("Shelf name updated.", HttpStatus.OK.value()));
+    }
+
 }
