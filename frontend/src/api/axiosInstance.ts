@@ -1,9 +1,8 @@
 import axios, { AxiosRequestConfig } from 'axios';
-
-const API_URL = 'http://10.10.0.136:8080/account/';
+import { API_URL_ACCOUNT } from './api';
 
 const instance = axios.create({
-  baseURL: API_URL,
+  baseURL: API_URL_ACCOUNT,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -28,13 +27,16 @@ instance.interceptors.response.use(
     const originalConfig = err.config;
     if (err.response.data.message === 'Token expired.') {
       try {
-        const response = await axios.get(`${API_URL}auth/refresh/token`, {
-          headers: {
-            Authorization: `Bearer ${JSON.parse(
-              localStorage.getItem('refreshToken') || ''
-            )}`,
-          },
-        });
+        const response = await axios.get(
+          `${API_URL_ACCOUNT}auth/refresh/token`,
+          {
+            headers: {
+              Authorization: `Bearer ${JSON.parse(
+                localStorage.getItem('refreshToken') || ''
+              )}`,
+            },
+          }
+        );
 
         const { token: acccesToken } = response.data;
         localStorage.setItem('token', JSON.stringify(acccesToken));

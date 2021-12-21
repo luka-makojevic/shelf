@@ -41,7 +41,7 @@ const CreateShelfModal = ({
           );
         })
         .catch((err) => {
-          if (err.response.status === 500) {
+          if (err.response?.status === 500) {
             onError('Internal server error');
             return;
           }
