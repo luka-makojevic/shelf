@@ -5,7 +5,7 @@ import { useShelf } from '../../hooks/shelfHooks';
 import { TableDataTypes } from '../../interfaces/dataTypes';
 import { useAppSelector } from '../../store/hooks';
 import AlertPortal from '../../components/alert/alert';
-import CreateShelfModal from '../../components/modal/createShelfModal';
+import CreateShelfModal from '../../components/modal/shelfModal';
 import Modal from '../../components/modal';
 import { Button } from '../../components/UI/button';
 import { AlertMessage } from '../../utils/enums/alertMessages';
