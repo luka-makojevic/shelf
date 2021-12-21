@@ -1,7 +1,6 @@
 package tests.backendTests;
 
 import com.google.gson.Gson;
-import db.SheldDBServer;
 import helpers.*;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;
@@ -128,30 +127,32 @@ public class ApiTest {
     @AfterClass
     public static void setUp() throws SQLException, ClassNotFoundException
     {
-        // Data
-        String email = "srdjan.rados@htecgroup.com";
-
-        SheldDBServer sheldDBServer = new SheldDBServer();
-        String query = "SELECT * FROM shelf.user WHERE shelf.user.email='srdjan.rados@htecgroup.com'";
-        ResultSet rs = sheldDBServer.testDB(query);
-        String table = null;
-
-        boolean status = false;
-
-        while (rs.next()){
-            table = rs.getString("email");
-            System.out.println("table:"+table);
-            if (email.equals(table)) {
-                sheldDBServer = new SheldDBServer();
-                String sql = "DELETE FROM shelf.user WHERE shelf.user.email='srdjan.rados@htecgroup.com'";
-                sheldDBServer.deleteQuery(sql);
-                status = true;
-                break;
-            }
-            if(status == false)
-            {
-                System.out.println("Record not found");
-            }
-        }
+//        // Data
+//        String email = "srdjan.rados@htecgroup.com";
+//
+//        SheldDBServer sheldDBServer = new SheldDBServer();
+//        String query = "SELECT * FROM shelf.user WHERE shelf.user.email='srdjan.rados@htecgroup.com'";
+//        ResultSet rs = sheldDBServer.testDB(query);
+//        String table = null;
+//
+//        boolean status = false;
+//
+//        while (rs.next()){
+//            table = rs.getString("email");
+//            System.out.println("table:"+table);
+//            if (email.equals(table)) {
+//                sheldDBServer = new SheldDBServer();
+//                String sql = "DELETE FROM shelf.user WHERE shelf.user.email='srdjan.rados@htecgroup.com'";
+//                sheldDBServer.deleteQuery(sql);
+//                status = true;
+//                break;
+//            }
+//            if(status == false)
+//            {
+//                System.out.println("Record not found");
+//            }
+//        }
+    Cleanup cleanup = new Cleanup();
+    cleanup.cleanup();
     }
 }
