@@ -44,8 +44,8 @@ public class FolderController {
         return folderService.getFiles(user.getId(), folderId);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity createFolder(@RequestBody CreateFolderRequestModel createFolderRequestModel, @AuthenticationUser AuthUser authUser) {
+    @PostMapping
+    public ResponseEntity<TextResponseMessage> createFolder(@RequestBody CreateFolderRequestModel createFolderRequestModel, @AuthenticationUser AuthUser authUser) {
 
         HttpStatus retStatus = HttpStatus.OK;
 

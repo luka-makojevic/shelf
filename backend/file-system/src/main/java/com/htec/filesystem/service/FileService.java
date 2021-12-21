@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 public class FileService {
@@ -85,38 +86,49 @@ public class FileService {
 
     public void saveFile(Long shelfId, Long folderId, Map<String, Pair<String, String>> files) {
 
-        if (files == null || files.get("file") == null)
+        if (files == null)
             throw ExceptionSupplier.couldNotUploadFile.get();
 
-        byte[] bytes = Base64.getDecoder().decode(files.get("file").getSecond());
+        Set<String> uploadFileKeys = files.keySet();
 
-        String fileName = files.get("file").getFirst();
-        String localPath;
-        String dbPath;
+        for (String uploadFileKey : uploadFileKeys) {
 
-        ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
-                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+            byte[] bytes = Base64.getDecoder().decode(files.get(uploadFileKey).getSecond());
 
-        if (folderId != 0) {
+            String fileName = files.get(uploadFileKey).getFirst();
+            String localPath;
+            String dbPath;
 
-            FolderEntity folderEntity = folderRepository.findById(folderId)
-                    .orElseThrow(ExceptionSupplier.noFolderWithGivenId);
+            ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
+                    .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
 
-            dbPath = folderEntity.getPath() + pathSeparator + fileName;
-            localPath = userPath + folderEntity.getPath() + pathSeparator;
+            if (folderId != 0) {
 
-        } else {
+                FolderEntity folderEntity = folderRepository.findById(folderId)
+                        .orElseThrow(ExceptionSupplier.noFolderWithGivenId);
 
-            localPath = userPath + shelfEntity.getUserId() + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator;
-            dbPath = shelfEntity.getUserId() + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator + fileName;
+                dbPath = folderEntity.getPath() + pathSeparator + fileName;
+                localPath = userPath + folderEntity.getPath() + pathSeparator;
+
+                if (fileRepository.findByNameAndParentFolderId(fileName, folderId).isPresent())
+                    throw ExceptionSupplier.fileAlreadyExists.get();
+
+            } else {
+
+                localPath = userPath + shelfEntity.getUserId() + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator;
+                dbPath = shelfEntity.getUserId() + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator + fileName;
+
+                if (fileRepository.findByNameAndShelfId(fileName, shelfId).isPresent())
+                    throw ExceptionSupplier.fileAlreadyExists.get();
+            }
+
+            if (fileRepository.findByPath(dbPath).isPresent())
+                throw ExceptionSupplier.fileAlreadyExists.get();
+
+            String uploadDir = homePath + localPath;
+            FileUtil.saveFile(uploadDir, fileName, bytes);
+            saveFileIntoDB(dbPath, fileName, shelfId, folderId);
         }
-
-        if (fileRepository.findByPath(dbPath).isPresent())
-            throw ExceptionSupplier.fileAlreadyExists.get();
-
-        String uploadDir = homePath + localPath;
-        FileUtil.saveFile(uploadDir, fileName, bytes);
-        saveFileIntoDB(dbPath, fileName, shelfId, folderId);
     }
 
     public void saveFileIntoDB(String filePath, String fileName, long shelfId, long folderId) {
