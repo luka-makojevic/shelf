@@ -20,7 +20,6 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.util.Pair;
 
-import java.io.IOException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -234,35 +233,35 @@ class FileServiceTest {
     }
 
     @Test
-    void updateDeletedFileTrue() throws IOException {
+    void updateDeletedFileTrue() {
         user.setId(1L);
         file.setId(1L);
         fileEntities.add(file);
         fileIds.add(1L);
         boolean delete = true;
 
-        when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds)).thenReturn(fileEntities);
+        when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds, false)).thenReturn(fileEntities);
 
         fileService.updateDeletedMultipleFiles(user, fileIds, delete);
 
-        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
+        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds, false);
         verify(fileRepository, times(1)).saveAll(fileEntities);
         verify(fileRepository, times(1)).updateIsDeletedByIds(delete, fileIds);
     }
 
     @Test
-    void updateDeletedFileFalse() throws IOException {
+    void updateDeletedFileFalse() {
         user.setId(1L);
         file.setId(1L);
         fileEntities.add(file);
         fileIds.add(1L);
         boolean delete = false;
 
-        when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds)).thenReturn(fileEntities);
+        when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds, true)).thenReturn(fileEntities);
 
         fileService.updateDeletedMultipleFiles(user, fileIds, delete);
 
-        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
+        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds, true);
         verify(fileRepository, times(1)).saveAll(fileEntities);
         verify(fileRepository, times(1)).updateIsDeletedByIds(delete, fileIds);
     }
@@ -278,7 +277,7 @@ class FileServiceTest {
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
                 () -> fileService.updateDeletedMultipleFiles(user, fileIds, delete));
 
-        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
+        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds, false);
         verify(fileRepository, times(0)).saveAll(fileEntities);
         verify(fileRepository, times(0)).updateIsDeletedByIds(delete, fileIds);
 
@@ -294,12 +293,12 @@ class FileServiceTest {
         fileEntities.add(file);
         boolean delete = true;
 
-        when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds)).thenReturn(fileEntities);
+        when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds, false)).thenReturn(fileEntities);
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
                 () -> fileService.updateDeletedMultipleFiles(user, fileIds, delete));
 
-        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
+        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds, false);
         verify(fileRepository, times(0)).saveAll(fileEntities);
         verify(fileRepository, times(0)).updateIsDeletedByIds(delete, fileIds);
 

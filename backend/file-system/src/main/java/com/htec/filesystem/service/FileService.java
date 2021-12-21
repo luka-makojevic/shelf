@@ -136,7 +136,7 @@ public class FileService {
 
     @Transactional
     public void updateDeletedMultipleFiles(AuthUser user, List<Long> fileIds, boolean delete) {
-        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds);
+        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds, !delete);
 
         if (fileEntities.size() != fileIds.size()) {
             throw ExceptionSupplier.filesNotFound.get();
