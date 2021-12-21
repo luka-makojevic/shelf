@@ -1,5 +1,6 @@
 package com.htec.filesystem.service;
 
+import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
@@ -19,10 +20,10 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.util.Pair;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.io.IOException;
+import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -44,9 +45,17 @@ class FileServiceTest {
     @InjectMocks
     private FileService fileService;
 
+    AuthUser user;
+    FileEntity file;
+    List<Long> fileIds;
+    List<FileEntity> fileEntities;
+
     @BeforeEach
     void setUp() {
-
+        user = new AuthUser();
+        file = new FileEntity();
+        fileIds = new ArrayList<>();
+        fileEntities = new ArrayList<>();
     }
 
     @Test
@@ -80,11 +89,10 @@ class FileServiceTest {
 
         Map<String, Pair<String, String>> files = new HashMap<>();
 
-        ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
-            fileService.saveUserProfilePicture(id, files);
-        });
+        ShelfException exception = Assertions.assertThrows(ShelfException.class,
+                () -> fileService.saveUserProfilePicture(id, files));
 
-        Assertions.assertEquals(ErrorMessages.COULD_NOT_SAVE_IMAGE_FILE.getErrorMessage(), exception.getMessage());
+        assertEquals(ErrorMessages.COULD_NOT_SAVE_IMAGE_FILE.getErrorMessage(), exception.getMessage());
     }
 
     @Test
@@ -113,7 +121,6 @@ class FileServiceTest {
             mocked.when(() -> FileUtil.saveFile(anyString(), anyString(), any(byte[].class))).then(invocationOnMock -> null);
 
             when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
-            //when(fileRepository.findById(anyLong())).thenReturn(Optional.of(fileEntity));
 
             fileService.saveFile(shelfId, folderId, files);
 
@@ -130,11 +137,10 @@ class FileServiceTest {
 
         Map<String, Pair<String, String>> files = new HashMap<>();
 
-        ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
-            fileService.saveFile(shelfId, folderId, files);
-        });
+        ShelfException exception = Assertions.assertThrows(ShelfException.class,
+                () -> fileService.saveFile(shelfId, folderId, files));
 
-        Assertions.assertEquals(ErrorMessages.COULD_NOT_UPLOAD_FILE.getErrorMessage(), exception.getMessage());
+        assertEquals(ErrorMessages.COULD_NOT_UPLOAD_FILE.getErrorMessage(), exception.getMessage());
     }
 
     @Test
@@ -162,11 +168,10 @@ class FileServiceTest {
 
             mocked.when(() -> FileUtil.saveFile(anyString(), anyString(), any(byte[].class))).then(invocationOnMock -> null);
 
-            ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
-                fileService.saveFile(shelfId, folderId, files);
-            });
+            ShelfException exception = Assertions.assertThrows(ShelfException.class,
+                    () -> fileService.saveFile(shelfId, folderId, files));
 
-            Assertions.assertEquals(ErrorMessages.NO_SHELF_WITH_GIVEN_ID.getErrorMessage(), exception.getMessage());
+            assertEquals(ErrorMessages.NO_SHELF_WITH_GIVEN_ID.getErrorMessage(), exception.getMessage());
         }
     }
 
@@ -198,12 +203,10 @@ class FileServiceTest {
             when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
             when(folderRepository.findById(folderEntity.getId())).thenReturn(Optional.empty());
 
+            ShelfException exception = Assertions.assertThrows(ShelfException.class,
+                    () -> fileService.saveFile(shelfId, folderId, files));
 
-            ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
-                fileService.saveFile(shelfId, folderId, files);
-            });
-
-            Assertions.assertEquals(ErrorMessages.NO_FOLDER_WITH_GIVEN_ID.getErrorMessage(), exception.getMessage());
+            assertEquals(ErrorMessages.NO_FOLDER_WITH_GIVEN_ID.getErrorMessage(), exception.getMessage());
         }
     }
 
@@ -224,10 +227,82 @@ class FileServiceTest {
     void getFile_FileNotFound() {
         String path = "test.jpg";
 
-        ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
-            fileService.getFile(path);
-        });
+        ShelfException exception = Assertions.assertThrows(ShelfException.class,
+                () -> fileService.getFile(path));
 
-        Assertions.assertEquals(ErrorMessages.FILE_NOT_FOUND.getErrorMessage(), exception.getMessage());
+        assertEquals(ErrorMessages.FILES_NOT_FOUND.getErrorMessage(), exception.getMessage());
+    }
+
+    @Test
+    void updateDeletedFileTrue() throws IOException {
+        user.setId(1L);
+        file.setId(1L);
+        fileEntities.add(file);
+        fileIds.add(1L);
+        boolean delete = true;
+
+        when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds)).thenReturn(fileEntities);
+
+        fileService.updateDeletedMultipleFiles(user, fileIds, delete);
+
+        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
+        verify(fileRepository, times(1)).saveAll(fileEntities);
+        verify(fileRepository, times(1)).updateIsDeletedByIds(delete, fileIds);
+    }
+
+    @Test
+    void updateDeletedFileFalse() throws IOException {
+        user.setId(1L);
+        file.setId(1L);
+        fileEntities.add(file);
+        fileIds.add(1L);
+        boolean delete = false;
+
+        when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds)).thenReturn(fileEntities);
+
+        fileService.updateDeletedMultipleFiles(user, fileIds, delete);
+
+        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
+        verify(fileRepository, times(1)).saveAll(fileEntities);
+        verify(fileRepository, times(1)).updateIsDeletedByIds(delete, fileIds);
+    }
+
+    @Test
+    void updateDeletedFile_idsNotFound() {
+
+        user.setId(1L);
+        file.setId(1L);
+        fileIds.add(1L);
+        boolean delete = true;
+
+        ShelfException exception = Assertions.assertThrows(ShelfException.class,
+                () -> fileService.updateDeletedMultipleFiles(user, fileIds, delete));
+
+        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
+        verify(fileRepository, times(0)).saveAll(fileEntities);
+        verify(fileRepository, times(0)).updateIsDeletedByIds(delete, fileIds);
+
+        assertEquals(ErrorMessages.FILES_NOT_FOUND.getErrorMessage(), exception.getMessage());
+    }
+
+    @Test
+    void softDeleteFile_idsNotEquals() {
+
+        user.setId(1L);
+        file.setId(1L);
+        fileIds.add(3L);
+        fileEntities.add(file);
+        boolean delete = true;
+
+        when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds)).thenReturn(fileEntities);
+
+        ShelfException exception = Assertions.assertThrows(ShelfException.class,
+                () -> fileService.updateDeletedMultipleFiles(user, fileIds, delete));
+
+        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
+        verify(fileRepository, times(0)).saveAll(fileEntities);
+        verify(fileRepository, times(0)).updateIsDeletedByIds(delete, fileIds);
+
+        assertEquals(ErrorMessages.FILE_NOT_FOUND.getErrorMessage(), exception.getMessage());
     }
 }

@@ -1,5 +1,6 @@
 package com.htec.filesystem.service;
 
+import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
@@ -11,15 +12,18 @@ import com.htec.filesystem.repository.ShelfRepository;
 import com.htec.filesystem.util.FileUtil;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StreamUtils;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class FileService {
@@ -128,5 +132,27 @@ public class FileService {
         fileEntity.setDeleted(false);
         fileEntity.setCreatedAt(LocalDateTime.now());
         fileRepository.save(fileEntity);
+    }
+
+    @Transactional
+    public void updateDeletedMultipleFiles(AuthUser user, List<Long> fileIds, boolean delete) throws IOException {
+        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds);
+
+        if (fileEntities.size() != fileIds.size()) {
+            throw ExceptionSupplier.filesNotFound.get();
+        }
+
+        if (!fileEntities.stream().map(FileEntity::getId).collect(Collectors.toList()).containsAll(fileIds)) {
+            throw ExceptionSupplier.userNotAllowedToDeleteFile.get();
+        }
+
+        for (FileEntity fileEntity : fileEntities) {
+            UUID uuid = UUID.randomUUID();
+            String uuidAsString = uuid.toString();
+            fileEntity.setName(uuidAsString + "_" + fileEntity.getName());
+        }
+
+        fileRepository.saveAll(fileEntities);
+        fileRepository.updateIsDeletedByIds(delete, fileIds);
     }
 }
