@@ -102,7 +102,8 @@ public class ShelfService {
     @Transactional
     public void hardDeleteShelf(Long shelfId, Long userId) {
 
-        ShelfEntity shelfEntity = shelfRepository.findById(shelfId).orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+        ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
+                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
 
         if (shelfEntity.getUserId() != userId)
             throw ExceptionSupplier.userNotAllowedToDeleteShelf.get();
@@ -119,7 +120,8 @@ public class ShelfService {
 
     public List<ShelfItemDTO> getShelfContent(Long shelfId, Long userId) {
 
-        ShelfEntity shelfEntity = shelfRepository.findById(shelfId).orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+        ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
+                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
 
         if (!Objects.equals(shelfEntity.getUserId(), userId))
             throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
@@ -142,7 +144,8 @@ public class ShelfService {
 
         fileSystemValidator.isShelfNameValid(shelfName);
 
-        ShelfEntity shelfEntity = shelfRepository.findById(shelfId).orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+        ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
+                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
 
         List<ShelfEntity> shelfList = shelfRepository.findAllByUserIdAndIsDeletedFalse(userId);
 
