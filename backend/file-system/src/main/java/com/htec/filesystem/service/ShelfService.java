@@ -107,7 +107,7 @@ public class ShelfService {
         ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
                 .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
 
-        if (shelfEntity.getUserId() != userId)
+        if (!Objects.equals(shelfEntity.getUserId(), userId))
             throw ExceptionSupplier.userNotAllowedToDeleteShelf.get();
 
         String shelfPath = homePath + userPath + userId + pathSeparator + "shelves" + pathSeparator + shelfId;
