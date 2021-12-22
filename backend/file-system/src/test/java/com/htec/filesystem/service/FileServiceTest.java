@@ -11,6 +11,7 @@ import com.htec.filesystem.repository.FolderRepository;
 import com.htec.filesystem.repository.ShelfRepository;
 import com.htec.filesystem.util.ErrorMessages;
 import com.htec.filesystem.util.FileUtil;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.util.Pair;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 
@@ -419,5 +421,60 @@ class FileServiceTest {
                 () -> fileService.fileRename(userId, renameFileRequestModel));
 
         assertEquals(ErrorMessages.USER_NOT_ALLOWED_TO_ACCESS_THIS_FILE.getErrorMessage(), exception.getMessage());
+    }
+
+    @Test
+    void deleteFile() throws IOException {
+        user.setId(1L);
+        file.setId(1L);
+        file.setPath("test/test1");
+        fileEntities.add(file);
+        fileIds.add(1L);
+
+        when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds, false)).thenReturn(fileEntities);
+
+        try (MockedStatic<FileUtils> mocked = mockStatic(FileUtils.class)) {
+
+            mocked.when(() -> FileUtils.forceDelete(any())).then(invocationOnMock -> null);
+
+            fileService.deleteFile(user, fileIds);
+
+        }
+
+        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds, false);
+        verify(fileRepository, times(1)).deleteAll(fileEntities);
+    }
+
+    @Test
+    void deleteFile_idsNotFound() {
+        user.setId(1L);
+        file.setId(1L);
+        fileIds.add(1L);
+
+        ShelfException exception = Assertions.assertThrows(ShelfException.class,
+                () -> fileService.deleteFile(user, fileIds));
+
+        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds, false);
+        verify(fileRepository, times(0)).deleteAll(fileEntities);
+
+        assertEquals(ErrorMessages.FILES_NOT_FOUND.getErrorMessage(), exception.getMessage());
+    }
+
+    @Test
+    void deleteFile_idsNotEquals() {
+        user.setId(1L);
+        file.setId(1L);
+        fileIds.add(3L);
+        fileEntities.add(file);
+
+        when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds, false)).thenReturn(fileEntities);
+
+        ShelfException exception = Assertions.assertThrows(ShelfException.class,
+                () -> fileService.deleteFile(user, fileIds));
+
+        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds, false);
+        verify(fileRepository, times(0)).deleteAll(fileEntities);
+
+        assertEquals(ErrorMessages.USER_NOT_ALLOWED_TO_DELETE_FILE.getErrorMessage(), exception.getMessage());
     }
 }
