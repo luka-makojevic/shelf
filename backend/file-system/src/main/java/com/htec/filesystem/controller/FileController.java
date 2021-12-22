@@ -38,7 +38,6 @@ public class FileController {
                                                @PathVariable Long id) {
 
         fileService.saveUserProfilePicture(id, files);
-
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(IMAGE_UPLOADED, HttpStatus.OK.value()));
     }
 
@@ -64,7 +63,6 @@ public class FileController {
 
 
         fileService.saveFile(shelfId, folderId, files, authUser.getId());
-
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_UPLOADED, HttpStatus.OK.value()));
     }
 
@@ -87,10 +85,7 @@ public class FileController {
     public ResponseEntity<TextResponseMessage> renameFile(@AuthenticationUser AuthUser user,
                                                           @RequestBody RenameFileRequestModel renameFileRequestModel) {
 
-        HttpStatus retStatus = HttpStatus.OK;
-
         fileService.fileRename(user.getId(), renameFileRequestModel);
-
-        return ResponseEntity.status(retStatus).body(new TextResponseMessage("File renamed", retStatus.value()));
+        return ResponseEntity.ok().body(new TextResponseMessage("File renamed", HttpStatus.OK.value()));
     }
 }
