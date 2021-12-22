@@ -5,6 +5,7 @@ import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ShelfException;
+import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FolderRepository;
 import com.htec.filesystem.repository.ShelfRepository;
@@ -20,6 +21,7 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.util.Pair;
 
+import java.nio.file.Files;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -105,15 +107,17 @@ class FileServiceTest {
         String homePath = "/home/stefan/";
         String localPath = "/shelf-files/user-data/2/shelves" + shelfId + "/";
         String uploadDir = homePath + localPath;
+        Long userId = 4L;
 
         ShelfEntity shelfEntity = new ShelfEntity();
-        shelfEntity.setUserId(2l);
-        shelfEntity.setId(1l);
+        shelfEntity.setUserId(2L);
+        shelfEntity.setId(1L);
+        shelfEntity.setUserId(userId);
 
         FileEntity fileEntity = new FileEntity();
         fileEntity.setDeleted(false);
-        fileEntity.setShelfId(1l);
-        fileEntity.setId(1l);
+        fileEntity.setShelfId(1L);
+        fileEntity.setId(1L);
 
         try (MockedStatic<FileUtil> mocked = mockStatic(FileUtil.class)) {
 
@@ -121,7 +125,8 @@ class FileServiceTest {
 
             when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
 
-            fileService.saveFile(shelfId, folderId, files);
+            fileService
+                    .saveFile(shelfId, folderId, files, userId);
 
             mocked.verify(() -> FileUtil.saveFile(anyString(), anyString(), any(byte[].class)));
 
@@ -133,11 +138,12 @@ class FileServiceTest {
 
         long shelfId = 1;
         long folderId = 1;
+        Long userId = 4L;
 
         Map<String, Pair<String, String>> files = null;
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
-                () -> fileService.saveFile(shelfId, folderId, files));
+                () -> fileService.saveFile(shelfId, folderId, files, userId));
 
         assertEquals(ErrorMessages.COULD_NOT_UPLOAD_FILE.getErrorMessage(), exception.getMessage());
     }
@@ -153,22 +159,30 @@ class FileServiceTest {
         String homePath = "/home/stefan/";
         String localPath = "/shelf-files/user-data/2/shelves" + shelfId + "/";
         String uploadDir = homePath + localPath;
+        Long userId = 4L;
 
         ShelfEntity shelfEntity = new ShelfEntity();
-        shelfEntity.setUserId(2l);
-        shelfEntity.setId(1l);
+        shelfEntity.setUserId(2L);
+        shelfEntity.setId(1L);
+        shelfEntity.setUserId(userId);
+
+        FolderEntity folderEntity = new FolderEntity();
+        folderEntity.setDeleted(false);
+        folderEntity.setShelfId(3L);
+        folderEntity.setId(1L);
 
         FileEntity fileEntity = new FileEntity();
         fileEntity.setDeleted(false);
-        fileEntity.setShelfId(1l);
-        fileEntity.setId(1l);
+        fileEntity.setShelfId(1L);
+        fileEntity.setId(1L);
 
         try (MockedStatic<FileUtil> mocked = mockStatic(FileUtil.class)) {
 
+            when(folderRepository.findById(folderEntity.getId())).thenReturn(Optional.of(folderEntity));
             mocked.when(() -> FileUtil.saveFile(anyString(), anyString(), any(byte[].class))).then(invocationOnMock -> null);
 
             ShelfException exception = Assertions.assertThrows(ShelfException.class,
-                    () -> fileService.saveFile(shelfId, folderId, files));
+                    () -> fileService.saveFile(shelfId, folderId, files, userId));
 
             assertEquals(ErrorMessages.NO_SHELF_WITH_GIVEN_ID.getErrorMessage(), exception.getMessage());
         }
@@ -185,27 +199,68 @@ class FileServiceTest {
         String homePath = "/home/stefan/";
         String localPath = "/shelf-files/user-data/2/shelves" + shelfId + "/";
         String uploadDir = homePath + localPath;
+        Long userId = 4L;
 
         ShelfEntity shelfEntity = new ShelfEntity();
-        shelfEntity.setUserId(2l);
-        shelfEntity.setId(1l);
+        shelfEntity.setUserId(2L);
+        shelfEntity.setId(1L);
+        shelfEntity.setUserId(userId);
 
         FolderEntity folderEntity = new FolderEntity();
         folderEntity.setDeleted(false);
-        folderEntity.setShelfId(1l);
-        folderEntity.setId(1l);
+        folderEntity.setShelfId(1L);
+        folderEntity.setId(1L);
 
         try (MockedStatic<FileUtil> mocked = mockStatic(FileUtil.class)) {
 
             mocked.when(() -> FileUtil.saveFile(anyString(), anyString(), any(byte[].class))).then(invocationOnMock -> null);
 
-            when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
             when(folderRepository.findById(folderEntity.getId())).thenReturn(Optional.empty());
 
             ShelfException exception = Assertions.assertThrows(ShelfException.class,
-                    () -> fileService.saveFile(shelfId, folderId, files));
+                    () -> fileService.saveFile(shelfId, folderId, files, userId));
 
             assertEquals(ErrorMessages.NO_FOLDER_WITH_GIVEN_ID.getErrorMessage(), exception.getMessage());
+        }
+    }
+
+    @Test
+    void saveFile_FolderIsNotInGivenShelf() {
+
+        long shelfId = 3;
+        long folderId = 1;
+        Map<String, Pair<String, String>> files = new HashMap<>();
+        files.put("file", Pair.of("test.jpeg", "content"));
+        String fileName = "test.jpeg";
+        String homePath = "/home/stefan/";
+        String localPath = "/shelf-files/user-data/2/shelves" + shelfId + "/";
+        String uploadDir = homePath + localPath;
+        Long userId = 4L;
+
+        ShelfEntity shelfEntity = new ShelfEntity();
+        shelfEntity.setUserId(2L);
+        shelfEntity.setId(1L);
+        shelfEntity.setUserId(userId);
+
+        FolderEntity folderEntity = new FolderEntity();
+        folderEntity.setDeleted(false);
+        folderEntity.setShelfId(1L);
+        folderEntity.setId(1L);
+
+        FileEntity fileEntity = new FileEntity();
+        fileEntity.setDeleted(false);
+        fileEntity.setShelfId(1L);
+        fileEntity.setId(1L);
+
+        try (MockedStatic<FileUtil> mocked = mockStatic(FileUtil.class)) {
+
+            when(folderRepository.findById(folderEntity.getId())).thenReturn(Optional.of(folderEntity));
+            mocked.when(() -> FileUtil.saveFile(anyString(), anyString(), any(byte[].class))).then(invocationOnMock -> null);
+
+            ShelfException exception = Assertions.assertThrows(ShelfException.class,
+                    () -> fileService.saveFile(shelfId, folderId, files, userId));
+
+            assertEquals(ErrorMessages.FOLDER_IS_NOT_IN_THE_GIVEN_SHELF.getErrorMessage(), exception.getMessage());
         }
     }
 
@@ -236,13 +291,20 @@ class FileServiceTest {
     void updateDeletedFilesTrue() {
         user.setId(1L);
         file.setId(1L);
+        file.setPath("test/fileName");
         fileEntities.add(file);
         fileIds.add(1L);
         boolean delete = true;
 
         when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds, false)).thenReturn(fileEntities);
 
-        fileService.updateDeletedFiles(user, fileIds, delete);
+        try (MockedStatic<Files> mocked = mockStatic(Files.class)) {
+
+            mocked.when(() -> Files.move(any(), any())).then(invocationOnMock -> null);
+
+            fileService.updateDeletedFiles(user, fileIds, delete);
+
+        }
 
         verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds, false);
         verify(fileRepository, times(1)).saveAll(fileEntities);
@@ -253,13 +315,20 @@ class FileServiceTest {
     void updateDeletedFilesFalse() {
         user.setId(1L);
         file.setId(1L);
+        file.setPath("test/fileName");
         fileEntities.add(file);
         fileIds.add(1L);
         boolean delete = false;
 
         when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds, true)).thenReturn(fileEntities);
 
-        fileService.updateDeletedFiles(user, fileIds, delete);
+        try (MockedStatic<Files> mocked = mockStatic(Files.class)) {
+
+            mocked.when(() -> Files.move(any(), any())).then(invocationOnMock -> null);
+
+            fileService.updateDeletedFiles(user, fileIds, delete);
+
+        }
 
         verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds, true);
         verify(fileRepository, times(1)).saveAll(fileEntities);
@@ -303,5 +372,52 @@ class FileServiceTest {
         verify(fileRepository, times(0)).updateIsDeletedByIds(delete, fileIds);
 
         assertEquals(ErrorMessages.USER_NOT_ALLOWED_TO_DELETE_FILE.getErrorMessage(), exception.getMessage());
+    }
+
+    @Test
+    void fileRename() {
+
+        Long userId = 4L;
+        RenameFileRequestModel renameFileRequestModel = new RenameFileRequestModel(4L, "fileName");
+
+        ShelfEntity shelfEntity = new ShelfEntity();
+        shelfEntity.setUserId(userId);
+        shelfEntity.setId(1L);
+
+        FileEntity fileEntity = new FileEntity();
+        fileEntity.setShelfId(1L);
+        fileEntity.setName("test.jpg");
+        fileEntity.setPath("testPath");
+
+        when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
+        when(fileRepository.findById(anyLong())).thenReturn(Optional.of(fileEntity));
+
+        fileService.fileRename(userId, renameFileRequestModel);
+
+        verify(fileRepository, times(1)).save(any(FileEntity.class));
+    }
+
+    @Test
+    void fileRename_UserNotAllowedToAccessFile() {
+
+        Long userId = 4L;
+        RenameFileRequestModel renameFileRequestModel = new RenameFileRequestModel(4L, "fileName");
+
+        ShelfEntity shelfEntity = new ShelfEntity();
+        shelfEntity.setUserId(1L);
+        shelfEntity.setId(1L);
+
+        FileEntity fileEntity = new FileEntity();
+        fileEntity.setShelfId(1L);
+        fileEntity.setName("test.jpg");
+        fileEntity.setPath("testPath");
+
+        when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
+        when(fileRepository.findById(anyLong())).thenReturn(Optional.of(fileEntity));
+
+        ShelfException exception = Assertions.assertThrows(ShelfException.class,
+                () -> fileService.fileRename(userId, renameFileRequestModel));
+
+        assertEquals(ErrorMessages.USER_NOT_ALLOWED_TO_ACCESS_THIS_FILE.getErrorMessage(), exception.getMessage());
     }
 }

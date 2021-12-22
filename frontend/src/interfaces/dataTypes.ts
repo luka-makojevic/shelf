@@ -126,7 +126,7 @@ export interface RegisterFieldConfig {
   validations: RegisterOptions;
 }
 
-export interface CreateShelfData {
+export interface ShelfFormData {
   name: string;
 }
 

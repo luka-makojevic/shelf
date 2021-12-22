@@ -3,11 +3,12 @@ package com.htec.filesystem.util;
 public enum ErrorMessages {
 
     COULD_NOT_SAVE_IMAGE_FILE("Could not save image file."),
-    INTERNAL_SERVER_ERROR_("Internal Server Error"),
+    INTERNAL_SERVER_ERROR("Internal Server Error"),
     SHELF_NAME_NOT_VALID("Shelf name is not in a valid format."),
     COULD_NOT_UPLOAD_FILE("Could not upload file."),
     COULD_NOT_DELETE_SHELF("Could not delete shelf."),
     FILE_WITH_THE_SAME_NAME_ALREADY_EXISTS("File with the same name already exists."),
+    FILE_COULDNT_BE_RENAMED("File couldn't be renamed."),
     FOLDER_WITH_THE_SAME_NAME_ALREADY_EXISTS("Folder with the same name already exists."),
     SHELF_WITH_THE_SAME_NAME_ALREADY_EXISTS("Shelf with the same name already exists."),
     NO_FILE_WITH_GIVEN_ID("There is no file with the provided id."),
@@ -26,7 +27,9 @@ public enum ErrorMessages {
     USER_NOT_ALLOWED_TO_DELETE_FILE("You are not allowed to delete this file."),
     USER_NOT_ALLOWED_TO_DELETE_FOLDER("You are not allowed to delete this folder."),
     USER_NOT_ALLOWED_TO_ACCESS_THIS_SHELF("You are not allowed to access this shelf."),
+    USER_NOT_ALLOWED_TO_ACCESS_THIS_FILE("You are not allowed to access this file."),
     AUTHENTICATION_CREDENTIALS_NOT_VALID("Authentication credentials not valid."),
+    FOLDER_IS_NOT_IN_THE_GIVEN_SHELF("Folder is not in the given shelf."),
     BAD_REQUEST("Bad request."),
     UNAUTHORIZED("Unauthorized."),
     NOT_FOUND("Not found."),
