@@ -53,6 +53,13 @@ public class ExceptionSupplier {
             ErrorMessages.FORBIDDEN.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> fileCouldntBeRenamed = () -> new ShelfException(
+            ErrorMessages.FILE_COULDNT_BE_RENAMED.getErrorMessage(),
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.INTERNAL_SERVER_ERROR_.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> folderAlreadyExists = () -> new ShelfException(
             ErrorMessages.FOLDER_WITH_THE_SAME_NAME_ALREADY_EXISTS.getErrorMessage(),
             HttpStatus.FORBIDDEN.value(),
@@ -172,10 +179,24 @@ public class ExceptionSupplier {
             ErrorMessages.FORBIDDEN.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> userNotAllowedToAccessFile = () -> new ShelfException(
+            ErrorMessages.USER_NOT_ALLOWED_TO_ACCESS_THIS_FILE.getErrorMessage(),
+            HttpStatus.FORBIDDEN.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.FORBIDDEN.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> shelfWithProvidedIdNotFound = () -> new ShelfException(
             ErrorMessages.SHELF_WITH_PROVIDED_ID_NOT_FOUND.getErrorMessage(),
             HttpStatus.NOT_FOUND.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.NOT_FOUND.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> folderIsNotInGivenShelf = () -> new ShelfException(
+            ErrorMessages.FOLDER_IS_NOT_IN_THE_GIVEN_SHELF.getErrorMessage(),
+            HttpStatus.FORBIDDEN.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.FORBIDDEN.getErrorMessage()
     );
 }

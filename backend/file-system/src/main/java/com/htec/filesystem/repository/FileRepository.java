@@ -56,5 +56,7 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
 
     Optional<FileEntity> findByNameAndParentFolderId(String name, Long parentFolderId);
 
-    Optional<FileEntity> findByNameAndShelfId(String name, Long shelfId);
+    Optional<FileEntity> findByNameAndShelfIdAndParentFolderIdIsNull(String name, Long shelfId);
+
+    Optional<FileEntity> findByNameAndParentFolderIdAndIdNot(String name, Long parentFolderId, Long id);
 }

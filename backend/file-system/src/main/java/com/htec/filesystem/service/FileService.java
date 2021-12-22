@@ -5,26 +5,25 @@ import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ExceptionSupplier;
+import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.model.response.FileResponseModel;
 import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FolderRepository;
 import com.htec.filesystem.repository.ShelfRepository;
 import com.htec.filesystem.util.FileUtil;
+import com.htec.filesystem.validator.FileSystemValidator;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StreamUtils;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class FileService {
@@ -84,18 +83,35 @@ public class FileService {
         return new FileResponseModel(imageBytes, path);
     }
 
-    public void saveFile(Long shelfId, Long folderId, Map<String, Pair<String, String>> files) {
+    public void saveFile(Long shelfId, Long folderId, Map<String, Pair<String, String>> files, Long userId) {
 
-        if (files == null)
+        if (files == null) {
             throw ExceptionSupplier.couldNotUploadFile.get();
+        }
 
-        Set<String> uploadFileKeys = files.keySet();
+        if (folderId != 0) {
 
-        for (String uploadFileKey : uploadFileKeys) {
+            FolderEntity folder = folderRepository.findById(folderId)
+                    .orElseThrow(ExceptionSupplier.noFolderWithGivenId);
 
-            byte[] bytes = Base64.getDecoder().decode(files.get(uploadFileKey).getSecond());
+            if (!Objects.equals(folder.getShelfId(), shelfId)) {
+                throw ExceptionSupplier.folderIsNotInGivenShelf.get();
+            }
+        }
 
-            String fileName = files.get(uploadFileKey).getFirst();
+        ShelfEntity shelf = shelfRepository.findById(shelfId)
+                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+
+        if (!Objects.equals(shelf.getUserId(), userId)) {
+            throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
+        }
+
+
+        for (Map.Entry<String, Pair<String, String>> filesPair : files.entrySet()) {
+
+            byte[] bytes = Base64.getDecoder().decode(filesPair.getValue().getSecond());
+
+            String fileName = filesPair.getValue().getFirst();
             String localPath;
             String dbPath;
 
@@ -110,20 +126,23 @@ public class FileService {
                 dbPath = folderEntity.getPath() + pathSeparator + fileName;
                 localPath = userPath + folderEntity.getPath() + pathSeparator;
 
-                if (fileRepository.findByNameAndParentFolderId(fileName, folderId).isPresent())
+                if (fileRepository.findByNameAndParentFolderId(fileName, folderId).isPresent()) {
                     throw ExceptionSupplier.fileAlreadyExists.get();
+                }
 
             } else {
 
                 localPath = userPath + shelfEntity.getUserId() + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator;
                 dbPath = shelfEntity.getUserId() + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator + fileName;
 
-                if (fileRepository.findByNameAndShelfId(fileName, shelfId).isPresent())
+                if (fileRepository.findByNameAndShelfIdAndParentFolderIdIsNull(fileName, shelfId).isPresent()) {
                     throw ExceptionSupplier.fileAlreadyExists.get();
+                }
             }
 
-            if (fileRepository.findByPath(dbPath).isPresent())
+            if (fileRepository.findByPath(dbPath).isPresent()) {
                 throw ExceptionSupplier.fileAlreadyExists.get();
+            }
 
             String uploadDir = homePath + localPath;
             FileUtil.saveFile(uploadDir, fileName, bytes);
@@ -167,5 +186,38 @@ public class FileService {
 
         fileRepository.saveAll(fileEntities);
         fileRepository.updateIsDeletedByIds(delete, fileIds);
+    }
+
+    public boolean fileRename(Long userId, RenameFileRequestModel renameFileRequestModel) {
+
+        String fileName = renameFileRequestModel.getFileName();
+        Long fileId = renameFileRequestModel.getFileId();
+
+        FileEntity fileEntity = fileRepository.findById(fileId)
+                .orElseThrow(ExceptionSupplier.noFileWithGivenId);
+
+        ShelfEntity shelfEntity = shelfRepository.findById(fileEntity.getShelfId())
+                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+
+        if (!Objects.equals(shelfEntity.getUserId(), userId))
+            throw ExceptionSupplier.userNotAllowedToAccessFile.get();
+
+        if (fileRepository.findByNameAndParentFolderIdAndIdNot(fileName,
+                fileEntity.getParentFolderId(),
+                fileEntity.getId()).isPresent())
+            throw ExceptionSupplier.fileAlreadyExists.get();
+
+        String oldFilePath = homePath + userPath + fileEntity.getPath();
+        File oldFile =  new File(oldFilePath);
+
+        String newFilePath = oldFilePath.replace(fileEntity.getName(), fileName);
+        File newFile = new File(newFilePath);
+
+        String dbPath = newFilePath.replace(homePath + userPath, "");
+        fileEntity.setPath(dbPath);
+        fileEntity.setName(fileName);
+        fileRepository.save(fileEntity);
+
+        return oldFile.renameTo(newFile);
     }
 }
