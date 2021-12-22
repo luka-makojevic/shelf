@@ -102,13 +102,11 @@ public class FileService {
         if (!Objects.equals(shelf.getUserId(), userId))
             throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
 
-        Set<String> uploadFileKeys = files.keySet();
+        for (Map.Entry<String, Pair<String, String>> filesPair : files.entrySet()) {
 
-        for (String uploadFileKey : uploadFileKeys) {
+            byte[] bytes = Base64.getDecoder().decode(filesPair.getValue().getSecond());
 
-            byte[] bytes = Base64.getDecoder().decode(files.get(uploadFileKey).getSecond());
-
-            String fileName = files.get(uploadFileKey).getFirst();
+            String fileName = filesPair.getValue().getFirst();
             String localPath;
             String dbPath;
 
@@ -197,8 +195,8 @@ public class FileService {
             throw ExceptionSupplier.userNotAllowedToAccessFile.get();
 
         if (fileRepository.findByNameAndParentFolderIdAndIdNot(fileName,
-                                                                fileEntity.getParentFolderId(),
-                                                                fileEntity.getId()).isPresent())
+                fileEntity.getParentFolderId(),
+                fileEntity.getId()).isPresent())
             throw ExceptionSupplier.fileAlreadyExists.get();
 
         String oldFilePath = homePath + userPath + fileEntity.getPath();
