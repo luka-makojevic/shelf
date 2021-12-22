@@ -2,10 +2,9 @@ import instance from '../api/axiosInstance';
 
 const API_URL_FILES = 'http://10.10.0.136:8080/filesystem/';
 
-const getShelfFiles = (shlefId: number) => instance.get(`${API_URL_FILES}file`);
+const getShelfFiles = () => instance.get(`${API_URL_FILES}file`);
 
-const getFolderFiles = (folderId: number) =>
-  instance.get(`${API_URL_FILES}file`);
+const getFolderFiles = () => instance.get(`${API_URL_FILES}file`);
 
 const createFolder = (folderName: string) =>
   instance.post(`${API_URL_FILES}folder/create`, folderName);

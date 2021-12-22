@@ -38,6 +38,6 @@ export const ButtonActionsBox = styled.div`
   justify-content: end;
 
   button {
-    margin-left: 10px;
+    margin-left: ${theme.space.sm};
   }
 `;

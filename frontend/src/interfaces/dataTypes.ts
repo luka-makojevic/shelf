@@ -138,16 +138,6 @@ export interface ShelfDataType {
   userId: number;
 }
 
-export interface FileDataType {
-  id: number;
-  name: string;
-  createdAt: string;
-  isDeleted: boolean;
-  userId: number;
-  folder: boolean;
-  size: number;
-}
-
 export interface HeaderTypes {
   header: string;
   key: string;
@@ -197,6 +187,9 @@ export interface FileDataType {
   folder: boolean;
   shelfId: number;
   parentFolderId: number;
+  userId: number;
+  size: number;
+  isDeleted: boolean;
 }
 export interface PathHistoryDataType {
   name: string;

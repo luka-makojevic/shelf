@@ -4,14 +4,14 @@ import TableWrapper from '../../components/table/TableWrapper';
 import {
   ActionsBox,
   ButtonActionsBox,
-} from '../../components/table/tableWrapper-styles';
+} from '../../components/table/tableWrapper.styles';
 import { Button } from '../../components/UI/button';
 import SearchBar from '../../components/UI/searchBar/searchBar';
 import { useTrash } from '../../hooks/trashHook';
 import AlertPortal from '../../components/alert/alert';
 import { AlertMessage } from '../../utils/enums/alertMessages';
 import { FileDataType, TableDataTypes } from '../../interfaces/dataTypes';
-import { useAppSelector } from '../../store/hooks';
+// import { useAppSelector } from '../../store/hooks';
 import { Description } from '../../components/text/text-styles';
 
 const headers = [
@@ -70,7 +70,7 @@ const data: FileDataType[] = [
 ];
 
 const Trash = () => {
-  const trashData = useAppSelector((state) => state.trash.trashData);
+  // const trashData = useAppSelector((state) => state.trash.trashData);
   const [filteredData, setFilteredData] = useState<TableDataTypes[]>([]);
   const [tableData, setTableData] = useState<TableDataTypes[]>([]);
   const [error, setError] = useState('');
