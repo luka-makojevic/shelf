@@ -24,6 +24,7 @@ public class FileController {
     private final FileService fileService;
 
     private final String FILE_UPLOADED = "File Uploaded";
+    private final String FILE_RENAMED = "File renamed";
     private final String IMAGE_UPLOADED = "Image Uploaded";
     private final String FILES_MOVED_TO_TRASH = "File/s moved to trash.";
     private final String FILES_RECOVERED_FROM_TRASH = "File/s recovered from trash.";
@@ -38,7 +39,6 @@ public class FileController {
                                                @PathVariable Long id) {
 
         fileService.saveUserProfilePicture(id, files);
-
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(IMAGE_UPLOADED, HttpStatus.OK.value()));
     }
 
@@ -64,7 +64,6 @@ public class FileController {
 
 
         fileService.saveFile(shelfId, folderId, files, authUser.getId());
-
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_UPLOADED, HttpStatus.OK.value()));
     }
 
@@ -87,14 +86,7 @@ public class FileController {
     public ResponseEntity<TextResponseMessage> renameFile(@AuthenticationUser AuthUser user,
                                                           @RequestBody RenameFileRequestModel renameFileRequestModel) {
 
-        HttpStatus retStatus = HttpStatus.OK;
-        String responseText = "File renamed";
-
-        if (!fileService.fileRename(user.getId(), renameFileRequestModel)) {
-            retStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-            responseText = "File couldn't be renamed.";
-        }
-
-        return ResponseEntity.status(retStatus).body(new TextResponseMessage(responseText, retStatus.value()));
+        fileService.fileRename(user.getId(), renameFileRequestModel);
+        return ResponseEntity.ok().body(new TextResponseMessage(FILE_RENAMED, HttpStatus.OK.value()));
     }
 }
