@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
 import { TableDataTypes } from '../../interfaces/dataTypes';
 
-export interface CreateShelfModalProps {
+export interface ShelfModalProps {
   onCloseModal: Dispatch<SetStateAction<boolean>>;
   onError: (value: SetStateAction<string>) => void;
   shelf: TableDataTypes | null;

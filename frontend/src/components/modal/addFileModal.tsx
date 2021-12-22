@@ -1,7 +1,7 @@
 import { FaFolderOpen } from 'react-icons/fa';
 import { theme } from '../../theme';
 import { Button } from '../UI/button';
-import { Footer } from './modal-styles';
+import { Footer } from './modal.styles';
 import { AddFileModalProps } from './modal.interfaces';
 
 const AddFileModal = ({ onCloseModal }: AddFileModalProps) => {
