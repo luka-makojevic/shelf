@@ -18,13 +18,11 @@ import org.springframework.util.StreamUtils;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class FileService {
@@ -39,10 +37,7 @@ public class FileService {
     private final FolderRepository folderRepository;
     private final ShelfRepository shelfRepository;
 
-    public FileService(UserAPICallService userAPICallService,
-                       FileRepository fileRepository,
-                       FolderRepository folderRepository,
-                       ShelfRepository shelfRepository) {
+    public FileService(UserAPICallService userAPICallService, FileRepository fileRepository, FolderRepository folderRepository, ShelfRepository shelfRepository) {
 
         this.userAPICallService = userAPICallService;
         this.fileRepository = fileRepository;
@@ -52,8 +47,7 @@ public class FileService {
 
     public void saveUserProfilePicture(Long id, Map<String, Pair<String, String>> files) {
 
-        if (files == null || files.get("image") == null)
-            throw ExceptionSupplier.couldNotSaveImage.get();
+        if (files == null || files.get("image") == null) throw ExceptionSupplier.couldNotSaveImage.get();
 
         byte[] bytes = Base64.getDecoder().decode(files.get("image").getSecond());
 
@@ -138,8 +132,7 @@ public class FileService {
         fileEntity.setName(fileName);
         fileEntity.setPath(filePath);
         fileEntity.setShelfId(shelfId);
-        if (folderId != 0)
-            fileEntity.setParentFolderId(folderId);
+        if (folderId != 0) fileEntity.setParentFolderId(folderId);
 
         fileEntity.setDeleted(false);
         fileEntity.setCreatedAt(LocalDateTime.now());
@@ -159,13 +152,103 @@ public class FileService {
             throw ExceptionSupplier.userNotAllowedToDeleteFile.get();
         }
 
-        for (FileEntity fileEntity : fileEntities) {
-            UUID uuid = UUID.randomUUID();
-            String uuidAsString = uuid.toString();
-            fileEntity.setName(fileEntity.getName() + "_" + uuidAsString);
+        if (delete) {
+            moveToTrash(fileEntities);
+        } else {
+            recover(user, fileEntities);
         }
 
         fileRepository.saveAll(fileEntities);
         fileRepository.updateIsDeletedByIds(delete, fileIds);
+    }
+
+    private void recover(AuthUser user, List<FileEntity> fileEntities) {
+
+        List<Long> folderIds = fileEntities.stream().map(FileEntity::getParentFolderId).collect(Collectors.toList());
+
+        List<FileEntity> fileEntitiesNotDeleted = fileRepository.findAllByUserIdAndParentFolderIdsIn(user.getId(), folderIds);
+
+        Map<Optional<Long>, List<FileEntity>> filesByFolder = fileEntitiesNotDeleted.stream().collect(Collectors.groupingBy(e -> Optional.ofNullable(e.getParentFolderId())));
+
+        Map<String, Integer> filesCount = new HashMap<>();
+
+        for (FileEntity fileEntity : fileEntities) {
+            List<FileEntity> existingFiles = filesByFolder.getOrDefault(Optional.ofNullable(fileEntity.getParentFolderId()), new ArrayList<>());
+
+            if (existingFiles.stream().anyMatch(e -> e.getName().equals(fileEntity.getRealName()))) {
+                filesCount.merge(fileEntity.getRealName(), 1, Integer::sum);
+            }
+        }
+
+        for (FileEntity fileEntity : fileEntities) {
+
+            Integer fileNameCounter = filesCount.getOrDefault(fileEntity.getRealName(), 0);
+
+            String oldPath = fileEntity.getPath();
+            String fileNameWithUUID = fileEntity.getName();
+
+            if (fileNameCounter > 0) {
+                filesCount.put(fileEntity.getRealName(), fileNameCounter - 1);
+
+                int extensionIndex = fileEntity.getRealName().lastIndexOf('.');
+                String nameWithoutExtension = fileEntity.getRealName().substring(0, extensionIndex);
+                String extension = fileEntity.getRealName().substring(extensionIndex);
+
+                int index = fileEntity.getPath().lastIndexOf('/');
+                String newPath = fileEntity.getPath().substring(0, index);
+
+                fileEntity.setName(nameWithoutExtension + "(" + fileNameCounter + ")" + extension);
+                fileEntity.setPath(newPath + pathSeparator + fileEntity.getName());
+                fileEntity.setDeletedAt(null);
+            }
+
+            recoverFilesOnFileSystem(fileEntity.getPath(), oldPath, fileNameWithUUID);
+        }
+    }
+
+    private void moveToTrash(List<FileEntity> fileEntities) {
+
+        for (FileEntity fileEntity : fileEntities) {
+            UUID uuid = UUID.randomUUID();
+            String uuidAsString = uuid.toString();
+
+            String newFileName = fileEntity.getName() + "_" + uuidAsString;
+
+            renameFilesOnFileSystem(newFileName, fileEntity.getPath());
+
+            fileEntity.setName(newFileName);
+            fileEntity.setDeletedAt(LocalDateTime.now());
+        }
+    }
+
+    private void renameFilesOnFileSystem(String newFileName, String oldPath) {
+
+        try {
+            int index = oldPath.lastIndexOf("/");
+            String newPath = oldPath.substring(0, index);
+
+            newPath = homePath + userPath + newPath + pathSeparator + newFileName;
+
+            Files.move(Paths.get(homePath + userPath + oldPath), Paths.get(newPath));
+        } catch (IOException e) {
+            throw ExceptionSupplier.internalServerError.get();
+        }
+    }
+
+    private void recoverFilesOnFileSystem(String newPath, String oldPath, String fileNameWithUUID) {
+
+        try {
+
+            int index = oldPath.lastIndexOf('/');
+            String oldPathWithoutFileName = oldPath.substring(0, index);
+
+            String newPathFull = homePath + userPath + newPath;
+            String oldPathFull = homePath + userPath + oldPathWithoutFileName + pathSeparator + fileNameWithUUID;
+
+            Files.move(Paths.get(oldPathFull), Paths.get(newPathFull));
+
+        } catch (IOException e) {
+            throw ExceptionSupplier.internalServerError.get();
+        }
     }
 }
