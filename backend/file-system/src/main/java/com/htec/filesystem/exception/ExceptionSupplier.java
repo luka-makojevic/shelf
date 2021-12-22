@@ -43,7 +43,7 @@ public class ExceptionSupplier {
             ErrorMessages.COULD_NOT_DELETE_SHELF.getErrorMessage(),
             HttpStatus.INTERNAL_SERVER_ERROR.value(),
             LocalDateTime.now().format(formatter),
-            ErrorMessages.INTERNAL_SERVER_ERROR_.getErrorMessage()
+            ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage()
     );
 
     public static final Supplier<ShelfException> fileAlreadyExists = () -> new ShelfException(
@@ -51,13 +51,6 @@ public class ExceptionSupplier {
             HttpStatus.FORBIDDEN.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.FORBIDDEN.getErrorMessage()
-    );
-
-    public static final Supplier<ShelfException> fileCouldntBeRenamed = () -> new ShelfException(
-            ErrorMessages.FILE_COULDNT_BE_RENAMED.getErrorMessage(),
-            HttpStatus.INTERNAL_SERVER_ERROR.value(),
-            LocalDateTime.now().format(formatter),
-            ErrorMessages.INTERNAL_SERVER_ERROR_.getErrorMessage()
     );
 
     public static final Supplier<ShelfException> folderAlreadyExists = () -> new ShelfException(
@@ -191,6 +184,13 @@ public class ExceptionSupplier {
             HttpStatus.NOT_FOUND.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.NOT_FOUND.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> internalServerError = () -> new ShelfException(
+            ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage(),
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage()
     );
 
     public static final Supplier<ShelfException> folderIsNotInGivenShelf = () -> new ShelfException(

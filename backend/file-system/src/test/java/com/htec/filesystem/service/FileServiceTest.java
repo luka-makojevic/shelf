@@ -18,11 +18,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.util.Pair;
 
-import java.io.File;
+import java.nio.file.Files;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -292,13 +291,20 @@ class FileServiceTest {
     void updateDeletedFilesTrue() {
         user.setId(1L);
         file.setId(1L);
+        file.setPath("test/fileName");
         fileEntities.add(file);
         fileIds.add(1L);
         boolean delete = true;
 
         when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds, false)).thenReturn(fileEntities);
 
-        fileService.updateDeletedFiles(user, fileIds, delete);
+        try (MockedStatic<Files> mocked = mockStatic(Files.class)) {
+
+            mocked.when(() -> Files.move(any(), any())).then(invocationOnMock -> null);
+
+            fileService.updateDeletedFiles(user, fileIds, delete);
+
+        }
 
         verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds, false);
         verify(fileRepository, times(1)).saveAll(fileEntities);
@@ -309,13 +315,20 @@ class FileServiceTest {
     void updateDeletedFilesFalse() {
         user.setId(1L);
         file.setId(1L);
+        file.setPath("test/fileName");
         fileEntities.add(file);
         fileIds.add(1L);
         boolean delete = false;
 
         when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds, true)).thenReturn(fileEntities);
 
-        fileService.updateDeletedFiles(user, fileIds, delete);
+        try (MockedStatic<Files> mocked = mockStatic(Files.class)) {
+
+            mocked.when(() -> Files.move(any(), any())).then(invocationOnMock -> null);
+
+            fileService.updateDeletedFiles(user, fileIds, delete);
+
+        }
 
         verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds, true);
         verify(fileRepository, times(1)).saveAll(fileEntities);
