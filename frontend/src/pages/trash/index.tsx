@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Table } from '../../components/table/table';
-import TableWrapper from '../../components/table/TableWrapper';
+import TableWrapper from '../../components/table/tableWrapper';
 import {
   ActionsBox,
   ButtonActionsBox,
