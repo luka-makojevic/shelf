@@ -172,10 +172,24 @@ public class ExceptionSupplier {
             ErrorMessages.FORBIDDEN.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> userNotAllowedToAccessFile = () -> new ShelfException(
+            ErrorMessages.USER_NOT_ALLOWED_TO_ACCESS_THIS_FILE.getErrorMessage(),
+            HttpStatus.FORBIDDEN.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.FORBIDDEN.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> shelfWithProvidedIdNotFound = () -> new ShelfException(
             ErrorMessages.SHELF_WITH_PROVIDED_ID_NOT_FOUND.getErrorMessage(),
             HttpStatus.NOT_FOUND.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.NOT_FOUND.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> folderIsNotInGivenShelf = () -> new ShelfException(
+            ErrorMessages.FOLDER_IS_NOT_IN_THE_GIVEN_SHELF.getErrorMessage(),
+            HttpStatus.FORBIDDEN.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.FORBIDDEN.getErrorMessage()
     );
 }

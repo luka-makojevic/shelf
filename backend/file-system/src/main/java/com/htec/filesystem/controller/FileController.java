@@ -2,6 +2,7 @@ package com.htec.filesystem.controller;
 
 import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.annotation.AuthenticationUser;
+import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.model.response.FileResponseModel;
 import com.htec.filesystem.model.response.TextResponseMessage;
 import com.htec.filesystem.service.FileService;
@@ -53,10 +54,11 @@ public class FileController {
     @PostMapping("/upload/{shelfId}/{folderId}")
     public ResponseEntity<TextResponseMessage> uploadFile(@RequestBody Map<String, Pair<String, String>> files,
                                      @PathVariable Long shelfId,
-                                     @PathVariable Long folderId) {
+                                     @PathVariable Long folderId,
+                                     @AuthenticationUser AuthUser authUser) {
 
 
-        fileService.saveFile(shelfId, folderId, files);
+        fileService.saveFile(shelfId, folderId, files, authUser.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("File Uploaded", HttpStatus.OK.value()));
     }
@@ -66,5 +68,19 @@ public class FileController {
 
         fileService.updateDeletedFiles(user, fileIds, true);
         return ResponseEntity.ok().body(new TextResponseMessage("File/s moved to trash.", HttpStatus.OK.value()));
+    }
+
+    @PutMapping("/rename")
+    public ResponseEntity<TextResponseMessage> renameFile(@AuthenticationUser AuthUser user,
+                                                          @RequestBody RenameFileRequestModel renameFileRequestModel) {
+
+
+        HttpStatus retStatus = HttpStatus.OK;
+
+        if (!fileService.fileRename(user.getId(), renameFileRequestModel)) {
+            retStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return ResponseEntity.status(retStatus).body(new TextResponseMessage("File renamed.", retStatus.value()));
     }
 }

@@ -28,7 +28,7 @@ public class FolderController {
     }
 
     @PostMapping("/initialize/{userId}")
-    public ResponseEntity initializeFolders(@PathVariable Long userId) {
+    public ResponseEntity<TextResponseMessage> initializeFolders(@PathVariable Long userId) {
 
         HttpStatus retStatus = HttpStatus.OK;
 

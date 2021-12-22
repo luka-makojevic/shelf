@@ -5,6 +5,7 @@ import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ExceptionSupplier;
+import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.model.response.FileResponseModel;
 import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FolderRepository;
@@ -15,16 +16,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StreamUtils;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class FileService {
@@ -84,10 +82,25 @@ public class FileService {
         return new FileResponseModel(imageBytes, path);
     }
 
-    public void saveFile(Long shelfId, Long folderId, Map<String, Pair<String, String>> files) {
+    public void saveFile(Long shelfId, Long folderId, Map<String, Pair<String, String>> files, Long userId) {
 
         if (files == null)
             throw ExceptionSupplier.couldNotUploadFile.get();
+
+        if (folderId != 0) {
+
+            FolderEntity folder = folderRepository.findById(folderId)
+                    .orElseThrow(ExceptionSupplier.noFolderWithGivenId);
+
+            if (!Objects.equals(folder.getShelfId(), shelfId))
+                throw ExceptionSupplier.folderIsNotInGivenShelf.get();
+        }
+
+        ShelfEntity shelf = shelfRepository.findById(shelfId)
+                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+
+        if (!Objects.equals(shelf.getUserId(), userId))
+            throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
 
         Set<String> uploadFileKeys = files.keySet();
 
@@ -118,7 +131,7 @@ public class FileService {
                 localPath = userPath + shelfEntity.getUserId() + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator;
                 dbPath = shelfEntity.getUserId() + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator + fileName;
 
-                if (fileRepository.findByNameAndShelfId(fileName, shelfId).isPresent())
+                if (fileRepository.findByNameAndShelfIdAndParentFolderIdIsNull(fileName, shelfId).isPresent())
                     throw ExceptionSupplier.fileAlreadyExists.get();
             }
 
@@ -167,5 +180,38 @@ public class FileService {
 
         fileRepository.saveAll(fileEntities);
         fileRepository.updateIsDeletedByIds(delete, fileIds);
+    }
+
+    public boolean fileRename(Long userId, RenameFileRequestModel renameFileRequestModel) {
+
+        String fileName = renameFileRequestModel.getFileName();
+        Long fileId = renameFileRequestModel.getFileId();
+
+        FileEntity fileEntity = fileRepository.findById(fileId)
+                .orElseThrow(ExceptionSupplier.noFileWithGivenId);
+
+        ShelfEntity shelfEntity = shelfRepository.findById(fileEntity.getShelfId())
+                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+
+        if (!Objects.equals(shelfEntity.getUserId(), userId))
+            throw ExceptionSupplier.userNotAllowedToAccessFile.get();
+
+        if (fileRepository.findByNameAndParentFolderIdAndIdNot(fileName,
+                                                                fileEntity.getParentFolderId(),
+                                                                fileEntity.getId()).isPresent())
+            throw ExceptionSupplier.fileAlreadyExists.get();
+
+        String oldFilePath = homePath + userPath + fileEntity.getPath();
+        File oldFile = new File(oldFilePath);
+
+        String newFilePath = oldFilePath.replace(fileEntity.getName(), fileName);
+        File newFile = new File(newFilePath);
+
+        String dbPath = newFilePath.replace(homePath + userPath, "");
+        fileEntity.setPath(dbPath);
+        fileEntity.setName(fileName);
+        fileRepository.save(fileEntity);
+
+        return oldFile.renameTo(newFile);
     }
 }
