@@ -65,7 +65,6 @@ public class FileController {
                                                           @PathVariable Long folderId,
                                                           @AuthenticationUser AuthUser authUser) {
 
-
         fileService.saveFile(shelfId, folderId, files, authUser.getId());
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_UPLOADED, HttpStatus.OK.value()));
     }
@@ -104,13 +103,5 @@ public class FileController {
 
         fileService.deleteFile(user, fileIds);
         return ResponseEntity.ok().body(new TextResponseMessage(FILES_DELETED, HttpStatus.OK.value()));
-    }
-
-    @PutMapping("/recover")
-    public ResponseEntity<TextResponseMessage> recoverSoftDeletedFile(@AuthenticationUser AuthUser user,
-                                                                      @RequestBody List<Long> fileIds) {
-
-        fileService.updateDeletedFiles(user, fileIds, false);
-        return ResponseEntity.ok().body(new TextResponseMessage("File/s recovered from trash.", HttpStatus.OK.value()));
     }
 }
