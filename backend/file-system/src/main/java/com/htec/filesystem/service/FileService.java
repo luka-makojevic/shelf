@@ -185,7 +185,7 @@ public class FileService {
         fileRepository.updateIsDeletedByIds(delete, fileIds);
     }
 
-    private void recover(AuthUser user, List<FileEntity> fileEntities) {
+    void recover(AuthUser user, List<FileEntity> fileEntities) {
 
         List<Long> folderIds = fileEntities.stream().map(FileEntity::getParentFolderId).collect(Collectors.toList());
 
@@ -229,7 +229,7 @@ public class FileService {
         }
     }
 
-    private void moveToTrash(List<FileEntity> fileEntities) {
+    void moveToTrash(List<FileEntity> fileEntities) {
 
         for (FileEntity fileEntity : fileEntities) {
             UUID uuid = UUID.randomUUID();

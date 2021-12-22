@@ -1,5 +1,6 @@
 package com.htec.filesystem.service;
 
+import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.dto.BreadCrumbDTO;
 import com.htec.filesystem.dto.ShelfItemDTO;
 import com.htec.filesystem.entity.FileEntity;
@@ -14,18 +15,21 @@ import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FileTreeRepository;
 import com.htec.filesystem.repository.FolderRepository;
 import com.htec.filesystem.repository.FolderTreeRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -161,42 +165,45 @@ public class FolderService {
     }
 
     @Transactional
-    public void updateDeletedFolders(Long userId, List<Long> folderIds, Boolean deleted) {
+    public void deleteFolder(AuthUser authUser, List<Long> folderIds) {
 
-        List<FolderEntity> folderEntities = folderRepository.findByUserIdAndFolderIds(userId, folderIds);
+        List<FolderEntity> folderEntities = folderRepository.findByUserIdAndFolderIds(authUser.getId(), folderIds);
 
         if (!folderEntities.stream().map(FolderEntity::getId).collect(Collectors.toList()).containsAll(folderIds)) {
             throw ExceptionSupplier.userNotAllowedToDeleteFolder.get();
         }
 
-        List<FolderEntity> downStreamFolders = folderTreeRepository.getFolderDownStreamTrees(folderIds, !deleted);
+        List<FileEntity> filesNotToBeDeleted = fileTreeRepository.getFileDownStreamTrees(folderIds, true);
+        List<Long> filesNotToBeDeletedIds = filesNotToBeDeleted.stream().map(FileEntity::getId).collect(Collectors.toList());
 
+        List<FolderEntity> downStreamFolders = folderTreeRepository.getFolderDownStreamTrees(folderIds, false);
         List<Long> downStreamFoldersIds = downStreamFolders.stream().map(FolderEntity::getId).collect(Collectors.toList());
 
-        folderRepository.updateDeletedByFolderIds(deleted, downStreamFoldersIds);
+        moveTrashFoldersToBaseShelfDirectory(filesNotToBeDeleted);
 
-        fileRepository.updateDeletedByParentFolderIds(deleted, downStreamFoldersIds);
+        folderRepository.deletedByFolderIdsIn(downStreamFoldersIds);
 
-        List<FileEntity> downStreamFiles = fileTreeRepository.getFileDownStreamTrees(folderIds, !deleted);
+        fileRepository.deletedByParentFolderIdsInAndIdNotIn(downStreamFoldersIds, filesNotToBeDeletedIds);
 
-        if (deleted) {
-            moveToTrash(downStreamFolders);
-//            fileService.moveToTrash(downStreamFiles);
-        } else {
-            recover(downStreamFolders);
-//            fileService.recover(downStreamFiles);
-        }
+        fileRepository.saveAll(filesNotToBeDeleted);
     }
 
-    private void moveToTrash(List<FolderEntity> folders) {
-        for (FolderEntity folderEntity : folders) {
-            UUID uuid = UUID.randomUUID();
-            String uuidAsString = uuid.toString();
-            folderEntity.setName(folderEntity.getName() + "_" + uuidAsString);
+    private void moveTrashFoldersToBaseShelfDirectory(List<FileEntity> filesNotToBeDeleted) {
+        try {
+            for (FileEntity fileEntity : filesNotToBeDeleted) {
+
+                String path = fileEntity.getPath();
+                int index = StringUtils.ordinalIndexOf(path, "/", 3);
+
+                String newPath = homePath + userPath + path.substring(0, index);
+                String oldPath = homePath + userPath + path;
+
+                Files.move(Paths.get(oldPath), Paths.get(newPath));
+
+                fileEntity.setPath(newPath);
+            }
+        } catch (IOException e) {
+            throw ExceptionSupplier.internalServerError.get();
         }
-    }
-
-    private void recover(List<FolderEntity> folders) {
-
     }
 }
