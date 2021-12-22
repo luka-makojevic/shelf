@@ -74,7 +74,6 @@ public class FileController {
     public ResponseEntity<TextResponseMessage> renameFile(@AuthenticationUser AuthUser user,
                                                           @RequestBody RenameFileRequestModel renameFileRequestModel) {
 
-
         HttpStatus retStatus = HttpStatus.OK;
 
         if (!fileService.fileRename(user.getId(), renameFileRequestModel)) {
