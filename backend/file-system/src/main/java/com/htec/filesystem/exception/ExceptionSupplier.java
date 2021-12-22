@@ -53,6 +53,13 @@ public class ExceptionSupplier {
             ErrorMessages.FORBIDDEN.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> fileCouldntBeRenamed = () -> new ShelfException(
+            ErrorMessages.FILE_COULDNT_BE_RENAMED.getErrorMessage(),
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.INTERNAL_SERVER_ERROR_.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> folderAlreadyExists = () -> new ShelfException(
             ErrorMessages.FOLDER_WITH_THE_SAME_NAME_ALREADY_EXISTS.getErrorMessage(),
             HttpStatus.FORBIDDEN.value(),

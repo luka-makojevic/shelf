@@ -74,12 +74,8 @@ public class FileController {
     public ResponseEntity<TextResponseMessage> renameFile(@AuthenticationUser AuthUser user,
                                                           @RequestBody RenameFileRequestModel renameFileRequestModel) {
 
-        HttpStatus retStatus = HttpStatus.OK;
+        fileService.fileRename(user.getId(), renameFileRequestModel);
 
-        if (!fileService.fileRename(user.getId(), renameFileRequestModel)) {
-            retStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-
-        return ResponseEntity.status(retStatus).body(new TextResponseMessage("File renamed.", retStatus.value()));
+        return ResponseEntity.ok().body(new TextResponseMessage("File renamed.", HttpStatus.OK.value()));
     }
 }

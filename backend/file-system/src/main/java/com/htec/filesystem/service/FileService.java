@@ -11,6 +11,7 @@ import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FolderRepository;
 import com.htec.filesystem.repository.ShelfRepository;
 import com.htec.filesystem.util.FileUtil;
+import com.htec.filesystem.validator.FileSystemValidator;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -187,7 +188,7 @@ public class FileService {
         fileRepository.updateIsDeletedByIds(delete, fileIds);
     }
 
-    public boolean fileRename(Long userId, RenameFileRequestModel renameFileRequestModel) {
+    public void fileRename(Long userId, RenameFileRequestModel renameFileRequestModel) {
 
         String fileName = renameFileRequestModel.getFileName();
         Long fileId = renameFileRequestModel.getFileId();
@@ -217,6 +218,10 @@ public class FileService {
         fileEntity.setName(fileName);
         fileRepository.save(fileEntity);
 
-        return oldFile.renameTo(newFile);
+        boolean renamed =  oldFile.renameTo(newFile);
+
+        if(!renamed) {
+            throw ExceptionSupplier.fileCouldntBeRenamed.get();
+        }
     }
 }

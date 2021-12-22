@@ -8,6 +8,7 @@ public enum ErrorMessages {
     COULD_NOT_UPLOAD_FILE("Could not upload file."),
     COULD_NOT_DELETE_SHELF("Could not delete shelf."),
     FILE_WITH_THE_SAME_NAME_ALREADY_EXISTS("File with the same name already exists."),
+    FILE_COULDNT_BE_RENAMED("File couldn't be renamed."),
     FOLDER_WITH_THE_SAME_NAME_ALREADY_EXISTS("Folder with the same name already exists."),
     SHELF_WITH_THE_SAME_NAME_ALREADY_EXISTS("Shelf with the same name already exists."),
     NO_FILE_WITH_GIVEN_ID("There is no file with the provided id."),
