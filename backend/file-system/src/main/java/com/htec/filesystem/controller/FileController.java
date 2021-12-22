@@ -105,4 +105,12 @@ public class FileController {
         fileService.deleteFile(user, fileIds);
         return ResponseEntity.ok().body(new TextResponseMessage(FILES_DELETED, HttpStatus.OK.value()));
     }
+
+    @PutMapping("/recover")
+    public ResponseEntity<TextResponseMessage> recoverSoftDeletedFile(@AuthenticationUser AuthUser user,
+                                                                      @RequestBody List<Long> fileIds) {
+
+        fileService.updateDeletedFiles(user, fileIds, false);
+        return ResponseEntity.ok().body(new TextResponseMessage("File/s recovered from trash.", HttpStatus.OK.value()));
+    }
 }
