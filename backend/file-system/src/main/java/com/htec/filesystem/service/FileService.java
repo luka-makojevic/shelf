@@ -84,23 +84,27 @@ public class FileService {
 
     public void saveFile(Long shelfId, Long folderId, Map<String, Pair<String, String>> files, Long userId) {
 
-        if (files == null)
+        if (files == null) {
             throw ExceptionSupplier.couldNotUploadFile.get();
+        }
 
         if (folderId != 0) {
 
             FolderEntity folder = folderRepository.findById(folderId)
                     .orElseThrow(ExceptionSupplier.noFolderWithGivenId);
 
-            if (!Objects.equals(folder.getShelfId(), shelfId))
+            if (!Objects.equals(folder.getShelfId(), shelfId)) {
                 throw ExceptionSupplier.folderIsNotInGivenShelf.get();
+            }
         }
 
         ShelfEntity shelf = shelfRepository.findById(shelfId)
                 .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
 
-        if (!Objects.equals(shelf.getUserId(), userId))
+        if (!Objects.equals(shelf.getUserId(), userId)) {
             throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
+        }
+
 
         for (Map.Entry<String, Pair<String, String>> filesPair : files.entrySet()) {
 
@@ -121,20 +125,23 @@ public class FileService {
                 dbPath = folderEntity.getPath() + pathSeparator + fileName;
                 localPath = userPath + folderEntity.getPath() + pathSeparator;
 
-                if (fileRepository.findByNameAndParentFolderId(fileName, folderId).isPresent())
+                if (fileRepository.findByNameAndParentFolderId(fileName, folderId).isPresent()) {
                     throw ExceptionSupplier.fileAlreadyExists.get();
+                }
 
             } else {
 
                 localPath = userPath + shelfEntity.getUserId() + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator;
                 dbPath = shelfEntity.getUserId() + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator + fileName;
 
-                if (fileRepository.findByNameAndShelfIdAndParentFolderIdIsNull(fileName, shelfId).isPresent())
+                if (fileRepository.findByNameAndShelfIdAndParentFolderIdIsNull(fileName, shelfId).isPresent()) {
                     throw ExceptionSupplier.fileAlreadyExists.get();
+                }
             }
 
-            if (fileRepository.findByPath(dbPath).isPresent())
+            if (fileRepository.findByPath(dbPath).isPresent()) {
                 throw ExceptionSupplier.fileAlreadyExists.get();
+            }
 
             String uploadDir = homePath + localPath;
             FileUtil.saveFile(uploadDir, fileName, bytes);
