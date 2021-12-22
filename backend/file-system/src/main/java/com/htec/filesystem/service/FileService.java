@@ -188,7 +188,7 @@ public class FileService {
         fileRepository.updateIsDeletedByIds(delete, fileIds);
     }
 
-    public void fileRename(Long userId, RenameFileRequestModel renameFileRequestModel) {
+    public boolean fileRename(Long userId, RenameFileRequestModel renameFileRequestModel) {
 
         String fileName = renameFileRequestModel.getFileName();
         Long fileId = renameFileRequestModel.getFileId();
@@ -208,7 +208,7 @@ public class FileService {
             throw ExceptionSupplier.fileAlreadyExists.get();
 
         String oldFilePath = homePath + userPath + fileEntity.getPath();
-        File oldFile = new File(oldFilePath);
+        File oldFile =  new File(oldFilePath);
 
         String newFilePath = oldFilePath.replace(fileEntity.getName(), fileName);
         File newFile = new File(newFilePath);
@@ -218,10 +218,6 @@ public class FileService {
         fileEntity.setName(fileName);
         fileRepository.save(fileEntity);
 
-        boolean renamed =  oldFile.renameTo(newFile);
-
-        if(!renamed) {
-            throw ExceptionSupplier.fileCouldntBeRenamed.get();
-        }
+        return oldFile.renameTo(newFile);
     }
 }
