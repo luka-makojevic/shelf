@@ -80,7 +80,7 @@ const FolderModal = ({
     required: 'This field is required',
     maxLength: {
       value: 50,
-      message: 'Shelf name can not be longer than 50 characters',
+      message: 'File name can not be longer than 50 characters',
     },
   };
 

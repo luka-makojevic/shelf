@@ -46,7 +46,7 @@ export const DashboardTableRow = ({
     rowText,
     pathName,
   }: {
-    rowText: string | number | boolean;
+    rowText: string | number;
     pathName: string;
   }) => {
     const handleClick = () => {
