@@ -1,5 +1,7 @@
 package helpers;
 
+import java.util.List;
+
 public class DbQueryHelpers
 {
     public static String selectUserFromDb(String email)

@@ -1,17 +1,17 @@
 package helpers;
 
 import db.SheldDBServer;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Cleanup
 {
-    // Data
-    String email = "srdjan.rados@htecgroup.com";
+    public String email;
 
-    public void cleanup() throws SQLException, ClassNotFoundException
+    public void cleanUp(String email) throws SQLException, ClassNotFoundException
     {
+        this.email = email;
+
         SheldDBServer sheldDBServer = new SheldDBServer();
         ResultSet rs = sheldDBServer.testDB(DbQueryHelpers.selectUserFromDb(email));
         String table = null;
