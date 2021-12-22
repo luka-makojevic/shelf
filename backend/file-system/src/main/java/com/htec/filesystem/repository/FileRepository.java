@@ -63,4 +63,8 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
             "WHERE sh.userId = :userId AND f.isDeleted = false AND (f.parentFolderId IN (:parentFolderIds) OR f.parentFolderId IS NULL)")
     List<FileEntity> findAllByUserIdAndParentFolderIdsIn(@Param("userId") Long userId,
                                                          @Param("parentFolderIds") List<Long> parentFolderIds);
+
+    Optional<FileEntity> findByNameAndShelfIdAndParentFolderIdIsNull(String name, Long shelfId);
+
+    Optional<FileEntity> findByNameAndParentFolderIdAndIdNot(String name, Long parentFolderId, Long id);
 }
