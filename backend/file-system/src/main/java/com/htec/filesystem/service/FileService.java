@@ -1,10 +1,12 @@
 package com.htec.filesystem.service;
 
 import com.htec.filesystem.annotation.AuthUser;
+import com.htec.filesystem.dto.ShelfItemDTO;
 import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ExceptionSupplier;
+import com.htec.filesystem.mapper.ShelfItemMapper;
 import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.model.response.FileResponseModel;
 import com.htec.filesystem.repository.FileRepository;
@@ -305,5 +307,18 @@ public class FileService {
         fileRepository.save(fileEntity);
 
         oldFile.renameTo(newFile);
+    }
+
+    public List<ShelfItemDTO> getAllFilesFromTrash(Long userId) {
+
+        List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserId(userId);
+        List<ShelfItemDTO> files = new ArrayList<>();
+
+        for(ShelfEntity shelf : shelfEntities) {
+
+            List<FileEntity> fileEntities = fileRepository.findAllByShelfIdAndIsDeletedTrue(shelf.getId());
+            files.addAll(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
+        }
+        return files;
     }
 }
