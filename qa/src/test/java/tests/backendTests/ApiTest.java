@@ -1,64 +1,39 @@
 package tests.backendTests;
 
-import com.google.gson.Gson;
 import helpers.*;
-import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import org.junit.AfterClass;
 import org.junit.Test;
-import pages.User;
-import java.io.IOException;
 import java.sql.*;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ApiTest {
+public class ApiTest extends BaseApiTest {
 
     @Test
-    public void apiPostUserRegisteredCheck() throws IOException
-    {
-        User user = new User();
-        user.setValuesForValidUser(user.email, user.password, user.firstName, user.lastName);
-        Gson gson = new Gson();
+    public void apiPostUserRegisteredCheck() {
+        user.setValuesForValidUser(excelReader);
         String parsedJson = gson.toJson(user);
 
         // Sending Post request
-        RequestSpecBuilder builder = new RequestSpecBuilder();
-        builder.setBaseUri(BaseHelperPropertieManager.getInstance().getURI(""));
-        builder.setBasePath("/register");
-        builder.setContentType("application/json");
-        builder.setBody(parsedJson);
-        RequestSpecification rSpec = builder.build();
-        Response response = RestHelpers.sendPostRequest(rSpec);
+        Response response = sendRequest.sendingPostReq("/register",parsedJson);
 
         //Assertions
-        assertEquals("User registered",response.jsonPath().get("message").toString());
-        assertEquals("201",response.jsonPath().get("status").toString());
+        assertEquals("User registered", response.jsonPath().get("message").toString());
+        assertEquals("201", response.jsonPath().get("status").toString());
     }
 
     @Test
-    public void apiPostNTCUserRegisteredCheck() throws IOException
-    {
-        ExcelReader excelReader = new ExcelReader("src/main/resources/ExcelRead.xlsx");
-
+    public void apiPostNTCUserRegisteredCheck() {
         // Loop through methods
         for (int i = 2; i <= excelReader.getLastRowNumberFromSheet("apiTest"); i++) {
-            User user = new User();
-            user.setValuesForInvalidUser(i, user.email, user.password, user.firstName, user.lastName);
-            Gson gson = new Gson();
+            user.setValuesForInvalidUser(i, excelReader);
             String parsedJson = gson.toJson(user);
 
             // Sending Post request
-            RequestSpecBuilder builder = new RequestSpecBuilder();
-            builder.setBaseUri(BaseHelperPropertieManager.getInstance().getURI(""));
-            builder.setBasePath("/register");
-            builder.setContentType("application/json");
-            builder.setBody(parsedJson);
-            RequestSpecification rSpec = builder.build();
-            Response response = RestHelpers.sendPostRequest(rSpec);
+            Response response = sendRequest.sendingPostReq("/register",parsedJson);
 
             //Assertions
             String[] expectedMess = {"Record already exists.", "Email is not valid.", "Password is not valid."};
@@ -71,24 +46,54 @@ public class ApiTest {
     }
 
     @Test
-    public void apiGetUserById() throws IOException
-    {
-        User user = new User();
-        user.setValuesForValidUserToLogin(user.email, user.password);
-        Gson gson = new Gson();
+    public void apiPostUserLoginCheck() {
+        user.setValuesForValidUserToLogin(excelReader);
         String parsedJson = gson.toJson(user);
 
-        RestFunctionHelpers restFunctionHelpers = new RestFunctionHelpers();
-        Response response = restFunctionHelpers.generateToken(parsedJson);
+        // Sending Post request
+        Response response = sendRequest.sendingPostReq("/login",parsedJson);
+
+        //Assertions
+        assertTrue(response.getBody().asString().contains("id"));
+        assertTrue(response.getBody().asString().contains("jwtToken"));
+        assertTrue(response.getBody().asString().contains("jwtRefreshToken"));
+        assertEquals("3", response.jsonPath().get("role").toString());
+    }
+
+    @Test
+    public void apiPostNTCUserLoginCheck() {
+        // Loop through methods
+        for (int i = 2; i <= excelReader.getLastRowNumberFromSheet("apiTest"); i++) {
+            user.setInvalidValuesForUserToLogin(i,excelReader);
+            String parsedJson = gson.toJson(user);
+
+            // Sending Post request
+            Response response = sendRequest.sendingPostReq("/login",parsedJson);
+
+            //Assertions
+            String[] expectedMess = {"User not found.", "Authentication credentials not valid."};
+            String[] expectedStatus = {"400"};
+
+            assertTrue(Arrays.toString(expectedMess).contains(response.jsonPath().get("message").toString()));
+            assertTrue(Arrays.toString(expectedStatus).contains(response.jsonPath().get("status").toString()));
+            System.out.println("---------------------------------");
+        }
+    }
+
+    @Test
+    public void apiGetUserById() {
+        user.setValuesForValidUserToLogin(excelReader);
+        String parsedJson = gson.toJson(user);
+
+        Response response = sendRequest.sendingPostReq("/login", parsedJson);
         String tokenGenerated = response.jsonPath().get("jwtToken");
         Integer id = response.jsonPath().get("id");
 
         // Sending Get request
-        restFunctionHelpers = new RestFunctionHelpers();
-        response = restFunctionHelpers.sendingGetReqWithGeneratedToken(tokenGenerated, id);
+        response = sendRequest.sendingGetReqWithGeneratedToken(tokenGenerated, id);
 
         //Assertions
-        assertEquals(id.toString(),response.jsonPath().get("id").toString());
+        assertEquals(id.toString(), response.jsonPath().get("id").toString());
         assertEquals("Srdjan", response.jsonPath().get("firstName").toString());
         assertEquals("Rados", response.jsonPath().get("lastName").toString());
         assertEquals("srdjan.rados@htecgroup.com", response.jsonPath().get("email").toString());
@@ -96,28 +101,21 @@ public class ApiTest {
     }
 
     @Test
-    public void apiUpdateUserById() throws IOException
-    {
-        User user = new User();
-        user.setValuesForValidUserToLogin(user.email, user.password);
-        Gson gson = new Gson();
+    public void apiUpdateUserById() {
+        user.setValuesForValidUserToLogin(excelReader);
         String parsedJson = gson.toJson(user);
 
-        RestFunctionHelpers restFunctionHelpers = new RestFunctionHelpers();
-        Response response = restFunctionHelpers.generateToken(parsedJson);
+        Response response = sendRequest.sendingPostReq("/login", parsedJson);
         String tokenGenerated = response.jsonPath().get("jwtToken");
         Integer id = response.jsonPath().get("id");
 
         // Sending Update request
-        user = new User();
-        user.setValuesForUpdatingUser(user.firstName, user.lastName, user.password);
-        gson = new Gson();
+        user.setValuesForUpdatingUser(excelReader);
         parsedJson = gson.toJson(user);
-        restFunctionHelpers = new RestFunctionHelpers();
-        response = restFunctionHelpers.sendingPutReqWithGeneratedToken(parsedJson,tokenGenerated, id);
+        response = sendRequest.sendingPutReqWithGeneratedToken(parsedJson, tokenGenerated, id);
 
         //Assertions
-        assertEquals(id.toString(),response.jsonPath().get("id").toString());
+        assertEquals(id.toString(), response.jsonPath().get("id").toString());
         assertEquals("Srdjan1", response.jsonPath().get("firstName").toString());
         assertEquals("Rados1", response.jsonPath().get("lastName").toString());
         assertEquals("{id=3, name=user}", response.jsonPath().get("role").toString());
