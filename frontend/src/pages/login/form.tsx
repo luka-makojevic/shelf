@@ -1,5 +1,5 @@
 import { useMsal } from '@azure/msal-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { loginRequest } from '../../azure/authConfig';
@@ -34,9 +34,6 @@ const LoginForm = () => {
 
   const navigation = useNavigate();
   const location = useLocation();
-  // must have, otherwise it reads location.state as unknown and breaks
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [success, setSuccess] = useState<any>('');
 
   const submitForm = (data: LoginData) => {
     login(
@@ -49,10 +46,6 @@ const LoginForm = () => {
       }
     );
   };
-
-  useEffect(() => {
-    setSuccess(location.state);
-  }, []);
 
   const handleMicrosoftSignIn = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -78,7 +71,6 @@ const LoginForm = () => {
 
   const handleAlertClose = () => {
     setError('');
-    setSuccess('');
     navigation(Routes.LOGIN);
   };
 
@@ -94,11 +86,11 @@ const LoginForm = () => {
             onClose={handleAlertClose}
           />
         )}
-        {success && (
+        {location.state && (
           <AlertPortal
             type={AlertMessage.INFO}
             title="Info"
-            message={success}
+            message={location.state}
             onClose={handleAlertClose}
           />
         )}
