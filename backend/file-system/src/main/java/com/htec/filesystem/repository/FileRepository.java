@@ -57,6 +57,7 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
     Optional<FileEntity> findByNameAndParentFolderId(String name, Long parentFolderId);
 
     Optional<FileEntity> findByNameAndShelfId(String name, Long shelfId);
+
     @Query("SELECT f FROM FileEntity f INNER JOIN ShelfEntity sh " +
             "ON (f.shelfId = sh.id) " +
             "WHERE sh.userId = :userId AND f.isDeleted = false AND (f.parentFolderId IN (:parentFolderIds) OR f.parentFolderId IS NULL)")

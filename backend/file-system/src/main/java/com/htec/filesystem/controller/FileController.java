@@ -22,6 +22,11 @@ public class FileController {
 
     private final FileService fileService;
 
+    private final String FILE_UPLOADED = "File Uploaded";
+    private final String IMAGE_UPLOADED = "Image Uploaded";
+    private final String FILES_MOVED_TO_TRASH = "File/s moved to trash.";
+    private final String FILES_RECOVERED_FROM_TRASH = "File/s recovered from trash.";
+
     public FileController(FileService fileService) {
         this.fileService = fileService;
     }
@@ -33,7 +38,7 @@ public class FileController {
 
         fileService.saveUserProfilePicture(id, files);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("Image Uploaded", HttpStatus.OK.value()));
+        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(IMAGE_UPLOADED, HttpStatus.OK.value()));
     }
 
     @GetMapping("/download/**")
@@ -52,20 +57,20 @@ public class FileController {
 
     @PostMapping("/upload/{shelfId}/{folderId}")
     public ResponseEntity<TextResponseMessage> uploadFile(@RequestBody Map<String, Pair<String, String>> files,
-                                     @PathVariable Long shelfId,
-                                     @PathVariable Long folderId) {
+                                                          @PathVariable Long shelfId,
+                                                          @PathVariable Long folderId) {
 
 
         fileService.saveFile(shelfId, folderId, files);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("File Uploaded", HttpStatus.OK.value()));
+        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_UPLOADED, HttpStatus.OK.value()));
     }
 
     @PutMapping("/move-to-trash")
     public ResponseEntity<TextResponseMessage> softDeleteFile(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) {
 
         fileService.updateDeletedFiles(user, fileIds, true);
-        return ResponseEntity.ok().body(new TextResponseMessage("File/s moved to trash.", HttpStatus.OK.value()));
+        return ResponseEntity.ok().body(new TextResponseMessage(FILES_MOVED_TO_TRASH, HttpStatus.OK.value()));
     }
 
     @PutMapping("/recover")
@@ -73,6 +78,6 @@ public class FileController {
                                                                       @RequestBody List<Long> fileIds) {
 
         fileService.updateDeletedFiles(user, fileIds, false);
-        return ResponseEntity.ok().body(new TextResponseMessage("File/s recovered from trash.", HttpStatus.OK.value()));
+        return ResponseEntity.ok().body(new TextResponseMessage(FILES_RECOVERED_FROM_TRASH, HttpStatus.OK.value()));
     }
 }
