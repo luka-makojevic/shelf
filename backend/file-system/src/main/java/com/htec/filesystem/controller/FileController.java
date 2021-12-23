@@ -65,7 +65,6 @@ public class FileController {
                                                           @PathVariable Long folderId,
                                                           @AuthenticationUser AuthUser authUser) {
 
-
         fileService.saveFile(shelfId, folderId, files, authUser.getId());
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_UPLOADED, HttpStatus.OK.value()));
     }

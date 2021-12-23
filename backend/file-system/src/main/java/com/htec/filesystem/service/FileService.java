@@ -219,7 +219,7 @@ public class FileService {
                 String nameWithoutExtension = fileEntity.getRealName().substring(0, extensionIndex);
                 String extension = fileEntity.getRealName().substring(extensionIndex);
 
-                int index = fileEntity.getPath().lastIndexOf('/');
+                int index = fileEntity.getPath().lastIndexOf(pathSeparator);
                 String newPath = fileEntity.getPath().substring(0, index);
 
                 fileEntity.setName(nameWithoutExtension + "(" + fileNameCounter + ")" + extension);
@@ -249,7 +249,7 @@ public class FileService {
     private void renameFilesOnFileSystem(String newFileName, String oldPath) {
 
         try {
-            int index = oldPath.lastIndexOf("/");
+            int index = oldPath.lastIndexOf(pathSeparator);
             String newPath = oldPath.substring(0, index);
 
             newPath = homePath + userPath + newPath + pathSeparator + newFileName;
@@ -264,7 +264,7 @@ public class FileService {
 
         try {
 
-            int index = oldPath.lastIndexOf('/');
+            int index = oldPath.lastIndexOf(pathSeparator);
             String oldPathWithoutFileName = oldPath.substring(0, index);
 
             String newPathFull = homePath + userPath + newPath;
