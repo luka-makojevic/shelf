@@ -305,16 +305,6 @@ public class FileService {
         oldFile.renameTo(newFile);
     }
 
-    public List<ShelfItemDTO> getAllFilesFromTrash(Long userId) {
-
-        List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserId(userId);
-        List<Long> shelfIds = shelfEntities.stream().map(ShelfEntity::getId).collect(Collectors.toList());
-
-        List<FileEntity> fileEntities = fileRepository.findAllByShelfIdIn(shelfIds);
-
-        return new ArrayList<>(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
-    }
-
     public void deleteFile(AuthUser user, List<Long> fileIds) throws IOException {
 
         List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds);

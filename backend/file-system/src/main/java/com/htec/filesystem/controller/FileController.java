@@ -92,12 +92,6 @@ public class FileController {
         return ResponseEntity.ok().body(new TextResponseMessage(FILE_RENAMED, HttpStatus.OK.value()));
     }
 
-    @GetMapping("/trash")
-    public ResponseEntity<List<ShelfItemDTO>> getFilesFromTrash(@AuthenticationUser AuthUser authUser) {
-
-        return ResponseEntity.ok(fileService.getAllFilesFromTrash(authUser.getId()));
-    }
-
     @DeleteMapping
     public ResponseEntity<TextResponseMessage> deleteFile(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) throws IOException {
 
