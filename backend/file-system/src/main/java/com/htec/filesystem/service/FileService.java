@@ -1,30 +1,33 @@
 package com.htec.filesystem.service;
 
 import com.htec.filesystem.annotation.AuthUser;
+import com.htec.filesystem.dto.ShelfItemDTO;
 import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ExceptionSupplier;
+import com.htec.filesystem.mapper.ShelfItemMapper;
+import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.model.response.FileResponseModel;
 import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FolderRepository;
 import com.htec.filesystem.repository.ShelfRepository;
 import com.htec.filesystem.util.FileUtil;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StreamUtils;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class FileService {
@@ -39,10 +42,7 @@ public class FileService {
     private final FolderRepository folderRepository;
     private final ShelfRepository shelfRepository;
 
-    public FileService(UserAPICallService userAPICallService,
-                       FileRepository fileRepository,
-                       FolderRepository folderRepository,
-                       ShelfRepository shelfRepository) {
+    public FileService(UserAPICallService userAPICallService, FileRepository fileRepository, FolderRepository folderRepository, ShelfRepository shelfRepository) {
 
         this.userAPICallService = userAPICallService;
         this.fileRepository = fileRepository;
@@ -52,8 +52,7 @@ public class FileService {
 
     public void saveUserProfilePicture(Long id, Map<String, Pair<String, String>> files) {
 
-        if (files == null || files.get("image") == null)
-            throw ExceptionSupplier.couldNotSaveImage.get();
+        if (files == null || files.get("image") == null) throw ExceptionSupplier.couldNotSaveImage.get();
 
         byte[] bytes = Base64.getDecoder().decode(files.get("image").getSecond());
 
@@ -84,18 +83,35 @@ public class FileService {
         return new FileResponseModel(imageBytes, path);
     }
 
-    public void saveFile(Long shelfId, Long folderId, Map<String, Pair<String, String>> files) {
+    public void saveFile(Long shelfId, Long folderId, Map<String, Pair<String, String>> files, Long userId) {
 
-        if (files == null)
+        if (files == null) {
             throw ExceptionSupplier.couldNotUploadFile.get();
+        }
 
-        Set<String> uploadFileKeys = files.keySet();
+        if (folderId != 0) {
 
-        for (String uploadFileKey : uploadFileKeys) {
+            FolderEntity folder = folderRepository.findById(folderId)
+                    .orElseThrow(ExceptionSupplier.noFolderWithGivenId);
 
-            byte[] bytes = Base64.getDecoder().decode(files.get(uploadFileKey).getSecond());
+            if (!Objects.equals(folder.getShelfId(), shelfId)) {
+                throw ExceptionSupplier.folderIsNotInGivenShelf.get();
+            }
+        }
 
-            String fileName = files.get(uploadFileKey).getFirst();
+        ShelfEntity shelf = shelfRepository.findById(shelfId)
+                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+
+        if (!Objects.equals(shelf.getUserId(), userId)) {
+            throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
+        }
+
+
+        for (Map.Entry<String, Pair<String, String>> filesPair : files.entrySet()) {
+
+            byte[] bytes = Base64.getDecoder().decode(filesPair.getValue().getSecond());
+
+            String fileName = filesPair.getValue().getFirst();
             String localPath;
             String dbPath;
 
@@ -110,20 +126,23 @@ public class FileService {
                 dbPath = folderEntity.getPath() + pathSeparator + fileName;
                 localPath = userPath + folderEntity.getPath() + pathSeparator;
 
-                if (fileRepository.findByNameAndParentFolderId(fileName, folderId).isPresent())
+                if (fileRepository.findByNameAndParentFolderId(fileName, folderId).isPresent()) {
                     throw ExceptionSupplier.fileAlreadyExists.get();
+                }
 
             } else {
 
                 localPath = userPath + shelfEntity.getUserId() + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator;
                 dbPath = shelfEntity.getUserId() + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator + fileName;
 
-                if (fileRepository.findByNameAndShelfId(fileName, shelfId).isPresent())
+                if (fileRepository.findByNameAndShelfIdAndParentFolderIdIsNull(fileName, shelfId).isPresent()) {
                     throw ExceptionSupplier.fileAlreadyExists.get();
+                }
             }
 
-            if (fileRepository.findByPath(dbPath).isPresent())
+            if (fileRepository.findByPath(dbPath).isPresent()) {
                 throw ExceptionSupplier.fileAlreadyExists.get();
+            }
 
             String uploadDir = homePath + localPath;
             FileUtil.saveFile(uploadDir, fileName, bytes);
@@ -138,15 +157,168 @@ public class FileService {
         fileEntity.setName(fileName);
         fileEntity.setPath(filePath);
         fileEntity.setShelfId(shelfId);
-        if (folderId != 0)
-            fileEntity.setParentFolderId(folderId);
+        if (folderId != 0) fileEntity.setParentFolderId(folderId);
 
         fileEntity.setCreatedAt(LocalDateTime.now());
         fileRepository.save(fileEntity);
     }
 
     @Transactional
-    public void updateDeletedFiles(AuthUser user, List<Long> fileIds) {
+    public void updateDeletedFiles(AuthUser user, List<Long> fileIds, Boolean deleted) {
+
+        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds);
+
+        if (fileEntities.size() != fileIds.size()) {
+            throw ExceptionSupplier.filesNotFound.get();
+        }
+
+        if (!fileEntities.stream().map(FileEntity::getId).collect(Collectors.toList()).containsAll(fileIds)) {
+            throw ExceptionSupplier.userNotAllowedToDeleteFile.get();
+        }
+
+        if (deleted) {
+            moveToTrash(fileEntities);
+        } else {
+            recover(user, fileEntities);
+        }
+
+        fileRepository.saveAll(fileEntities);
+    }
+
+    private void recover(AuthUser user, List<FileEntity> fileEntities) {
+
+        List<Long> folderIds = fileEntities.stream().map(FileEntity::getParentFolderId).collect(Collectors.toList());
+
+        List<FileEntity> fileEntitiesNotDeleted = fileRepository.findAllByUserIdAndParentFolderIdsIn(user.getId(), folderIds);
+
+        Map<Optional<Long>, List<FileEntity>> filesByFolder = fileEntitiesNotDeleted.stream().collect(Collectors.groupingBy(e -> Optional.ofNullable(e.getParentFolderId())));
+
+        Map<String, Integer> filesCount = new HashMap<>();
+
+        for (FileEntity fileEntity : fileEntities) {
+            List<FileEntity> existingFiles = filesByFolder.getOrDefault(Optional.ofNullable(fileEntity.getParentFolderId()), new ArrayList<>());
+
+            if (existingFiles.stream().anyMatch(e -> e.getName().equals(fileEntity.getName()))) {
+                filesCount.merge(fileEntity.getName(), 1, Integer::sum);
+            }
+        }
+
+        for (FileEntity fileEntity : fileEntities) {
+
+            Integer fileNameCounter = filesCount.getOrDefault(fileEntity.getName(), 0);
+
+            String oldPath = fileEntity.getPath();
+            String fileNameWithUUID = fileEntity.getName();
+
+            if (fileNameCounter > 0) {
+                filesCount.put(fileEntity.getName(), fileNameCounter - 1);
+
+                int extensionIndex = fileEntity.getName().lastIndexOf('.');
+                String nameWithoutExtension = fileEntity.getName().substring(0, extensionIndex);
+                String extension = fileEntity.getName().substring(extensionIndex);
+
+                int index = fileEntity.getPath().lastIndexOf(pathSeparator);
+                String newPath = fileEntity.getPath().substring(0, index);
+
+                fileEntity.setName(nameWithoutExtension + "(" + fileNameCounter + ")" + extension);
+                fileEntity.setPath(newPath + pathSeparator + fileEntity.getName());
+                fileEntity.setDeletedAt(null);
+            }
+
+            recoverFilesOnFileSystem(fileEntity.getPath(), oldPath, fileNameWithUUID);
+        }
+    }
+
+    private void moveToTrash(List<FileEntity> fileEntities) {
+
+        for (FileEntity fileEntity : fileEntities) {
+            UUID uuid = UUID.randomUUID();
+            String uuidAsString = uuid.toString();
+
+            String newFileName = fileEntity.getName() + "_" + uuidAsString;
+
+            renameFilesOnFileSystem(newFileName, fileEntity.getPath());
+
+            fileEntity.setName(newFileName);
+            fileEntity.setDeletedAt(LocalDateTime.now());
+        }
+    }
+
+    private void renameFilesOnFileSystem(String newFileName, String oldPath) {
+
+        try {
+            int index = oldPath.lastIndexOf(pathSeparator);
+            String newPath = oldPath.substring(0, index);
+
+            newPath = homePath + userPath + newPath + pathSeparator + newFileName;
+
+            Files.move(Paths.get(homePath + userPath + oldPath), Paths.get(newPath));
+        } catch (IOException e) {
+            throw ExceptionSupplier.internalServerError.get();
+        }
+    }
+
+    private void recoverFilesOnFileSystem(String newPath, String oldPath, String fileNameWithUUID) {
+
+        try {
+
+            int index = oldPath.lastIndexOf(pathSeparator);
+            String oldPathWithoutFileName = oldPath.substring(0, index);
+
+            String newPathFull = homePath + userPath + newPath;
+            String oldPathFull = homePath + userPath + oldPathWithoutFileName + pathSeparator + fileNameWithUUID;
+
+            Files.move(Paths.get(oldPathFull), Paths.get(newPathFull));
+
+        } catch (IOException e) {
+            throw ExceptionSupplier.internalServerError.get();
+        }
+    }
+
+    public void fileRename(Long userId, RenameFileRequestModel renameFileRequestModel) {
+
+        String fileName = renameFileRequestModel.getFileName();
+        Long fileId = renameFileRequestModel.getFileId();
+
+        FileEntity fileEntity = fileRepository.findById(fileId)
+                .orElseThrow(ExceptionSupplier.noFileWithGivenId);
+
+        ShelfEntity shelfEntity = shelfRepository.findById(fileEntity.getShelfId())
+                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+
+        if (!Objects.equals(shelfEntity.getUserId(), userId))
+            throw ExceptionSupplier.userNotAllowedToAccessFile.get();
+
+        if (fileRepository.findByNameAndParentFolderIdAndIdNot(fileName,
+                fileEntity.getParentFolderId(),
+                fileEntity.getId()).isPresent())
+            throw ExceptionSupplier.fileAlreadyExists.get();
+
+        String oldFilePath = homePath + userPath + fileEntity.getPath();
+        File oldFile = new File(oldFilePath);
+
+        String newFilePath = oldFilePath.replace(fileEntity.getName(), fileName);
+        File newFile = new File(newFilePath);
+
+        String dbPath = newFilePath.replace(homePath + userPath, "");
+        fileEntity.setPath(dbPath);
+        fileEntity.setName(fileName);
+        fileRepository.save(fileEntity);
+
+        oldFile.renameTo(newFile);
+    }
+
+    public List<ShelfItemDTO> getAllFilesFromTrash(Long userId) {
+
+        List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserId(userId);
+        List<Long> shelfIds = shelfEntities.stream().map(ShelfEntity::getId).collect(Collectors.toList());
+
+        List<FileEntity> fileEntities = fileRepository.findAllByShelfIdInAndIsDeletedTrue(shelfIds);
+
+        return new ArrayList<>(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
+    }
+
+    public void deleteFile(AuthUser user, List<Long> fileIds) throws IOException {
 
         List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds);
 
@@ -159,11 +331,10 @@ public class FileService {
         }
 
         for (FileEntity fileEntity : fileEntities) {
-            UUID uuid = UUID.randomUUID();
-            String uuidAsString = uuid.toString();
-            fileEntity.setName(fileEntity.getName() + "_" + uuidAsString);
+            String fullPath = homePath + userPath + fileEntity.getPath();
+            FileUtils.forceDelete(new File(fullPath));
         }
 
-        fileRepository.saveAll(fileEntities);
+        fileRepository.deleteAll(fileEntities);
     }
 }

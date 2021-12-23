@@ -5,7 +5,7 @@ import { useShelf } from '../../hooks/shelfHooks';
 import { TableDataTypes } from '../../interfaces/dataTypes';
 import { useAppSelector } from '../../store/hooks';
 import AlertPortal from '../../components/alert/alert';
-import CreateShelfModal from '../../components/modal/createShelfModal';
+import ShelfModal from '../../components/modal/shelfModal';
 import Modal from '../../components/modal';
 import { Button } from '../../components/UI/button';
 import { AlertMessage } from '../../utils/enums/alertMessages';
@@ -41,7 +41,6 @@ const Shelves = () => {
 
   useEffect(() => {
     getShelves(
-      { userId: user?.id },
       () => {},
       (err: string) => {
         setError(err);
@@ -96,19 +95,21 @@ const Shelves = () => {
           onClose={handleSetError}
         />
       )}
+      
       {openModal && (
         <Modal
           title={selectedShelf ? 'Rename shelf' : 'Create shelf'}
           onCloseModal={handleModalClose}
           closeIcon
         >
-          <CreateShelfModal
+          <ShelfModal
             onCloseModal={handleModalClose}
             onError={setError}
             shelf={selectedShelf}
           />
         </Modal>
       )}
+
       {deleteModalOpen && (
         <Modal title="Delete shelf" onCloseModal={handleModalClose}>
           <DeleteShelfModal

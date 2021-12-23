@@ -1,8 +1,8 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { PathHistoryDataType } from '../interfaces/dataTypes';
+import { PathHistoryData } from '../interfaces/dataTypes';
 
-export const initialPathHistory: { pathHistory: PathHistoryDataType[] } = {
+export const initialPathHistory: { pathHistory: PathHistoryData[] } = {
   pathHistory: [],
 };
 
@@ -10,7 +10,7 @@ const pathHistorySlice = createSlice({
   name: 'pathHistory',
   initialState: initialPathHistory,
   reducers: {
-    setPathHistory: (state, action: PayloadAction<PathHistoryDataType[]>) => {
+    setPathHistory: (state, action: PayloadAction<PathHistoryData[]>) => {
       state.pathHistory = action.payload;
     },
   },

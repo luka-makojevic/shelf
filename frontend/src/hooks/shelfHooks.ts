@@ -7,7 +7,6 @@ export const useShelf = () => {
   const dispatch = useAppDispatch();
 
   const getShelves = (
-    data: {},
     onSuccess: () => void,
     onError: (error: string) => void
   ) => {

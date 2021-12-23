@@ -126,7 +126,7 @@ export interface RegisterFieldConfig {
   validations: RegisterOptions;
 }
 
-export interface CreateShelfData {
+export interface ShelfFormData {
   name: string;
 }
 
@@ -155,6 +155,7 @@ export interface FileTableDataTypes {
   size: number;
   createdAt: string;
   id: number;
+  folder: number;
 }
 export interface FunctionTableDataTypes {
   [key: string]: string | number;
@@ -187,7 +188,8 @@ export interface FileDataType {
   shelfId: number;
   parentFolderId: number;
 }
-export interface PathHistoryDataType {
-  name: string;
-  id: number;
+
+export interface PathHistoryData {
+  folderName: string;
+  folderId: number;
 }

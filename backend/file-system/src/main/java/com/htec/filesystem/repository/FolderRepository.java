@@ -34,6 +34,7 @@ public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
 
     List<FolderEntity> findAllByShelfIdAndParentFolderIdIsNull(Long shelfId);
 
+
     @Query("SELECT s " +
             "FROM FolderEntity f JOIN ShelfEntity s ON (f.shelfId = s.id)" +
             "WHERE f.id = :folderId")

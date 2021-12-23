@@ -68,6 +68,7 @@ export const StyledRow = styled.tr`
   }
 `;
 
-export const ActionContainer = styled.span`
+export const IconContainer = styled.div`
+  display: inline-block;
   margin-right: ${theme.space.sm};
 `;

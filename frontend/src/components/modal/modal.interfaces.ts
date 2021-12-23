@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
 import { TableDataTypes } from '../../interfaces/dataTypes';
 
-export interface CreateShelfModalProps {
+export interface ShelfModalProps {
   onCloseModal: Dispatch<SetStateAction<boolean>>;
   onError: (value: SetStateAction<string>) => void;
   shelf: TableDataTypes | null;
@@ -26,4 +26,13 @@ export interface ModalProps {
   children: JSX.Element;
   title: string;
   closeIcon?: boolean;
+}
+
+export interface FolderModalProps {
+  onCloseModal: Dispatch<SetStateAction<boolean>>;
+  onError: (value: SetStateAction<string>) => void;
+  shelfId: string | undefined;
+  folderId: string | undefined;
+  placeholder: string | undefined;
+  buttonText: string | undefined;
 }

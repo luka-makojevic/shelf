@@ -1,16 +1,24 @@
+import { API_URL_FILESYSTEM } from '../api/api';
 import instance from '../api/axiosInstance';
 
-const API_URL_SHELF = 'http://10.10.0.136:8080/filesystem/';
-
-const getShelves = () => instance.get(`${API_URL_SHELF}shelf`);
+const getShelves = () => instance.get(`${API_URL_FILESYSTEM}shelf`);
 
 const createShelf = (shelfName: string) =>
-  instance.post(`${API_URL_SHELF}shelf/create`, shelfName);
+  instance.post(`${API_URL_FILESYSTEM}shelf`, shelfName);
 
-const deleteShelf = (shelfIds: number[]) =>
-  instance.put(`${API_URL_SHELF}shelf/move-to-trash`, shelfIds);
+const softDeleteShelf = (shelfIds: number[]) =>
+  instance.put(`${API_URL_FILESYSTEM}shelf/move-to-trash`, shelfIds);
 
-const editShelf = (id: number, data: string) =>
-  instance.post(`${API_URL_SHELF}${id}`, data);
+const hardDeleteShelf = (shelfId: number) =>
+  instance.delete(`${API_URL_FILESYSTEM}shelf/${shelfId}`);
 
-export default { getShelves, createShelf, deleteShelf, editShelf };
+const editShelf = (data: { shelfId: number; shelfName: string }) =>
+  instance.put(`${API_URL_FILESYSTEM}shelf/rename`, data);
+
+export default {
+  getShelves,
+  createShelf,
+  softDeleteShelf,
+  editShelf,
+  hardDeleteShelf,
+};

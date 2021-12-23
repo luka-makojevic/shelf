@@ -2,7 +2,6 @@ package com.htec.filesystem.controller;
 
 import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.annotation.AuthenticationUser;
-import com.htec.filesystem.dto.ShelfItemDTO;
 import com.htec.filesystem.model.request.CreateFolderRequestModel;
 import com.htec.filesystem.model.response.ShelfContentResponseModel;
 import com.htec.filesystem.model.response.TextResponseMessage;
@@ -29,7 +28,7 @@ public class FolderController {
     }
 
     @PostMapping("/initialize/{userId}")
-    public ResponseEntity initializeFolders(@PathVariable Long userId) {
+    public ResponseEntity<TextResponseMessage> initializeFolders(@PathVariable Long userId) {
 
         HttpStatus retStatus = HttpStatus.OK;
 
@@ -72,4 +71,5 @@ public class FolderController {
 //
 //        return ResponseEntity.ok().body(new TextResponseMessage(FOLDERS_RECOVERED_FROM_TRASH, HttpStatus.OK.value()));
 //    }
+
 }

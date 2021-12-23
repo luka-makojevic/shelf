@@ -25,7 +25,7 @@ public class ShelfController {
     }
 
     @PostMapping
-    public ResponseEntity createShelf(@RequestBody CreateShelfRequestModel createShelfRequestModel,
+    public ResponseEntity<TextResponseMessage> createShelf(@RequestBody CreateShelfRequestModel createShelfRequestModel,
                                       @AuthenticationUser AuthUser authUser) {
 
         HttpStatus retStatus = HttpStatus.OK;
