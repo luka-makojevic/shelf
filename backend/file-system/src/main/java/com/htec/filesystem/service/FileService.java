@@ -11,6 +11,7 @@ import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FolderRepository;
 import com.htec.filesystem.repository.ShelfRepository;
 import com.htec.filesystem.util.FileUtil;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -305,5 +306,25 @@ public class FileService {
         fileRepository.save(fileEntity);
 
         oldFile.renameTo(newFile);
+    }
+
+    public void deleteFile(AuthUser user, List<Long> fileIds) throws IOException {
+
+        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds, false);
+
+        if (fileEntities.size() != fileIds.size()) {
+            throw ExceptionSupplier.filesNotFound.get();
+        }
+
+        if (!fileEntities.stream().map(FileEntity::getId).collect(Collectors.toList()).containsAll(fileIds)) {
+            throw ExceptionSupplier.userNotAllowedToDeleteFile.get();
+        }
+
+        for (FileEntity fileEntity : fileEntities) {
+            String fullPath = homePath + userPath + fileEntity.getPath();
+            FileUtils.forceDelete(new File(fullPath));
+        }
+
+        fileRepository.deleteAll(fileEntities);
     }
 }
