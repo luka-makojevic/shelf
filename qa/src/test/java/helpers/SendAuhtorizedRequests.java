@@ -4,7 +4,7 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
-public class SendRequest
+public class SendAuhtorizedRequests
 {
     public Response sendingPostReq(String basePath, String parsedJson)
     {

@@ -11,7 +11,7 @@ public class BaseApiTest {
     public static ExcelReader excelReader;
     public static User user;
     public static Gson gson;
-    public static SendRequest sendRequest;
+    public static SendAuhtorizedRequests sendAuhtorizedRequests;
 
     @BeforeClass
     public static void initialize() throws IOException
@@ -19,7 +19,7 @@ public class BaseApiTest {
         excelReader = new ExcelReader("src/main/resources/ExcelRead.xlsx");
         user = new User();
         gson = new Gson();
-        sendRequest = new SendRequest();
+        sendAuhtorizedRequests = new SendAuhtorizedRequests();
     }
 
 }

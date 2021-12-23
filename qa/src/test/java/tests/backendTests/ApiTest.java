@@ -18,7 +18,7 @@ public class ApiTest extends BaseApiTest {
         String parsedJson = gson.toJson(user);
 
         // Sending Post request
-        Response response = sendRequest.sendingPostReq("/register",parsedJson);
+        Response response = sendAuhtorizedRequests.sendingPostReq("/register",parsedJson);
 
         //Assertions
         assertEquals("User registered", response.jsonPath().get("message").toString());
@@ -33,7 +33,7 @@ public class ApiTest extends BaseApiTest {
             String parsedJson = gson.toJson(user);
 
             // Sending Post request
-            Response response = sendRequest.sendingPostReq("/register",parsedJson);
+            Response response = sendAuhtorizedRequests.sendingPostReq("/register",parsedJson);
 
             //Assertions
             String[] expectedMess = {"Record already exists.", "Email is not valid.", "Password is not valid."};
@@ -51,33 +51,42 @@ public class ApiTest extends BaseApiTest {
         String parsedJson = gson.toJson(user);
 
         // Sending Post request
-        Response response = sendRequest.sendingPostReq("/login",parsedJson);
+        Response response = sendAuhtorizedRequests.sendingPostReq("/login",parsedJson);
+        Integer id = response.jsonPath().get("id");
+        String jwtToken = response.jsonPath().get("jwtToken");
+        String jwtRefreshToken = response.jsonPath().get("jwtRefreshToken");
 
         //Assertions
-        assertTrue(response.getBody().asString().contains("id"));
-        assertTrue(response.getBody().asString().contains("jwtToken"));
-        assertTrue(response.getBody().asString().contains("jwtRefreshToken"));
+        assertEquals(id.toString(), response.jsonPath().get("id").toString());
+        assertEquals(jwtToken, response.jsonPath().get("jwtToken").toString());
+        assertEquals(jwtRefreshToken, response.jsonPath().get("jwtRefreshToken").toString());
         assertEquals("3", response.jsonPath().get("role").toString());
     }
 
     @Test
-    public void apiPostNTCUserLoginCheck() {
-        // Loop through methods
-        for (int i = 2; i <= excelReader.getLastRowNumberFromSheet("apiTest"); i++) {
-            user.setInvalidValuesForUserToLogin(i,excelReader);
+    public void apiPostInvalidEmailLoginCheck() {
+            user.setInvalidValuesForUserToLogin(2, 0, 2, 1, excelReader);
             String parsedJson = gson.toJson(user);
 
             // Sending Post request
-            Response response = sendRequest.sendingPostReq("/login",parsedJson);
+            Response response = sendAuhtorizedRequests.sendingPostReq("/login",parsedJson);
 
             //Assertions
-            String[] expectedMess = {"User not found.", "Authentication credentials not valid."};
-            String[] expectedStatus = {"400"};
+            assertEquals("User not found.", response.jsonPath().get("message").toString());
+            assertEquals("400", response.jsonPath().get("status").toString());
+    }
 
-            assertTrue(Arrays.toString(expectedMess).contains(response.jsonPath().get("message").toString()));
-            assertTrue(Arrays.toString(expectedStatus).contains(response.jsonPath().get("status").toString()));
-            System.out.println("---------------------------------");
-        }
+    @Test
+    public void apiPostInvalidPasswordLoginCheck() {
+        user.setInvalidValuesForUserToLogin(3, 0, 3, 1, excelReader);
+        String parsedJson = gson.toJson(user);
+
+        // Sending Post request
+        Response response = sendAuhtorizedRequests.sendingPostReq("/login",parsedJson);
+
+        //Assertions
+        assertEquals("Authentication credentials not valid.", response.jsonPath().get("message").toString());
+        assertEquals("400", response.jsonPath().get("status").toString());
     }
 
     @Test
@@ -85,12 +94,12 @@ public class ApiTest extends BaseApiTest {
         user.setValuesForValidUserToLogin(excelReader);
         String parsedJson = gson.toJson(user);
 
-        Response response = sendRequest.sendingPostReq("/login", parsedJson);
+        Response response = sendAuhtorizedRequests.sendingPostReq("/login", parsedJson);
         String tokenGenerated = response.jsonPath().get("jwtToken");
         Integer id = response.jsonPath().get("id");
 
         // Sending Get request
-        response = sendRequest.sendingGetReqWithGeneratedToken(tokenGenerated, id);
+        response = sendAuhtorizedRequests.sendingGetReqWithGeneratedToken(tokenGenerated, id);
 
         //Assertions
         assertEquals(id.toString(), response.jsonPath().get("id").toString());
@@ -105,14 +114,14 @@ public class ApiTest extends BaseApiTest {
         user.setValuesForValidUserToLogin(excelReader);
         String parsedJson = gson.toJson(user);
 
-        Response response = sendRequest.sendingPostReq("/login", parsedJson);
+        Response response = sendAuhtorizedRequests.sendingPostReq("/login", parsedJson);
         String tokenGenerated = response.jsonPath().get("jwtToken");
         Integer id = response.jsonPath().get("id");
 
         // Sending Update request
         user.setValuesForUpdatingUser(excelReader);
         parsedJson = gson.toJson(user);
-        response = sendRequest.sendingPutReqWithGeneratedToken(parsedJson, tokenGenerated, id);
+        response = sendAuhtorizedRequests.sendingPutReqWithGeneratedToken(parsedJson, tokenGenerated, id);
 
         //Assertions
         assertEquals(id.toString(), response.jsonPath().get("id").toString());

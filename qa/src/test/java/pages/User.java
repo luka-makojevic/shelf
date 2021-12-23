@@ -26,9 +26,9 @@ public class User
         password = excelReader.getStringData("apiTest",1,1);
     }
 
-    public void setInvalidValuesForUserToLogin(int i, ExcelReader excelReader) {
-        email = excelReader.getStringData("apiTest",i,0);
-        password = excelReader.getStringData("apiTest",i,1);
+    public void setInvalidValuesForUserToLogin(int emalRow, int emailCell, int passRow, int passCell, ExcelReader excelReader) {
+        email = excelReader.getStringData("apiTest",emalRow,emailCell);
+        password = excelReader.getStringData("apiTest",passRow,passCell);
     }
 
     public void setValuesForUpdatingUser(ExcelReader excelReader) {
