@@ -74,7 +74,7 @@ public class ShelfController {
     }
 
     @GetMapping("/trash")
-    public ResponseEntity<List<ShelfItemDTO>> getFilesFromTrash(@AuthenticationUser AuthUser authUser) {
+    public ResponseEntity<List<ShelfItemDTO>> getFilesAndFoldersFromTrash(@AuthenticationUser AuthUser authUser) {
 
         return ResponseEntity.ok(shelfService.getAllFilesFromTrash(authUser.getId()));
     }
