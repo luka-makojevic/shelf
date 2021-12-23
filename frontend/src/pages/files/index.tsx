@@ -21,6 +21,7 @@ import { ButtonContainer } from '../../components/table/tableWrapper-styles';
 import SearchBar from '../../components/UI/searchBar/searchBar';
 import { useFiles } from '../../hooks/fileHooks';
 import FolderModal from '../../components/modal/folderModal';
+import fileServices from '../../services/fileServices';
 
 const Files = () => {
   const files = useAppSelector((state) => state.file.files);
@@ -89,9 +90,40 @@ const Files = () => {
     { header: 'Creation date', key: 'createdAt' },
   ];
 
+  const handleDelete = () => {
+    const fileIds: number[] = [];
+    const folderIds: number[] = [];
+    selectedRows.forEach((item) => {
+      if (item.folder) folderIds.push(item.id);
+      else {
+        fileIds.push(item.id);
+      }
+    });
+
+    if (fileIds.length !== 0)
+      fileServices
+        .softDeleteFile(fileIds)
+        .then(() => getData())
+        .catch((err) => {
+          if (err.response?.status === 500) {
+            setError('Internal server error');
+          } else setError(err.response?.data?.message);
+        });
+    if (folderIds.length !== 0)
+      fileServices
+        .softDeleteFolder(folderIds)
+        .then(() => getData())
+        .catch((err) => {
+          if (err.response?.status === 500) {
+            setError('Internal server error');
+          } else setError(err.response?.data?.message);
+        });
+  };
+
   const getSelectedRows = (selectedRowsData: TableDataTypes[]) => {
     setSelectedRows(selectedRowsData);
   };
+
   if (loading) return null;
   return (
     <>
@@ -141,7 +173,9 @@ const Files = () => {
           <Button onClick={handleOpenUploadModal} icon={<FaCloudUploadAlt />}>
             Upload
           </Button>
-          <Button icon={<FaTrash />}>Delete</Button>
+          <Button icon={<FaTrash />} onClick={handleDelete}>
+            Delete
+          </Button>
         </ButtonContainer>
         {(files && files.length === 0) || filteredFiles.length === 0 ? (
           <Description>{message}</Description>

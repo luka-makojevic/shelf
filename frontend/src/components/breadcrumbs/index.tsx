@@ -18,7 +18,7 @@ const Breadcrumbs = () => {
     <BreadcrumbsContainer>
       {pathHistory &&
         pathHistory.map((item: PathHistoryData, i: number) => (
-          <span>
+          <span key={item.folderId}>
             {i === 0 ? (
               <span>
                 <Link to={rootUrl}>{pathHistory[0].folderName}</Link>
