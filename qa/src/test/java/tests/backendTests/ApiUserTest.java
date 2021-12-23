@@ -1,6 +1,7 @@
 package tests.backendTests;
 
-import helpers.*;
+import helpers.apiHelpers.BaseApiTest;
+import helpers.dbHelpers.DbQueryHelpers;
 import io.restassured.response.Response;
 import org.junit.AfterClass;
 import org.junit.Test;
@@ -10,7 +11,7 @@ import java.util.Arrays;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ApiTest extends BaseApiTest {
+public class ApiUserTest extends BaseApiTest {
 
     @Test
     public void apiPostUserRegisteredCheck() {
@@ -43,6 +44,26 @@ public class ApiTest extends BaseApiTest {
             assertTrue(Arrays.toString(expectedStatus).contains(response.jsonPath().get("status").toString()));
             System.out.println("---------------------------------");
         }
+    }
+
+    @Test
+    public void apiPostEmailVerifyToken() throws SQLException, ClassNotFoundException {
+
+//        user.setValuesForValidUser(excelReader);
+//        String parsedJson = gson.toJson(user);
+//        sendAuhtorizedRequests.sendingPostReq("/register", parsedJson);
+        String sql = null;
+
+        ResultSet rs = sheldDBServer.testDB(DbQueryHelpers.fetchEmailTokenVerify("srdjan.rados@htecgroup.com"));
+        while (rs.next()) {
+            sql = rs.getString("token");
+        }
+        String parsedJson = gson.toJson(sql);
+        Response response = sendAuhtorizedRequests.sendingPostReqForEmailVerifyToken("/tokens/confirmation", parsedJson);
+
+        //Assertions
+        assertEquals("Email confirmed", response.jsonPath().get("message").toString());
+        assertEquals("200", response.jsonPath().get("status").toString());
     }
 
     @Test
@@ -133,7 +154,6 @@ public class ApiTest extends BaseApiTest {
     @AfterClass
     public static void setUp() throws SQLException, ClassNotFoundException
     {
-        Cleanup cleanup = new Cleanup();
         cleanup.cleanUp("srdjan.rados@htecgroup.com");
     }
 }

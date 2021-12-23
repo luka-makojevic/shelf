@@ -1,14 +1,14 @@
 package db;
 
-import helpers.BaseHelperPropertieManager;
+import helpers.propertieHelpers.PropertieManager;
 import java.sql.*;
 
 public class SheldDBServer
 {
-        public String DB_URL = BaseHelperPropertieManager.getInstance().getdbURI("db-url");
-        public String DB_TABLE = BaseHelperPropertieManager.getInstance().getdbNameTable("shelf-table");
-        public String DB_USER = BaseHelperPropertieManager.getInstance().getdbUser("db-user");
-        public String DB_PASSWORD = BaseHelperPropertieManager.getInstance().getdbPass("db-pass");
+        public String DB_URL = PropertieManager.getInstance().getdbURI("db-url");
+        public String DB_TABLE = PropertieManager.getInstance().getdbNameTable("shelf-table");
+        public String DB_USER = PropertieManager.getInstance().getdbUser("db-user");
+        public String DB_PASSWORD = PropertieManager.getInstance().getdbPass("db-pass");
 
         public ResultSet testDB(String query) throws ClassNotFoundException, SQLException {
                 Class.forName("com.mysql.cj.jdbc.Driver");

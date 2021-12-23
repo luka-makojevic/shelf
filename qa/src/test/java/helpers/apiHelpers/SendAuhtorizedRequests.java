@@ -1,5 +1,6 @@
-package helpers;
+package helpers.apiHelpers;
 
+import helpers.propertieHelpers.PropertieManager;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -9,7 +10,7 @@ public class SendAuhtorizedRequests
     public Response sendingPostReq(String basePath, String parsedJson)
     {
         RequestSpecBuilder builder = new RequestSpecBuilder();
-        builder.setBaseUri(BaseHelperPropertieManager.getInstance().getURI(""));
+        builder.setBaseUri(PropertieManager.getInstance().getURI(""));
         builder.setBasePath(basePath);
         builder.setContentType("application/json");
         builder.setBody(parsedJson);
@@ -18,10 +19,22 @@ public class SendAuhtorizedRequests
         return response;
     }
 
+    public Response sendingPostReqForEmailVerifyToken(String basePath, String parsedJson)
+    {
+        RequestSpecBuilder builder = new RequestSpecBuilder();
+        builder.setBaseUri(PropertieManager.getInstance().getURI(""));
+        builder.setBasePath(basePath);
+        builder.setContentType("application/json");
+        builder.setBody("{"+"\"token\""+":"+" "+parsedJson+"}");
+        RequestSpecification rSpec = builder.build();
+        Response response = RestHelpers.sendPostRequest(rSpec);
+        return response;
+    }
+
     public Response sendingGetReqWithGeneratedToken(String tokenGenerated,Integer id)
     {
         RequestSpecBuilder builder = new RequestSpecBuilder();
-        builder.setBaseUri(BaseHelperPropertieManager.getInstance().getURI(""));
+        builder.setBaseUri(PropertieManager.getInstance().getURI(""));
         builder.setBasePath(String.format("/users/%d", id));
         builder.addHeader("Authorization","Bearer "+tokenGenerated);
         builder.setContentType("application/json");
@@ -34,13 +47,26 @@ public class SendAuhtorizedRequests
     public Response sendingPutReqWithGeneratedToken(String parsedJson, String tokenGenerated, Integer id)
     {
         RequestSpecBuilder builder = new RequestSpecBuilder();
-        builder.setBaseUri(BaseHelperPropertieManager.getInstance().getURI(""));
+        builder.setBaseUri(PropertieManager.getInstance().getURI(""));
         builder.setBasePath(String.format("/users/%d", id));
         builder.addHeader("Authorization","Bearer "+tokenGenerated);
         builder.setContentType("application/json");
         builder.setBody(parsedJson);
         RequestSpecification reqSpec = builder.build();
         Response response = RestHelpers.sendPutRequest(reqSpec);
+        return response;
+    }
+
+    public Response sendingPostReqForCreateShelf(String tokenGenerated,String shelfName)
+    {
+        RequestSpecBuilder builder = new RequestSpecBuilder();
+        builder.setBaseUri(PropertieManager.getInstance().getShelfURI(""));
+        builder.setBasePath("/shelf");
+        builder.addHeader("Authorization","Bearer "+tokenGenerated);
+        builder.setContentType("application/json");
+        builder.setBody("{"+"\"shelfName\""+":"+" "+"\""+shelfName+"\""+"}");
+        RequestSpecification rSpec = builder.build();
+        Response response = RestHelpers.sendPostRequest(rSpec);
         return response;
     }
 }

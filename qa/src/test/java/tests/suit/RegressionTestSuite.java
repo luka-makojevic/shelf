@@ -1,15 +1,15 @@
-package tests.suits;
+package tests.suit;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-import tests.backendTests.ApiTest;
+import tests.backendTests.ApiUserTest;
 import tests.frontendTests.LoginTest;
 
 @RunWith(Suite.class)
 
 @Suite.SuiteClasses({
         LoginTest.class,
-        ApiTest.class
+        ApiUserTest.class
 })
 public class RegressionTestSuite {
 }
