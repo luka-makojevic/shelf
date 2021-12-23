@@ -2,6 +2,7 @@ package com.htec.filesystem.controller;
 
 import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.annotation.AuthenticationUser;
+import com.htec.filesystem.dto.ShelfItemDTO;
 import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.model.response.FileResponseModel;
 import com.htec.filesystem.model.response.TextResponseMessage;
@@ -90,6 +91,12 @@ public class FileController {
 
         fileService.fileRename(user.getId(), renameFileRequestModel);
         return ResponseEntity.ok().body(new TextResponseMessage(FILE_RENAMED, HttpStatus.OK.value()));
+    }
+
+    @GetMapping("/trash")
+    public ResponseEntity<List<ShelfItemDTO>> getFilesFromTrash(@AuthenticationUser AuthUser authUser) {
+
+        return ResponseEntity.ok(fileService.getAllFilesFromTrash(authUser.getId()));
     }
 
     @DeleteMapping

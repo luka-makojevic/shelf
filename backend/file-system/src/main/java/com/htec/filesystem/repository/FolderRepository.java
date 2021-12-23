@@ -51,7 +51,7 @@ public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
     void updateDeletedByFolderIds(@Param("deleted") Boolean deleted,
                                   @Param("folderIdsToBeDeleted") List<Long> folderIdsToBeDeleted);
 
-    List<FolderEntity> findAllByShelfIdAndParentFolderIdIsNull(Long shelfId);
+    List<FolderEntity> findAllByShelfIdAndParentFolderIdIsNullAndIsDeletedFalse(Long shelfId);
 
     @Query("SELECT s " +
             "FROM FolderEntity f JOIN ShelfEntity s ON (f.shelfId = s.id)" +
