@@ -92,7 +92,7 @@ public class FileController {
     }
 
     @GetMapping("/trash")
-    public ResponseEntity<List<ShelfItemDTO>> getImage(@AuthenticationUser AuthUser authUser) {
+    public ResponseEntity<List<ShelfItemDTO>> getFilesFromTrash(@AuthenticationUser AuthUser authUser) {
 
         return ResponseEntity.ok(fileService.getAllFilesFromTrash(authUser.getId()));
     }
