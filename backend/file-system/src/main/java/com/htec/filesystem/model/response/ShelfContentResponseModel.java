@@ -1,5 +1,6 @@
 package com.htec.filesystem.model.response;
 
+import com.htec.filesystem.dto.BreadCrumbDTO;
 import com.htec.filesystem.dto.ShelfItemDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ShelfContentResponseModel {
-//    private List<BreadCrumb> breadCrumbs;
+    private List<BreadCrumbDTO> breadCrumbs;
     private List<ShelfItemDTO> shelfItems;
 }

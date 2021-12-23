@@ -1,11 +1,15 @@
 package com.htec.filesystem.service;
 
+import com.htec.filesystem.dto.BreadCrumbDTO;
 import com.htec.filesystem.dto.ShelfItemDTO;
 import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
+import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ExceptionSupplier;
-import com.htec.filesystem.mapper.FileMapper;
+import com.htec.filesystem.mapper.BreadCrumbsMapper;
+import com.htec.filesystem.mapper.ShelfItemMapper;
 import com.htec.filesystem.model.request.CreateFolderRequestModel;
+import com.htec.filesystem.model.response.ShelfContentResponseModel;
 import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FileTreeRepository;
 import com.htec.filesystem.repository.FolderRepository;
@@ -19,6 +23,7 @@ import java.io.File;
 import java.nio.file.FileSystems;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,16 +37,13 @@ public class FolderService {
     private final FolderRepository folderRepository;
     private final FileRepository fileRepository;
     private final FolderTreeRepository folderTreeRepository;
-    private final FileTreeRepository fileTreeRepository;
 
     public FolderService(FolderRepository folderRepository,
                          FileRepository fileRepository,
-                         FolderTreeRepository folderTreeRepository,
-                         FileTreeRepository fileTreeRepository) {
+                         FolderTreeRepository folderTreeRepository) {
         this.folderRepository = folderRepository;
         this.fileRepository = fileRepository;
         this.folderTreeRepository = folderTreeRepository;
-        this.fileTreeRepository = fileTreeRepository;
     }
 
     public boolean initializeFolders(Long userId) {
@@ -63,9 +65,9 @@ public class FolderService {
         return new File(userShelvesPath).mkdirs();
     }
 
-    public ResponseEntity<List<ShelfItemDTO>> getFiles(Long userId, Long folderId) {
+    public ResponseEntity<ShelfContentResponseModel> getFiles(Long userId, Long folderId) {
 
-        List<ShelfItemDTO> fileDTOS = new ArrayList<>();
+        List<ShelfItemDTO> itemDTOs = new ArrayList<>();
 
         List<FolderEntity> allFolders = folderRepository
                 .findAllByUserIdAndParentFolderIdAndIsDeleted(userId, folderId, false);
@@ -73,10 +75,29 @@ public class FolderService {
         List<FileEntity> allFiles = fileRepository
                 .findAllByUserIdAndParentFolderIdAndIsDeleted(userId, folderId, false);
 
-        fileDTOS.addAll(FileMapper.INSTANCE.fileEntitiesToShelfItemDTOs(allFiles));
-        fileDTOS.addAll(FileMapper.INSTANCE.folderEntitiesToShelfItemDTOs(allFolders));
+        itemDTOs.addAll(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(allFiles));
+        itemDTOs.addAll(ShelfItemMapper.INSTANCE.folderEntitiesToShelfItemDTOs(allFolders));
 
-        return ResponseEntity.status(HttpStatus.OK).body(fileDTOS);
+        List<BreadCrumbDTO> breadCrumbDTOS = generateBreadCrumbs(folderId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ShelfContentResponseModel(breadCrumbDTOS, itemDTOs));
+    }
+
+    private List<BreadCrumbDTO> generateBreadCrumbs(Long folderId) {
+
+        List<FolderEntity> folderUpStreamTree = folderTreeRepository.getFolderUpStreamTree(folderId, false);
+
+        List<BreadCrumbDTO> breadCrumbs = new ArrayList<>(
+                BreadCrumbsMapper.INSTANCE.folderEntitiesToBreadCrumbDTOs(folderUpStreamTree));
+
+        Collections.reverse(breadCrumbs);
+
+        ShelfEntity shelfEntity = folderRepository.getShelfByFolderId(folderId)
+                .orElseThrow(ExceptionSupplier.shelfNotFound);
+
+        breadCrumbs.add(0, new BreadCrumbDTO(shelfEntity.getName(), shelfEntity.getId()));
+
+        return breadCrumbs;
     }
 
     public boolean createFolder(CreateFolderRequestModel createFolderRequestModel, Long userId) {
@@ -144,12 +165,8 @@ public class FolderService {
 
         List<Long> downStreamFoldersIds = downStreamFolders.stream().map(FolderEntity::getId).collect(Collectors.toList());
 
-        List<FileEntity> downStreamFiles = fileTreeRepository.getFileDownStreamTrees(folderIds, !deleted);
-
-        List<Long> downStreamFilesIds = downStreamFiles.stream().map(FileEntity::getId).collect(Collectors.toList());
-
         folderRepository.updateDeletedByFolderIds(deleted, downStreamFoldersIds);
 
-        fileRepository.updateDeletedByFileIds(deleted, downStreamFilesIds);
+        fileRepository.updateDeletedByParentFolderIds(deleted, downStreamFoldersIds);
     }
 }

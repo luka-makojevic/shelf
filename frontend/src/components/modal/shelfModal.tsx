@@ -4,8 +4,8 @@ import { Base, InputFieldWrapper } from '../form/form-styles';
 import { InputField } from '../UI/input/InputField';
 import { ModalButtonDivider } from '../layout/layout.styles';
 import { Button } from '../UI/button';
-import { ShelfModalProps } from './modal.interfaces';
 import shelfServices from '../../services/shelfServices';
+import { ShelfModalProps } from './modal.interfaces';
 import { useShelf } from '../../hooks/shelfHooks';
 
 const ShelfModal = ({ onCloseModal, onError, shelf }: ShelfModalProps) => {

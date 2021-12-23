@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import {
   Base,
   FormContainer,
@@ -13,6 +14,7 @@ import { Button } from '../../components/UI/button';
 import AlertPortal from '../../components/alert/alert';
 import { AlertMessage } from '../../utils/enums/alertMessages';
 import { H2 } from '../../components/text/text-styles';
+import { Routes } from '../../utils/enums/routes';
 
 const ForgotPasswordForm = () => {
   const {
@@ -22,10 +24,10 @@ const ForgotPasswordForm = () => {
   } = useForm<ForgotPasswordData>();
 
   const validation = forgotPasswordFieldConfig;
+  const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
-  const [success, setSuccess] = useState<string>('');
 
   const submitData = (data: ForgotPasswordData) => {
     setIsLoading(true);
@@ -33,7 +35,9 @@ const ForgotPasswordForm = () => {
       .forgotPassword(data)
       .then((res) => {
         if (res.data) {
-          setSuccess('Go to your email to reset password');
+          navigate(Routes.LOGIN, {
+            state: 'Go to your email to reset password',
+          });
         }
       })
       .catch((err) => {
@@ -44,7 +48,6 @@ const ForgotPasswordForm = () => {
 
   const handleAlertClose = () => {
     setError('');
-    setSuccess('');
   };
 
   return (
@@ -56,14 +59,6 @@ const ForgotPasswordForm = () => {
             type={AlertMessage.ERRROR}
             title="Error"
             message={error}
-            onClose={handleAlertClose}
-          />
-        )}
-        {success && (
-          <AlertPortal
-            type={AlertMessage.INFO}
-            title="Info"
-            message={success}
             onClose={handleAlertClose}
           />
         )}

@@ -12,9 +12,9 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 @Mapper
-public interface FileMapper {
+public interface ShelfItemMapper {
 
-    FileMapper INSTANCE = Mappers.getMapper(FileMapper.class);
+    ShelfItemMapper INSTANCE = Mappers.getMapper(ShelfItemMapper.class);
 
     ShelfDTO shelfEntityToShelfDto(ShelfEntity shelfEntity);
 

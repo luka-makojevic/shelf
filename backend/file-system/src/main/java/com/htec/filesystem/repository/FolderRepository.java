@@ -1,12 +1,12 @@
 package com.htec.filesystem.repository;
 
 import com.htec.filesystem.entity.FolderEntity;
+import com.htec.filesystem.entity.ShelfEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,5 +51,10 @@ public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
     void updateDeletedByFolderIds(@Param("deleted") Boolean deleted,
                                   @Param("folderIdsToBeDeleted") List<Long> folderIdsToBeDeleted);
 
-    List<FolderEntity> findAllByShelfIdAndParentFolderIdIsNull(Long shelfId);
+    List<FolderEntity> findAllByShelfIdAndParentFolderIdIsNullAndIsDeletedFalse(Long shelfId);
+
+    @Query("SELECT s " +
+            "FROM FolderEntity f JOIN ShelfEntity s ON (f.shelfId = s.id)" +
+            "WHERE f.id = :folderId")
+    Optional<ShelfEntity> getShelfByFolderId(@Param("folderId") Long folderId);
 }

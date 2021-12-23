@@ -8,21 +8,22 @@ import {
 } from '../interfaces/dataTypes';
 import instance from '../api/axiosInstance';
 import loginInstance from '../api/loginInstance';
+import { API_URL_ACCOUNT } from '../api/api';
 
-const API_URL = 'http://10.10.0.136:8080/account/';
-
-const register = (data: RegisterData) => axios.post(`${API_URL}register`, data);
+const register = (data: RegisterData) =>
+  axios.post(`${API_URL_ACCOUNT}register`, data);
 
 const microsoftRegister = (data: MicrosoftRegisterData) =>
-  axios.post(`${API_URL}register/microsoft`, data);
+  axios.post(`${API_URL_ACCOUNT}register/microsoft`, data);
 
-const login = (data: LoginData) => loginInstance.post(`${API_URL}login`, data);
+const login = (data: LoginData) =>
+  loginInstance.post(`${API_URL_ACCOUNT}login`, data);
 
 const microsoftLogin = (data: MicrosoftLoginData) =>
-  loginInstance.post(`${API_URL}login/microsoft`, data);
+  loginInstance.post(`${API_URL_ACCOUNT}login/microsoft`, data);
 
 const logout = (data: LogoutData) =>
-  instance.post(`${API_URL}auth/logout`, data);
+  instance.post(`${API_URL_ACCOUNT}auth/logout`, data);
 
 export default {
   register,
