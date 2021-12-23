@@ -25,6 +25,7 @@ import { setPathHistory } from '../../store/pathHistory';
 
 const Files = () => {
   const files = useAppSelector((state) => state.file.files);
+  const loading = useAppSelector((state) => state.loading.loading);
   const [openCreateFileModal, setOpenCreateFileModal] = useState(false);
   const [openUploadModal, setOpenUploadModal] = useState(false);
   const [error, setError] = useState('');
@@ -99,7 +100,7 @@ const Files = () => {
   const getSelectedRows = (selectedRowsData: TableDataTypes[]) => {
     setSelectedRows(selectedRowsData);
   };
-
+  if (loading) return null;
   return (
     <>
       {error && (

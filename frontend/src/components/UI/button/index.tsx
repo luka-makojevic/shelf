@@ -62,7 +62,7 @@ export const Button = ({
         variant={variant}
         {...restProps}
       >
-        <IconButtonContainer style={{ display: 'flex', alignItems: 'center' }}>
+        <IconButtonContainer>
           {icon}
           {children}
         </IconButtonContainer>
