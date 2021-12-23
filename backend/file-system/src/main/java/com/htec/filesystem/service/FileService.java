@@ -263,6 +263,7 @@ public class FileService {
     private void recoverFilesOnFileSystem(String newPath, String oldPath, String fileNameWithUUID) {
 
         try {
+
             int index = oldPath.lastIndexOf(pathSeparator);
             String oldPathWithoutFileName = oldPath.substring(0, index);
 
