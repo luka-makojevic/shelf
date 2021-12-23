@@ -60,16 +60,16 @@ public class FolderController {
     @PutMapping("/move-to-trash")
     public ResponseEntity<TextResponseMessage> moveToTrash(@AuthenticationUser AuthUser user, @RequestBody List<Long> folderIds) {
 
-        folderService.updateDeletedFolders(user.getId(), folderIds, true);
+        folderService.moveToTrash(user.getId(), folderIds);
 
         return ResponseEntity.ok().body(new TextResponseMessage(FOLDERS_MOVED_TO_TRASH, HttpStatus.OK.value()));
     }
 
-    @PutMapping("/recover")
-    public ResponseEntity<TextResponseMessage> recover(@AuthenticationUser AuthUser user, @RequestBody List<Long> folderIds) {
-
-        folderService.updateDeletedFolders(user.getId(), folderIds, false);
-
-        return ResponseEntity.ok().body(new TextResponseMessage(FOLDERS_RECOVERED_FROM_TRASH, HttpStatus.OK.value()));
-    }
+//    @PutMapping("/recover")
+//    public ResponseEntity<TextResponseMessage> recover(@AuthenticationUser AuthUser user, @RequestBody List<Long> folderIds) {
+//
+//        folderService.updateDeletedFolders(user.getId(), folderIds, false);
+//
+//        return ResponseEntity.ok().body(new TextResponseMessage(FOLDERS_RECOVERED_FROM_TRASH, HttpStatus.OK.value()));
+//    }
 }

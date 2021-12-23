@@ -141,15 +141,14 @@ public class FileService {
         if (folderId != 0)
             fileEntity.setParentFolderId(folderId);
 
-        fileEntity.setDeleted(false);
         fileEntity.setCreatedAt(LocalDateTime.now());
         fileRepository.save(fileEntity);
     }
 
     @Transactional
-    public void updateDeletedFiles(AuthUser user, List<Long> fileIds, boolean delete) {
+    public void updateDeletedFiles(AuthUser user, List<Long> fileIds) {
 
-        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds, !delete);
+        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds);
 
         if (fileEntities.size() != fileIds.size()) {
             throw ExceptionSupplier.filesNotFound.get();
@@ -166,6 +165,5 @@ public class FileService {
         }
 
         fileRepository.saveAll(fileEntities);
-        fileRepository.updateIsDeletedByIds(delete, fileIds);
     }
 }

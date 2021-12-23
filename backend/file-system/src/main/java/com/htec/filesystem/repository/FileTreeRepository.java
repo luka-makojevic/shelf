@@ -11,6 +11,5 @@ import java.util.List;
 public interface FileTreeRepository extends JpaRepository<FileEntity, Long> {
 
     @Query(value = SqlConstants.FILE_DOWN_STREAM_TREE_QUERY_SQL, nativeQuery = true)
-    List<FileEntity> getFileDownStreamTrees(@Param("folderIds") List<Long> folderIds,
-                                            @Param("deleted") Boolean deleted);
+    List<FileEntity> getFileDownStreamTrees(@Param("folderIds") List<Long> folderIds);
 }

@@ -25,8 +25,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class FolderService {
@@ -78,10 +76,10 @@ public class FolderService {
         List<ShelfItemDTO> itemDTOs = new ArrayList<>();
 
         List<FolderEntity> allFolders = folderRepository
-                .findAllByUserIdAndParentFolderIdAndIsDeleted(userId, folderId, false);
+                .findAllByUserIdAndParentFolderId(userId, folderId);
 
         List<FileEntity> allFiles = fileRepository
-                .findAllByUserIdAndParentFolderIdAndIsDeleted(userId, folderId, false);
+                .findAllByUserIdAndParentFolderId(userId, folderId);
 
         itemDTOs.addAll(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(allFiles));
         itemDTOs.addAll(ShelfItemMapper.INSTANCE.folderEntitiesToShelfItemDTOs(allFolders));
@@ -93,7 +91,7 @@ public class FolderService {
 
     private List<BreadCrumbDTO> generateBreadCrumbs(Long folderId) {
 
-        List<FolderEntity> folderUpStreamTree = folderTreeRepository.getFolderUpStreamTree(folderId, false);
+        List<FolderEntity> folderUpStreamTree = folderTreeRepository.getFolderUpStreamTree(folderId);
 
         List<BreadCrumbDTO> breadCrumbs = new ArrayList<>(
                 BreadCrumbsMapper.INSTANCE.folderEntitiesToBreadCrumbDTOs(folderUpStreamTree));
@@ -154,49 +152,15 @@ public class FolderService {
             folderEntity.setParentFolderId(parentFolderId);
 
         folderEntity.setShelfId(shelfId);
-        folderEntity.setDeleted(false);
         folderEntity.setCreatedAt(LocalDateTime.now());
 
         folderRepository.save(folderEntity);
     }
 
     @Transactional
-    public void updateDeletedFolders(Long userId, List<Long> folderIds, Boolean deleted) {
+    public void moveToTrash(Long userId, List<Long> folderIds) {
 
-        List<FolderEntity> folderEntities = folderRepository.findByUserIdAndFolderIds(userId, folderIds);
-
-        if (!folderEntities.stream().map(FolderEntity::getId).collect(Collectors.toList()).containsAll(folderIds)) {
-            throw ExceptionSupplier.userNotAllowedToDeleteFolder.get();
-        }
-
-        List<FolderEntity> downStreamFolders = folderTreeRepository.getFolderDownStreamTrees(folderIds, !deleted);
-
-        List<Long> downStreamFoldersIds = downStreamFolders.stream().map(FolderEntity::getId).collect(Collectors.toList());
-
-        folderRepository.updateDeletedByFolderIds(deleted, downStreamFoldersIds);
-
-        fileRepository.updateDeletedByParentFolderIds(deleted, downStreamFoldersIds);
-
-        List<FileEntity> downStreamFiles = fileTreeRepository.getFileDownStreamTrees(folderIds, !deleted);
-
-        if (deleted) {
-            moveToTrash(downStreamFolders);
-//            fileService.moveToTrash(downStreamFiles);
-        } else {
-            recover(downStreamFolders);
-//            fileService.recover(downStreamFiles);
-        }
-    }
-
-    private void moveToTrash(List<FolderEntity> folders) {
-        for (FolderEntity folderEntity : folders) {
-            UUID uuid = UUID.randomUUID();
-            String uuidAsString = uuid.toString();
-            folderEntity.setName(folderEntity.getName() + "_" + uuidAsString);
-        }
-    }
-
-    private void recover(List<FolderEntity> folders) {
 
     }
+
 }

@@ -67,7 +67,6 @@ class FileServiceTest {
         String fileName = "test.jpeg";
         String homePath = "/home/stefan/";
         String localPath = "1/profile-picture/";
-        String uploadDir = homePath + localPath;
 
         try (MockedStatic<FileUtil> mocked = mockStatic(FileUtil.class)) {
 
@@ -101,19 +100,16 @@ class FileServiceTest {
         long folderId = 0;
         Map<String, Pair<String, String>> files = new HashMap<>();
         files.put("file", Pair.of("test.jpeg", "content"));
-        String fileName = "test.jpeg";
         String homePath = "/home/stefan/";
         String localPath = "/shelf-files/user-data/2/shelves" + shelfId + "/";
-        String uploadDir = homePath + localPath;
 
         ShelfEntity shelfEntity = new ShelfEntity();
-        shelfEntity.setUserId(2l);
-        shelfEntity.setId(1l);
+        shelfEntity.setUserId(2L);
+        shelfEntity.setId(1L);
 
         FileEntity fileEntity = new FileEntity();
-        fileEntity.setDeleted(false);
-        fileEntity.setShelfId(1l);
-        fileEntity.setId(1l);
+        fileEntity.setShelfId(1L);
+        fileEntity.setId(1L);
 
         try (MockedStatic<FileUtil> mocked = mockStatic(FileUtil.class)) {
 
@@ -149,19 +145,16 @@ class FileServiceTest {
         long folderId = 1;
         Map<String, Pair<String, String>> files = new HashMap<>();
         files.put("file", Pair.of("test.jpeg", "content"));
-        String fileName = "test.jpeg";
         String homePath = "/home/stefan/";
         String localPath = "/shelf-files/user-data/2/shelves" + shelfId + "/";
-        String uploadDir = homePath + localPath;
 
         ShelfEntity shelfEntity = new ShelfEntity();
-        shelfEntity.setUserId(2l);
-        shelfEntity.setId(1l);
+        shelfEntity.setUserId(2L);
+        shelfEntity.setId(1L);
 
         FileEntity fileEntity = new FileEntity();
-        fileEntity.setDeleted(false);
-        fileEntity.setShelfId(1l);
-        fileEntity.setId(1l);
+        fileEntity.setShelfId(1L);
+        fileEntity.setId(1L);
 
         try (MockedStatic<FileUtil> mocked = mockStatic(FileUtil.class)) {
 
@@ -187,13 +180,12 @@ class FileServiceTest {
         String uploadDir = homePath + localPath;
 
         ShelfEntity shelfEntity = new ShelfEntity();
-        shelfEntity.setUserId(2l);
-        shelfEntity.setId(1l);
+        shelfEntity.setUserId(2L);
+        shelfEntity.setId(1L);
 
         FolderEntity folderEntity = new FolderEntity();
-        folderEntity.setDeleted(false);
-        folderEntity.setShelfId(1l);
-        folderEntity.setId(1l);
+        folderEntity.setShelfId(1L);
+        folderEntity.setId(1L);
 
         try (MockedStatic<FileUtil> mocked = mockStatic(FileUtil.class)) {
 
@@ -238,15 +230,13 @@ class FileServiceTest {
         file.setId(1L);
         fileEntities.add(file);
         fileIds.add(1L);
-        boolean delete = true;
 
-        when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds, false)).thenReturn(fileEntities);
+        when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds)).thenReturn(fileEntities);
 
-        fileService.updateDeletedFiles(user, fileIds, delete);
+        fileService.updateDeletedFiles(user, fileIds);
 
-        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds, false);
+        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
         verify(fileRepository, times(1)).saveAll(fileEntities);
-        verify(fileRepository, times(1)).updateIsDeletedByIds(delete, fileIds);
     }
 
     @Test
@@ -255,15 +245,13 @@ class FileServiceTest {
         file.setId(1L);
         fileEntities.add(file);
         fileIds.add(1L);
-        boolean delete = false;
 
-        when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds, true)).thenReturn(fileEntities);
+        when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds)).thenReturn(fileEntities);
 
-        fileService.updateDeletedFiles(user, fileIds, delete);
+        fileService.updateDeletedFiles(user, fileIds);
 
-        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds, true);
+        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
         verify(fileRepository, times(1)).saveAll(fileEntities);
-        verify(fileRepository, times(1)).updateIsDeletedByIds(delete, fileIds);
     }
 
     @Test
@@ -272,14 +260,12 @@ class FileServiceTest {
         user.setId(1L);
         file.setId(1L);
         fileIds.add(1L);
-        boolean delete = true;
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
-                () -> fileService.updateDeletedFiles(user, fileIds, delete));
+                () -> fileService.updateDeletedFiles(user, fileIds));
 
-        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds, false);
+        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
         verify(fileRepository, times(0)).saveAll(fileEntities);
-        verify(fileRepository, times(0)).updateIsDeletedByIds(delete, fileIds);
 
         assertEquals(ErrorMessages.FILES_NOT_FOUND.getErrorMessage(), exception.getMessage());
     }
@@ -291,16 +277,14 @@ class FileServiceTest {
         file.setId(1L);
         fileIds.add(3L);
         fileEntities.add(file);
-        boolean delete = true;
 
-        when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds, false)).thenReturn(fileEntities);
+        when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds)).thenReturn(fileEntities);
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
-                () -> fileService.updateDeletedFiles(user, fileIds, delete));
+                () -> fileService.updateDeletedFiles(user, fileIds));
 
-        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds, false);
+        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
         verify(fileRepository, times(0)).saveAll(fileEntities);
-        verify(fileRepository, times(0)).updateIsDeletedByIds(delete, fileIds);
 
         assertEquals(ErrorMessages.USER_NOT_ALLOWED_TO_DELETE_FILE.getErrorMessage(), exception.getMessage());
     }

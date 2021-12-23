@@ -89,8 +89,6 @@ public class ShelfService {
         }
 
         shelfRepository.updateIsDeletedByIds(delete, shelfIds);
-        folderRepository.updateIsDeletedByShelfIds(delete, shelfIds);
-        fileRepository.updateIsDeletedByShelfIds(delete, shelfIds);
     }
 
     public List<ShelfDTO> getAllShelvesById(Long userId) {
