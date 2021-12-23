@@ -41,7 +41,7 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
     void updateDeletedByFileIds(@Param("deleted") Boolean deleted,
                                 @Param("fileIdsToBeDeleted") List<Long> fileIdsToBeDeleted);
 
-    List<FileEntity> findAllByShelfIdAndParentFolderIdIsNull(Long shelfId);
+    List<FileEntity> findAllByShelfIdAndParentFolderIdIsNullAndIsDeletedFalse(Long shelfId);
 
     @Query("SELECT f FROM FileEntity f INNER JOIN ShelfEntity sh " +
             "ON (f.shelfId = sh.id) WHERE sh.userId = :userId AND f.id IN (:fileIds) AND f.isDeleted = :delete")
