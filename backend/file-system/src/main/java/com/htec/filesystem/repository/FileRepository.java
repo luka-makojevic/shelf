@@ -68,5 +68,5 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
 
     Optional<FileEntity> findByNameAndParentFolderIdAndIdNot(String name, Long parentFolderId, Long id);
 
-    List<FileEntity> findAllByShelfIdAndIsDeletedTrue(Long shelfId);
+    List<FileEntity> findAllByShelfIdInAndIsDeletedTrue(List<Long> shelfId);
 }

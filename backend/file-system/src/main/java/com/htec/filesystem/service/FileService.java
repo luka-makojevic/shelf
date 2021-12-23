@@ -312,13 +312,10 @@ public class FileService {
     public List<ShelfItemDTO> getAllFilesFromTrash(Long userId) {
 
         List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserId(userId);
-        List<ShelfItemDTO> files = new ArrayList<>();
+        List<Long> shelfIds = shelfEntities.stream().map(ShelfEntity::getId).collect(Collectors.toList());
 
-        for(ShelfEntity shelf : shelfEntities) {
+        List<FileEntity> fileEntities = fileRepository.findAllByShelfIdInAndIsDeletedTrue(shelfIds);
 
-            List<FileEntity> fileEntities = fileRepository.findAllByShelfIdAndIsDeletedTrue(shelf.getId());
-            files.addAll(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
-        }
-        return files;
+        return new ArrayList<>(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
     }
 }
