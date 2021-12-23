@@ -13,18 +13,14 @@ import java.util.List;
 public interface EntitiesMapper {
 
     FolderEntity folderDeletedEntityToFolderEntity(FolderDeletedEntity folderDeletedEntity);
-
     List<FolderEntity> folderDeletedEntitiesToFolderEntities(List<FolderDeletedEntity> folderDeletedEntities);
 
     FileEntity fileDeletedEntityToFileEntity(FileDeletedEntity fileDeletedEntity);
-
     List<FileEntity> fileDeletedEntitiesToFileEntities(List<FileDeletedEntity> fileDeletedEntities);
 
     FolderDeletedEntity folderEntityToFolderDeletedEntity(FolderEntity fod);
-
     List<FolderDeletedEntity> folderEntitiesToFolderDeletedEntities(List<FolderEntity> folderEntities);
 
-    FolderDeletedEntity fileEntityToFileDeletedEntity(FolderDeletedEntity fileDeletedEntity);
-
+    FileDeletedEntity fileEntityToFileDeletedEntity(FileEntity fileDeletedEntity);
     List<FileDeletedEntity> fileEntitiesToFileDeletedEntities(List<FileEntity> fileEntities);
 }
