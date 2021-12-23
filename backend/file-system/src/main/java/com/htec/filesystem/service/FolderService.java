@@ -1,22 +1,31 @@
 package com.htec.filesystem.service;
 
-import com.htec.filesystem.dto.FileDTO;
+import com.htec.filesystem.dto.BreadCrumbDTO;
+import com.htec.filesystem.dto.ShelfItemDTO;
 import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
+import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ExceptionSupplier;
-import com.htec.filesystem.mapper.FileMapper;
+import com.htec.filesystem.mapper.BreadCrumbsMapper;
+import com.htec.filesystem.mapper.ShelfItemMapper;
 import com.htec.filesystem.model.request.CreateFolderRequestModel;
+import com.htec.filesystem.model.response.ShelfContentResponseModel;
 import com.htec.filesystem.repository.FileRepository;
+import com.htec.filesystem.repository.FileTreeRepository;
 import com.htec.filesystem.repository.FolderRepository;
+import com.htec.filesystem.repository.FolderTreeRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.nio.file.FileSystems;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FolderService {
@@ -27,10 +36,14 @@ public class FolderService {
 
     private final FolderRepository folderRepository;
     private final FileRepository fileRepository;
+    private final FolderTreeRepository folderTreeRepository;
 
-    public FolderService(FolderRepository folderRepository, FileRepository fileRepository) {
+    public FolderService(FolderRepository folderRepository,
+                         FileRepository fileRepository,
+                         FolderTreeRepository folderTreeRepository) {
         this.folderRepository = folderRepository;
         this.fileRepository = fileRepository;
+        this.folderTreeRepository = folderTreeRepository;
     }
 
     public boolean initializeFolders(Long userId) {
@@ -52,20 +65,39 @@ public class FolderService {
         return new File(userShelvesPath).mkdirs();
     }
 
-    public ResponseEntity<List<FileDTO>> getFiles(Long userId, Long folderId) {
+    public ResponseEntity<ShelfContentResponseModel> getFiles(Long userId, Long folderId) {
 
-        List<FileDTO> fileDTOS = new ArrayList<>();
+        List<ShelfItemDTO> itemDTOs = new ArrayList<>();
 
         List<FolderEntity> allFolders = folderRepository
-                .findAllByUserIdAndParentFolderId(userId, folderId, false);
+                .findAllByUserIdAndParentFolderIdAndIsDeleted(userId, folderId, false);
 
         List<FileEntity> allFiles = fileRepository
-                .findAllByUserIdAndParentFolderId(userId, folderId, false);
+                .findAllByUserIdAndParentFolderIdAndIsDeleted(userId, folderId, false);
 
-        fileDTOS.addAll(FileMapper.INSTANCE.fileEntityToFileDTO(allFiles));
-        fileDTOS.addAll(FileMapper.INSTANCE.folderEntityToFileDTO(allFolders));
+        itemDTOs.addAll(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(allFiles));
+        itemDTOs.addAll(ShelfItemMapper.INSTANCE.folderEntitiesToShelfItemDTOs(allFolders));
 
-        return ResponseEntity.status(HttpStatus.OK).body(fileDTOS);
+        List<BreadCrumbDTO> breadCrumbDTOS = generateBreadCrumbs(folderId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ShelfContentResponseModel(breadCrumbDTOS, itemDTOs));
+    }
+
+    private List<BreadCrumbDTO> generateBreadCrumbs(Long folderId) {
+
+        List<FolderEntity> folderUpStreamTree = folderTreeRepository.getFolderUpStreamTree(folderId, false);
+
+        List<BreadCrumbDTO> breadCrumbs = new ArrayList<>(
+                BreadCrumbsMapper.INSTANCE.folderEntitiesToBreadCrumbDTOs(folderUpStreamTree));
+
+        Collections.reverse(breadCrumbs);
+
+        ShelfEntity shelfEntity = folderRepository.getShelfByFolderId(folderId)
+                .orElseThrow(ExceptionSupplier.shelfNotFound);
+
+        breadCrumbs.add(0, new BreadCrumbDTO(shelfEntity.getName(), shelfEntity.getId()));
+
+        return breadCrumbs;
     }
 
     public boolean createFolder(CreateFolderRequestModel createFolderRequestModel, Long userId) {
@@ -118,5 +150,23 @@ public class FolderService {
         folderEntity.setCreatedAt(LocalDateTime.now());
 
         folderRepository.save(folderEntity);
+    }
+
+    @Transactional
+    public void updateDeleted(Long userId, List<Long> folderIds, Boolean deleted) {
+
+        List<FolderEntity> folderEntities = folderRepository.findByUserIdAndFolderIds(userId, folderIds);
+
+        if (!folderEntities.stream().map(FolderEntity::getId).collect(Collectors.toList()).containsAll(folderIds)) {
+            throw ExceptionSupplier.userNotAllowedToDeleteFolder.get();
+        }
+
+        List<FolderEntity> downStreamFolders = folderTreeRepository.getFolderDownStreamTrees(folderIds, !deleted);
+
+        List<Long> downStreamFoldersIds = downStreamFolders.stream().map(FolderEntity::getId).collect(Collectors.toList());
+
+        folderRepository.updateDeletedByFolderIds(deleted, downStreamFoldersIds);
+
+        fileRepository.updateDeletedByParentFolderIds(deleted, downStreamFoldersIds);
     }
 }

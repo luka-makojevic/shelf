@@ -1,25 +1,19 @@
 import { useForm } from 'react-hook-form';
-import { CreateShelfData } from '../../interfaces/dataTypes';
+import { ShelfFormData } from '../../interfaces/dataTypes';
 import { Base, InputFieldWrapper } from '../form/form-styles';
 import { InputField } from '../UI/input/InputField';
 import { ModalButtonDivider } from '../layout/layout.styles';
 import { Button } from '../UI/button';
-import { CreateShelfModalProps } from './modal.interfaces';
+import { ShelfModalProps } from './modal.interfaces';
 import shelfServices from '../../services/shelfServices';
 import { useShelf } from '../../hooks/shelfHooks';
 
-export const ROOT_FOLDER = { name: 'Root', id: null, path: [] };
-
-const CreateShelfModal = ({
-  onCloseModal,
-  onError,
-  shelf,
-}: CreateShelfModalProps) => {
+const ShelfModal = ({ onCloseModal, onError, shelf }: ShelfModalProps) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateShelfData>({ defaultValues: { name: shelf?.name } });
+  } = useForm<ShelfFormData>({ defaultValues: { name: shelf?.name } });
 
   const handleCloseModal = () => {
     onCloseModal(false);
@@ -27,7 +21,7 @@ const CreateShelfModal = ({
 
   const { getShelves } = useShelf();
 
-  const onSubmit = (data: CreateShelfData) => {
+  const onSubmit = (data: ShelfFormData) => {
     const shelfName = data.name;
 
     if (!shelf) {
@@ -40,14 +34,29 @@ const CreateShelfModal = ({
           );
         })
         .catch((err) => {
-          if (err.response.status === 500) {
+          if (err?.response?.status === 500) {
             onError('Internal server error');
             return;
           }
           onError(err.response?.data?.message);
         });
     } else {
-      // TODO Connect EditShelf
+      shelfServices
+        .editShelf({ shelfId: shelf.id, shelfName: data.name })
+        .then(() => {
+          getShelves(
+            {},
+            () => {},
+            () => {}
+          );
+        })
+        .catch((err) => {
+          if (err?.response?.status === 500) {
+            onError('Internal server error');
+            return;
+          }
+          onError(err.response?.data?.message);
+        });
     }
 
     onCloseModal(false);
@@ -66,7 +75,7 @@ const CreateShelfModal = ({
       <Base onSubmit={handleSubmit(onSubmit)}>
         <InputFieldWrapper>
           <InputField
-            placeholder={shelf ? 'New shelf name' : 'Untitled Shelf'}
+            placeholder="Untitled shelf"
             error={errors.name}
             {...register('name', validations)}
           />
@@ -83,4 +92,4 @@ const CreateShelfModal = ({
   );
 };
 
-export default CreateShelfModal;
+export default ShelfModal;

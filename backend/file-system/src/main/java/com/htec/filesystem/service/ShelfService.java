@@ -1,11 +1,17 @@
 package com.htec.filesystem.service;
 
 import com.htec.filesystem.annotation.AuthUser;
+import com.htec.filesystem.dto.BreadCrumbDTO;
 import com.htec.filesystem.dto.ShelfDTO;
+import com.htec.filesystem.dto.ShelfItemDTO;
+import com.htec.filesystem.entity.FileEntity;
+import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ExceptionSupplier;
-import com.htec.filesystem.mapper.FileMapper;
+import com.htec.filesystem.mapper.ShelfItemMapper;
 import com.htec.filesystem.model.request.CreateShelfRequestModel;
+import com.htec.filesystem.model.request.ShelfEditRequestModel;
+import com.htec.filesystem.model.response.ShelfContentResponseModel;
 import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FolderRepository;
 import com.htec.filesystem.repository.ShelfRepository;
@@ -20,6 +26,7 @@ import java.nio.file.FileSystems;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,7 +54,6 @@ public class ShelfService {
     public boolean createShelf(CreateShelfRequestModel createShelfRequestModel, Long userId) {
 
         String shelfName = createShelfRequestModel.getShelfName();
-
 
         fileSystemValidator.isShelfNameValid(shelfName);
 
@@ -79,7 +85,7 @@ public class ShelfService {
         }
 
         if (!shelfEntities.stream().map(ShelfEntity::getId).collect(Collectors.toList()).containsAll(shelfIds)) {
-            throw ExceptionSupplier.userNotAllowed.get();
+            throw ExceptionSupplier.userNotAllowedToDeleteShelf.get();
         }
 
         shelfRepository.updateIsDeletedByIds(delete, shelfIds);
@@ -89,25 +95,20 @@ public class ShelfService {
 
     public List<ShelfDTO> getAllShelvesById(Long userId) {
 
-        List<ShelfDTO> dtoShelves = new ArrayList<>();
 
         List<ShelfEntity> entityShelves = shelfRepository.findAllById(userId);
 
-        for (ShelfEntity shelfEntity : entityShelves) {
-
-            ShelfDTO shelfDto = FileMapper.INSTANCE.shelfEntityToShelfDto(shelfEntity);
-            dtoShelves.add(shelfDto);
-        }
-        return dtoShelves;
+        return ShelfItemMapper.INSTANCE.shelfEntitiesToShelfDTOs(entityShelves);
     }
 
     @Transactional
     public void hardDeleteShelf(Long shelfId, Long userId) {
 
-        ShelfEntity shelfEntity = shelfRepository.findById(shelfId).orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+        ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
+                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
 
-        if (shelfEntity.getUserId() != userId)
-            throw ExceptionSupplier.userNotAllowed.get();
+        if (!Objects.equals(shelfEntity.getUserId(), userId))
+            throw ExceptionSupplier.userNotAllowedToDeleteShelf.get();
 
         String shelfPath = homePath + userPath + userId + pathSeparator + "shelves" + pathSeparator + shelfId;
 
@@ -117,7 +118,51 @@ public class ShelfService {
         } catch (IOException e) {
             throw ExceptionSupplier.couldNotDeleteShelf.get();
         }
+    }
 
+    public ShelfContentResponseModel getShelfContent(Long shelfId, Long userId) {
 
+        ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
+                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+
+        if (!Objects.equals(shelfEntity.getUserId(), userId))
+            throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
+
+        List<ShelfItemDTO> dtoItems = new ArrayList<>();
+
+        List<FileEntity> fileEntities = fileRepository.findAllByShelfIdAndParentFolderIdIsNullAndIsDeletedFalse(shelfId);
+        List<FolderEntity> folderEntities = folderRepository.findAllByShelfIdAndParentFolderIdIsNullAndIsDeletedFalse(shelfId);
+
+        dtoItems.addAll(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
+        dtoItems.addAll(ShelfItemMapper.INSTANCE.folderEntitiesToShelfItemDTOs(folderEntities));
+
+        List<BreadCrumbDTO> breadCrumbDTOS = new ArrayList<>();
+        breadCrumbDTOS.add(new BreadCrumbDTO(shelfEntity.getName(), shelfEntity.getId()));
+
+        return new ShelfContentResponseModel(breadCrumbDTOS, dtoItems);
+    }
+
+    public void updateShelfName(ShelfEditRequestModel shelfEditRequestModel, Long userId) {
+
+        String shelfName = shelfEditRequestModel.getShelfName();
+        Long shelfId = shelfEditRequestModel.getShelfId();
+
+        fileSystemValidator.isShelfNameValid(shelfName);
+
+        ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
+                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+
+        List<ShelfEntity> shelfList = shelfRepository.findAllByUserIdAndIsDeletedFalse(userId);
+
+        if(shelfList.stream().map(ShelfEntity::getName).collect(Collectors.toList()).contains(shelfName))
+            throw ExceptionSupplier.shelfAlreadyExists.get();
+
+        if (!Objects.equals(shelfEntity.getUserId(), userId))
+            throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
+
+        if (!shelfEntity.getName().equals(shelfName))
+            shelfEntity.setName(shelfName);
+
+        shelfRepository.save(shelfEntity);
     }
 }

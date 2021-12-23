@@ -2,7 +2,10 @@ package com.htec.filesystem.controller;
 
 import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.annotation.AuthenticationUser;
+import com.htec.filesystem.dto.ShelfDTO;
 import com.htec.filesystem.model.request.CreateShelfRequestModel;
+import com.htec.filesystem.model.request.ShelfEditRequestModel;
+import com.htec.filesystem.model.response.ShelfContentResponseModel;
 import com.htec.filesystem.model.response.TextResponseMessage;
 import com.htec.filesystem.service.ShelfService;
 import org.springframework.http.HttpStatus;
@@ -21,8 +24,8 @@ public class ShelfController {
         this.shelfService = shelfService;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity createShelf(@RequestBody CreateShelfRequestModel createShelfRequestModel,
+    @PostMapping
+    public ResponseEntity<TextResponseMessage> createShelf(@RequestBody CreateShelfRequestModel createShelfRequestModel,
                                       @AuthenticationUser AuthUser authUser) {
 
         HttpStatus retStatus = HttpStatus.OK;
@@ -42,16 +45,31 @@ public class ShelfController {
     }
 
     @GetMapping
-    public ResponseEntity getAllShelves(@AuthenticationUser AuthUser authUser) {
+    public ResponseEntity<List<ShelfDTO>> getAllShelves(@AuthenticationUser AuthUser authUser) {
 
         return ResponseEntity.ok(shelfService.getAllShelvesById(authUser.getId()));
     }
 
     @DeleteMapping("/{shelfId}")
-    public ResponseEntity deleteShelf(@AuthenticationUser AuthUser authUser,
+    public ResponseEntity<TextResponseMessage> deleteShelf(@AuthenticationUser AuthUser authUser,
                                       @PathVariable Long shelfId) {
 
         shelfService.hardDeleteShelf(shelfId, authUser.getId());
         return ResponseEntity.ok().body(new TextResponseMessage("Successfully deleted shelves.", HttpStatus.OK.value()));
     }
+
+    @GetMapping("/{shelfId}")
+    public ResponseEntity<ShelfContentResponseModel> getFirstLevelContent(@AuthenticationUser AuthUser authUser, @PathVariable Long shelfId) {
+
+        return ResponseEntity.ok(shelfService.getShelfContent(shelfId, authUser.getId()));
+    }
+
+    @PutMapping("/rename")
+    public ResponseEntity<TextResponseMessage> updateShelfName(@AuthenticationUser AuthUser authUser, @RequestBody ShelfEditRequestModel shelfEditRequestModel) {
+
+        shelfService.updateShelfName(shelfEditRequestModel, authUser.getId());
+
+        return ResponseEntity.ok().body(new TextResponseMessage("Shelf name updated.", HttpStatus.OK.value()));
+    }
+
 }
