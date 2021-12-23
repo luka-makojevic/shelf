@@ -131,17 +131,4 @@ class FolderServiceTest {
     void uploadDeleted_UserNotAllowed() {
 
     }
-
-    @Test
-    void createFolderInDb() {
-
-        String name = "folder1";
-        String path = "shelf-files/user-data/2/shelves/1/folder1";
-        Long shelfId = 1L;
-        Long parentFolderId = 0L;
-
-        folderService.createFolderInDb(name, path, shelfId, parentFolderId);
-
-        verify(folderRepository, times(1)).save(any(FolderEntity.class));
-    }
 }
