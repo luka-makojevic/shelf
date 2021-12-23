@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMsal } from '@azure/msal-react';
 import {
@@ -23,6 +23,7 @@ import { config } from '../../utils/validation/config/registerValidationConfig';
 import { useAppSelector } from '../../store/hooks';
 import { RootState } from '../../store/store';
 import { useAuth } from '../../hooks/authHook';
+import PasswordRequirementsTooltip from './passwordRequirementsTooltip';
 
 const RegisterForm = () => {
   const {
@@ -90,6 +91,21 @@ const RegisterForm = () => {
     setSuccess('');
   };
 
+  const [isPasswordTooltipVisible, setIsPasswordTooltipVisible] =
+    useState(false);
+
+  const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (e.target.name === 'password') {
+      setIsPasswordTooltipVisible(true);
+    }
+  };
+
+  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (e.target.name === 'password') {
+      setIsPasswordTooltipVisible(false);
+    }
+  };
+
   return (
     <FormContainer>
       <H2>Register</H2>
@@ -119,8 +135,11 @@ const RegisterForm = () => {
               error={errors[fieldConfig.name]}
               type={fieldConfig.type}
               {...register(fieldConfig.name, fieldConfig.validations)}
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
             />
           ))}
+          {isPasswordTooltipVisible && <PasswordRequirementsTooltip />}
           <InputFieldWrapper>
             <CheckBox
               id="termsOfServices"

@@ -1,11 +1,14 @@
 package com.htec.filesystem.service;
 
 import com.htec.filesystem.annotation.AuthUser;
+import com.htec.filesystem.dto.ShelfItemDTO;
 import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ShelfException;
+import com.htec.filesystem.mapper.ShelfItemMapper;
 import com.htec.filesystem.model.request.CreateShelfRequestModel;
+import com.htec.filesystem.model.request.ShelfEditRequestModel;
 import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FolderRepository;
 import com.htec.filesystem.repository.ShelfRepository;
@@ -130,9 +133,8 @@ class ShelfServiceTest {
         shelfIds.add(1L);
         boolean delete = true;
 
-        ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
-            shelfService.updateIsDeletedShelf(user, shelfIds, delete);
-        });
+        ShelfException exception = Assertions.assertThrows(ShelfException.class,
+                () -> shelfService.updateIsDeletedShelf(user, shelfIds, delete));
 
         verify(shelfRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), shelfIds);
         verify(folderRepository, times(0)).updateIsDeletedByShelfIds(delete, shelfIds);
@@ -154,16 +156,15 @@ class ShelfServiceTest {
 
         when(shelfRepository.findAllByUserIdAndIdIn(user.getId(), shelfIds)).thenReturn(shelfEntities);
 
-        ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
-            shelfService.updateIsDeletedShelf(user, shelfIds, delete);
-        });
+        ShelfException exception = Assertions.assertThrows(ShelfException.class,
+                () -> shelfService.updateIsDeletedShelf(user, shelfIds, delete));
 
         verify(shelfRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), shelfIds);
         verify(folderRepository, times(0)).updateIsDeletedByShelfIds(delete, shelfIds);
         verify(fileRepository, times(0)).updateIsDeletedByShelfIds(delete, shelfIds);
         verify(shelfRepository, times(0)).save(shelf);
 
-        assertEquals(ErrorMessages.USER_NOT_ALLOWED.getErrorMessage(), exception.getMessage());
+        assertEquals(ErrorMessages.USER_NOT_ALLOWED_TO_DELETE_SHELF.getErrorMessage(), exception.getMessage());
     }
 
     @Test
@@ -185,6 +186,112 @@ class ShelfServiceTest {
             mocked.verify(() -> FileUtils.deleteDirectory(any(File.class)));
 
         }
+    }
 
+    @Test
+    void getShelfContent() {
+
+        Long shelfId = 15L;
+        Long userId = 1L;
+
+        ShelfEntity shelfEntity = new ShelfEntity();
+        shelfEntity.setUserId(userId);
+
+
+
+        FileEntity fileEntity = new FileEntity();
+        List<FileEntity> fileList = new ArrayList<>();
+        fileList.add(fileEntity);
+
+        FolderEntity folderEntity = new FolderEntity();
+        List<FolderEntity> folderList = new ArrayList<>();
+        folderList.add(folderEntity);
+
+        List<ShelfItemDTO> dtoList = new ArrayList<>();
+        dtoList.addAll(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileList));
+        dtoList.addAll(ShelfItemMapper.INSTANCE.folderEntitiesToShelfItemDTOs(folderList));
+
+
+        when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
+        when(fileRepository.findAllByShelfIdAndParentFolderIdIsNull(anyLong())).thenReturn(fileList);
+        when(folderRepository.findAllByShelfIdAndParentFolderIdIsNull(anyLong())).thenReturn(folderList);
+
+        List<ShelfItemDTO> returnFileDtos = shelfService.getShelfContent(shelfId, userId).getShelfItems();
+
+        assertEquals(dtoList.size(), returnFileDtos.size());
+    }
+
+    @Test
+    void getShelfContent_UserNotAllowedToAccessShelf() {
+
+        Long shelfId = 15L;
+        Long userId = 1L;
+
+        ShelfEntity shelfEntity = new ShelfEntity();
+        shelfEntity.setUserId(3L);
+
+        when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
+
+        ShelfException exception = Assertions.assertThrows(ShelfException.class,
+                () -> shelfService.getShelfContent(shelfId, userId));
+
+        assertEquals(ErrorMessages.USER_NOT_ALLOWED_TO_ACCESS_THIS_SHELF.getErrorMessage(), exception.getMessage());
+    }
+
+    @Test
+    void updateShelfName() {
+
+        ShelfEditRequestModel shelfEditRequestModel = new ShelfEditRequestModel(7L, "shelf1");
+        Long userId = 4L;
+        ShelfEntity shelfEntity = new ShelfEntity();
+        shelfEntity.setName("newShelf");
+        shelfEntity.setUserId(userId);
+        List<ShelfEntity> shelfEntities = new ArrayList<>();
+        shelfEntities.add(shelfEntity);
+
+        when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
+        when(shelfRepository.findAllByUserIdAndIsDeletedFalse(anyLong())).thenReturn(shelfEntities);
+
+        shelfService.updateShelfName(shelfEditRequestModel, userId);
+        verify(shelfRepository, times(1)).save(any(ShelfEntity.class));
+    }
+
+    @Test
+    void updateShelfName_ShelfAlreadyExists() {
+
+        ShelfEditRequestModel shelfEditRequestModel = new ShelfEditRequestModel(7L, "shelf1");
+        Long userId = 4L;
+        ShelfEntity shelfEntity = new ShelfEntity();
+        shelfEntity.setName("shelf1");
+        shelfEntity.setUserId(userId);
+        List<ShelfEntity> shelfEntities = new ArrayList<>();
+        shelfEntities.add(shelfEntity);
+
+        when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
+        when(shelfRepository.findAllByUserIdAndIsDeletedFalse(anyLong())).thenReturn(shelfEntities);
+
+        ShelfException exception = Assertions.assertThrows(ShelfException.class,
+                () -> shelfService.updateShelfName(shelfEditRequestModel, userId));
+
+        assertEquals(ErrorMessages.SHELF_WITH_THE_SAME_NAME_ALREADY_EXISTS.getErrorMessage(), exception.getMessage());
+    }
+
+    @Test
+    void updateShelfName_UserNotAllowedToAccessShelf() {
+
+        ShelfEditRequestModel shelfEditRequestModel = new ShelfEditRequestModel(7L, "shelf1");
+        Long userId = 4L;
+        ShelfEntity shelfEntity = new ShelfEntity();
+        shelfEntity.setName("newShelf");
+        List<ShelfEntity> shelfEntities = new ArrayList<>();
+        shelfEntities.add(shelfEntity);
+
+        when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
+        when(shelfRepository.findAllByUserIdAndIsDeletedFalse(anyLong())).thenReturn(shelfEntities);
+
+        ShelfException exception = Assertions.assertThrows(ShelfException.class,
+                () -> shelfService.updateShelfName(shelfEditRequestModel, userId));
+
+        assertEquals(ErrorMessages.USER_NOT_ALLOWED_TO_ACCESS_THIS_SHELF.getErrorMessage(), exception.getMessage());
     }
 }

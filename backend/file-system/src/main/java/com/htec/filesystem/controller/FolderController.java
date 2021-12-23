@@ -2,8 +2,9 @@ package com.htec.filesystem.controller;
 
 import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.annotation.AuthenticationUser;
-import com.htec.filesystem.dto.FileDTO;
+import com.htec.filesystem.dto.ShelfItemDTO;
 import com.htec.filesystem.model.request.CreateFolderRequestModel;
+import com.htec.filesystem.model.response.ShelfContentResponseModel;
 import com.htec.filesystem.model.response.TextResponseMessage;
 import com.htec.filesystem.service.FolderService;
 import org.springframework.http.HttpStatus;
@@ -18,12 +19,16 @@ public class FolderController {
 
     private final FolderService folderService;
 
+    private final String FOLDERS_CREATED = "Folders created";
+    private final String FOLDERS_MOVED_TO_TRASH = "Folder moved to trash";
+    private final String FOLDERS_RECOVERED_FROM_TRASH = "Folders recovered from trash";
+
     public FolderController(FolderService folderService) {
         this.folderService = folderService;
     }
 
     @PostMapping("/initialize/{userId}")
-    public ResponseEntity initializeFolders(@PathVariable Long userId) {
+    public ResponseEntity<TextResponseMessage> initializeFolders(@PathVariable Long userId) {
 
         HttpStatus retStatus = HttpStatus.OK;
 
@@ -31,17 +36,16 @@ public class FolderController {
             retStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
-        return ResponseEntity.status(retStatus).body(new TextResponseMessage("Folders created", retStatus.value()));
+        return ResponseEntity.status(retStatus).body(new TextResponseMessage(FOLDERS_CREATED, retStatus.value()));
     }
 
     @GetMapping("/{folderId}")
-    public ResponseEntity<List<FileDTO>> getFiles(@AuthenticationUser AuthUser user, @PathVariable Long folderId) {
-
+    public ResponseEntity<ShelfContentResponseModel> getFiles(@AuthenticationUser AuthUser user, @PathVariable Long folderId) {
         return folderService.getFiles(user.getId(), folderId);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity createFolder(@RequestBody CreateFolderRequestModel createFolderRequestModel, @AuthenticationUser AuthUser authUser) {
+    @PostMapping
+    public ResponseEntity<TextResponseMessage> createFolder(@RequestBody CreateFolderRequestModel createFolderRequestModel, @AuthenticationUser AuthUser authUser) {
 
         HttpStatus retStatus = HttpStatus.OK;
 
@@ -50,5 +54,19 @@ public class FolderController {
         }
 
         return ResponseEntity.status(retStatus).body(new TextResponseMessage("Folder created", retStatus.value()));
+    }
+
+    @PutMapping("/move-to-trash")
+    public ResponseEntity<TextResponseMessage> moveToTrash(@AuthenticationUser AuthUser user, @RequestBody List<Long> folderIds) {
+
+        folderService.updateDeleted(user.getId(), folderIds, true);
+        return ResponseEntity.ok().body(new TextResponseMessage(FOLDERS_MOVED_TO_TRASH, HttpStatus.OK.value()));
+    }
+
+    @PutMapping("/recover")
+    public ResponseEntity<TextResponseMessage> recover(@AuthenticationUser AuthUser user, @RequestBody List<Long> folderIds) {
+
+        folderService.updateDeleted(user.getId(), folderIds, false);
+        return ResponseEntity.ok().body(new TextResponseMessage(FOLDERS_RECOVERED_FROM_TRASH, HttpStatus.OK.value()));
     }
 }
