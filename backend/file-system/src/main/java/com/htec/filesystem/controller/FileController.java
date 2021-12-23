@@ -15,6 +15,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +30,7 @@ public class FileController {
     private final String IMAGE_UPLOADED = "Image Uploaded";
     private final String FILES_MOVED_TO_TRASH = "File/s moved to trash.";
     private final String FILES_RECOVERED_FROM_TRASH = "File/s recovered from trash.";
+    private final String FILES_DELETED = "File/s deleted.";
 
     public FileController(FileService fileService) {
         this.fileService = fileService;
@@ -95,5 +97,12 @@ public class FileController {
     public ResponseEntity<List<ShelfItemDTO>> getFilesFromTrash(@AuthenticationUser AuthUser authUser) {
 
         return ResponseEntity.ok(fileService.getAllFilesFromTrash(authUser.getId()));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<TextResponseMessage> deleteFile(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) throws IOException {
+
+        fileService.deleteFile(user, fileIds);
+        return ResponseEntity.ok().body(new TextResponseMessage(FILES_DELETED, HttpStatus.OK.value()));
     }
 }
