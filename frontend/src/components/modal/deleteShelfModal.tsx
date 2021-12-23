@@ -4,7 +4,7 @@ import { Button } from '../UI/button';
 import { DeleteShelfModalProps } from './modal.interfaces';
 import shelfServices from '../../services/shelfServices';
 import { useShelf } from '../../hooks/shelfHooks';
-import { DeleteModalBody } from './modal-styles';
+import { DeleteModalBody } from './modal.styles';
 
 const DeleteShelfModal = ({
   onCloseModal,
@@ -20,7 +20,7 @@ const DeleteShelfModal = ({
   const handleDeleteShelf = () => {
     if (shelf) {
       shelfServices
-        .deleteShelf([shelf.id])
+        .hardDeleteShelf(shelf.id)
         .then(() => {
           getShelves(
             {},
@@ -29,7 +29,7 @@ const DeleteShelfModal = ({
           );
         })
         .catch((err) => {
-          if (err.response.status === 500) {
+          if (err.response?.status === 500) {
             onError('Internal server error');
             return;
           }

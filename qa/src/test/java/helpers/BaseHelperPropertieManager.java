@@ -10,6 +10,10 @@ public class BaseHelperPropertieManager
     private static final Object lock = new Object();
 
     private static String baseuri;
+    private static String dburl;
+    private static String dbtable;
+    private static String dbuser;
+    private static String dbpass;
 
     //Create a Singleton instance. We need only one instance of Property Manager.
     public static BaseHelperPropertieManager getInstance() {
@@ -35,10 +39,25 @@ public class BaseHelperPropertieManager
         }
         //Get properties from configuration.properties
         baseuri = prop.getProperty("base-uri");
+        dburl = prop.getProperty("db-url");
+        dbtable = prop.getProperty("shelf-table");
+        dbuser = prop.getProperty("db-user");
+        dbpass = prop.getProperty("db-pass");
     }
 
     public String getURI(String s) {
         return baseuri;
     }
-
+    public String getdbURI(String s) {
+        return dburl;
+    }
+    public String getdbNameTable(String s) {
+        return dbtable;
+    }
+    public String getdbUser(String s) {
+        return dbuser;
+    }
+    public String getdbPass(String s) {
+        return dbpass;
+    }
 }

@@ -9,7 +9,7 @@ import {
   Close,
   Body,
   HeaderItem,
-} from './modal-styles';
+} from './modal.styles';
 import { ModalProps } from './modal.interfaces';
 
 const Modal = ({ onCloseModal, children, title, closeIcon }: ModalProps) => {
