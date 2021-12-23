@@ -1,8 +1,5 @@
 import {
-  FileTableDataTypes,
-  FunctionTableDataTypes,
   HeaderTypes,
-  ShelfTableDataTypes,
   SorterDataTypes,
   SortingDirectionTypes,
   TableDataTypes,
@@ -10,7 +7,7 @@ import {
 import { SortingDirection } from '../../utils/enums/table';
 
 const sortData = (
-  data: TableDataTypes[],
+  data: SorterDataTypes[],
   sortKey: string,
   sortingDirection: string
 ) => {
@@ -50,11 +47,7 @@ const getNextSortingDirection = (sortingDirection: SortingDirection) => {
 export const sortColumn = (
   sortKey: string,
   sortingDirections: SortingDirectionTypes,
-  tableData: (
-    | FunctionTableDataTypes
-    | FileTableDataTypes
-    | ShelfTableDataTypes
-  )[],
+  tableData: TableDataTypes[],
   setTableData: (data: TableDataTypes[]) => void,
   setSortingDirections: (data: SortingDirectionTypes) => void
 ) => {

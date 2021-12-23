@@ -1,56 +1,71 @@
 import { useForm } from 'react-hook-form';
-import { ShelfFormData } from '../../interfaces/dataTypes';
+import { ShelfDataType } from '../../interfaces/dataTypes';
 import { Base, InputFieldWrapper } from '../form/form-styles';
 import { InputField } from '../UI/input/InputField';
 import { ModalButtonDivider } from '../layout/layout.styles';
 import { Button } from '../UI/button';
-import shelfServices from '../../services/shelfServices';
-import { ShelfModalProps } from './modal.interfaces';
-import { useShelf } from '../../hooks/shelfHooks';
+import { FolderModalProps } from './modal.interfaces';
+import { useFiles } from '../../hooks/fileHooks';
+import fileServices from '../../services/fileServices';
 
-const ShelfModal = ({ onCloseModal, onError, shelf }: ShelfModalProps) => {
+export const ROOT_FOLDER = { name: 'Root', id: null, path: [] };
+
+const FolderModal = ({
+  onCloseModal,
+  onError,
+  shelfId,
+  folderId,
+  placeholder,
+  buttonText,
+}: FolderModalProps) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ShelfFormData>({ defaultValues: { name: shelf?.name } });
+  } = useForm<ShelfDataType>();
 
   const handleCloseModal = () => {
     onCloseModal(false);
   };
 
-  const { getShelves } = useShelf();
+  const { getShelfFiles, getFolderFiles } = useFiles();
+  const convertedShelfId = Number(shelfId);
+  const convertedFolderId = Number(folderId);
 
-  const onSubmit = (data: ShelfFormData) => {
-    const shelfName = data.name;
+  const onSubmit = (data: { name: string }) => {
+    const folderName = data.name;
 
-    if (!shelf) {
-      shelfServices
-        .createShelf(shelfName)
+    if (folderId) {
+      fileServices
+        .createFolder(folderName, convertedShelfId, convertedFolderId)
         .then(() => {
-          getShelves(
+          getFolderFiles(
+            convertedFolderId,
             () => {},
             () => {}
           );
         })
         .catch((err) => {
-          if (err?.response?.status === 500) {
+          if (err.response?.status === 500) {
             onError('Internal server error');
             return;
           }
           onError(err.response?.data?.message);
         });
-    } else {
-      shelfServices
-        .editShelf({ shelfId: shelf.id, shelfName: data.name })
+    }
+
+    if (!folderId) {
+      fileServices
+        .createFolder(folderName, convertedShelfId)
         .then(() => {
-          getShelves(
+          getShelfFiles(
+            convertedShelfId,
             () => {},
             () => {}
           );
         })
         .catch((err) => {
-          if (err?.response?.status === 500) {
+          if (err.response?.status === 500) {
             onError('Internal server error');
             return;
           }
@@ -65,7 +80,7 @@ const ShelfModal = ({ onCloseModal, onError, shelf }: ShelfModalProps) => {
     required: 'This field is required',
     maxLength: {
       value: 50,
-      message: 'Shelf name can not be longer than 50 characters',
+      message: 'File name can not be longer than 50 characters',
     },
   };
 
@@ -74,21 +89,21 @@ const ShelfModal = ({ onCloseModal, onError, shelf }: ShelfModalProps) => {
       <Base onSubmit={handleSubmit(onSubmit)}>
         <InputFieldWrapper>
           <InputField
-            placeholder="Untitled shelf"
+            placeholder={placeholder}
             error={errors.name}
             {...register('name', validations)}
           />
         </InputFieldWrapper>
 
         <ModalButtonDivider>
-          <Button variant="lightBordered" onClick={handleCloseModal}>
+          <Button variant="light" onClick={handleCloseModal}>
             Cancel
           </Button>
-          <Button>{shelf ? 'Update' : 'Create'}</Button>
+          <Button>{buttonText}</Button>
         </ModalButtonDivider>
       </Base>
     </>
   );
 };
 
-export default ShelfModal;
+export default FolderModal;

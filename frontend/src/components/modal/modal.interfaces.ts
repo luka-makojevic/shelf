@@ -27,3 +27,12 @@ export interface ModalProps {
   title: string;
   closeIcon?: boolean;
 }
+
+export interface FolderModalProps {
+  onCloseModal: Dispatch<SetStateAction<boolean>>;
+  onError: (value: SetStateAction<string>) => void;
+  shelfId: string | undefined;
+  folderId: string | undefined;
+  placeholder: string | undefined;
+  buttonText: string | undefined;
+}

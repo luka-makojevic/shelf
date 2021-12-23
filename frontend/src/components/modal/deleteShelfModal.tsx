@@ -23,7 +23,6 @@ const DeleteShelfModal = ({
         .hardDeleteShelf(shelf.id)
         .then(() => {
           getShelves(
-            {},
             () => {},
             () => {}
           );

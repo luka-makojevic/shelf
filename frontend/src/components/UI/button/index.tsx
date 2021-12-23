@@ -3,6 +3,7 @@ import {
   StyledLink,
   IconButton,
   SpinnerButton,
+  IconButtonContainer,
 } from './button-styles';
 import { Spinner } from '../../form/form-styles';
 import { ButtonProps } from './button.interfaces';
@@ -61,8 +62,10 @@ export const Button = ({
         variant={variant}
         {...restProps}
       >
-        {icon}
-        {children}
+        <IconButtonContainer>
+          {icon}
+          {children}
+        </IconButtonContainer>
       </IconButton>
     );
   }

@@ -41,7 +41,6 @@ const Shelves = () => {
 
   useEffect(() => {
     getShelves(
-      { userId: user?.id },
       () => {},
       (err: string) => {
         setError(err);
@@ -96,6 +95,7 @@ const Shelves = () => {
           onClose={handleSetError}
         />
       )}
+      
       {openModal && (
         <Modal
           title={selectedShelf ? 'Rename shelf' : 'Create shelf'}
@@ -109,6 +109,7 @@ const Shelves = () => {
           />
         </Modal>
       )}
+
       {deleteModalOpen && (
         <Modal title="Delete shelf" onCloseModal={handleModalClose}>
           <DeleteShelfModal

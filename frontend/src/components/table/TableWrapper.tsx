@@ -6,7 +6,7 @@ import {
 } from './tableWrapper-styles';
 
 export interface TableWrapperProps {
-  title: string;
+  title?: string;
   description?: string;
   children: JSX.Element | JSX.Element[];
 }
