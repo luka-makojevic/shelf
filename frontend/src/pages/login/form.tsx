@@ -1,7 +1,7 @@
 import { useMsal } from '@azure/msal-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { loginRequest } from '../../azure/authConfig';
 import {
   Base,
@@ -33,6 +33,7 @@ const LoginForm = () => {
   const isLoading = useAppSelector((state: RootState) => state.loading.loading);
 
   const navigation = useNavigate();
+  const location = useLocation();
 
   const submitForm = (data: LoginData) => {
     login(
@@ -70,6 +71,7 @@ const LoginForm = () => {
 
   const handleAlertClose = () => {
     setError('');
+    navigation(Routes.LOGIN);
   };
 
   return (
@@ -81,6 +83,14 @@ const LoginForm = () => {
             type={AlertMessage.ERRROR}
             title="Error"
             message={error}
+            onClose={handleAlertClose}
+          />
+        )}
+        {location.state && (
+          <AlertPortal
+            type={AlertMessage.INFO}
+            title="Info"
+            message={location.state}
             onClose={handleAlertClose}
           />
         )}

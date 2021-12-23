@@ -1,10 +1,9 @@
 import axios from 'axios';
 import { LocalStorage } from '../services/localStorage';
-
-const API_URL = 'http://10.10.0.136:8080/account/';
+import { API_URL_ACCOUNT } from './api';
 
 const loginInstance = axios.create({
-  baseURL: API_URL,
+  baseURL: API_URL_ACCOUNT,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -20,11 +19,14 @@ loginInstance.interceptors.response.use(
 
     if (!user) {
       try {
-        const response = await axios.get(`${API_URL}users/${res.data.id}`, {
-          headers: {
-            Authorization: `Bearer ${res.data.jwtToken}`,
-          },
-        });
+        const response = await axios.get(
+          `${API_URL_ACCOUNT}users/${res.data.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${res.data.jwtToken}`,
+            },
+          }
+        );
 
         const userData = response.data;
         localStorage.setItem('user', JSON.stringify(userData));
