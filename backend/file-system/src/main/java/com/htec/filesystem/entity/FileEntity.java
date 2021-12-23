@@ -25,9 +25,6 @@ public class FileEntity {
 
     private String path;
 
-    @Column(name = "is_deleted")
-    private boolean isDeleted;
-
     @Column(name = "shelf_id")
     private Long shelfId;
 
@@ -42,15 +39,6 @@ public class FileEntity {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    public String getRealName() {
-        if (isDeleted) {
-            int index = name.lastIndexOf("_");
-
-            return name.substring(0, index);
-        }
-        return name;
-    }
 
     @Override
     public boolean equals(Object o) {

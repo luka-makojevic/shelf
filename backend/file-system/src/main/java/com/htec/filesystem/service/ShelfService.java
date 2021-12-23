@@ -89,8 +89,6 @@ public class ShelfService {
         }
 
         shelfRepository.updateIsDeletedByIds(delete, shelfIds);
-        folderRepository.updateIsDeletedByShelfIds(delete, shelfIds);
-        fileRepository.updateIsDeletedByShelfIds(delete, shelfIds);
     }
 
     public List<ShelfDTO> getAllShelvesById(Long userId) {
@@ -131,7 +129,7 @@ public class ShelfService {
         List<ShelfItemDTO> dtoItems = new ArrayList<>();
 
         List<FileEntity> fileEntities = fileRepository.findAllByShelfIdAndParentFolderIdIsNullAndIsDeletedFalse(shelfId);
-        List<FolderEntity> folderEntities = folderRepository.findAllByShelfIdAndParentFolderIdIsNullAndIsDeletedFalse(shelfId);
+        List<FolderEntity> folderEntities = folderRepository.findAllByShelfIdAndParentFolderIdIsNull(shelfId);
 
         dtoItems.addAll(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
         dtoItems.addAll(ShelfItemMapper.INSTANCE.folderEntitiesToShelfItemDTOs(folderEntities));
@@ -154,7 +152,7 @@ public class ShelfService {
 
         List<ShelfEntity> shelfList = shelfRepository.findAllByUserIdAndIsDeletedFalse(userId);
 
-        if(shelfList.stream().map(ShelfEntity::getName).collect(Collectors.toList()).contains(shelfName))
+        if (shelfList.stream().map(ShelfEntity::getName).collect(Collectors.toList()).contains(shelfName))
             throw ExceptionSupplier.shelfAlreadyExists.get();
 
         if (!Objects.equals(shelfEntity.getUserId(), userId))

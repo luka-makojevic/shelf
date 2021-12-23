@@ -159,15 +159,14 @@ public class FileService {
         fileEntity.setShelfId(shelfId);
         if (folderId != 0) fileEntity.setParentFolderId(folderId);
 
-        fileEntity.setDeleted(false);
         fileEntity.setCreatedAt(LocalDateTime.now());
         fileRepository.save(fileEntity);
     }
 
     @Transactional
-    public void updateDeletedFiles(AuthUser user, List<Long> fileIds, boolean delete) {
+    public void moveToTrash(AuthUser user, List<Long> fileIds) {
 
-        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds, !delete);
+        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds);
 
         if (fileEntities.size() != fileIds.size()) {
             throw ExceptionSupplier.filesNotFound.get();
@@ -177,14 +176,11 @@ public class FileService {
             throw ExceptionSupplier.userNotAllowedToDeleteFile.get();
         }
 
-        if (delete) {
-            moveToTrash(fileEntities);
-        } else {
-            recover(user, fileEntities);
-        }
+
+        moveToTrash(fileEntities);
+
 
         fileRepository.saveAll(fileEntities);
-        fileRepository.updateIsDeletedByIds(delete, fileIds);
     }
 
     private void recover(AuthUser user, List<FileEntity> fileEntities) {
@@ -200,24 +196,24 @@ public class FileService {
         for (FileEntity fileEntity : fileEntities) {
             List<FileEntity> existingFiles = filesByFolder.getOrDefault(Optional.ofNullable(fileEntity.getParentFolderId()), new ArrayList<>());
 
-            if (existingFiles.stream().anyMatch(e -> e.getName().equals(fileEntity.getRealName()))) {
-                filesCount.merge(fileEntity.getRealName(), 1, Integer::sum);
+            if (existingFiles.stream().anyMatch(e -> e.getName().equals(fileEntity.getName()))) {
+                filesCount.merge(fileEntity.getName(), 1, Integer::sum);
             }
         }
 
         for (FileEntity fileEntity : fileEntities) {
 
-            Integer fileNameCounter = filesCount.getOrDefault(fileEntity.getRealName(), 0);
+            Integer fileNameCounter = filesCount.getOrDefault(fileEntity.getName(), 0);
 
             String oldPath = fileEntity.getPath();
             String fileNameWithUUID = fileEntity.getName();
 
             if (fileNameCounter > 0) {
-                filesCount.put(fileEntity.getRealName(), fileNameCounter - 1);
+                filesCount.put(fileEntity.getName(), fileNameCounter - 1);
 
-                int extensionIndex = fileEntity.getRealName().lastIndexOf('.');
-                String nameWithoutExtension = fileEntity.getRealName().substring(0, extensionIndex);
-                String extension = fileEntity.getRealName().substring(extensionIndex);
+                int extensionIndex = fileEntity.getName().lastIndexOf('.');
+                String nameWithoutExtension = fileEntity.getName().substring(0, extensionIndex);
+                String extension = fileEntity.getName().substring(extensionIndex);
 
                 int index = fileEntity.getPath().lastIndexOf(pathSeparator);
                 String newPath = fileEntity.getPath().substring(0, index);
@@ -242,7 +238,6 @@ public class FileService {
             renameFilesOnFileSystem(newFileName, fileEntity.getPath());
 
             fileEntity.setName(newFileName);
-            fileEntity.setDeletedAt(LocalDateTime.now());
         }
     }
 
@@ -322,7 +317,7 @@ public class FileService {
 
     public void deleteFile(AuthUser user, List<Long> fileIds) throws IOException {
 
-        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds, false);
+        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds);
 
         if (fileEntities.size() != fileIds.size()) {
             throw ExceptionSupplier.filesNotFound.get();

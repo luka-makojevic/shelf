@@ -25,7 +25,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class FolderService {
@@ -37,13 +36,20 @@ public class FolderService {
     private final FolderRepository folderRepository;
     private final FileRepository fileRepository;
     private final FolderTreeRepository folderTreeRepository;
+    private final FileTreeRepository fileTreeRepository;
+
+    private final FileService fileService;
 
     public FolderService(FolderRepository folderRepository,
                          FileRepository fileRepository,
-                         FolderTreeRepository folderTreeRepository) {
+                         FolderTreeRepository folderTreeRepository,
+                         FileTreeRepository fileTreeRepository,
+                         FileService fileService) {
         this.folderRepository = folderRepository;
         this.fileRepository = fileRepository;
         this.folderTreeRepository = folderTreeRepository;
+        this.fileTreeRepository = fileTreeRepository;
+        this.fileService = fileService;
     }
 
     public boolean initializeFolders(Long userId) {
@@ -70,10 +76,10 @@ public class FolderService {
         List<ShelfItemDTO> itemDTOs = new ArrayList<>();
 
         List<FolderEntity> allFolders = folderRepository
-                .findAllByUserIdAndParentFolderIdAndIsDeleted(userId, folderId, false);
+                .findAllByUserIdAndParentFolderId(userId, folderId);
 
         List<FileEntity> allFiles = fileRepository
-                .findAllByUserIdAndParentFolderIdAndIsDeleted(userId, folderId, false);
+                .findAllByUserIdAndParentFolderId(userId, folderId);
 
         itemDTOs.addAll(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(allFiles));
         itemDTOs.addAll(ShelfItemMapper.INSTANCE.folderEntitiesToShelfItemDTOs(allFolders));
@@ -85,7 +91,7 @@ public class FolderService {
 
     private List<BreadCrumbDTO> generateBreadCrumbs(Long folderId) {
 
-        List<FolderEntity> folderUpStreamTree = folderTreeRepository.getFolderUpStreamTree(folderId, false);
+        List<FolderEntity> folderUpStreamTree = folderTreeRepository.getFolderUpStreamTree(folderId);
 
         List<BreadCrumbDTO> breadCrumbs = new ArrayList<>(
                 BreadCrumbsMapper.INSTANCE.folderEntitiesToBreadCrumbDTOs(folderUpStreamTree));
@@ -146,27 +152,15 @@ public class FolderService {
             folderEntity.setParentFolderId(parentFolderId);
 
         folderEntity.setShelfId(shelfId);
-        folderEntity.setDeleted(false);
         folderEntity.setCreatedAt(LocalDateTime.now());
 
         folderRepository.save(folderEntity);
     }
 
     @Transactional
-    public void updateDeleted(Long userId, List<Long> folderIds, Boolean deleted) {
+    public void moveToTrash(Long userId, List<Long> folderIds) {
 
-        List<FolderEntity> folderEntities = folderRepository.findByUserIdAndFolderIds(userId, folderIds);
 
-        if (!folderEntities.stream().map(FolderEntity::getId).collect(Collectors.toList()).containsAll(folderIds)) {
-            throw ExceptionSupplier.userNotAllowedToDeleteFolder.get();
-        }
-
-        List<FolderEntity> downStreamFolders = folderTreeRepository.getFolderDownStreamTrees(folderIds, !deleted);
-
-        List<Long> downStreamFoldersIds = downStreamFolders.stream().map(FolderEntity::getId).collect(Collectors.toList());
-
-        folderRepository.updateDeletedByFolderIds(deleted, downStreamFoldersIds);
-
-        fileRepository.updateDeletedByParentFolderIds(deleted, downStreamFoldersIds);
     }
+
 }

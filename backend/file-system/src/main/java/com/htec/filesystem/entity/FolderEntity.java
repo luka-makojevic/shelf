@@ -24,9 +24,6 @@ public class FolderEntity {
 
     private String path;
 
-    @Column(name = "is_deleted")
-    private boolean isDeleted;
-
     @Column(name = "shelf_id")
     private Long shelfId;
 
