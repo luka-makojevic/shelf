@@ -164,7 +164,7 @@ public class FileService {
     }
 
     @Transactional
-    public void updateDeletedFiles(AuthUser user, List<Long> fileIds, Boolean deleted) {
+    public void moveToTrash(AuthUser user, List<Long> fileIds) {
 
         List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds);
 
@@ -176,11 +176,9 @@ public class FileService {
             throw ExceptionSupplier.userNotAllowedToDeleteFile.get();
         }
 
-        if (deleted) {
-            moveToTrash(fileEntities);
-        } else {
-            recover(user, fileEntities);
-        }
+
+        moveToTrash(fileEntities);
+
 
         fileRepository.saveAll(fileEntities);
     }
@@ -240,7 +238,6 @@ public class FileService {
             renameFilesOnFileSystem(newFileName, fileEntity.getPath());
 
             fileEntity.setName(newFileName);
-            fileEntity.setDeletedAt(LocalDateTime.now());
         }
     }
 
