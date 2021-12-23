@@ -4,17 +4,13 @@ import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.dto.BreadCrumbDTO;
 import com.htec.filesystem.dto.ShelfDTO;
 import com.htec.filesystem.dto.ShelfItemDTO;
-import com.htec.filesystem.entity.FileEntity;
-import com.htec.filesystem.entity.FolderEntity;
-import com.htec.filesystem.entity.ShelfEntity;
+import com.htec.filesystem.entity.*;
 import com.htec.filesystem.exception.ExceptionSupplier;
 import com.htec.filesystem.mapper.ShelfItemMapper;
 import com.htec.filesystem.model.request.CreateShelfRequestModel;
 import com.htec.filesystem.model.request.ShelfEditRequestModel;
 import com.htec.filesystem.model.response.ShelfContentResponseModel;
-import com.htec.filesystem.repository.FileRepository;
-import com.htec.filesystem.repository.FolderRepository;
-import com.htec.filesystem.repository.ShelfRepository;
+import com.htec.filesystem.repository.*;
 import com.htec.filesystem.validator.FileSystemValidator;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.stereotype.Service;
@@ -35,6 +31,8 @@ public class ShelfService {
     private final ShelfRepository shelfRepository;
     private final FolderRepository folderRepository;
     private final FileRepository fileRepository;
+    private final FileDeletedRepository fileDeletedRepository;
+    private final FolderDeletedRepository folderDeletedRepository;
     private final FileSystemValidator fileSystemValidator;
 
     private final String homePath = System.getProperty("user.home");
@@ -44,10 +42,14 @@ public class ShelfService {
     public ShelfService(ShelfRepository shelfRepository,
                         FolderRepository folderRepository,
                         FileRepository fileRepository,
+                        FileDeletedRepository fileDeletedRepository,
+                        FolderDeletedRepository folderDeletedRepository,
                         FileSystemValidator fileSystemValidator) {
         this.shelfRepository = shelfRepository;
         this.folderRepository = folderRepository;
         this.fileRepository = fileRepository;
+        this.fileDeletedRepository = fileDeletedRepository;
+        this.folderDeletedRepository = folderDeletedRepository;
         this.fileSystemValidator = fileSystemValidator;
     }
 
@@ -163,5 +165,20 @@ public class ShelfService {
             shelfEntity.setName(shelfName);
 
         shelfRepository.save(shelfEntity);
+    }
+
+    public List<ShelfItemDTO> getAllFilesFromTrash(Long userId) {
+
+        List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserId(userId);
+        List<Long> shelfIds = shelfEntities.stream().map(ShelfEntity::getId).collect(Collectors.toList());
+
+        List<FileDeletedEntity> fileDeletedEntities = fileDeletedRepository.findAllByShelfIdInAndParentFolderIdIsNull(shelfIds);
+        List<FolderDeletedEntity> folderDeletedEntities = folderDeletedRepository.findAllByShelfIdInAndParentFolderIdIsNull(shelfIds);
+
+        List<ShelfItemDTO> trashItems = new ArrayList<>();
+        trashItems.addAll(ShelfItemMapper.INSTANCE.fileDeletedEntitiesToShelfItemDTOs(fileDeletedEntities));
+        trashItems.addAll(ShelfItemMapper.INSTANCE.folderDeletedEntitiesToShelfItemDTOs(folderDeletedEntities));
+
+        return trashItems;
     }
 }

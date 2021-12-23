@@ -3,6 +3,7 @@ package com.htec.filesystem.controller;
 import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.annotation.AuthenticationUser;
 import com.htec.filesystem.dto.ShelfDTO;
+import com.htec.filesystem.dto.ShelfItemDTO;
 import com.htec.filesystem.model.request.CreateShelfRequestModel;
 import com.htec.filesystem.model.request.ShelfEditRequestModel;
 import com.htec.filesystem.model.response.ShelfContentResponseModel;
@@ -72,4 +73,9 @@ public class ShelfController {
         return ResponseEntity.ok().body(new TextResponseMessage("Shelf name updated.", HttpStatus.OK.value()));
     }
 
+    @GetMapping("/trash")
+    public ResponseEntity<List<ShelfItemDTO>> getFilesAndFoldersFromTrash(@AuthenticationUser AuthUser authUser) {
+
+        return ResponseEntity.ok(shelfService.getAllFilesFromTrash(authUser.getId()));
+    }
 }
