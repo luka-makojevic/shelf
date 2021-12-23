@@ -25,7 +25,7 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
                                                       @Param("folderId") Long folderId);
 
 
-    List<FileEntity> findAllByShelfIdAndParentFolderIdIsNullAndIsDeletedFalse(Long shelfId);
+    List<FileEntity> findAllByShelfIdAndParentFolderIdIsNull(Long shelfId);
 
     @Query("SELECT f FROM FileEntity f INNER JOIN ShelfEntity sh " +
             "ON (f.shelfId = sh.id) WHERE sh.userId = :userId AND f.id IN (:fileIds)")
@@ -40,13 +40,11 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
 
     @Query("SELECT f FROM FileEntity f INNER JOIN ShelfEntity sh " +
             "ON (f.shelfId = sh.id) " +
-            "WHERE sh.userId = :userId AND f.isDeleted = false AND (f.parentFolderId IN (:parentFolderIds) OR f.parentFolderId IS NULL)")
+            "WHERE sh.userId = :userId AND (f.parentFolderId IN (:parentFolderIds) OR f.parentFolderId IS NULL)")
     List<FileEntity> findAllByUserIdAndParentFolderIdsIn(@Param("userId") Long userId,
                                                          @Param("parentFolderIds") List<Long> parentFolderIds);
 
     Optional<FileEntity> findByNameAndShelfIdAndParentFolderIdIsNull(String name, Long shelfId);
 
     Optional<FileEntity> findByNameAndParentFolderIdAndIdNot(String name, Long parentFolderId, Long id);
-
-    List<FileEntity> findAllByShelfIdInAndIsDeletedTrue(List<Long> shelfId);
 }
