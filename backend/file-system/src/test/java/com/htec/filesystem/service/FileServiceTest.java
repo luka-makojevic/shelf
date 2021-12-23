@@ -299,7 +299,7 @@ class FileServiceTest {
 
             mocked.when(() -> Files.move(any(), any())).then(invocationOnMock -> null);
 
-            fileService.updateDeletedFiles(user, fileIds, true);
+            fileService.moveToTrash(user, fileIds);
 
         }
 
@@ -323,7 +323,7 @@ class FileServiceTest {
 
             mocked.when(() -> Files.move(any(), any())).then(invocationOnMock -> null);
 
-            fileService.updateDeletedFiles(user, fileIds, false);
+            fileService.moveToTrash(user, fileIds);
 
         }
 
@@ -339,7 +339,7 @@ class FileServiceTest {
         fileIds.add(1L);
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
-                () -> fileService.updateDeletedFiles(user, fileIds, false));
+                () -> fileService.moveToTrash(user, fileIds));
 
         verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
         verify(fileRepository, times(0)).saveAll(fileEntities);
@@ -358,7 +358,7 @@ class FileServiceTest {
         when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds)).thenReturn(fileEntities);
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
-                () -> fileService.updateDeletedFiles(user, fileIds , false));
+                () -> fileService.moveToTrash(user, fileIds));
 
         verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
         verify(fileRepository, times(0)).saveAll(fileEntities);
