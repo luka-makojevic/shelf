@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaCaretDown, FaCaretUp } from 'react-icons/fa';
 import CheckBox from '../UI/checkbox/checkBox';
 import { DashboardTableRow } from './row';

@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { CreateShelfData } from '../../interfaces/dataTypes';
+import { ShelfDataType } from '../../interfaces/dataTypes';
 import { Base, InputFieldWrapper } from '../form/form-styles';
 import { InputField } from '../UI/input/InputField';
 import { ModalButtonDivider } from '../layout/layout.styles';
@@ -22,7 +22,7 @@ const FolderModal = ({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateShelfData>();
+  } = useForm<ShelfDataType>();
 
   const handleCloseModal = () => {
     onCloseModal(false);

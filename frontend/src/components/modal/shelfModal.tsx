@@ -45,7 +45,6 @@ const ShelfModal = ({ onCloseModal, onError, shelf }: ShelfModalProps) => {
         .editShelf({ shelfId: shelf.id, shelfName: data.name })
         .then(() => {
           getShelves(
-            {},
             () => {},
             () => {}
           );

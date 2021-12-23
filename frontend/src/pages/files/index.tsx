@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom';
 import {
   FaCloudDownloadAlt,
   FaCloudUploadAlt,
@@ -9,7 +9,7 @@ import {
 import { Table } from '../../components/table/table';
 import TableWrapper from '../../components/table/TableWrapper';
 import { TableDataTypes } from '../../interfaces/dataTypes';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { useAppSelector } from '../../store/hooks';
 import AlertPortal from '../../components/alert/alert';
 import Modal from '../../components/modal';
 import AddFileModal from '../../components/modal/addFileModal';
@@ -21,7 +21,6 @@ import { ButtonContainer } from '../../components/table/tableWrapper-styles';
 import SearchBar from '../../components/UI/searchBar/searchBar';
 import { useFiles } from '../../hooks/fileHooks';
 import FolderModal from '../../components/modal/folderModal';
-import { setPathHistory } from '../../store/pathHistory';
 
 const Files = () => {
   const files = useAppSelector((state) => state.file.files);
@@ -40,13 +39,6 @@ const Files = () => {
   const handleSetError = () => {
     setError('');
   };
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    return () => {
-      dispatch(setPathHistory([]));
-    };
-  }, []);
 
   const { getShelfFiles, getFolderFiles } = useFiles();
 
