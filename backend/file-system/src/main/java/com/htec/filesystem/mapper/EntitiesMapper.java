@@ -18,7 +18,7 @@ public interface EntitiesMapper {
     FileEntity fileDeletedEntityToFileEntity(FileDeletedEntity fileDeletedEntity);
     List<FileEntity> fileDeletedEntitiesToFileEntities(List<FileDeletedEntity> fileDeletedEntities);
 
-    FolderDeletedEntity folderEntityToFolderDeletedEntity(FolderEntity fod);
+    FolderDeletedEntity folderEntityToFolderDeletedEntity(FolderEntity fodFolderEntity);
     List<FolderDeletedEntity> folderEntitiesToFolderDeletedEntities(List<FolderEntity> folderEntities);
 
     FileDeletedEntity fileEntityToFileDeletedEntity(FileEntity fileDeletedEntity);
