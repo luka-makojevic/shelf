@@ -309,6 +309,7 @@ public class FileService {
     }
 
     public void deleteFile(AuthUser user, List<Long> fileIds) throws IOException {
+
         List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds, false);
 
         if (fileEntities.size() != fileIds.size()) {

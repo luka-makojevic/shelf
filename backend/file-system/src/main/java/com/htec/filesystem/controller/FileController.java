@@ -92,7 +92,7 @@ public class FileController {
         return ResponseEntity.ok().body(new TextResponseMessage(FILE_RENAMED, HttpStatus.OK.value()));
     }
 
-    @DeleteMapping()
+    @DeleteMapping
     public ResponseEntity<TextResponseMessage> deleteFile(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) throws IOException {
 
         fileService.deleteFile(user, fileIds);

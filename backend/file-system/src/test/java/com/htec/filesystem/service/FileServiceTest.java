@@ -281,6 +281,7 @@ class FileServiceTest {
 
     @Test
     void getFile_FileNotFound() {
+
         String path = "test.jpg";
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
@@ -291,6 +292,7 @@ class FileServiceTest {
 
     @Test
     void updateDeletedFilesTrue() {
+
         user.setId(1L);
         file.setId(1L);
         file.setPath("test/fileName");
@@ -315,6 +317,7 @@ class FileServiceTest {
 
     @Test
     void updateDeletedFilesFalse() {
+
         user.setId(1L);
         file.setId(1L);
         file.setPath("test/fileName");
@@ -425,6 +428,7 @@ class FileServiceTest {
 
     @Test
     void deleteFile() throws IOException {
+
         user.setId(1L);
         file.setId(1L);
         file.setPath("test/test1");
@@ -447,6 +451,7 @@ class FileServiceTest {
 
     @Test
     void deleteFile_idsNotFound() {
+
         user.setId(1L);
         file.setId(1L);
         fileIds.add(1L);
@@ -462,6 +467,7 @@ class FileServiceTest {
 
     @Test
     void deleteFile_idsNotEquals() {
+
         user.setId(1L);
         file.setId(1L);
         fileIds.add(3L);
