@@ -205,7 +205,9 @@ class ShelfServiceTest {
 
 
         when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
-        when(fileRepository.findAllByShelfIdAndParentFolderIdIsNullAndIsDeletedFalse(anyLong())).thenReturn(fileList);
+
+        when(fileRepository.findAllByShelfIdAndParentFolderIdIsNull(anyLong())).thenReturn(fileList);
+
         when(folderRepository.findAllByShelfIdAndParentFolderIdIsNull(anyLong())).thenReturn(folderList);
 
         List<ShelfItemDTO> returnFileDtos = shelfService.getShelfContent(shelfId, userId).getShelfItems();

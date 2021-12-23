@@ -310,7 +310,7 @@ public class FileService {
         List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserId(userId);
         List<Long> shelfIds = shelfEntities.stream().map(ShelfEntity::getId).collect(Collectors.toList());
 
-        List<FileEntity> fileEntities = fileRepository.findAllByShelfIdInAndIsDeletedTrue(shelfIds);
+        List<FileEntity> fileEntities = fileRepository.findAllByShelfIdIn(shelfIds);
 
         return new ArrayList<>(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
     }
