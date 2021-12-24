@@ -27,12 +27,4 @@ public interface ShelfItemMapper {
     List<ShelfItemDTO> fileEntitiesToShelfItemDTOs(List<FileEntity> fileEntities);
 
     List<ShelfItemDTO> folderEntitiesToShelfItemDTOs(List<FolderEntity> folderEntities);
-
-    ShelfItemDTO fileDeletedEntityToShelfItemDTO(FileDeletedEntity fileDeletedEntity);
-
-    List<ShelfItemDTO> fileDeletedEntitiesToShelfItemDTOs(List<FileDeletedEntity> fileDeletedEntities);
-
-    ShelfItemDTO folderDeletedEntityToShelfItemDTO(FolderDeletedEntity folderDeletedEntity);
-
-    List<ShelfItemDTO> folderDeletedEntitiesToShelfItemDTOs(List<FolderDeletedEntity> folderDeletedEntities);
 }

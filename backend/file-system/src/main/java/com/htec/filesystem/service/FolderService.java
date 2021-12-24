@@ -92,7 +92,7 @@ public class FolderService {
 
     private List<BreadCrumbDTO> generateBreadCrumbs(Long folderId) {
 
-        List<FolderEntity> folderUpStreamTree = folderTreeRepository.getFolderUpStreamTree(folderId);
+        List<FolderEntity> folderUpStreamTree = folderTreeRepository.getFolderUpStreamTree(folderId , false);
 
         List<BreadCrumbDTO> breadCrumbs = new ArrayList<>(
                 BreadCrumbsMapper.INSTANCE.folderEntitiesToBreadCrumbDTOs(folderUpStreamTree));
