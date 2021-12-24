@@ -76,10 +76,11 @@ public class FolderService {
         List<ShelfItemDTO> itemDTOs = new ArrayList<>();
 
         List<FolderEntity> allFolders = folderRepository
-                .findAllByUserIdAndParentFolderId(userId, folderId);
+                .findAllByUserIdAndParentFolderIdAndDeleted(userId, folderId, false);
 
         List<FileEntity> allFiles = fileRepository
-                .findAllByUserIdAndParentFolderId(userId, folderId);
+                .findAllByUserIdAndParentFolderIdAndDeleted(userId, folderId, false);
+
 
         itemDTOs.addAll(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(allFiles));
         itemDTOs.addAll(ShelfItemMapper.INSTANCE.folderEntitiesToShelfItemDTOs(allFolders));
@@ -113,7 +114,6 @@ public class FolderService {
         String folderName = createFolderRequestModel.getFolderName();
         String fileSystemPath = homePath + userPath;
         String dbPath;
-
 
         if (parentFolderId != 0) {
 

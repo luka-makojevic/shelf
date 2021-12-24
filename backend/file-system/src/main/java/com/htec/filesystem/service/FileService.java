@@ -164,9 +164,9 @@ public class FileService {
     }
 
     @Transactional
-    public void moveToTrash(AuthUser user, List<Long> fileIds) {
+    public void updateDeletedFiles(AuthUser user, List<Long> fileIds, Boolean deleted) {
 
-        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds);
+        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndDeletedAndIdIn(user.getId(), !deleted, fileIds);
 
         if (fileEntities.size() != fileIds.size()) {
             throw ExceptionSupplier.filesNotFound.get();
@@ -176,18 +176,22 @@ public class FileService {
             throw ExceptionSupplier.userNotAllowedToDeleteFile.get();
         }
 
-
-        moveToTrash(fileEntities);
-
+        if (deleted) {
+            moveToTrash(fileEntities);
+        } else {
+            recover(user, fileEntities);
+        }
 
         fileRepository.saveAll(fileEntities);
+
+        fileRepository.updateDeletedByIds(deleted, fileIds);
     }
 
     private void recover(AuthUser user, List<FileEntity> fileEntities) {
 
         List<Long> folderIds = fileEntities.stream().map(FileEntity::getParentFolderId).collect(Collectors.toList());
 
-        List<FileEntity> fileEntitiesNotDeleted = fileRepository.findAllByUserIdAndParentFolderIdsIn(user.getId(), folderIds);
+        List<FileEntity> fileEntitiesNotDeleted = fileRepository.findAllByUserIdAndNotDeletedAndParentFolderIdsIn(user.getId(), folderIds);
 
         Map<Optional<Long>, List<FileEntity>> filesByFolder = fileEntitiesNotDeleted.stream().collect(Collectors.groupingBy(e -> Optional.ofNullable(e.getParentFolderId())));
 
@@ -305,9 +309,19 @@ public class FileService {
         oldFile.renameTo(newFile);
     }
 
+    public List<ShelfItemDTO> getAllFilesFromTrash(Long userId) {
+
+        List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserId(userId);
+        List<Long> shelfIds = shelfEntities.stream().map(ShelfEntity::getId).collect(Collectors.toList());
+
+        List<FileEntity> fileEntities = fileRepository.findAllByShelfIdInAndDeletedTrue(shelfIds);
+
+        return new ArrayList<>(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
+    }
+
     public void deleteFile(AuthUser user, List<Long> fileIds) throws IOException {
 
-        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds);
+        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndDeletedAndIdIn(user.getId(), false, fileIds);
 
         if (fileEntities.size() != fileIds.size()) {
             throw ExceptionSupplier.filesNotFound.get();

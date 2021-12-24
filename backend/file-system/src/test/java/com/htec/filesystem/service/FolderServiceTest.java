@@ -47,9 +47,10 @@ class FolderServiceTest {
         Long testUserId = 1L;
         Long testFolderId = 1L;
 
-        when(folderRepository.findAllByUserIdAndParentFolderId(testUserId, testFolderId))
+
+        when(folderRepository.findAllByUserIdAndParentFolderIdAndDeleted(testUserId, testFolderId, false))
                 .thenReturn(new ArrayList<>());
-        when(fileRepository.findAllByUserIdAndParentFolderId(testUserId, testFolderId))
+        when(fileRepository.findAllByUserIdAndParentFolderIdAndDeleted(testUserId, testFolderId, false))
                 .thenReturn(new ArrayList<>());
         when(folderRepository.getShelfByFolderId(testFolderId)).thenReturn(Optional.of(new ShelfEntity()));
 
@@ -64,7 +65,7 @@ class FolderServiceTest {
         Long testUserId = 1L;
         Long testFolderId = 1L;
 
-        when(folderRepository.findAllByUserIdAndParentFolderId(testUserId, testFolderId)).thenReturn(
+        when(folderRepository.findAllByUserIdAndParentFolderIdAndDeleted(testUserId, testFolderId, false)).thenReturn(
                 new ArrayList<FolderEntity>() {
                     {
                         add(new FolderEntity());
@@ -73,7 +74,7 @@ class FolderServiceTest {
                     }
                 }
         );
-        when(fileRepository.findAllByUserIdAndParentFolderId(testUserId, testFolderId)).thenReturn(
+        when(fileRepository.findAllByUserIdAndParentFolderIdAndDeleted(testUserId, testFolderId, false)).thenReturn(
                 new ArrayList<FileEntity>() {
                     {
                         add(new FileEntity());
@@ -94,14 +95,14 @@ class FolderServiceTest {
         Long testUserId = 1L;
         Long testFolderId = 1L;
 
-        when(folderRepository.findAllByUserIdAndParentFolderId(testUserId, testFolderId)).thenReturn(
+        when(folderRepository.findAllByUserIdAndParentFolderIdAndDeleted(testUserId, testFolderId, false)).thenReturn(
                 new ArrayList<FolderEntity>() {
                     {
                         add(new FolderEntity());
                     }
                 }
         );
-        when(fileRepository.findAllByUserIdAndParentFolderId(testUserId, testFolderId)).thenReturn(
+        when(fileRepository.findAllByUserIdAndParentFolderIdAndDeleted(testUserId, testFolderId, false)).thenReturn(
                 new ArrayList<FileEntity>() {
                     {
                         add(new FileEntity());

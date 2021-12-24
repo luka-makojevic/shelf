@@ -90,13 +90,15 @@ public class ShelfService {
             throw ExceptionSupplier.userNotAllowedToDeleteShelf.get();
         }
 
-        shelfRepository.updateIsDeletedByIds(delete, shelfIds);
+        shelfRepository.updateDeletedByIds(delete, shelfIds);
+        folderRepository.updateDeletedByShelfIds(delete, shelfIds);
+        fileRepository.updateDeletedByShelfIds(delete, shelfIds);
     }
 
     public List<ShelfDTO> getAllShelvesById(Long userId) {
 
 
-        List<ShelfEntity> entityShelves = shelfRepository.findAllById(userId);
+        List<ShelfEntity> entityShelves = shelfRepository.findAllByIdAndNotDeleted(userId);
 
         return ShelfItemMapper.INSTANCE.shelfEntitiesToShelfDTOs(entityShelves);
     }
@@ -130,9 +132,9 @@ public class ShelfService {
 
         List<ShelfItemDTO> dtoItems = new ArrayList<>();
 
-        List<FileEntity> fileEntities = fileRepository.findAllByShelfIdAndParentFolderIdIsNull(shelfId);
+        List<FileEntity> fileEntities = fileRepository.findAllByShelfIdAndParentFolderIdIsNullAndDeletedFalse(shelfId);
+        List<FolderEntity> folderEntities = folderRepository.findAllByShelfIdAndParentFolderIdIsNullAndDeletedFalse(shelfId);
 
-        List<FolderEntity> folderEntities = folderRepository.findAllByShelfIdAndParentFolderIdIsNull(shelfId);
 
         dtoItems.addAll(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
         dtoItems.addAll(ShelfItemMapper.INSTANCE.folderEntitiesToShelfItemDTOs(folderEntities));
@@ -153,7 +155,7 @@ public class ShelfService {
         ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
                 .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
 
-        List<ShelfEntity> shelfList = shelfRepository.findAllByUserIdAndIsDeletedFalse(userId);
+        List<ShelfEntity> shelfList = shelfRepository.findAllByUserIdAndDeletedFalse(userId);
 
         if (shelfList.stream().map(ShelfEntity::getName).collect(Collectors.toList()).contains(shelfName))
             throw ExceptionSupplier.shelfAlreadyExists.get();
