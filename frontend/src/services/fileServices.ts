@@ -25,10 +25,18 @@ const softDeleteFolder = (folderIds: number[]) =>
 const softDeleteFile = (fileIds: number[]) =>
   instance.put(`${API_URL_FILES}file/move-to-trash`, fileIds);
 
+const editFile = (data: { fileId: number; fileName: string }) =>
+  instance.put(`${API_URL_FILES}file/rename`, data);
+
+const editFolder = (data: { folderId: number; folderName: string }) =>
+  instance.put(`${API_URL_FILES}folder/rename`, data);
+
 export default {
   getShelfFiles,
   getFolderFiles,
   createFolder,
   softDeleteFolder,
   softDeleteFile,
+  editFile,
+  editFolder,
 };
