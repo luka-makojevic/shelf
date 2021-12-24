@@ -51,6 +51,7 @@ public class ShelfService {
         this.fileSystemValidator = fileSystemValidator;
     }
 
+    @Transactional
     public boolean createShelf(CreateShelfRequestModel createShelfRequestModel, Long userId) {
 
         String shelfName = createShelfRequestModel.getShelfName();
@@ -68,6 +69,7 @@ public class ShelfService {
 
         ShelfEntity savedEntity = shelfRepository.save(shelfEntity);
 
+        shelfRepository.flush();
         Long shelfId = savedEntity.getId();
 
         String shelfPath = homePath + userPath + userId + pathSeparator + "shelves" + pathSeparator + shelfId;
@@ -88,15 +90,14 @@ public class ShelfService {
             throw ExceptionSupplier.userNotAllowedToDeleteShelf.get();
         }
 
-        shelfRepository.updateIsDeletedByIds(delete, shelfIds);
-        folderRepository.updateIsDeletedByShelfIds(delete, shelfIds);
-        fileRepository.updateIsDeletedByShelfIds(delete, shelfIds);
+        shelfRepository.updateDeletedByIds(delete, shelfIds);
+        folderRepository.updateDeletedByShelfIds(delete, shelfIds);
+        fileRepository.updateDeletedByShelfIds(delete, shelfIds);
     }
 
     public List<ShelfDTO> getAllShelvesById(Long userId) {
 
-
-        List<ShelfEntity> entityShelves = shelfRepository.findAllById(userId);
+        List<ShelfEntity> entityShelves = shelfRepository.findAllByIdAndNotDeleted(userId);
 
         return ShelfItemMapper.INSTANCE.shelfEntitiesToShelfDTOs(entityShelves);
     }
@@ -130,8 +131,9 @@ public class ShelfService {
 
         List<ShelfItemDTO> dtoItems = new ArrayList<>();
 
-        List<FileEntity> fileEntities = fileRepository.findAllByShelfIdAndParentFolderIdIsNullAndIsDeletedFalse(shelfId);
-        List<FolderEntity> folderEntities = folderRepository.findAllByShelfIdAndParentFolderIdIsNullAndIsDeletedFalse(shelfId);
+        List<FileEntity> fileEntities = fileRepository.findAllByShelfIdAndParentFolderIdIsNullAndDeletedFalse(shelfId);
+        List<FolderEntity> folderEntities = folderRepository.findAllByShelfIdAndParentFolderIdIsNullAndDeletedFalse(shelfId);
+
 
         dtoItems.addAll(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
         dtoItems.addAll(ShelfItemMapper.INSTANCE.folderEntitiesToShelfItemDTOs(folderEntities));
@@ -152,9 +154,9 @@ public class ShelfService {
         ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
                 .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
 
-        List<ShelfEntity> shelfList = shelfRepository.findAllByUserIdAndIsDeletedFalse(userId);
+        List<ShelfEntity> shelfList = shelfRepository.findAllByUserIdAndDeletedFalse(userId);
 
-        if(shelfList.stream().map(ShelfEntity::getName).collect(Collectors.toList()).contains(shelfName))
+        if (shelfList.stream().map(ShelfEntity::getName).collect(Collectors.toList()).contains(shelfName))
             throw ExceptionSupplier.shelfAlreadyExists.get();
 
         if (!Objects.equals(shelfEntity.getUserId(), userId))
@@ -164,5 +166,24 @@ public class ShelfService {
             shelfEntity.setName(shelfName);
 
         shelfRepository.save(shelfEntity);
+    }
+
+    public List<ShelfItemDTO> getFirstLevelTrash(Long userId) {
+
+        List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserId(userId);
+        List<Long> shelfIds = shelfEntities.stream().map(ShelfEntity::getId).collect(Collectors.toList());
+
+        List<FileEntity> fileEntities = fileRepository.findAllByShelfIdInAndTrashVisible(shelfIds, true);
+        List<FolderEntity> folderEntities = folderRepository.findAllByShelfIdInAndTrashVisible(shelfIds, true);
+
+        for (FileEntity fileEntity : fileEntities) {
+            fileEntity.setName(fileEntity.getRealName());
+        }
+
+        List<ShelfItemDTO> trashItems = new ArrayList<>();
+        trashItems.addAll(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
+        trashItems.addAll(ShelfItemMapper.INSTANCE.folderEntitiesToShelfItemDTOs(folderEntities));
+
+        return trashItems;
     }
 }

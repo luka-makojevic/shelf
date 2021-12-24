@@ -24,8 +24,11 @@ public class FolderEntity {
 
     private String path;
 
-    @Column(name = "is_deleted")
-    private boolean isDeleted;
+    @Column(name = "deleted")
+    private Boolean deleted;
+
+    @Column(name = "trash_visible")
+    private Boolean trashVisible;
 
     @Column(name = "shelf_id")
     private Long shelfId;

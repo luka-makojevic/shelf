@@ -101,8 +101,8 @@ class ShelfServiceTest {
         shelfService.updateIsDeletedShelf(user, shelfIds, delete);
 
         verify(shelfRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), shelfIds);
-        verify(folderRepository, times(1)).updateIsDeletedByShelfIds(delete, shelfIds);
-        verify(fileRepository, times(1)).updateIsDeletedByShelfIds(delete, shelfIds);
+        verify(folderRepository, times(1)).updateDeletedByShelfIds(delete, shelfIds);
+        verify(fileRepository, times(1)).updateDeletedByShelfIds(delete, shelfIds);
     }
 
     @Test
@@ -120,8 +120,8 @@ class ShelfServiceTest {
         shelfService.updateIsDeletedShelf(user, shelfIds, delete);
 
         verify(shelfRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), shelfIds);
-        verify(folderRepository, times(1)).updateIsDeletedByShelfIds(delete, shelfIds);
-        verify(fileRepository, times(1)).updateIsDeletedByShelfIds(delete, shelfIds);
+        verify(folderRepository, times(1)).updateDeletedByShelfIds(delete, shelfIds);
+        verify(fileRepository, times(1)).updateDeletedByShelfIds(delete, shelfIds);
     }
 
     @Test
@@ -137,8 +137,8 @@ class ShelfServiceTest {
                 () -> shelfService.updateIsDeletedShelf(user, shelfIds, delete));
 
         verify(shelfRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), shelfIds);
-        verify(folderRepository, times(0)).updateIsDeletedByShelfIds(delete, shelfIds);
-        verify(fileRepository, times(0)).updateIsDeletedByShelfIds(delete, shelfIds);
+        verify(folderRepository, times(0)).updateDeletedByShelfIds(delete, shelfIds);
+        verify(fileRepository, times(0)).updateDeletedByShelfIds(delete, shelfIds);
         verify(shelfRepository, times(0)).save(shelf);
 
         assertEquals(ErrorMessages.SHELF_WITH_PROVIDED_ID_NOT_FOUND.getErrorMessage(), exception.getMessage());
@@ -160,8 +160,8 @@ class ShelfServiceTest {
                 () -> shelfService.updateIsDeletedShelf(user, shelfIds, delete));
 
         verify(shelfRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), shelfIds);
-        verify(folderRepository, times(0)).updateIsDeletedByShelfIds(delete, shelfIds);
-        verify(fileRepository, times(0)).updateIsDeletedByShelfIds(delete, shelfIds);
+        verify(folderRepository, times(0)).updateDeletedByShelfIds(delete, shelfIds);
+        verify(fileRepository, times(0)).updateDeletedByShelfIds(delete, shelfIds);
         verify(shelfRepository, times(0)).save(shelf);
 
         assertEquals(ErrorMessages.USER_NOT_ALLOWED_TO_DELETE_SHELF.getErrorMessage(), exception.getMessage());
@@ -213,8 +213,8 @@ class ShelfServiceTest {
 
 
         when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
-        when(fileRepository.findAllByShelfIdAndParentFolderIdIsNullAndIsDeletedFalse(anyLong())).thenReturn(fileList);
-        when(folderRepository.findAllByShelfIdAndParentFolderIdIsNullAndIsDeletedFalse(anyLong())).thenReturn(folderList);
+        when(fileRepository.findAllByShelfIdAndParentFolderIdIsNullAndDeletedFalse(anyLong())).thenReturn(fileList);
+        when(folderRepository.findAllByShelfIdAndParentFolderIdIsNullAndDeletedFalse(anyLong())).thenReturn(folderList);
 
         List<ShelfItemDTO> returnFileDtos = shelfService.getShelfContent(shelfId, userId).getShelfItems();
 
@@ -250,7 +250,7 @@ class ShelfServiceTest {
         shelfEntities.add(shelfEntity);
 
         when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
-        when(shelfRepository.findAllByUserIdAndIsDeletedFalse(anyLong())).thenReturn(shelfEntities);
+        when(shelfRepository.findAllByUserIdAndDeletedFalse(anyLong())).thenReturn(shelfEntities);
 
         shelfService.updateShelfName(shelfEditRequestModel, userId);
         verify(shelfRepository, times(1)).save(any(ShelfEntity.class));
@@ -268,7 +268,7 @@ class ShelfServiceTest {
         shelfEntities.add(shelfEntity);
 
         when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
-        when(shelfRepository.findAllByUserIdAndIsDeletedFalse(anyLong())).thenReturn(shelfEntities);
+        when(shelfRepository.findAllByUserIdAndDeletedFalse(anyLong())).thenReturn(shelfEntities);
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
                 () -> shelfService.updateShelfName(shelfEditRequestModel, userId));
@@ -287,7 +287,7 @@ class ShelfServiceTest {
         shelfEntities.add(shelfEntity);
 
         when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
-        when(shelfRepository.findAllByUserIdAndIsDeletedFalse(anyLong())).thenReturn(shelfEntities);
+        when(shelfRepository.findAllByUserIdAndDeletedFalse(anyLong())).thenReturn(shelfEntities);
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
                 () -> shelfService.updateShelfName(shelfEditRequestModel, userId));

@@ -25,8 +25,8 @@ public class ShelfEntity {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "is_deleted")
-    private boolean isDeleted;
+    @Column(name = "deleted")
+    private boolean deleted;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

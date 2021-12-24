@@ -11,7 +11,7 @@ import { AlertMessage } from '../../utils/enums/alertMessages';
 import { Description } from '../../components/text/text-styles';
 import DeleteShelfModal from '../../components/modal/deleteMessageModal';
 import SearchBar from '../../components/UI/searchBar/searchBar';
-import TableWrapper from '../../components/table/tableWrapper';
+import TableWrapper from '../../components/table/TableWrapper';
 
 const Shelves = () => {
   const shelves = useAppSelector((state) => state.shelf.shelves);

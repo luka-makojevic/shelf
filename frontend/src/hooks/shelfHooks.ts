@@ -35,6 +35,8 @@ export const useShelf = () => {
     shelfServices
       .getTrash()
       .then((res) => {
+        console.log(res);
+
         dispatch(setTrash(res.data));
         onSuccess();
       })

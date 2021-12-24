@@ -126,7 +126,8 @@ export const Table = ({
               onRecoverFromTrash={onRecoverFromTrash}
               onEdit={onEdit}
               isChecked={selectedRows.some(
-                (rowData: TableDataTypes) => rowData.id === item.id
+                (rowData: TableDataTypes) =>
+                  rowData.id === item.id && rowData.folder === item.folder
               )}
             />
           ))}

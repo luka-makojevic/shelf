@@ -25,8 +25,11 @@ public class FileEntity {
 
     private String path;
 
-    @Column(name = "is_deleted")
-    private boolean isDeleted;
+    @Column(name = "deleted")
+    private Boolean deleted;
+
+    @Column(name = "trash_visible")
+    private Boolean trashVisible;
 
     @Column(name = "shelf_id")
     private Long shelfId;
@@ -44,7 +47,7 @@ public class FileEntity {
     private LocalDateTime updatedAt;
 
     public String getRealName() {
-        if (isDeleted) {
+        if (deleted) {
             int index = name.lastIndexOf("_");
 
             return name.substring(0, index);

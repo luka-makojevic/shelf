@@ -16,18 +16,18 @@ public interface ShelfRepository extends JpaRepository<ShelfEntity, Long> {
     Optional<ShelfEntity> findByNameAndUserId(String name, Long userId);
 
     @Modifying
-    @Query("UPDATE ShelfEntity sh SET sh.isDeleted = :deleted WHERE sh.id IN (:shelfIds)")
-    void updateIsDeletedByIds(@Param("deleted") Boolean delete,
-                              @Param("shelfIds") List<Long> shelfIds);
+    @Query("UPDATE ShelfEntity sh SET sh.deleted = :deleted WHERE sh.id IN (:shelfIds)")
+    void updateDeletedByIds(@Param("deleted") Boolean delete,
+                            @Param("shelfIds") List<Long> shelfIds);
 
-    @Query("SELECT s FROM ShelfEntity s WHERE s.userId = :userId AND s.isDeleted = 0")
-    List<ShelfEntity> findAllById(@Param("userId") Long userId);
+    @Query("SELECT s FROM ShelfEntity s WHERE s.userId = :userId AND s.deleted = 0")
+    List<ShelfEntity> findAllByIdAndNotDeleted(@Param("userId") Long userId);
 
     List<ShelfEntity> findAllByIdAndUserIdIn(Long userId, List<Long> shelfIds);
 
     List<ShelfEntity> findAllByUserIdAndIdIn(Long userId, List<Long> shelfIds);
 
-    List<ShelfEntity> findAllByUserIdAndIsDeletedFalse(Long userId);
+    List<ShelfEntity> findAllByUserIdAndDeletedFalse(Long userId);
 
     List<ShelfEntity> findAllByUserId(Long userId);
 }

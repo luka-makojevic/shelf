@@ -1,3 +1,4 @@
+import { AxiosRequestConfig } from 'axios';
 import { API_URL_FILESYSTEM } from '../api/api';
 import instance from '../api/axiosInstance';
 
@@ -36,6 +37,30 @@ const recoverFileFromTrash = (data: number) =>
 const recoverFolderFromTrash = (data: number) =>
   instance.put(`${API_URL_FILESYSTEM}trash/file`, data);
 
+const editFile = (data: { fileId: number; fileName: string }) =>
+  instance.put(`${API_URL_FILESYSTEM}file/rename`, data);
+
+const editFolder = (data: { folderId: number; folderName: string }) =>
+  instance.put(`${API_URL_FILESYSTEM}folder/rename`, data);
+const downloadFile = (fileId: number) =>
+  instance({
+    url: `${API_URL_FILESYSTEM}file/download/${fileId}?file=true`,
+    method: 'GET',
+    responseType: 'blob',
+  });
+
+const uploadFiles = (
+  shelfId: number,
+  folderId: number,
+  files: FormData,
+  options: AxiosRequestConfig
+) =>
+  instance.post(
+    `${API_URL_FILESYSTEM}file/upload/${shelfId}/${folderId}`,
+    files,
+    options
+  );
+
 export default {
   getShelfFiles,
   getFolderFiles,
@@ -46,4 +71,8 @@ export default {
   hardDeleteFolder,
   recoverFileFromTrash,
   recoverFolderFromTrash,
+  editFile,
+  editFolder,
+  downloadFile,
+  uploadFiles,
 };

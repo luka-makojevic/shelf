@@ -25,7 +25,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class FolderService {
@@ -37,13 +36,20 @@ public class FolderService {
     private final FolderRepository folderRepository;
     private final FileRepository fileRepository;
     private final FolderTreeRepository folderTreeRepository;
+    private final FileTreeRepository fileTreeRepository;
+
+    private final FileService fileService;
 
     public FolderService(FolderRepository folderRepository,
                          FileRepository fileRepository,
-                         FolderTreeRepository folderTreeRepository) {
+                         FolderTreeRepository folderTreeRepository,
+                         FileTreeRepository fileTreeRepository,
+                         FileService fileService) {
         this.folderRepository = folderRepository;
         this.fileRepository = fileRepository;
         this.folderTreeRepository = folderTreeRepository;
+        this.fileTreeRepository = fileTreeRepository;
+        this.fileService = fileService;
     }
 
     public boolean initializeFolders(Long userId) {
@@ -60,32 +66,39 @@ public class FolderService {
             return false;
         }
 
+        String userTrashPath = userDataPath + pathSeparator + "trash";
+
+        if (!new File(userTrashPath).mkdirs()) {
+            return false;
+        }
+
         String userShelvesPath = userDataPath + pathSeparator + "shelves";
 
         return new File(userShelvesPath).mkdirs();
     }
 
-    public ResponseEntity<ShelfContentResponseModel> getFiles(Long userId, Long folderId) {
+    public ResponseEntity<ShelfContentResponseModel> getItems(Long userId, Long folderId, Boolean deleted) {
 
         List<ShelfItemDTO> itemDTOs = new ArrayList<>();
 
         List<FolderEntity> allFolders = folderRepository
-                .findAllByUserIdAndParentFolderIdAndIsDeleted(userId, folderId, false);
+                .findAllByUserIdAndParentFolderIdAndDeleted(userId, folderId, deleted);
 
         List<FileEntity> allFiles = fileRepository
-                .findAllByUserIdAndParentFolderIdAndIsDeleted(userId, folderId, false);
+                .findAllByUserIdAndParentFolderIdAndDeleted(userId, folderId, deleted);
+
 
         itemDTOs.addAll(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(allFiles));
         itemDTOs.addAll(ShelfItemMapper.INSTANCE.folderEntitiesToShelfItemDTOs(allFolders));
 
-        List<BreadCrumbDTO> breadCrumbDTOS = generateBreadCrumbs(folderId);
+        List<BreadCrumbDTO> breadCrumbDTOS = generateBreadCrumbs(folderId, deleted);
 
         return ResponseEntity.status(HttpStatus.OK).body(new ShelfContentResponseModel(breadCrumbDTOS, itemDTOs));
     }
 
-    private List<BreadCrumbDTO> generateBreadCrumbs(Long folderId) {
+    private List<BreadCrumbDTO> generateBreadCrumbs(Long folderId, Boolean deleted) {
 
-        List<FolderEntity> folderUpStreamTree = folderTreeRepository.getFolderUpStreamTree(folderId, false);
+        List<FolderEntity> folderUpStreamTree = folderTreeRepository.getFolderUpStreamTree(folderId , deleted);
 
         List<BreadCrumbDTO> breadCrumbs = new ArrayList<>(
                 BreadCrumbsMapper.INSTANCE.folderEntitiesToBreadCrumbDTOs(folderUpStreamTree));
@@ -108,7 +121,6 @@ public class FolderService {
         String fileSystemPath = homePath + userPath;
         String dbPath;
 
-
         if (parentFolderId != 0) {
 
             FolderEntity folderEntity = folderRepository.findById(parentFolderId).orElseThrow(ExceptionSupplier.noFolderWithGivenId);
@@ -120,18 +132,18 @@ public class FolderService {
             fileSystemPath += userId + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator;
         }
 
-        dbPath += folderName;
-        fileSystemPath += folderName;
+        Long newFolderId = createFolderInDb(folderName, dbPath, shelfId, parentFolderId);
 
-        createFolderInDb(folderName, dbPath, shelfId, parentFolderId);
+        dbPath += newFolderId;
+        fileSystemPath += newFolderId;
 
         return new File(fileSystemPath).mkdirs();
     }
 
-    public void createFolderInDb(String name, String path, Long shelfId, Long parentFolderId) {
+    public Long createFolderInDb(String name, String path, Long shelfId, Long parentFolderId) {
 
         if (parentFolderId == 0) {
-            if (folderRepository.findByNameAndParentFolderId(name, null).isPresent())
+            if (folderRepository.findByNameAndParentFolderIdAndShelfId(name, null, shelfId).isPresent())
                 throw ExceptionSupplier.folderAlreadyExists.get();
         } else {
             if (folderRepository.findByNameAndParentFolderId(name, parentFolderId).isPresent())
@@ -141,32 +153,27 @@ public class FolderService {
         FolderEntity folderEntity = new FolderEntity();
         folderEntity.setName(name);
         folderEntity.setPath(path);
+        folderEntity.setDeleted(false);
 
         if (parentFolderId != 0)
             folderEntity.setParentFolderId(parentFolderId);
 
         folderEntity.setShelfId(shelfId);
-        folderEntity.setDeleted(false);
         folderEntity.setCreatedAt(LocalDateTime.now());
 
+        FolderEntity createdFolder = folderRepository.save(folderEntity);
+
+        folderEntity.setPath(folderEntity.getPath() + createdFolder.getId());
+
         folderRepository.save(folderEntity);
+
+        return folderEntity.getId();
     }
 
     @Transactional
-    public void updateDeleted(Long userId, List<Long> folderIds, Boolean deleted) {
+    public void moveToTrash(Long userId, List<Long> folderIds) {
 
-        List<FolderEntity> folderEntities = folderRepository.findByUserIdAndFolderIds(userId, folderIds);
 
-        if (!folderEntities.stream().map(FolderEntity::getId).collect(Collectors.toList()).containsAll(folderIds)) {
-            throw ExceptionSupplier.userNotAllowedToDeleteFolder.get();
-        }
-
-        List<FolderEntity> downStreamFolders = folderTreeRepository.getFolderDownStreamTrees(folderIds, !deleted);
-
-        List<Long> downStreamFoldersIds = downStreamFolders.stream().map(FolderEntity::getId).collect(Collectors.toList());
-
-        folderRepository.updateDeletedByFolderIds(deleted, downStreamFoldersIds);
-
-        fileRepository.updateDeletedByParentFolderIds(deleted, downStreamFoldersIds);
     }
+
 }

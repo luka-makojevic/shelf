@@ -17,12 +17,14 @@ const FolderModal = ({
   folderId,
   placeholder,
   buttonText,
+  file,
+  getData,
 }: FolderModalProps) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ShelfDataType>();
+  } = useForm<ShelfDataType>({ defaultValues: { name: file?.name } });
 
   const handleCloseModal = () => {
     onCloseModal(false);
@@ -33,11 +35,39 @@ const FolderModal = ({
   const convertedFolderId = Number(folderId);
 
   const onSubmit = (data: { name: string }) => {
-    const folderName = data.name;
+    const newName = data.name;
 
-    if (folderId) {
+    if (file) {
+      if (!file?.folder) {
+        fileServices
+          .editFile({ fileId: file.id, fileName: newName })
+          .then(() => {
+            getData();
+          })
+          .catch((err) => {
+            if (err?.response?.status === 500) {
+              onError('Internal server error');
+              return;
+            }
+            onError(err.response?.data?.message);
+          });
+      } else if (file?.folder) {
+        fileServices
+          .editFolder({ folderId: file.id, folderName: newName })
+          .then(() => {
+            getData();
+          })
+          .catch((err) => {
+            if (err?.response?.status === 500) {
+              onError('Internal server error');
+              return;
+            }
+            onError(err.response?.data?.message);
+          });
+      }
+    } else if (folderId) {
       fileServices
-        .createFolder(folderName, convertedShelfId, convertedFolderId)
+        .createFolder(newName, convertedShelfId, convertedFolderId)
         .then(() => {
           getFolderFiles(
             convertedFolderId,
@@ -52,11 +82,9 @@ const FolderModal = ({
           }
           onError(err.response?.data?.message);
         });
-    }
-
-    if (!folderId) {
+    } else if (!folderId) {
       fileServices
-        .createFolder(folderName, convertedShelfId)
+        .createFolder(newName, convertedShelfId)
         .then(() => {
           getShelfFiles(
             convertedShelfId,

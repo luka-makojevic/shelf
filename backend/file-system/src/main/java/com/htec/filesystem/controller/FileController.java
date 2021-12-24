@@ -2,7 +2,6 @@ package com.htec.filesystem.controller;
 
 import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.annotation.AuthenticationUser;
-import com.htec.filesystem.dto.ShelfItemDTO;
 import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.model.response.FileResponseModel;
 import com.htec.filesystem.model.response.TextResponseMessage;
@@ -15,6 +14,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -38,24 +38,28 @@ public class FileController {
 
 
     @PostMapping("/upload/profile/{id}")
-    public ResponseEntity uploadProfilePicture(@RequestBody Map<String, Pair<String, String>> files,
-                                               @PathVariable Long id) {
+    public ResponseEntity<TextResponseMessage> uploadProfilePicture(@RequestBody Map<String, Pair<String, String>> files,
+                                                                    @PathVariable Long id) {
 
         fileService.saveUserProfilePicture(id, files);
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(IMAGE_UPLOADED, HttpStatus.OK.value()));
     }
 
-    @GetMapping("/download/**")
-    public ResponseEntity<byte[]> getFile(RequestEntity<byte[]> request) {
+    @GetMapping("/download/{id}")
+    public ResponseEntity<byte[]> getFile(@AuthenticationUser AuthUser user,
+                                          @PathVariable Long id,
+                                          @RequestParam(value = "file") boolean file) {
 
-        FileResponseModel fileResponseModel = fileService.getFile(FileUtil.getFilePath(request.getUrl().getPath()));
+        FileResponseModel fileResponseModel = fileService.getFile(user, id, file);
         return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).body(fileResponseModel.getImageContent());
     }
 
-    @GetMapping("/preview/**")
-    public ResponseEntity<byte[]> getImage(RequestEntity<byte[]> request) {
+    @GetMapping("/preview/{id}")
+    public ResponseEntity<byte[]> getImage(@AuthenticationUser AuthUser user,
+                                           @PathVariable Long id,
+                                           @RequestParam(value = "file") boolean file) {
 
-        FileResponseModel fileResponseModel = fileService.getFile(FileUtil.getFilePath(request.getUrl().getPath()));
+        FileResponseModel fileResponseModel = fileService.getFile(user, id, file);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(fileResponseModel.getImageContent());
     }
 
@@ -72,17 +76,17 @@ public class FileController {
     @PutMapping("/move-to-trash")
     public ResponseEntity<TextResponseMessage> softDeleteFile(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) {
 
-        fileService.updateDeletedFiles(user, fileIds, true);
+        fileService.updateDeletedFiles(user, fileIds , true, true);
         return ResponseEntity.ok().body(new TextResponseMessage(FILES_MOVED_TO_TRASH, HttpStatus.OK.value()));
     }
 
-    @PutMapping("/recover")
-    public ResponseEntity<TextResponseMessage> recoverSoftDeletedFile(@AuthenticationUser AuthUser user,
-                                                                      @RequestBody List<Long> fileIds) {
-
-        fileService.updateDeletedFiles(user, fileIds, false);
-        return ResponseEntity.ok().body(new TextResponseMessage(FILES_RECOVERED_FROM_TRASH, HttpStatus.OK.value()));
-    }
+//    @PutMapping("/recover")
+//    public ResponseEntity<TextResponseMessage> recoverSoftDeletedFile(@AuthenticationUser AuthUser user,
+//                                                                      @RequestBody List<Long> fileIds) {
+//
+//        fileService.updateDeletedFiles(user, fileIds, false);
+//        return ResponseEntity.ok().body(new TextResponseMessage(FILES_RECOVERED_FROM_TRASH, HttpStatus.OK.value()));
+//    }
 
     @PutMapping("/rename")
     public ResponseEntity<TextResponseMessage> renameFile(@AuthenticationUser AuthUser user,
@@ -90,12 +94,6 @@ public class FileController {
 
         fileService.fileRename(user.getId(), renameFileRequestModel);
         return ResponseEntity.ok().body(new TextResponseMessage(FILE_RENAMED, HttpStatus.OK.value()));
-    }
-
-    @GetMapping("/trash")
-    public ResponseEntity<List<ShelfItemDTO>> getFilesFromTrash(@AuthenticationUser AuthUser authUser) {
-
-        return ResponseEntity.ok(fileService.getAllFilesFromTrash(authUser.getId()));
     }
 
     @DeleteMapping
