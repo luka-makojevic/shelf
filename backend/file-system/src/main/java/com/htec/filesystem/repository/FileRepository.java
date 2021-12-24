@@ -74,4 +74,6 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
     Optional<FileEntity> findByIdAndUserIdAndDeleted(@Param("fileId") Long fileId,
                                                      @Param("userId") Long userId,
                                                      @Param("deleted") Boolean deleted);
+
+    List<FileEntity> findAllByShelfIdInAndTrashVisible(List<Long> shelfId, Boolean trashVisible);
 }

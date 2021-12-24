@@ -168,12 +168,21 @@ public class ShelfService {
         shelfRepository.save(shelfEntity);
     }
 
-    public List<ShelfItemDTO> getAllFilesFromTrash(Long userId) {
+    public List<ShelfItemDTO> getFirstLevelTrash(Long userId) {
 
         List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserId(userId);
         List<Long> shelfIds = shelfEntities.stream().map(ShelfEntity::getId).collect(Collectors.toList());
 
+        List<FileEntity> fileEntities = fileRepository.findAllByShelfIdInAndTrashVisible(shelfIds, true);
+        List<FolderEntity> folderEntities = folderRepository.findAllByShelfIdInAndTrashVisible(shelfIds, true);
+
+        for (FileEntity fileEntity : fileEntities) {
+            fileEntity.setName(fileEntity.getRealName());
+        }
+
         List<ShelfItemDTO> trashItems = new ArrayList<>();
+        trashItems.addAll(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
+        trashItems.addAll(ShelfItemMapper.INSTANCE.folderEntitiesToShelfItemDTOs(folderEntities));
 
         return trashItems;
     }

@@ -54,7 +54,7 @@ class FolderServiceTest {
                 .thenReturn(new ArrayList<>());
         when(folderRepository.getShelfByFolderId(testFolderId)).thenReturn(Optional.of(new ShelfEntity()));
 
-        ResponseEntity<ShelfContentResponseModel> files = folderService.getFiles(testUserId, testFolderId);
+        ResponseEntity<ShelfContentResponseModel> files = folderService.getItems(testUserId, testFolderId, false);
 
         Assertions.assertEquals(0, Objects.requireNonNull(files.getBody()).getShelfItems().size());
     }
@@ -84,7 +84,7 @@ class FolderServiceTest {
         );
         when(folderRepository.getShelfByFolderId(testFolderId)).thenReturn(Optional.of(new ShelfEntity()));
 
-        ResponseEntity<ShelfContentResponseModel> files = folderService.getFiles(testUserId, testFolderId);
+        ResponseEntity<ShelfContentResponseModel> files = folderService.getItems(testUserId, testFolderId, false);
 
         Assertions.assertEquals(5, Objects.requireNonNull(files.getBody()).getShelfItems().size());
     }
@@ -111,7 +111,7 @@ class FolderServiceTest {
         );
         when(folderRepository.getShelfByFolderId(testFolderId)).thenReturn(Optional.of(new ShelfEntity()));
 
-        ResponseEntity<ShelfContentResponseModel> files = folderService.getFiles(testUserId, testFolderId);
+        ResponseEntity<ShelfContentResponseModel> files = folderService.getItems(testUserId, testFolderId, false);
 
         Assertions.assertEquals(2, Objects.requireNonNull(files.getBody()).getShelfItems().size());
         Assertions.assertFalse(Objects.requireNonNull(files.getBody()).getShelfItems().get(0).getFolder());

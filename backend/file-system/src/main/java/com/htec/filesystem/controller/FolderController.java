@@ -40,8 +40,13 @@ public class FolderController {
     }
 
     @GetMapping("/{folderId}")
-    public ResponseEntity<ShelfContentResponseModel> getFiles(@AuthenticationUser AuthUser user, @PathVariable Long folderId) {
-        return folderService.getFiles(user.getId(), folderId);
+    public ResponseEntity<ShelfContentResponseModel> getItems(@AuthenticationUser AuthUser user, @PathVariable Long folderId) {
+        return folderService.getItems(user.getId(), folderId, false);
+    }
+
+    @GetMapping("/trash/{folderId}")
+    public ResponseEntity<ShelfContentResponseModel> getTrashItems(@AuthenticationUser AuthUser user, @PathVariable Long folderId) {
+        return folderService.getItems(user.getId(), folderId, true);
     }
 
     @PostMapping
