@@ -14,17 +14,20 @@ import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FileTreeRepository;
 import com.htec.filesystem.repository.FolderRepository;
 import com.htec.filesystem.repository.FolderTreeRepository;
+import org.apache.commons.io.FileUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FolderService {
@@ -171,9 +174,76 @@ public class FolderService {
     }
 
     @Transactional
-    public void moveToTrash(Long userId, List<Long> folderIds) {
+    public void updateDeletedFolders(Long userId, List<Long> folderIds, Boolean deleted) {
 
+        List<FolderEntity> folderEntities = folderRepository.findByUserIdAndFolderIds(userId, folderIds);
 
+        if (!folderEntities.stream().map(FolderEntity::getId).collect(Collectors.toList()).containsAll(folderIds)) {
+            throw ExceptionSupplier.userNotAllowedToDeleteFolder.get();
+        }
+
+        List<FolderEntity> downStreamFolders = folderTreeRepository.getFolderDownStreamTrees(folderIds, !deleted);
+
+        List<Long> downStreamFoldersIds = downStreamFolders.stream().map(FolderEntity::getId).collect(Collectors.toList());
+
+        List<FileEntity> downStreamFiles = fileRepository.findAllByParentFolderIdIn(downStreamFoldersIds);
+
+        List<Long> downStreamFilesIds = downStreamFiles.stream().map(FileEntity::getId).collect(Collectors.toList());
+
+        if (deleted) {
+
+            moveFoldersToTrash(folderEntities);
+
+            replaceFoldersShelfPath(downStreamFolders);
+            replaceFilesShelfPath(downStreamFiles);
+
+        } else {
+            // todo: recover(folderEntities);
+        }
+
+        downStreamFolders.forEach(folderEntity -> folderEntity.setDeleted(deleted));
+
+        downStreamFiles.forEach(file -> file.setDeleted(deleted));
+
+        folderRepository.saveAll(folderEntities);
+        fileRepository.saveAll(downStreamFiles);
+
+        folderRepository.updateTrashVisibleByFolderIdIn(true, folderIds);
+    }
+
+    private void replaceFoldersShelfPath(List<FolderEntity> folders) {
+        for (FolderEntity folder : folders) {
+            String path = folder.getPath();
+            folder.setPath(path.replace("shelves" + pathSeparator + folder.getShelfId(), "trash"));
+        }
+    }
+
+    private void replaceFilesShelfPath(List<FileEntity> files) {
+        for (FileEntity file : files) {
+            String path = file.getPath();
+            file.setPath(path.replace("shelves" + pathSeparator + file.getShelfId(), "trash"));
+        }
+    }
+
+    private void moveFoldersToTrash(List<FolderEntity> folderEntities) {
+
+        try {
+            for (FolderEntity folderEntity : folderEntities) {
+
+                String path = folderEntity.getPath();
+                Long shelfId = folderEntity.getShelfId();
+
+                String oldPath = homePath + userPath + path;
+                String newPath = oldPath.replace("shelves" + pathSeparator + shelfId, "trash");
+
+                File from = new File(oldPath);
+                File to = new File(newPath);
+
+                FileUtils.moveDirectory(from, to);
+            }
+        } catch (IOException ex) {
+            throw ExceptionSupplier.internalServerError.get();
+        }
     }
 
 }
