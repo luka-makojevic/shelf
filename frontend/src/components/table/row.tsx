@@ -106,7 +106,7 @@ export const DashboardTableRow = ({
       )}
       {multiSelect && (
         <StyledCell>
-          <FaEdit fill={theme.colors.black} />
+          <FaEdit fill={theme.colors.black} onClick={handleEdit} />
         </StyledCell>
       )}
     </StyledRow>

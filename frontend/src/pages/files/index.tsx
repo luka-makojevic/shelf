@@ -26,18 +26,16 @@ import fileServices from '../../services/fileServices';
 const Files = () => {
   const files = useAppSelector((state) => state.file.files);
   const loading = useAppSelector((state) => state.loading.loading);
-  const [openCreateFileModal, setOpenCreateFileModal] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [openUploadModal, setOpenUploadModal] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [filesforTable, setFilesForTable] = useState<TableDataTypes[]>([]);
   const [filteredFiles, setFilteredFiles] = useState<TableDataTypes[]>([]);
   const [selectedRows, setSelectedRows] = useState<TableDataTypes[]>([]);
+  const [selectedFile, setSelectedFile] = useState<TableDataTypes | null>();
+  const [success, setSuccess] = useState('');
   const { shelfId, folderId } = useParams();
 
-  const handleOpenCreateFileModal = () => {
-    setOpenCreateFileModal(true);
-  };
   const handleOpenUploadModal = () => {
     setOpenUploadModal(true);
   };
@@ -107,7 +105,7 @@ const Files = () => {
         .catch((err) => {
           if (err.response?.status === 500) {
             setError('Internal server error');
-          } else setError(err.response?.data?.message);
+          } else setError('File could not be deleted');
         });
     if (folderIds.length !== 0)
       fileServices
@@ -116,8 +114,19 @@ const Files = () => {
         .catch((err) => {
           if (err.response?.status === 500) {
             setError('Internal server error');
-          } else setError(err.response?.data?.message);
+          } else setError('Folder could not be deleted');
         });
+  };
+  const handleEdit = (file: TableDataTypes) => {
+    setSelectedFile(file);
+    setOpenModal(true);
+  };
+  const handleCreateFolder = () => {
+    setOpenModal(true);
+  };
+  const handleModalClose = () => {
+    setSelectedFile(null);
+    setOpenModal(false);
   };
 
   const getSelectedRows = (selectedRowsData: TableDataTypes[]) => {
@@ -152,19 +161,21 @@ const Files = () => {
           onClose={handleAlertClose}
         />
       )}
-      {openCreateFileModal && (
+      {openModal && (
         <Modal
-          title="Create folder"
-          onCloseModal={setOpenCreateFileModal}
+          title={selectedFile ? 'Edit name' : 'Create folder'}
+          onCloseModal={handleModalClose}
           closeIcon
         >
           <FolderModal
-            onCloseModal={setOpenCreateFileModal}
+            onCloseModal={handleModalClose}
             onError={setError}
             shelfId={shelfId}
             folderId={folderId}
-            placeholder="Folder name"
-            buttonText="Create"
+            getData={getData}
+            placeholder={selectedFile ? '' : 'Folder Name'}
+            buttonText={selectedFile ? 'Rename' : 'Create'}
+            file={selectedFile}
           />
         </Modal>
       )}
@@ -187,7 +198,7 @@ const Files = () => {
           searchKey="name"
         />
         <ButtonContainer>
-          <Button onClick={handleOpenCreateFileModal} icon={<FaPlusCircle />}>
+          <Button onClick={handleCreateFolder} icon={<FaPlusCircle />}>
             Create folder
           </Button>
           <Button icon={<FaCloudDownloadAlt />} onClick={handleDownload}>
@@ -210,6 +221,7 @@ const Files = () => {
             headers={headers}
             path="folders/"
             getSelectedRows={getSelectedRows}
+            onEdit={handleEdit}
           />
         )}
       </TableWrapper>

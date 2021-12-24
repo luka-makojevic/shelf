@@ -31,4 +31,6 @@ export interface FolderModalProps {
   folderId: string | undefined;
   placeholder: string | undefined;
   buttonText: string | undefined;
+  file?: TableDataTypes | null;
+  getData: () => void;
 }
