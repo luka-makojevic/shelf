@@ -35,12 +35,12 @@ const FolderModal = ({
   const convertedFolderId = Number(folderId);
 
   const onSubmit = (data: { name: string }) => {
-    const folderName = data.name;
+    const newName = data.name;
 
     if (file) {
       if (!file?.folder) {
         fileServices
-          .editFile({ fileId: file.id, fileName: file.name })
+          .editFile({ fileId: file.id, fileName: newName })
           .then(() => {
             getData();
           })
@@ -53,7 +53,7 @@ const FolderModal = ({
           });
       } else if (file?.folder) {
         fileServices
-          .editFolder({ folderId: file.id, folderName: file.name })
+          .editFolder({ folderId: file.id, folderName: newName })
           .then(() => {
             getData();
           })
@@ -67,7 +67,7 @@ const FolderModal = ({
       }
     } else if (folderId) {
       fileServices
-        .createFolder(folderName, convertedShelfId, convertedFolderId)
+        .createFolder(newName, convertedShelfId, convertedFolderId)
         .then(() => {
           getFolderFiles(
             convertedFolderId,
@@ -84,7 +84,7 @@ const FolderModal = ({
         });
     } else if (!folderId) {
       fileServices
-        .createFolder(folderName, convertedShelfId)
+        .createFolder(newName, convertedShelfId)
         .then(() => {
           getShelfFiles(
             convertedShelfId,
