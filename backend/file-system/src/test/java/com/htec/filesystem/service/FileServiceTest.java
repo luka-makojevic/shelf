@@ -276,12 +276,17 @@ class FileServiceTest {
     @Test
     void getFile_FileNotFound() {
 
-        String path = "test.jpg";
+        file.setId(1L);
+        user.setId(1L);
+
+        when(fileRepository.findByIdAndUserIdAndNotDeleted(user.getId(), file.getId(), false)).thenReturn(Optional.empty());
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
-                () -> fileService.getFile(path));
+                () -> fileService.getFile(user, file.getId(), true));
 
         assertEquals(ErrorMessages.FILE_NOT_FOUND.getErrorMessage(), exception.getMessage());
+
+        verify(fileRepository, times(1)).findByIdAndUserIdAndNotDeleted(user.getId(), file.getId(), false);
     }
 
     @Test

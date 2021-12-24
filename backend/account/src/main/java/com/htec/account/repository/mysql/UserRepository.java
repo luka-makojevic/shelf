@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -13,4 +14,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     @Query("SELECT u FROM UserEntity u WHERE u.id != ?1 AND u.emailVerified != 0")
     Page<UserEntity> findAll(Long userId, Pageable pageable);
+
+    @Query("SELECT u.pictureName FROM UserEntity u WHERE u.id = :userId")
+    Optional<String> getPicturePathByUserId(@Param("userId") Long userId);
 }

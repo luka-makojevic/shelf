@@ -66,4 +66,10 @@ public class UserController {
 
         return ResponseEntity.ok(userService.getUserById(updateUserPhotoByIdRequestModel.getId()));
     }
+
+    @GetMapping("/picture-name/{userId}")
+    public String pictureNamePath(@PathVariable Long userId) {
+
+        return userService.getPicturePathByUserId(userId);
+    }
 }
