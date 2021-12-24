@@ -12,7 +12,7 @@ import { TableDataTypes } from '../../interfaces/dataTypes';
 import { useAppSelector } from '../../store/hooks';
 import AlertPortal from '../../components/alert/alert';
 import Modal from '../../components/modal';
-import AddFileModal from '../../components/modal/addFileModal';
+import UploadModal from '../../components/modal/uploadModal';
 import { Button } from '../../components/UI/button';
 import { AlertMessage } from '../../utils/enums/alertMessages';
 import { Description } from '../../components/text/text-styles';
@@ -26,28 +26,26 @@ import fileServices from '../../services/fileServices';
 const Files = () => {
   const files = useAppSelector((state) => state.file.files);
   const loading = useAppSelector((state) => state.loading.loading);
-  const [openCreateFileModal, setOpenCreateFileModal] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [openUploadModal, setOpenUploadModal] = useState(false);
   const [error, setError] = useState('');
+  const [filesforTable, setFilesForTable] = useState<TableDataTypes[]>([]);
+  const [filteredFiles, setFilteredFiles] = useState<TableDataTypes[]>([]);
+  const [selectedRows, setSelectedRows] = useState<TableDataTypes[]>([]);
+  const [selectedFile, setSelectedFile] = useState<TableDataTypes | null>();
+  const [success, setSuccess] = useState('');
+  const { shelfId, folderId } = useParams();
 
-  const handleOpenCreateFileModal = () => {
-    setOpenCreateFileModal(true);
-  };
   const handleOpenUploadModal = () => {
     setOpenUploadModal(true);
   };
 
-  const handleSetError = () => {
+  const handleAlertClose = () => {
     setError('');
+    setSuccess('');
   };
 
   const { getShelfFiles, getFolderFiles } = useFiles();
-
-  const [filesforTable, setFilesForTable] = useState<TableDataTypes[]>([]);
-  const [filteredFiles, setFilteredFiles] = useState<TableDataTypes[]>([]);
-  const [selectedRows, setSelectedRows] = useState<TableDataTypes[]>([]);
-  const { shelfId, folderId } = useParams();
-
   const getData = () => {
     if (folderId) {
       getFolderFiles(
@@ -107,7 +105,7 @@ const Files = () => {
         .catch((err) => {
           if (err.response?.status === 500) {
             setError('Internal server error');
-          } else setError(err.response?.data?.message);
+          } else setError('File could not be deleted');
         });
     if (folderIds.length !== 0)
       fileServices
@@ -116,44 +114,78 @@ const Files = () => {
         .catch((err) => {
           if (err.response?.status === 500) {
             setError('Internal server error');
-          } else setError(err.response?.data?.message);
+          } else setError('Folder could not be deleted');
         });
+  };
+  const handleEdit = (file: TableDataTypes) => {
+    setSelectedFile(file);
+    setOpenModal(true);
+  };
+  const handleCreateFolder = () => {
+    setOpenModal(true);
+  };
+  const handleModalClose = () => {
+    setSelectedFile(null);
+    setOpenModal(false);
   };
 
   const getSelectedRows = (selectedRowsData: TableDataTypes[]) => {
     setSelectedRows(selectedRowsData);
   };
+  const handleDownload = () => {
+    if (selectedRows.length === 0) return;
+    fileServices
+      .downloadFile(selectedRows[0].id)
+      .then((res) => {
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', selectedRows[0].name);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      })
+      .catch(() => {
+        setError('Failed to download');
+      });
+  };
 
   if (loading) return null;
   return (
     <>
-      {error && (
+      {(error || success) && (
         <AlertPortal
-          type={AlertMessage.ERRROR}
-          title="Error"
-          message={error}
-          onClose={handleSetError}
+          type={error ? AlertMessage.ERRROR : AlertMessage.SUCCESS}
+          title={`${error ? 'Error' : 'Success'}`}
+          message={error || success}
+          onClose={handleAlertClose}
         />
       )}
-      {openCreateFileModal && (
+      {openModal && (
         <Modal
-          title="Create folder"
-          onCloseModal={setOpenCreateFileModal}
+          title={selectedFile ? 'Edit name' : 'Create folder'}
+          onCloseModal={handleModalClose}
           closeIcon
         >
           <FolderModal
-            onCloseModal={setOpenCreateFileModal}
+            onCloseModal={handleModalClose}
             onError={setError}
             shelfId={shelfId}
             folderId={folderId}
-            placeholder="Folder name"
-            buttonText="Create"
+            getData={getData}
+            placeholder={selectedFile ? '' : 'Folder Name'}
+            buttonText={selectedFile ? 'Rename' : 'Create'}
+            file={selectedFile}
           />
         </Modal>
       )}
       {openUploadModal && (
         <Modal title="Upload files" onCloseModal={setOpenUploadModal} closeIcon>
-          <AddFileModal onCloseModal={setOpenUploadModal} />
+          <UploadModal
+            onCloseModal={setOpenUploadModal}
+            onError={setError}
+            onSuccess={setSuccess}
+          />
         </Modal>
       )}
 
@@ -166,10 +198,12 @@ const Files = () => {
           searchKey="name"
         />
         <ButtonContainer>
-          <Button onClick={handleOpenCreateFileModal} icon={<FaPlusCircle />}>
+          <Button onClick={handleCreateFolder} icon={<FaPlusCircle />}>
             Create folder
           </Button>
-          <Button icon={<FaCloudDownloadAlt />}>Download</Button>
+          <Button icon={<FaCloudDownloadAlt />} onClick={handleDownload}>
+            Download
+          </Button>
           <Button onClick={handleOpenUploadModal} icon={<FaCloudUploadAlt />}>
             Upload
           </Button>
@@ -187,6 +221,7 @@ const Files = () => {
             headers={headers}
             path="folders/"
             getSelectedRows={getSelectedRows}
+            onEdit={handleEdit}
           />
         )}
       </TableWrapper>

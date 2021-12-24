@@ -276,12 +276,17 @@ class FileServiceTest {
     @Test
     void getFile_FileNotFound() {
 
-        String path = "test.jpg";
+        file.setId(1L);
+        user.setId(1L);
+
+        when(fileRepository.findByIdAndUserIdAndDeleted(user.getId(), file.getId(), false)).thenReturn(Optional.empty());
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
-                () -> fileService.getFile(path));
+                () -> fileService.getFile(user, file.getId(), true));
 
         assertEquals(ErrorMessages.FILE_NOT_FOUND.getErrorMessage(), exception.getMessage());
+
+        verify(fileRepository, times(1)).findByIdAndUserIdAndDeleted(user.getId(), file.getId(), false);
     }
 
     @Test
@@ -299,7 +304,7 @@ class FileServiceTest {
 
             mocked.when(() -> Files.move(any(), any())).then(invocationOnMock -> null);
 
-            fileService.updateDeletedFiles(user, fileIds, true);
+            fileService.updateDeletedFiles(user, fileIds, true, true);
 
         }
 
@@ -324,7 +329,7 @@ class FileServiceTest {
 
             mocked.when(() -> Files.move(any(), any())).then(invocationOnMock -> null);
 
-            fileService.updateDeletedFiles(user, fileIds, true);
+            fileService.updateDeletedFiles(user, fileIds, true, true);
 
         }
 
@@ -341,7 +346,7 @@ class FileServiceTest {
         fileIds.add(1L);
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
-                () -> fileService.updateDeletedFiles(user, fileIds, true));
+                () -> fileService.updateDeletedFiles(user, fileIds, true, true));
 
         verify(fileRepository, times(1)).findAllByUserIdAndDeletedAndIdIn(user.getId(), false, fileIds);
         verify(fileRepository, times(0)).saveAll(fileEntities);
@@ -361,7 +366,7 @@ class FileServiceTest {
         when(fileRepository.findAllByUserIdAndDeletedAndIdIn(user.getId(), false, fileIds)).thenReturn(fileEntities);
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
-                () -> fileService.updateDeletedFiles(user, fileIds, true));
+                () -> fileService.updateDeletedFiles(user, fileIds, true, true));
 
         verify(fileRepository, times(1)).findAllByUserIdAndDeletedAndIdIn(user.getId(), false, fileIds);
         verify(fileRepository, times(0)).saveAll(fileEntities);

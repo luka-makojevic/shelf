@@ -20,7 +20,7 @@ public class FolderController {
 
     private final String FOLDERS_CREATED = "Folders created";
     private final String FOLDER_CREATED = "Folder created";
-    private final String FOLDERS_MOVED_TO_TRASH = "Folder moved to trash";
+    private final String FOLDERS_MOVED_TO_TRASH = "Folders moved to trash";
     private final String FOLDERS_RECOVERED_FROM_TRASH = "Folders recovered from trash";
 
     public FolderController(FolderService folderService) {
@@ -59,7 +59,7 @@ public class FolderController {
     @PutMapping("/move-to-trash")
     public ResponseEntity<TextResponseMessage> moveToTrash(@AuthenticationUser AuthUser user, @RequestBody List<Long> folderIds) {
 
-        folderService.moveToTrash(user.getId(), folderIds);
+        folderService.updateDeletedFolders(user.getId(), folderIds, true);
 
         return ResponseEntity.ok().body(new TextResponseMessage(FOLDERS_MOVED_TO_TRASH, HttpStatus.OK.value()));
     }

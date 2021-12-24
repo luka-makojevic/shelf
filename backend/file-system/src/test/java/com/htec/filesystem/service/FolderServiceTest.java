@@ -114,8 +114,8 @@ class FolderServiceTest {
         ResponseEntity<ShelfContentResponseModel> files = folderService.getFiles(testUserId, testFolderId);
 
         Assertions.assertEquals(2, Objects.requireNonNull(files.getBody()).getShelfItems().size());
-        Assertions.assertFalse(Objects.requireNonNull(files.getBody()).getShelfItems().get(0).isFolder());
-        Assertions.assertTrue(Objects.requireNonNull(files.getBody()).getShelfItems().get(1).isFolder());
+        Assertions.assertFalse(Objects.requireNonNull(files.getBody()).getShelfItems().get(0).getFolder());
+        Assertions.assertTrue(Objects.requireNonNull(files.getBody()).getShelfItems().get(1).getFolder());
     }
 
     @Test
@@ -131,18 +131,5 @@ class FolderServiceTest {
     @Test
     void uploadDeleted_UserNotAllowed() {
 
-    }
-
-    @Test
-    void createFolderInDb() {
-
-        String name = "folder1";
-        String path = "shelf-files/user-data/2/shelves/1/folder1";
-        Long shelfId = 1L;
-        Long parentFolderId = 0L;
-
-        folderService.createFolderInDb(name, path, shelfId, parentFolderId);
-
-        verify(folderRepository, times(1)).save(any(FolderEntity.class));
     }
 }

@@ -4,13 +4,17 @@ import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.dto.BreadCrumbDTO;
 import com.htec.filesystem.dto.ShelfDTO;
 import com.htec.filesystem.dto.ShelfItemDTO;
-import com.htec.filesystem.entity.*;
+import com.htec.filesystem.entity.FileEntity;
+import com.htec.filesystem.entity.FolderEntity;
+import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ExceptionSupplier;
 import com.htec.filesystem.mapper.ShelfItemMapper;
 import com.htec.filesystem.model.request.CreateShelfRequestModel;
 import com.htec.filesystem.model.request.ShelfEditRequestModel;
 import com.htec.filesystem.model.response.ShelfContentResponseModel;
-import com.htec.filesystem.repository.*;
+import com.htec.filesystem.repository.FileRepository;
+import com.htec.filesystem.repository.FolderRepository;
+import com.htec.filesystem.repository.ShelfRepository;
 import com.htec.filesystem.validator.FileSystemValidator;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.stereotype.Service;
@@ -47,6 +51,7 @@ public class ShelfService {
         this.fileSystemValidator = fileSystemValidator;
     }
 
+    @Transactional
     public boolean createShelf(CreateShelfRequestModel createShelfRequestModel, Long userId) {
 
         String shelfName = createShelfRequestModel.getShelfName();
@@ -64,6 +69,7 @@ public class ShelfService {
 
         ShelfEntity savedEntity = shelfRepository.save(shelfEntity);
 
+        shelfRepository.flush();
         Long shelfId = savedEntity.getId();
 
         String shelfPath = homePath + userPath + userId + pathSeparator + "shelves" + pathSeparator + shelfId;
@@ -90,7 +96,6 @@ public class ShelfService {
     }
 
     public List<ShelfDTO> getAllShelvesById(Long userId) {
-
 
         List<ShelfEntity> entityShelves = shelfRepository.findAllByIdAndNotDeleted(userId);
 

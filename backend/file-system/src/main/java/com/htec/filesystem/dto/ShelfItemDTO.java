@@ -20,8 +20,9 @@ public class ShelfItemDTO {
     private LocalDateTime deletedAt;
     private LocalDateTime updatedAt;
 
-    private boolean isDeleted;
-    private boolean folder;
+    private Boolean deleted;
+    private Boolean folder;
+    private Boolean trashVisible;
 
     private Long shelfId;
     private Long parentFolderId;

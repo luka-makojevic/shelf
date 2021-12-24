@@ -1,3 +1,5 @@
+import { AxiosRequestConfig } from 'axios';
+import { API_URL_FILESYSTEM } from '../api/api';
 import instance from '../api/axiosInstance';
 
 const API_URL_FILES = 'http://10.10.0.136:8080/filesystem/';
@@ -25,10 +27,38 @@ const softDeleteFolder = (folderIds: number[]) =>
 const softDeleteFile = (fileIds: number[]) =>
   instance.put(`${API_URL_FILES}file/move-to-trash`, fileIds);
 
+const editFile = (data: { fileId: number; fileName: string }) =>
+  instance.put(`${API_URL_FILES}file/rename`, data);
+
+const editFolder = (data: { folderId: number; folderName: string }) =>
+  instance.put(`${API_URL_FILES}folder/rename`, data);
+const downloadFile = (fileId: number) =>
+  instance({
+    url: `${API_URL_FILES}file/download/${fileId}?file=true`,
+    method: 'GET',
+    responseType: 'blob',
+  });
+
+const uploadFiles = (
+  shelfId: number,
+  folderId: number,
+  files: FormData,
+  options: AxiosRequestConfig
+) =>
+  instance.post(
+    `${API_URL_FILESYSTEM}file/upload/${shelfId}/${folderId}`,
+    files,
+    options
+  );
+
 export default {
   getShelfFiles,
   getFolderFiles,
   createFolder,
   softDeleteFolder,
   softDeleteFile,
+  editFile,
+  editFolder,
+  downloadFile,
+  uploadFiles,
 };

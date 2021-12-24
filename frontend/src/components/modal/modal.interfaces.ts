@@ -17,10 +17,6 @@ export interface PathType {
   path: { name: string; id: number | null }[];
 }
 
-export interface AddFileModalProps {
-  onCloseModal: Dispatch<SetStateAction<boolean>>;
-}
-
 export interface ModalProps {
   onCloseModal: Dispatch<SetStateAction<boolean>>;
   children: JSX.Element;
@@ -35,4 +31,6 @@ export interface FolderModalProps {
   folderId: string | undefined;
   placeholder: string | undefined;
   buttonText: string | undefined;
+  file?: TableDataTypes | null;
+  getData: () => void;
 }

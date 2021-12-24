@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -25,6 +26,7 @@ public class UserAPICallService {
     @Value("${userServiceUrl}")
     private String host;
     private final String UPDATE_PHOTO_URL = "/users/update/photo";
+    private final String GET_PHOTO_NAME = "/users/picture-name/";
 
     public void updateUserPhotoById(Long id, String pictureName) {
 
@@ -49,6 +51,18 @@ public class UserAPICallService {
             else
                 throw ExceptionSupplier.couldNotUpdateUser.get();
         }
+    }
+
+    public String getUserPhotoPath(Long userId) {
+
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add(SecurityConstants.AUTHORIZATION_HEADER_STRING,
+                JwtStorageFilter.jwtThreadLocal.get());
+
+        HttpEntity<String> httpEntityRequestBody = new HttpEntity<>(headers);
+
+        ResponseEntity<String> path = restTemplate.exchange(host + GET_PHOTO_NAME + userId, HttpMethod.GET, httpEntityRequestBody, String.class);
+        return path.getBody();
     }
 
 }
