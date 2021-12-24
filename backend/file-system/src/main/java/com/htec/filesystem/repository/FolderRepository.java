@@ -1,5 +1,6 @@
 package com.htec.filesystem.repository;
 
+import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -58,4 +59,6 @@ public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
     Optional<ShelfEntity> getShelfByFolderId(@Param("folderId") Long folderId);
 
     Optional<FolderEntity> findByNameAndParentFolderIdAndShelfId(String name, Long parentFolderId, Long shelfId);
+
+    List<FolderEntity> findAllByShelfIdInAndTrashVisible(List<Long> shelfId, Boolean trashVisible);
 }

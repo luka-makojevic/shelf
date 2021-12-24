@@ -77,28 +77,28 @@ public class FolderService {
         return new File(userShelvesPath).mkdirs();
     }
 
-    public ResponseEntity<ShelfContentResponseModel> getFiles(Long userId, Long folderId) {
+    public ResponseEntity<ShelfContentResponseModel> getItems(Long userId, Long folderId, Boolean deleted) {
 
         List<ShelfItemDTO> itemDTOs = new ArrayList<>();
 
         List<FolderEntity> allFolders = folderRepository
-                .findAllByUserIdAndParentFolderIdAndDeleted(userId, folderId, false);
+                .findAllByUserIdAndParentFolderIdAndDeleted(userId, folderId, deleted);
 
         List<FileEntity> allFiles = fileRepository
-                .findAllByUserIdAndParentFolderIdAndDeleted(userId, folderId, false);
+                .findAllByUserIdAndParentFolderIdAndDeleted(userId, folderId, deleted);
 
 
         itemDTOs.addAll(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(allFiles));
         itemDTOs.addAll(ShelfItemMapper.INSTANCE.folderEntitiesToShelfItemDTOs(allFolders));
 
-        List<BreadCrumbDTO> breadCrumbDTOS = generateBreadCrumbs(folderId);
+        List<BreadCrumbDTO> breadCrumbDTOS = generateBreadCrumbs(folderId, deleted);
 
         return ResponseEntity.status(HttpStatus.OK).body(new ShelfContentResponseModel(breadCrumbDTOS, itemDTOs));
     }
 
-    private List<BreadCrumbDTO> generateBreadCrumbs(Long folderId) {
+    private List<BreadCrumbDTO> generateBreadCrumbs(Long folderId, Boolean deleted) {
 
-        List<FolderEntity> folderUpStreamTree = folderTreeRepository.getFolderUpStreamTree(folderId , false);
+        List<FolderEntity> folderUpStreamTree = folderTreeRepository.getFolderUpStreamTree(folderId , deleted);
 
         List<BreadCrumbDTO> breadCrumbs = new ArrayList<>(
                 BreadCrumbsMapper.INSTANCE.folderEntitiesToBreadCrumbDTOs(folderUpStreamTree));

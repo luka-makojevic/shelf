@@ -2,7 +2,9 @@ package com.htec.filesystem.mapper;
 
 import com.htec.filesystem.dto.ShelfDTO;
 import com.htec.filesystem.dto.ShelfItemDTO;
-import com.htec.filesystem.entity.*;
+import com.htec.filesystem.entity.FileEntity;
+import com.htec.filesystem.entity.FolderEntity;
+import com.htec.filesystem.entity.ShelfEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
