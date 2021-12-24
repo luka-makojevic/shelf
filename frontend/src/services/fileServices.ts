@@ -1,3 +1,5 @@
+import { AxiosRequestConfig } from 'axios';
+import { API_URL_FILESYSTEM } from '../api/api';
 import instance from '../api/axiosInstance';
 
 const API_URL_FILES = 'http://10.10.0.136:8080/filesystem/';
@@ -30,6 +32,24 @@ const editFile = (data: { fileId: number; fileName: string }) =>
 
 const editFolder = (data: { folderId: number; folderName: string }) =>
   instance.put(`${API_URL_FILES}folder/rename`, data);
+const downloadFile = (fileId: number) =>
+  instance({
+    url: `${API_URL_FILES}file/download/${fileId}?file=true`,
+    method: 'GET',
+    responseType: 'blob',
+  });
+
+const uploadFiles = (
+  shelfId: number,
+  folderId: number,
+  files: FormData,
+  options: AxiosRequestConfig
+) =>
+  instance.post(
+    `${API_URL_FILESYSTEM}file/upload/${shelfId}/${folderId}`,
+    files,
+    options
+  );
 
 export default {
   getShelfFiles,
@@ -39,4 +59,6 @@ export default {
   softDeleteFile,
   editFile,
   editFolder,
+  downloadFile,
+  uploadFiles,
 };

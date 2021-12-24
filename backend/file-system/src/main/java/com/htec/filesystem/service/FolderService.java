@@ -76,10 +76,11 @@ public class FolderService {
         List<ShelfItemDTO> itemDTOs = new ArrayList<>();
 
         List<FolderEntity> allFolders = folderRepository
-                .findAllByUserIdAndParentFolderId(userId, folderId);
+                .findAllByUserIdAndParentFolderIdAndDeleted(userId, folderId, false);
 
         List<FileEntity> allFiles = fileRepository
-                .findAllByUserIdAndParentFolderId(userId, folderId);
+                .findAllByUserIdAndParentFolderIdAndDeleted(userId, folderId, false);
+
 
         itemDTOs.addAll(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(allFiles));
         itemDTOs.addAll(ShelfItemMapper.INSTANCE.folderEntitiesToShelfItemDTOs(allFolders));
@@ -91,7 +92,7 @@ public class FolderService {
 
     private List<BreadCrumbDTO> generateBreadCrumbs(Long folderId) {
 
-        List<FolderEntity> folderUpStreamTree = folderTreeRepository.getFolderUpStreamTree(folderId);
+        List<FolderEntity> folderUpStreamTree = folderTreeRepository.getFolderUpStreamTree(folderId , false);
 
         List<BreadCrumbDTO> breadCrumbs = new ArrayList<>(
                 BreadCrumbsMapper.INSTANCE.folderEntitiesToBreadCrumbDTOs(folderUpStreamTree));
@@ -114,7 +115,6 @@ public class FolderService {
         String fileSystemPath = homePath + userPath;
         String dbPath;
 
-
         if (parentFolderId != 0) {
 
             FolderEntity folderEntity = folderRepository.findById(parentFolderId).orElseThrow(ExceptionSupplier.noFolderWithGivenId);
@@ -126,15 +126,15 @@ public class FolderService {
             fileSystemPath += userId + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator;
         }
 
-        dbPath += folderName;
-        fileSystemPath += folderName;
+        Long newFolderId = createFolderInDb(folderName, dbPath, shelfId, parentFolderId);
 
-        createFolderInDb(folderName, dbPath, shelfId, parentFolderId);
+        dbPath += newFolderId;
+        fileSystemPath += newFolderId;
 
         return new File(fileSystemPath).mkdirs();
     }
 
-    public void createFolderInDb(String name, String path, Long shelfId, Long parentFolderId) {
+    public Long createFolderInDb(String name, String path, Long shelfId, Long parentFolderId) {
 
         if (parentFolderId == 0) {
             if (folderRepository.findByNameAndParentFolderIdAndShelfId(name, null, shelfId).isPresent())
@@ -154,7 +154,13 @@ public class FolderService {
         folderEntity.setShelfId(shelfId);
         folderEntity.setCreatedAt(LocalDateTime.now());
 
+        FolderEntity createdFolder = folderRepository.save(folderEntity);
+
+        folderEntity.setPath(folderEntity.getPath() + createdFolder.getId());
+
         folderRepository.save(folderEntity);
+
+        return folderEntity.getId();
     }
 
     @Transactional

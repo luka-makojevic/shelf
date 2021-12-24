@@ -12,7 +12,7 @@ import { TableDataTypes } from '../../interfaces/dataTypes';
 import { useAppSelector } from '../../store/hooks';
 import AlertPortal from '../../components/alert/alert';
 import Modal from '../../components/modal';
-import AddFileModal from '../../components/modal/addFileModal';
+import UploadModal from '../../components/modal/uploadModal';
 import { Button } from '../../components/UI/button';
 import { AlertMessage } from '../../utils/enums/alertMessages';
 import { Description } from '../../components/text/text-styles';
@@ -33,14 +33,16 @@ const Files = () => {
   const [filteredFiles, setFilteredFiles] = useState<TableDataTypes[]>([]);
   const [selectedRows, setSelectedRows] = useState<TableDataTypes[]>([]);
   const [selectedFile, setSelectedFile] = useState<TableDataTypes | null>();
+  const [success, setSuccess] = useState('');
   const { shelfId, folderId } = useParams();
 
   const handleOpenUploadModal = () => {
     setOpenUploadModal(true);
   };
 
-  const handleSetError = () => {
+  const handleAlertClose = () => {
     setError('');
+    setSuccess('');
   };
 
   const { getShelfFiles, getFolderFiles } = useFiles();
@@ -130,16 +132,33 @@ const Files = () => {
   const getSelectedRows = (selectedRowsData: TableDataTypes[]) => {
     setSelectedRows(selectedRowsData);
   };
+  const handleDownload = () => {
+    if (selectedRows.length === 0) return;
+    fileServices
+      .downloadFile(selectedRows[0].id)
+      .then((res) => {
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', selectedRows[0].name);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      })
+      .catch(() => {
+        setError('Failed to download');
+      });
+  };
 
   if (loading) return null;
   return (
     <>
-      {error && (
+      {(error || success) && (
         <AlertPortal
-          type={AlertMessage.ERRROR}
-          title="Error"
-          message={error}
-          onClose={handleSetError}
+          type={error ? AlertMessage.ERRROR : AlertMessage.SUCCESS}
+          title={`${error ? 'Error' : 'Success'}`}
+          message={error || success}
+          onClose={handleAlertClose}
         />
       )}
       {openModal && (
@@ -162,7 +181,11 @@ const Files = () => {
       )}
       {openUploadModal && (
         <Modal title="Upload files" onCloseModal={setOpenUploadModal} closeIcon>
-          <AddFileModal onCloseModal={setOpenUploadModal} />
+          <UploadModal
+            onCloseModal={setOpenUploadModal}
+            onError={setError}
+            onSuccess={setSuccess}
+          />
         </Modal>
       )}
 
@@ -178,7 +201,9 @@ const Files = () => {
           <Button onClick={handleCreateFolder} icon={<FaPlusCircle />}>
             Create folder
           </Button>
-          <Button icon={<FaCloudDownloadAlt />}>Download</Button>
+          <Button icon={<FaCloudDownloadAlt />} onClick={handleDownload}>
+            Download
+          </Button>
           <Button onClick={handleOpenUploadModal} icon={<FaCloudUploadAlt />}>
             Upload
           </Button>
