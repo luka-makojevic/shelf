@@ -51,6 +51,7 @@ public class ShelfService {
         this.fileSystemValidator = fileSystemValidator;
     }
 
+    @Transactional
     public boolean createShelf(CreateShelfRequestModel createShelfRequestModel, Long userId) {
 
         String shelfName = createShelfRequestModel.getShelfName();
@@ -68,6 +69,7 @@ public class ShelfService {
 
         ShelfEntity savedEntity = shelfRepository.save(shelfEntity);
 
+        shelfRepository.flush();
         Long shelfId = savedEntity.getId();
 
         String shelfPath = homePath + userPath + userId + pathSeparator + "shelves" + pathSeparator + shelfId;

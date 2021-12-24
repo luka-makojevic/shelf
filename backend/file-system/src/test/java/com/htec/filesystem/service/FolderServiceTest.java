@@ -114,8 +114,8 @@ class FolderServiceTest {
         ResponseEntity<ShelfContentResponseModel> files = folderService.getFiles(testUserId, testFolderId);
 
         Assertions.assertEquals(2, Objects.requireNonNull(files.getBody()).getShelfItems().size());
-        Assertions.assertFalse(Objects.requireNonNull(files.getBody()).getShelfItems().get(0).isFolder());
-        Assertions.assertTrue(Objects.requireNonNull(files.getBody()).getShelfItems().get(1).isFolder());
+        Assertions.assertFalse(Objects.requireNonNull(files.getBody()).getShelfItems().get(0).getFolder());
+        Assertions.assertTrue(Objects.requireNonNull(files.getBody()).getShelfItems().get(1).getFolder());
     }
 
     @Test

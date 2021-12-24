@@ -26,10 +26,10 @@ public class FileEntity {
     private String path;
 
     @Column(name = "deleted")
-    private boolean deleted;
+    private Boolean deleted;
 
-    @Column(name = "visible")
-    private boolean visible;
+    @Column(name = "trash_visible")
+    private Boolean trashVisible;
 
     @Column(name = "shelf_id")
     private Long shelfId;
