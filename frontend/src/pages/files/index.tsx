@@ -30,6 +30,10 @@ const Files = () => {
   const [openUploadModal, setOpenUploadModal] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [filesforTable, setFilesForTable] = useState<TableDataTypes[]>([]);
+  const [filteredFiles, setFilteredFiles] = useState<TableDataTypes[]>([]);
+  const [selectedRows, setSelectedRows] = useState<TableDataTypes[]>([]);
+  const { shelfId, folderId } = useParams();
 
   const handleOpenCreateFileModal = () => {
     setOpenCreateFileModal(true);
@@ -44,12 +48,6 @@ const Files = () => {
   };
 
   const { getShelfFiles, getFolderFiles } = useFiles();
-
-  const [filesforTable, setFilesForTable] = useState<TableDataTypes[]>([]);
-  const [filteredFiles, setFilteredFiles] = useState<TableDataTypes[]>([]);
-  const [selectedRows, setSelectedRows] = useState<TableDataTypes[]>([]);
-  const { shelfId, folderId } = useParams();
-
   const getData = () => {
     if (folderId) {
       getFolderFiles(
@@ -125,6 +123,23 @@ const Files = () => {
   const getSelectedRows = (selectedRowsData: TableDataTypes[]) => {
     setSelectedRows(selectedRowsData);
   };
+  const handleDownload = () => {
+    if (selectedRows.length === 0) return;
+    fileServices
+      .downloadFile(selectedRows[0].id)
+      .then((res) => {
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', selectedRows[0].name);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      })
+      .catch(() => {
+        setError('Failed to download');
+      });
+  };
 
   if (loading) return null;
   return (
@@ -175,7 +190,9 @@ const Files = () => {
           <Button onClick={handleOpenCreateFileModal} icon={<FaPlusCircle />}>
             Create folder
           </Button>
-          <Button icon={<FaCloudDownloadAlt />}>Download</Button>
+          <Button icon={<FaCloudDownloadAlt />} onClick={handleDownload}>
+            Download
+          </Button>
           <Button onClick={handleOpenUploadModal} icon={<FaCloudUploadAlt />}>
             Upload
           </Button>
