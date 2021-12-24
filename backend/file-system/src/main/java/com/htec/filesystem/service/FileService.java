@@ -74,7 +74,7 @@ public class FileService {
 
         if (file) {
 
-            FileEntity fileEntity = fileRepository.findByIdAndUserIdAndNotDeleted(id, user.getId(), false)
+            FileEntity fileEntity = fileRepository.findByIdAndUserIdAndDeleted(id, user.getId(), false)
                     .orElseThrow(ExceptionSupplier.fileNotFound);
 
             path = fileEntity.getPath();

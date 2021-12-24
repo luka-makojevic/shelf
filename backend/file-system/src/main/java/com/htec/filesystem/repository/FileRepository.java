@@ -71,7 +71,7 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
     List<FileEntity> findAllByShelfIdInAndDeletedTrue(List<Long> shelfId);
 
     @Query("SELECT f FROM FileEntity f INNER JOIN ShelfEntity sh ON f.shelfId = sh.id WHERE f.id = :fileId And sh.userId = :userId AND f.deleted = :deleted")
-    Optional<FileEntity> findByIdAndUserIdAndNotDeleted(@Param("fileId") Long fileId,
-                                                        @Param("userId") Long userId,
-                                                        @Param("deleted") Boolean deleted);
+    Optional<FileEntity> findByIdAndUserIdAndDeleted(@Param("fileId") Long fileId,
+                                                     @Param("userId") Long userId,
+                                                     @Param("deleted") Boolean deleted);
 }
