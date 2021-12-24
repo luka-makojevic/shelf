@@ -11,10 +11,9 @@ import CheckBox from '../UI/checkbox/checkBox';
 import {
   StyledRow,
   StyledCell,
-  ActionContainer,
   DeleteActionContainer,
   IconContainer,
-} from './table -styles';
+} from './table.styles';
 
 interface RowProps {
   data: TableDataTypes;
@@ -23,8 +22,10 @@ interface RowProps {
   setSelectedRows: (data: TableDataTypes[]) => void;
   isChecked?: boolean;
   path: string;
+  location?: string;
   onDelete?: (shelf: TableDataTypes) => void;
   onEdit?: (data: TableDataTypes) => void;
+  onRecoverFromTrash?: (data: TableDataTypes) => void;
 }
 
 export const DashboardTableRow = ({
@@ -34,8 +35,10 @@ export const DashboardTableRow = ({
   setSelectedRows,
   isChecked,
   path,
+  location,
   onDelete,
   onEdit,
+  onRecoverFromTrash,
 }: RowProps) => {
   const navigation = useNavigate();
 
@@ -61,10 +64,19 @@ export const DashboardTableRow = ({
     pathName: string;
   }) => {
     const handleClick = () => {
-      navigation(pathName);
+      if (data.folder || data.folder === undefined) navigation(pathName);
     };
 
-    return <StyledCell onClick={handleClick}>{rowText}</StyledCell>;
+    return (
+      <StyledCell onClick={handleClick}>
+        {data.folder !== undefined && (
+          <IconContainer>
+            {rowText === data.name && (data.folder ? <FaFolder /> : <FaFile />)}
+          </IconContainer>
+        )}
+        {rowText}
+      </StyledCell>
+    );
   };
 
   const handleDelete = () => {
@@ -75,7 +87,9 @@ export const DashboardTableRow = ({
     if (onEdit) onEdit(data);
   };
 
-  const handleRestore = () => {};
+  const handleRecoverFromTrash = () => {
+    if (onRecoverFromTrash) onRecoverFromTrash(data);
+  };
 
   return (
     <StyledRow>
@@ -87,18 +101,13 @@ export const DashboardTableRow = ({
 
       {Object.values(data).map((rowText) => {
         if (rowText === data.id || rowText === data.folder) return null;
-        if (path === 'trash/') {
-          return (
-            // if it's in trash, there should be no navigation handled, only display of cells
-            <StyledCell key={rowText}>
-              <IconContainer>
-                {data.name === rowText &&
-                  (data.folder ? <FaFolder /> : <FaFile />)}
-              </IconContainer>
-              {rowText}
-            </StyledCell>
-          );
-        }
+        if (
+          rowText === data.id ||
+          rowText === data.folder ||
+          typeof rowText === 'boolean'
+        )
+          return null;
+
         return (
           <CellWithHandler
             key={rowText}
@@ -113,13 +122,20 @@ export const DashboardTableRow = ({
             <FaTrash onClick={handleDelete} />
           </DeleteActionContainer>
 
-          <ActionContainer>
-            {path === 'trash/' ? (
-              <FaTrashRestore onClick={handleRestore} />
+          <IconContainer>
+            <FaEdit onClick={handleEdit} />
+          </IconContainer>
+        </StyledCell>
+      )}
+      {multiSelect && (
+        <StyledCell>
+          <IconContainer>
+            {location && location === 'trash' ? (
+              <FaTrashRestore onClick={handleRecoverFromTrash} />
             ) : (
               <FaEdit onClick={handleEdit} />
             )}
-          </ActionContainer>
+          </IconContainer>
         </StyledCell>
       )}
     </StyledRow>

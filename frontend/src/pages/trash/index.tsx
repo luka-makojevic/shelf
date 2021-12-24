@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { FaTrash } from 'react-icons/fa';
 import { Table } from '../../components/table/table';
 import TableWrapper from '../../components/table/tableWrapper';
 import {
@@ -7,12 +8,16 @@ import {
 } from '../../components/table/tableWrapper.styles';
 import { Button } from '../../components/UI/button';
 import SearchBar from '../../components/UI/searchBar/searchBar';
-import { useTrash } from '../../hooks/trashHook';
 import AlertPortal from '../../components/alert/alert';
 import { AlertMessage } from '../../utils/enums/alertMessages';
 import { FileDataType, TableDataTypes } from '../../interfaces/dataTypes';
-// import { useAppSelector } from '../../store/hooks';
 import { Description } from '../../components/text/text-styles';
+import Breadcrumbs from '../../components/breadcrumbs';
+import Modal from '../../components/modal';
+import DeleteShelfModal from '../../components/modal/deleteMessageModal';
+import fileServices from '../../services/fileServices';
+import { useShelf } from '../../hooks/shelfHooks';
+import { useAppSelector } from '../../store/hooks';
 
 const headers = [
   {
@@ -70,16 +75,18 @@ const data: FileDataType[] = [
 ];
 
 const Trash = () => {
-  // const trashData = useAppSelector((state) => state.trash.trashData);
+  const trashData = useAppSelector((state) => state.trash.trashData);
   const [filteredData, setFilteredData] = useState<TableDataTypes[]>([]);
+  const [selectedRows, setSelectedRows] = useState<TableDataTypes[]>([]);
   const [tableData, setTableData] = useState<TableDataTypes[]>([]);
+  const [openModal, setOpenModal] = useState(false);
   const [error, setError] = useState('');
   const message =
-    data.length === 0 // replace data with trashData
+    trashData.length === 0 // replace data with trashData
       ? 'Trash is empty'
       : 'Sorry, no matching results found :(';
 
-  const { getTrash } = useTrash();
+  const { getTrash } = useShelf();
 
   useEffect(() => {
     getTrash(
@@ -91,7 +98,7 @@ const Trash = () => {
   }, []);
 
   useEffect(() => {
-    const newData = data.map((item) => ({
+    const newData = trashData.map((item) => ({
       // replace data with trashData
       id: item.id,
       folder: item.folder ? 1 : 0,
@@ -104,18 +111,71 @@ const Trash = () => {
     setTableData(newData);
   }, [data]);
 
-  const handleEmptyTrash = () => {};
+  const getSelectedRows = (selectedRowsData: TableDataTypes[]) => {
+    setSelectedRows(selectedRowsData);
+  };
 
-  const handleDelete = () => {};
+  const handleHardDelete = () => {
+    setOpenModal(true);
+  };
 
-  const handleEdit = () => {};
+  const handleRecoverFromTrash = (row: TableDataTypes) => {
+    if (row.folder) {
+      fileServices
+        .recoverFolderFromTrash(row.id)
+        .then(() =>
+          getTrash(
+            () => {},
+            () => {}
+          )
+        )
+        .catch((err) => {
+          if (err.response?.status === 500) {
+            setError('Internal server error');
+            return;
+          }
+          setError(err.response?.data?.message);
+        });
+    } else {
+      fileServices
+        .recoverFileFromTrash(row.id)
+        .then(() =>
+          getTrash(
+            () => {},
+            () => {}
+          )
+        )
+        .catch((err) => {
+          if (err.response?.status === 500) {
+            setError('Internal server error');
+            return;
+          }
+          setError(err.response?.data?.message);
+        });
+    }
+  };
 
   const handleSetError = () => {
     setError('');
   };
 
+  const handleModalClose = () => {
+    setOpenModal(false);
+    setSelectedRows([]);
+  };
+
   return (
     <>
+      {openModal && (
+        <Modal title="Delete shelf" onCloseModal={handleModalClose}>
+          <DeleteShelfModal
+            onCloseModal={handleModalClose}
+            onError={setError}
+            message="This action will permanently delete this file/folder"
+            selectedData={selectedRows}
+          />
+        </Modal>
+      )}
       {error && (
         <AlertPortal
           type={AlertMessage.ERRROR}
@@ -124,7 +184,8 @@ const Trash = () => {
           onClose={handleSetError}
         />
       )}
-      <TableWrapper title="Trash" description="All deleted files">
+      <TableWrapper title="Trash">
+        <Breadcrumbs />
         <ActionsBox>
           <SearchBar
             placeholder="Search..."
@@ -133,19 +194,27 @@ const Trash = () => {
             searchKey="name"
           />
           <ButtonActionsBox>
-            <Button onClick={handleEmptyTrash}>Empty Trash</Button>
+            <Button
+              onClick={handleHardDelete}
+              icon={<FaTrash />}
+              disabled={selectedRows.length === 0}
+            >
+              Delete
+            </Button>
           </ButtonActionsBox>
         </ActionsBox>
-        {data.length === 0 || filteredData.length === 0 ? ( // replace data with trashData
+        {trashData.length === 0 || filteredData.length === 0 ? ( // replace data with trashData
           <Description>{message}</Description>
         ) : (
           <Table
             setTableData={setFilteredData}
             data={filteredData}
             headers={headers}
-            path="trash/"
-            onDelete={handleDelete}
-            onEdit={handleEdit}
+            path="folders/"
+            location="trash"
+            mulitSelect
+            getSelectedRows={getSelectedRows}
+            onRecoverFromTrash={handleRecoverFromTrash}
           />
         )}
       </TableWrapper>

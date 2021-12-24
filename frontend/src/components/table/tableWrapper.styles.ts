@@ -15,6 +15,12 @@ export const TableTitle = styled.div`
   font-size: ${theme.fontSizes.xl};
 `;
 
+export const ButtonContainer = styled.div`
+  button {
+    margin-right: 10px;
+  }
+`;
+
 export const TableDescription = styled.div`
   font-size: ${theme.fontSizes.md};
 `;

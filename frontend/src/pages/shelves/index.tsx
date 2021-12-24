@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Table } from '../../components/table/table';
-import TableWrapper from '../../components/table/tableWrapper';
 import { useShelf } from '../../hooks/shelfHooks';
 import { TableDataTypes } from '../../interfaces/dataTypes';
 import { useAppSelector } from '../../store/hooks';
@@ -10,8 +9,9 @@ import Modal from '../../components/modal';
 import { Button } from '../../components/UI/button';
 import { AlertMessage } from '../../utils/enums/alertMessages';
 import { Description } from '../../components/text/text-styles';
-import DeleteShelfModal from '../../components/modal/deleteShelfModal';
+import DeleteShelfModal from '../../components/modal/deleteMessageModal';
 import SearchBar from '../../components/UI/searchBar/searchBar';
+import TableWrapper from '../../components/table/tableWrapper';
 
 const Shelves = () => {
   const shelves = useAppSelector((state) => state.shelf.shelves);
@@ -30,8 +30,6 @@ const Shelves = () => {
     setError('');
   };
 
-  const user = useAppSelector((state) => state.user.user);
-
   const { getShelves } = useShelf();
 
   const [shelvesForTable, setShelvesForTable] = useState<TableDataTypes[]>([]);
@@ -41,7 +39,6 @@ const Shelves = () => {
 
   useEffect(() => {
     getShelves(
-      { userId: user?.id },
       () => {},
       (err: string) => {
         setError(err);
@@ -96,6 +93,7 @@ const Shelves = () => {
           onClose={handleSetError}
         />
       )}
+
       {openModal && (
         <Modal
           title={selectedShelf ? 'Rename shelf' : 'Create shelf'}
@@ -109,6 +107,7 @@ const Shelves = () => {
           />
         </Modal>
       )}
+
       {deleteModalOpen && (
         <Modal title="Delete shelf" onCloseModal={handleModalClose}>
           <DeleteShelfModal

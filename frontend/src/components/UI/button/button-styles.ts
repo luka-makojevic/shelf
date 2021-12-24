@@ -121,9 +121,14 @@ export const StyledLink = styled(ReachRouterLink)<ButtonStyleProps>`
 export const IconButton = styled(StyledButton)`
   img {
     width: 20px;
-
     margin-right: 10px;
   }
+  svg {
+    width: 20px;
+    margin-right: 5px;
+  }
+`;
+export const IconButtonContainer = styled.div`
   display: flex;
   align-items: center;
 `;

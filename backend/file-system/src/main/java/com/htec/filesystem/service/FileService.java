@@ -1,10 +1,12 @@
 package com.htec.filesystem.service;
 
 import com.htec.filesystem.annotation.AuthUser;
+import com.htec.filesystem.dto.ShelfItemDTO;
 import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ExceptionSupplier;
+import com.htec.filesystem.mapper.ShelfItemMapper;
 import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.model.response.FileResponseModel;
 import com.htec.filesystem.repository.FileRepository;
@@ -217,7 +219,7 @@ public class FileService {
                 String nameWithoutExtension = fileEntity.getRealName().substring(0, extensionIndex);
                 String extension = fileEntity.getRealName().substring(extensionIndex);
 
-                int index = fileEntity.getPath().lastIndexOf('/');
+                int index = fileEntity.getPath().lastIndexOf(pathSeparator);
                 String newPath = fileEntity.getPath().substring(0, index);
 
                 fileEntity.setName(nameWithoutExtension + "(" + fileNameCounter + ")" + extension);
@@ -247,7 +249,7 @@ public class FileService {
     private void renameFilesOnFileSystem(String newFileName, String oldPath) {
 
         try {
-            int index = oldPath.lastIndexOf("/");
+            int index = oldPath.lastIndexOf(pathSeparator);
             String newPath = oldPath.substring(0, index);
 
             newPath = homePath + userPath + newPath + pathSeparator + newFileName;
@@ -262,7 +264,7 @@ public class FileService {
 
         try {
 
-            int index = oldPath.lastIndexOf('/');
+            int index = oldPath.lastIndexOf(pathSeparator);
             String oldPathWithoutFileName = oldPath.substring(0, index);
 
             String newPathFull = homePath + userPath + newPath;
@@ -306,6 +308,16 @@ public class FileService {
         fileRepository.save(fileEntity);
 
         oldFile.renameTo(newFile);
+    }
+
+    public List<ShelfItemDTO> getAllFilesFromTrash(Long userId) {
+
+        List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserId(userId);
+        List<Long> shelfIds = shelfEntities.stream().map(ShelfEntity::getId).collect(Collectors.toList());
+
+        List<FileEntity> fileEntities = fileRepository.findAllByShelfIdInAndIsDeletedTrue(shelfIds);
+
+        return new ArrayList<>(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
     }
 
     public void deleteFile(AuthUser user, List<Long> fileIds) throws IOException {

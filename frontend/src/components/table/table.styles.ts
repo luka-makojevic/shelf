@@ -68,7 +68,8 @@ export const StyledRow = styled.tr`
   }
 `;
 
-export const ActionContainer = styled.span`
+export const IconContainer = styled.div`
+  display: inline-block;
   margin-right: ${theme.space.sm};
 
   &:hover {
@@ -82,8 +83,4 @@ export const DeleteActionContainer = styled.span`
   &:hover {
     color: ${theme.colors.danger};
   }
-`;
-
-export const IconContainer = styled.span`
-  margin-right: ${theme.space.sm};
 `;

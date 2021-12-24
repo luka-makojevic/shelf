@@ -10,7 +10,9 @@ export interface ShelfModalProps {
 export interface DeleteShelfModalProps {
   onCloseModal: Dispatch<SetStateAction<boolean>>;
   onError: (value: SetStateAction<string>) => void;
-  shelf: TableDataTypes | null;
+  shelf?: TableDataTypes | null;
+  message?: string;
+  selectedData?: TableDataTypes[];
 }
 
 export interface PathType {
@@ -26,4 +28,13 @@ export interface ModalProps {
   children: JSX.Element;
   title: string;
   closeIcon?: boolean;
+}
+
+export interface FolderModalProps {
+  onCloseModal: Dispatch<SetStateAction<boolean>>;
+  onError: (value: SetStateAction<string>) => void;
+  shelfId: string | undefined;
+  folderId: string | undefined;
+  placeholder: string | undefined;
+  buttonText: string | undefined;
 }

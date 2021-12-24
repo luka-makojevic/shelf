@@ -151,11 +151,11 @@ export interface ShelfTableDataTypes {
 }
 export interface FileTableDataTypes {
   [key: string]: string | number;
-  folder: number;
   name: string;
   size: number;
   createdAt: string;
   id: number;
+  folder: number;
 }
 export interface FunctionTableDataTypes {
   [key: string]: string | number;
@@ -191,7 +191,8 @@ export interface FileDataType {
   size: number;
   isDeleted: boolean;
 }
-export interface PathHistoryDataType {
-  name: string;
-  id: number;
+
+export interface PathHistoryData {
+  folderName: string;
+  folderId: number;
 }

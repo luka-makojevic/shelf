@@ -1,22 +1,24 @@
-import shelfServices from '../services/shelfServices';
 import { useAppDispatch } from '../store/hooks';
 import { setLoading } from '../store/loadingReducer';
-import { setShelves } from '../store/shelfReducer';
-import { setTrash } from '../store/trashReducer';
+import { setFiles } from '../store/fileReducer';
+import { setPathHistory } from '../store/pathHistory';
+import fileServices from '../services/fileServices';
 
-export const useShelf = () => {
+export const useFiles = () => {
   const dispatch = useAppDispatch();
 
-  const getShelves = (
+  const getShelfFiles = (
+    id: number,
     onSuccess: () => void,
     onError: (error: string) => void
   ) => {
     dispatch(setLoading(true));
 
-    shelfServices
-      .getShelves()
+    fileServices
+      .getShelfFiles(id)
       .then((res) => {
-        dispatch(setShelves(res.data));
+        dispatch(setFiles(res.data.shelfItems));
+        dispatch(setPathHistory(res.data.breadCrumbs));
         onSuccess();
       })
       .catch((err) => {
@@ -27,15 +29,18 @@ export const useShelf = () => {
       });
   };
 
-  const getTrash = (
+  const getFolderFiles = (
+    id: number,
     onSuccess: () => void,
     onError: (error: string) => void
   ) => {
     dispatch(setLoading(true));
-    shelfServices
-      .getTrash()
+
+    fileServices
+      .getFolderFiles(id)
       .then((res) => {
-        dispatch(setTrash(res.data));
+        dispatch(setFiles(res.data.shelfItems));
+        dispatch(setPathHistory(res.data.breadCrumbs));
         onSuccess();
       })
       .catch((err) => {
@@ -46,5 +51,5 @@ export const useShelf = () => {
       });
   };
 
-  return { getShelves, getTrash };
+  return { getShelfFiles, getFolderFiles };
 };

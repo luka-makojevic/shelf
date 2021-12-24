@@ -1,14 +1,49 @@
+import { API_URL_FILESYSTEM } from '../api/api';
 import instance from '../api/axiosInstance';
 
-const API_URL_FILES = 'http://10.10.0.136:8080/filesystem/';
+const getShelfFiles = (shelfId: number) =>
+  instance.get(`${API_URL_FILESYSTEM}shelf/${shelfId}`);
 
-const getShelfFiles = () => instance.get(`${API_URL_FILES}file`);
+const getFolderFiles = (folderId: number) =>
+  instance.get(`${API_URL_FILESYSTEM}folder/${folderId}`);
 
-const getFolderFiles = () => instance.get(`${API_URL_FILES}file`);
+const createFolder = (
+  folderName: string,
+  shelfId: number,
+  parentFolderId = 0
+) =>
+  instance.post(`${API_URL_FILESYSTEM}folder`, {
+    folderName,
+    shelfId,
+    parentFolderId,
+  });
 
-const createFolder = (folderName: string) =>
-  instance.post(`${API_URL_FILES}folder/create`, folderName);
+const softDeleteFolder = (folderIds: number[]) =>
+  instance.put(`${API_URL_FILESYSTEM}folder/move-to-trash`, folderIds);
 
-const getTrashFiles = () => instance.get(`${API_URL_FILES}trash/file`);
+const softDeleteFile = (fileIds: number[]) =>
+  instance.put(`${API_URL_FILESYSTEM}file/move-to-trash`, fileIds);
 
-export default { getShelfFiles, getFolderFiles, createFolder, getTrashFiles };
+const hardDeleteFile = (data: number[]) =>
+  instance.delete(`${API_URL_FILESYSTEM}file`, { data });
+
+const hardDeleteFolder = (data: number[]) =>
+  instance.delete(`${API_URL_FILESYSTEM}folder`, { data });
+
+const recoverFileFromTrash = (data: number) =>
+  instance.put(`${API_URL_FILESYSTEM}trash/file`, data);
+
+const recoverFolderFromTrash = (data: number) =>
+  instance.put(`${API_URL_FILESYSTEM}trash/file`, data);
+
+export default {
+  getShelfFiles,
+  getFolderFiles,
+  createFolder,
+  softDeleteFolder,
+  softDeleteFile,
+  hardDeleteFile,
+  hardDeleteFolder,
+  recoverFileFromTrash,
+  recoverFolderFromTrash,
+};
