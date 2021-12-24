@@ -282,7 +282,7 @@ class FileServiceTest {
         when(fileRepository.findByIdAndUserIdAndDeleted(user.getId(), file.getId(), false)).thenReturn(Optional.empty());
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
-                () -> fileService.getFile(user, file.getId(), true));
+                () -> fileService.getFile(user.getId(), file.getId(), true));
 
         assertEquals(ErrorMessages.FILE_NOT_FOUND.getErrorMessage(), exception.getMessage());
 

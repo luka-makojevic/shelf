@@ -55,13 +55,13 @@ public class UserAPICallService {
 
     public String getUserPhotoPath(Long userId) {
 
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add(SecurityConstants.AUTHORIZATION_HEADER_STRING,
-                JwtStorageFilter.jwtThreadLocal.get());
+//        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+//        headers.add(SecurityConstants.AUTHORIZATION_HEADER_STRING,
+//                JwtStorageFilter.jwtThreadLocal.get());
+//
+//        HttpEntity<String> httpEntityRequestBody = new HttpEntity<>(headers);
 
-        HttpEntity<String> httpEntityRequestBody = new HttpEntity<>(headers);
-
-        ResponseEntity<String> path = restTemplate.exchange(host + GET_PHOTO_NAME + userId, HttpMethod.GET, httpEntityRequestBody, String.class);
+        ResponseEntity<String> path = restTemplate.getForEntity(host + GET_PHOTO_NAME + userId, String.class);
         return path.getBody();
     }
 

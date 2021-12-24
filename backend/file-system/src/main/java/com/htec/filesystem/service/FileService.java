@@ -69,23 +69,19 @@ public class FileService {
         FileUtil.saveFile(uploadDir, fileName, bytes);
     }
 
-    public FileResponseModel getFile(AuthUser user, Long id, boolean file) {
+    public FileResponseModel getFile(Long userId, Long id, boolean file) {
 
         String path = "";
 
-        if (file) {
+        if (file && userId != null) {
 
-            FileEntity fileEntity = fileRepository.findByIdAndUserIdAndDeleted(id, user.getId(), false)
+            FileEntity fileEntity = fileRepository.findByIdAndUserIdAndDeleted(id, userId, false)
                     .orElseThrow(ExceptionSupplier.fileNotFound);
 
             path = fileEntity.getPath();
         } else {
 
-            if (!Objects.equals(user.getId(), id)) {
-                throw ExceptionSupplier.userNotAllowedToAccessFile.get();
-            }
-
-            path = userAPICallService.getUserPhotoPath(user.getId());
+            path = userAPICallService.getUserPhotoPath(id);
         }
 
         String folder = homePath + userPath;

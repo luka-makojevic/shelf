@@ -50,16 +50,15 @@ public class FileController {
                                           @PathVariable Long id,
                                           @RequestParam(value = "file") boolean file) {
 
-        FileResponseModel fileResponseModel = fileService.getFile(user, id, file);
+        FileResponseModel fileResponseModel = fileService.getFile(user.getId(), id, file);
         return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).body(fileResponseModel.getImageContent());
     }
 
     @GetMapping("/preview/{id}")
-    public ResponseEntity<byte[]> getImage(@AuthenticationUser AuthUser user,
-                                           @PathVariable Long id,
+    public ResponseEntity<byte[]> getImage(@PathVariable Long id,
                                            @RequestParam(value = "file") boolean file) {
 
-        FileResponseModel fileResponseModel = fileService.getFile(user, id, file);
+        FileResponseModel fileResponseModel = fileService.getFile(null, id, file);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(fileResponseModel.getImageContent());
     }
 
