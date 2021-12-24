@@ -1,6 +1,7 @@
-package helpers;
+package helpers.dbHelpers;
 
 import db.SheldDBServer;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

@@ -1,6 +1,6 @@
 package pages;
 
-import helpers.BaseWdWaitHelpers;
+import helpers.uiHelpers.WdWaitHelpers;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -12,12 +12,12 @@ import java.util.Set;
 public class LoginViaMicrosoft
 {
     WebDriver driver;
-    BaseWdWaitHelpers baseWdWaitHelpers;
+    WdWaitHelpers wdWaitHelpers;
 
-    public LoginViaMicrosoft(WebDriver driver, BaseWdWaitHelpers baseWdWaitHelpers)
+    public LoginViaMicrosoft(WebDriver driver, WdWaitHelpers wdWaitHelpers)
     {
         this.driver = driver;
-        this.baseWdWaitHelpers = baseWdWaitHelpers;
+        this.wdWaitHelpers = wdWaitHelpers;
         PageFactory.initElements(driver, this);
     }
 
@@ -53,15 +53,15 @@ public class LoginViaMicrosoft
         driver.switchTo().window(newHandle);
 
         // Actions on new tab
-        baseWdWaitHelpers.waitForAllElementsToBePresence(By.className("outer"));
+        wdWaitHelpers.waitForAllElementsToBePresence(By.className("outer"));
         email.sendKeys(username);
-        baseWdWaitHelpers.waitToBeClickable(nextButton);
+        wdWaitHelpers.waitToBeClickable(nextButton);
         nextButton.click();
-        baseWdWaitHelpers.waitForAllElementsToBePresence(By.className("outer"));
+        wdWaitHelpers.waitForAllElementsToBePresence(By.className("outer"));
         pass.sendKeys(password);
-        baseWdWaitHelpers.waitToBeClickable(signInButton);
+        wdWaitHelpers.waitToBeClickable(signInButton);
         signInButton.click();
-        baseWdWaitHelpers.waitToBeClickable(noButton);
+        wdWaitHelpers.waitToBeClickable(noButton);
         noButton.click();
 
         // Switch to the previous tab

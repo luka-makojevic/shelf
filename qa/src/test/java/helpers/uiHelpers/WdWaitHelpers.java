@@ -1,4 +1,4 @@
-package helpers;
+package helpers.uiHelpers;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -10,12 +10,12 @@ import java.time.Duration;
 import java.util.List;
 
 
-public class BaseWdWaitHelpers {
+public class WdWaitHelpers {
 
     WebDriver driver;
     WebDriverWait wait;
 
-    public BaseWdWaitHelpers(WebDriver driver) {
+    public WdWaitHelpers(WebDriver driver) {
         this.driver = driver;
     }
 

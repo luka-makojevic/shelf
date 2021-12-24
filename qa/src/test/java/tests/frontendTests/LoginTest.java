@@ -1,5 +1,5 @@
 package tests.frontendTests;
-import helpers.BaseTest;
+import helpers.uiHelpers.BaseTest;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -19,7 +19,7 @@ public class LoginTest extends BaseTest {
         String email = excelReader.getStringData("LoginTest", 1,0);
         String password = excelReader.getStringData("LoginTest", 1, 1);
         loginPage.loginAsUser(email, password);
-        baseWdWaitHelpers.waitUrlToBe(navigateBrowser.getPageUrl("dashboardPageUrl"));
+        wdWaitHelpers.waitUrlToBe(navigateBrowser.getPageUrl("dashboardPageUrl"));
         Assert.assertEquals(driver.getCurrentUrl(), navigateBrowser.getPageUrl("dashboardPageUrl"));
     }
     @Test
@@ -27,7 +27,7 @@ public class LoginTest extends BaseTest {
         String email = excelReader.getStringData("LoginTest", 1,0);
         String password = excelReader.getStringData("LoginTest", 1, 1);
         loginViaMicrosoft.loginAsMicrosoftUser(email, password);
-        baseWdWaitHelpers.waitUrlToBe(navigateBrowser.getPageUrl("dashboardPageUrl"));
+        wdWaitHelpers.waitUrlToBe(navigateBrowser.getPageUrl("dashboardPageUrl"));
         Assert.assertEquals(driver.getCurrentUrl(), navigateBrowser.getPageUrl("dashboardPageUrl"));
     }
     @Test
@@ -75,13 +75,13 @@ public class LoginTest extends BaseTest {
     @Test
     public void userShouldRedirectedToRegistrationPageWhenClicksSignUpButton() throws IOException {
         loginPage.clickSignUpButton();
-        baseWdWaitHelpers.waitUrlToBe(navigateBrowser.getPageUrl("registrationPageUrl"));
+        wdWaitHelpers.waitUrlToBe(navigateBrowser.getPageUrl("registrationPageUrl"));
         Assert.assertEquals(driver.getCurrentUrl(), navigateBrowser.getPageUrl("registrationPageUrl"));
     }
     @Test
     public void userShouldRedirectToForgotPasswordPage() throws IOException {
         loginPage.clickResetPassword();
-        baseWdWaitHelpers.waitUrlToBe(navigateBrowser.getPageUrl("forgotPassword"));
+        wdWaitHelpers.waitUrlToBe(navigateBrowser.getPageUrl("forgotPassword"));
         Assert.assertEquals(driver.getCurrentUrl(), navigateBrowser.getPageUrl("forgotPassword"));
     }
     @After

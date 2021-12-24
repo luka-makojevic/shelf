@@ -1,5 +1,6 @@
-package helpers;
+package helpers.uiHelpers;
 
+import helpers.uiHelpers.WdWaitHelpers;
 import org.openqa.selenium.WebDriver;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -9,12 +10,12 @@ import java.util.Properties;
 public class NavigateBrowserHelper {
     WebDriver driver;
     Properties prop;
-    BaseWdWaitHelpers baseWdWaitHelpers;
+    WdWaitHelpers wdWaitHelpers;
 
-    public NavigateBrowserHelper(WebDriver driver, Properties prop, BaseWdWaitHelpers baseWdWaitHelpers) {
+    public NavigateBrowserHelper(WebDriver driver, Properties prop, WdWaitHelpers wdWaitHelpers) {
         this.driver = driver;
         this.prop = prop;
-        this.baseWdWaitHelpers = baseWdWaitHelpers;
+        this.wdWaitHelpers = wdWaitHelpers;
     }
 
     /**
@@ -43,7 +44,7 @@ public class NavigateBrowserHelper {
         FileInputStream fis = new FileInputStream (".\\datafiles\\data.properties");
         prop.load(fis);
         String pageUrl = prop.getProperty(page);
-        baseWdWaitHelpers.waitUrlToBe(pageUrl);
+        wdWaitHelpers.waitUrlToBe(pageUrl);
         return pageUrl;
     }
 
