@@ -25,6 +25,12 @@ public class FileEntity {
 
     private String path;
 
+    @Column(name = "deleted")
+    private boolean deleted;
+
+    @Column(name = "visible")
+    private boolean visible;
+
     @Column(name = "shelf_id")
     private Long shelfId;
 
@@ -39,6 +45,15 @@ public class FileEntity {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public String getRealName() {
+        if (deleted) {
+            int index = name.lastIndexOf("_");
+
+            return name.substring(0, index);
+        }
+        return name;
+    }
 
     @Override
     public boolean equals(Object o) {

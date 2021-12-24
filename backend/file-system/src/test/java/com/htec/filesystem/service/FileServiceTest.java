@@ -299,12 +299,13 @@ class FileServiceTest {
 
             mocked.when(() -> Files.move(any(), any())).then(invocationOnMock -> null);
 
-            fileService.moveToTrash(user, fileIds);
+            fileService.updateDeletedFiles(user, fileIds, true);
 
         }
 
         verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
         verify(fileRepository, times(1)).saveAll(fileEntities);
+        verify(fileRepository, times(1)).updateDeletedByIds(true, fileIds);
     }
 
     @Test
@@ -323,12 +324,13 @@ class FileServiceTest {
 
             mocked.when(() -> Files.move(any(), any())).then(invocationOnMock -> null);
 
-            fileService.moveToTrash(user, fileIds);
+            fileService.updateDeletedFiles(user, fileIds, true);
 
         }
 
         verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
         verify(fileRepository, times(1)).saveAll(fileEntities);
+        verify(fileRepository, times(1)).updateDeletedByIds(true, fileIds);
     }
 
     @Test
@@ -339,10 +341,11 @@ class FileServiceTest {
         fileIds.add(1L);
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
-                () -> fileService.moveToTrash(user, fileIds));
+                () -> fileService.updateDeletedFiles(user, fileIds, true));
 
         verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
         verify(fileRepository, times(0)).saveAll(fileEntities);
+        verify(fileRepository, times(0)).updateDeletedByIds(true, fileIds);
 
         assertEquals(ErrorMessages.FILES_NOT_FOUND.getErrorMessage(), exception.getMessage());
     }
@@ -358,10 +361,11 @@ class FileServiceTest {
         when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds)).thenReturn(fileEntities);
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
-                () -> fileService.moveToTrash(user, fileIds));
+                () -> fileService.updateDeletedFiles(user, fileIds, true));
 
         verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
         verify(fileRepository, times(0)).saveAll(fileEntities);
+        verify(fileRepository, times(0)).updateDeletedByIds(true, fileIds);
 
         assertEquals(ErrorMessages.USER_NOT_ALLOWED_TO_DELETE_FILE.getErrorMessage(), exception.getMessage());
     }

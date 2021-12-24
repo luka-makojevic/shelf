@@ -164,7 +164,7 @@ public class FileService {
     }
 
     @Transactional
-    public void moveToTrash(AuthUser user, List<Long> fileIds) {
+    public void updateDeletedFiles(AuthUser user, List<Long> fileIds, Boolean deleted) {
 
         List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds);
 
@@ -176,11 +176,15 @@ public class FileService {
             throw ExceptionSupplier.userNotAllowedToDeleteFile.get();
         }
 
-
-        moveToTrash(fileEntities);
-
+        if (deleted) {
+            moveToTrash(fileEntities);
+        } else {
+            recover(user, fileEntities);
+        }
 
         fileRepository.saveAll(fileEntities);
+
+        fileRepository.updateDeletedByIds(deleted, fileIds);
     }
 
     private void recover(AuthUser user, List<FileEntity> fileEntities) {
@@ -303,6 +307,16 @@ public class FileService {
         fileRepository.save(fileEntity);
 
         oldFile.renameTo(newFile);
+    }
+
+    public List<ShelfItemDTO> getAllFilesFromTrash(Long userId) {
+
+        List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserId(userId);
+        List<Long> shelfIds = shelfEntities.stream().map(ShelfEntity::getId).collect(Collectors.toList());
+
+        List<FileEntity> fileEntities = fileRepository.findAllByShelfIdInAndDeletedTrue(shelfIds);
+
+        return new ArrayList<>(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
     }
 
     public void deleteFile(AuthUser user, List<Long> fileIds) throws IOException {
