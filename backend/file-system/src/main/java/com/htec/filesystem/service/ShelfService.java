@@ -91,14 +91,14 @@ public class ShelfService {
         }
 
         shelfRepository.updateDeletedByIds(delete, shelfIds);
-        folderRepository.updateIsDeletedByShelfIds(delete, shelfIds);
+        folderRepository.updateDeletedByShelfIds(delete, shelfIds);
         fileRepository.updateDeletedByShelfIds(delete, shelfIds);
     }
 
     public List<ShelfDTO> getAllShelvesById(Long userId) {
 
 
-        List<ShelfEntity> entityShelves = shelfRepository.findAllById(userId);
+        List<ShelfEntity> entityShelves = shelfRepository.findAllByIdAndNotDeleted(userId);
 
         return ShelfItemMapper.INSTANCE.shelfEntitiesToShelfDTOs(entityShelves);
     }

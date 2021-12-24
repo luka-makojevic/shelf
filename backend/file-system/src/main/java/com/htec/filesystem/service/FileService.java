@@ -166,7 +166,7 @@ public class FileService {
     @Transactional
     public void updateDeletedFiles(AuthUser user, List<Long> fileIds, Boolean deleted) {
 
-        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds);
+        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndDeletedAndIdIn(user.getId(), fileIds);
 
         if (fileEntities.size() != fileIds.size()) {
             throw ExceptionSupplier.filesNotFound.get();
@@ -191,7 +191,7 @@ public class FileService {
 
         List<Long> folderIds = fileEntities.stream().map(FileEntity::getParentFolderId).collect(Collectors.toList());
 
-        List<FileEntity> fileEntitiesNotDeleted = fileRepository.findAllByUserIdAndParentFolderIdsIn(user.getId(), folderIds);
+        List<FileEntity> fileEntitiesNotDeleted = fileRepository.findAllByUserIdAndNotDeletedAndParentFolderIdsIn(user.getId(), folderIds);
 
         Map<Optional<Long>, List<FileEntity>> filesByFolder = fileEntitiesNotDeleted.stream().collect(Collectors.groupingBy(e -> Optional.ofNullable(e.getParentFolderId())));
 
@@ -321,7 +321,7 @@ public class FileService {
 
     public void deleteFile(AuthUser user, List<Long> fileIds) throws IOException {
 
-        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds);
+        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndDeletedAndIdIn(user.getId(), fileIds);
 
         if (fileEntities.size() != fileIds.size()) {
             throw ExceptionSupplier.filesNotFound.get();

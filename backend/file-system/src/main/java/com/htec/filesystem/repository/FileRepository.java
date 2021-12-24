@@ -44,13 +44,14 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
     List<FileEntity> findAllByShelfIdAndParentFolderIdIsNullAndDeletedFalse(Long shelfId);
 
     @Query("SELECT f FROM FileEntity f INNER JOIN ShelfEntity sh " +
-            "ON (f.shelfId = sh.id) WHERE sh.userId = :userId AND f.id IN (:fileIds) AND f.deleted = :delete")
-    List<FileEntity> findAllByUserIdAndIdIn(@Param("userId") Long userId,
-                                            @Param("fileIds") List<Long> fileIds);
+            "ON (f.shelfId = sh.id) WHERE sh.userId = :userId AND f.deleted = :delete AND f.id IN (:fileIds)")
+    List<FileEntity> findAllByUserIdAndDeletedAndIdIn(@Param("userId") Long userId,
+                                                      @Param("fileIds") List<Long> fileIds,
+                                                      @Param("deleted") Boolean deleted);
 
     @Modifying
     @Query("UPDATE FileEntity f SET f.deleted = :delete WHERE f.id IN (:fileIds)")
-    void updateDeletedByIds(@Param("delete") boolean delete,
+    void updateDeletedByIds(@Param("delete") Boolean delete,
                             @Param("fileIds") List<Long> fileIds);
 
     Optional<FileEntity> findByNameAndParentFolderId(String name, Long parentFolderId);
@@ -60,8 +61,8 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
     @Query("SELECT f FROM FileEntity f INNER JOIN ShelfEntity sh " +
             "ON (f.shelfId = sh.id) " +
             "WHERE sh.userId = :userId AND f.deleted = false AND (f.parentFolderId IN (:parentFolderIds) OR f.parentFolderId IS NULL)")
-    List<FileEntity> findAllByUserIdAndParentFolderIdsIn(@Param("userId") Long userId,
-                                                         @Param("parentFolderIds") List<Long> parentFolderIds);
+    List<FileEntity> findAllByUserIdAndNotDeletedAndParentFolderIdsIn(@Param("userId") Long userId,
+                                                                      @Param("parentFolderIds") List<Long> parentFolderIds);
 
     Optional<FileEntity> findByNameAndShelfIdAndParentFolderIdIsNull(String name, Long shelfId);
 

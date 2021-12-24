@@ -293,7 +293,7 @@ class FileServiceTest {
         fileEntities.add(file);
         fileIds.add(1L);
 
-        when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds)).thenReturn(fileEntities);
+        when(fileRepository.findAllByUserIdAndDeletedAndIdIn(user.getId(), fileIds)).thenReturn(fileEntities);
 
         try (MockedStatic<Files> mocked = mockStatic(Files.class)) {
 
@@ -303,7 +303,7 @@ class FileServiceTest {
 
         }
 
-        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
+        verify(fileRepository, times(1)).findAllByUserIdAndDeletedAndIdIn(user.getId(), fileIds);
         verify(fileRepository, times(1)).saveAll(fileEntities);
         verify(fileRepository, times(1)).updateDeletedByIds(true, fileIds);
     }
@@ -317,7 +317,7 @@ class FileServiceTest {
         fileEntities.add(file);
         fileIds.add(1L);
 
-        when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds)).thenReturn(fileEntities);
+        when(fileRepository.findAllByUserIdAndDeletedAndIdIn(user.getId(), fileIds)).thenReturn(fileEntities);
 
 
         try (MockedStatic<Files> mocked = mockStatic(Files.class)) {
@@ -328,7 +328,7 @@ class FileServiceTest {
 
         }
 
-        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
+        verify(fileRepository, times(1)).findAllByUserIdAndDeletedAndIdIn(user.getId(), fileIds);
         verify(fileRepository, times(1)).saveAll(fileEntities);
         verify(fileRepository, times(1)).updateDeletedByIds(true, fileIds);
     }
@@ -343,7 +343,7 @@ class FileServiceTest {
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
                 () -> fileService.updateDeletedFiles(user, fileIds, true));
 
-        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
+        verify(fileRepository, times(1)).findAllByUserIdAndDeletedAndIdIn(user.getId(), fileIds);
         verify(fileRepository, times(0)).saveAll(fileEntities);
         verify(fileRepository, times(0)).updateDeletedByIds(true, fileIds);
 
@@ -358,12 +358,12 @@ class FileServiceTest {
         fileIds.add(3L);
         fileEntities.add(file);
 
-        when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds)).thenReturn(fileEntities);
+        when(fileRepository.findAllByUserIdAndDeletedAndIdIn(user.getId(), fileIds)).thenReturn(fileEntities);
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
                 () -> fileService.updateDeletedFiles(user, fileIds, true));
 
-        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
+        verify(fileRepository, times(1)).findAllByUserIdAndDeletedAndIdIn(user.getId(), fileIds);
         verify(fileRepository, times(0)).saveAll(fileEntities);
         verify(fileRepository, times(0)).updateDeletedByIds(true, fileIds);
 
@@ -426,7 +426,7 @@ class FileServiceTest {
         fileEntities.add(file);
         fileIds.add(1L);
 
-        when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds)).thenReturn(fileEntities);
+        when(fileRepository.findAllByUserIdAndDeletedAndIdIn(user.getId(), fileIds)).thenReturn(fileEntities);
 
         try (MockedStatic<FileUtils> mocked = mockStatic(FileUtils.class)) {
 
@@ -436,7 +436,7 @@ class FileServiceTest {
 
         }
 
-        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
+        verify(fileRepository, times(1)).findAllByUserIdAndDeletedAndIdIn(user.getId(), fileIds);
         verify(fileRepository, times(1)).deleteAll(fileEntities);
     }
 
@@ -450,7 +450,7 @@ class FileServiceTest {
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
                 () -> fileService.deleteFile(user, fileIds));
 
-        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
+        verify(fileRepository, times(1)).findAllByUserIdAndDeletedAndIdIn(user.getId(), fileIds);
         verify(fileRepository, times(0)).deleteAll(fileEntities);
 
         assertEquals(ErrorMessages.FILES_NOT_FOUND.getErrorMessage(), exception.getMessage());
@@ -464,12 +464,12 @@ class FileServiceTest {
         fileIds.add(3L);
         fileEntities.add(file);
 
-        when(fileRepository.findAllByUserIdAndIdIn(user.getId(), fileIds)).thenReturn(fileEntities);
+        when(fileRepository.findAllByUserIdAndDeletedAndIdIn(user.getId(), fileIds)).thenReturn(fileEntities);
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
                 () -> fileService.deleteFile(user, fileIds));
 
-        verify(fileRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), fileIds);
+        verify(fileRepository, times(1)).findAllByUserIdAndDeletedAndIdIn(user.getId(), fileIds);
         verify(fileRepository, times(0)).deleteAll(fileEntities);
 
         assertEquals(ErrorMessages.USER_NOT_ALLOWED_TO_DELETE_FILE.getErrorMessage(), exception.getMessage());

@@ -21,7 +21,7 @@ public interface ShelfRepository extends JpaRepository<ShelfEntity, Long> {
                             @Param("shelfIds") List<Long> shelfIds);
 
     @Query("SELECT s FROM ShelfEntity s WHERE s.userId = :userId AND s.deleted = 0")
-    List<ShelfEntity> findAllById(@Param("userId") Long userId);
+    List<ShelfEntity> findAllByIdAndNotDeleted(@Param("userId") Long userId);
 
     List<ShelfEntity> findAllByIdAndUserIdIn(Long userId, List<Long> shelfIds);
 

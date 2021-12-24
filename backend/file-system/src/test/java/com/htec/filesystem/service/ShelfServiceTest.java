@@ -101,7 +101,7 @@ class ShelfServiceTest {
         shelfService.updateIsDeletedShelf(user, shelfIds, delete);
 
         verify(shelfRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), shelfIds);
-        verify(folderRepository, times(1)).updateIsDeletedByShelfIds(delete, shelfIds);
+        verify(folderRepository, times(1)).updateDeletedByShelfIds(delete, shelfIds);
         verify(fileRepository, times(1)).updateDeletedByShelfIds(delete, shelfIds);
     }
 
@@ -120,7 +120,7 @@ class ShelfServiceTest {
         shelfService.updateIsDeletedShelf(user, shelfIds, delete);
 
         verify(shelfRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), shelfIds);
-        verify(folderRepository, times(1)).updateIsDeletedByShelfIds(delete, shelfIds);
+        verify(folderRepository, times(1)).updateDeletedByShelfIds(delete, shelfIds);
         verify(fileRepository, times(1)).updateDeletedByShelfIds(delete, shelfIds);
     }
 
@@ -137,7 +137,7 @@ class ShelfServiceTest {
                 () -> shelfService.updateIsDeletedShelf(user, shelfIds, delete));
 
         verify(shelfRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), shelfIds);
-        verify(folderRepository, times(0)).updateIsDeletedByShelfIds(delete, shelfIds);
+        verify(folderRepository, times(0)).updateDeletedByShelfIds(delete, shelfIds);
         verify(fileRepository, times(0)).updateDeletedByShelfIds(delete, shelfIds);
         verify(shelfRepository, times(0)).save(shelf);
 
@@ -160,7 +160,7 @@ class ShelfServiceTest {
                 () -> shelfService.updateIsDeletedShelf(user, shelfIds, delete));
 
         verify(shelfRepository, times(1)).findAllByUserIdAndIdIn(user.getId(), shelfIds);
-        verify(folderRepository, times(0)).updateIsDeletedByShelfIds(delete, shelfIds);
+        verify(folderRepository, times(0)).updateDeletedByShelfIds(delete, shelfIds);
         verify(fileRepository, times(0)).updateDeletedByShelfIds(delete, shelfIds);
         verify(shelfRepository, times(0)).save(shelf);
 
