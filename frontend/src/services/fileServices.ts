@@ -25,10 +25,18 @@ const softDeleteFolder = (folderIds: number[]) =>
 const softDeleteFile = (fileIds: number[]) =>
   instance.put(`${API_URL_FILES}file/move-to-trash`, fileIds);
 
+const downloadFile = (fileId: number) =>
+  instance({
+    url: `${API_URL_FILES}file/download/${fileId}?file=true`,
+    method: 'GET',
+    responseType: 'blob',
+  });
+
 export default {
   getShelfFiles,
   getFolderFiles,
   createFolder,
   softDeleteFolder,
   softDeleteFile,
+  downloadFile,
 };
