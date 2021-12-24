@@ -12,7 +12,7 @@ import { TableDataTypes } from '../../interfaces/dataTypes';
 import { useAppSelector } from '../../store/hooks';
 import AlertPortal from '../../components/alert/alert';
 import Modal from '../../components/modal';
-import AddFileModal from '../../components/modal/addFileModal';
+import UploadModal from '../../components/modal/uploadModal';
 import { Button } from '../../components/UI/button';
 import { AlertMessage } from '../../utils/enums/alertMessages';
 import { Description } from '../../components/text/text-styles';
@@ -29,6 +29,7 @@ const Files = () => {
   const [openCreateFileModal, setOpenCreateFileModal] = useState(false);
   const [openUploadModal, setOpenUploadModal] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [filesforTable, setFilesForTable] = useState<TableDataTypes[]>([]);
   const [filteredFiles, setFilteredFiles] = useState<TableDataTypes[]>([]);
   const [selectedRows, setSelectedRows] = useState<TableDataTypes[]>([]);
@@ -41,8 +42,9 @@ const Files = () => {
     setOpenUploadModal(true);
   };
 
-  const handleSetError = () => {
+  const handleAlertClose = () => {
     setError('');
+    setSuccess('');
   };
 
   const { getShelfFiles, getFolderFiles } = useFiles();
@@ -142,12 +144,12 @@ const Files = () => {
   if (loading) return null;
   return (
     <>
-      {error && (
+      {(error || success) && (
         <AlertPortal
-          type={AlertMessage.ERRROR}
-          title="Error"
-          message={error}
-          onClose={handleSetError}
+          type={error ? AlertMessage.ERRROR : AlertMessage.SUCCESS}
+          title={`${error ? 'Error' : 'Success'}`}
+          message={error || success}
+          onClose={handleAlertClose}
         />
       )}
       {openCreateFileModal && (
@@ -168,7 +170,11 @@ const Files = () => {
       )}
       {openUploadModal && (
         <Modal title="Upload files" onCloseModal={setOpenUploadModal} closeIcon>
-          <AddFileModal onCloseModal={setOpenUploadModal} />
+          <UploadModal
+            onCloseModal={setOpenUploadModal}
+            onError={setError}
+            onSuccess={setSuccess}
+          />
         </Modal>
       )}
 
