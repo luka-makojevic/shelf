@@ -206,7 +206,7 @@ public class FileService {
         fileRepository.updateDeletedByIds(deleted, fileIds);
     }
 
-    private void recover(AuthUser user, List<FileEntity> fileEntities) {
+    void recover(AuthUser user, List<FileEntity> fileEntities) {
 
         List<Long> folderIds = fileEntities.stream().map(FileEntity::getParentFolderId).collect(Collectors.toList());
 
@@ -249,6 +249,7 @@ public class FileService {
             recoverFilesOnFileSystem(fileEntity.getPath(), oldPath, fileNameWithUUID);
         }
     }
+
 
     private void moveFilesToTrash(List<FileEntity> fileEntities, Boolean trashVisible) {
 
@@ -366,4 +367,5 @@ public class FileService {
 
         fileRepository.deleteAll(fileEntities);
     }
+
 }
