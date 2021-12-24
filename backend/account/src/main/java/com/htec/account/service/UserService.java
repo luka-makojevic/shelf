@@ -248,7 +248,14 @@ public class UserService {
     }
 
     public long findUserIdByJwtToken(String jwtToken) {
+
         return passwordResetTokenRepository.findByToken(jwtToken)
                 .orElseThrow(ExceptionSupplier.emailResetRequestWasNotSent).getUserDetails().getId();
+    }
+
+    public String getPicturePathByUserId(Long userId) {
+
+        return userRepository.getPicturePathByUserId(userId)
+                .orElseThrow(ExceptionSupplier.userNotFound);
     }
 }

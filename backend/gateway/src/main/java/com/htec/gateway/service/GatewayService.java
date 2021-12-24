@@ -43,7 +43,7 @@ public class GatewayService {
 
         if (!AUTH_MICROSERVICE_NAME.equals(microserviceName)) {
 
-            String accountApiUrl = getApiUrl(AUTH_MICROSERVICE_NAME, AUTH_ENDPOINT_PATH);
+            String accountApiUrl = getApiUrl(AUTH_MICROSERVICE_NAME, AUTH_ENDPOINT_PATH, null);
 
             ResponseEntity<byte[]> authRet = send(accountApiUrl, HttpMethod.GET, new HttpEntity<>(request.getHeaders()));
 
@@ -52,7 +52,7 @@ public class GatewayService {
             }
         }
 
-        String apiUrl = getApiUrl(microserviceName, request.getUrl().getPath());
+        String apiUrl = getApiUrl(microserviceName, request.getUrl().getPath(), request.getUrl().getQuery());
 
         HttpEntity<byte[]> forwardingRequest;
 
@@ -143,7 +143,7 @@ public class GatewayService {
         return headers;
     }
 
-    private String getApiUrl(String microserviceName, String path) {
+    private String getApiUrl(String microserviceName, String path, String queryString) {
 
         String apiServer = apiServerUrls.get(microserviceName);
 
@@ -153,6 +153,10 @@ public class GatewayService {
 
         if (arr.length > 0) {
             urlPath = arr[arr.length - 1];
+        }
+
+        if (queryString != null && !queryString.isEmpty()) {
+            urlPath = urlPath + "?" + queryString;
         }
 
         return apiServer + "/" + urlPath;
