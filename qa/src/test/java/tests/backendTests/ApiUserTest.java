@@ -58,7 +58,9 @@ public class ApiUserTest extends BaseApiTest {
         while (rs.next()) {
             sql = rs.getString("token");
         }
-        String parsedJson = gson.toJson(sql);
+
+        String token = responseToJson.setToken(sql);
+        String parsedJson = gson.toJson(token);
         Response response = sendAuhtorizedRequests.sendingPostReqForEmailVerifyToken("/tokens/confirmation", parsedJson);
 
         //Assertions

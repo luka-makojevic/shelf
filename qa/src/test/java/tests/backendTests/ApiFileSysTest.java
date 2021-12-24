@@ -25,7 +25,8 @@ public class ApiFileSysTest extends BaseApiTest
         while (rs.next()) {
             sql = rs.getString("token");
         }
-        parsedJson = gson.toJson(sql);
+        String token = responseToJson.setToken(sql);
+        parsedJson = gson.toJson(token);
         sendAuhtorizedRequests.sendingPostReqForEmailVerifyToken("/tokens/confirmation", parsedJson);
 
         user.setValuesForValidUserToLogin(excelReader);
@@ -34,7 +35,9 @@ public class ApiFileSysTest extends BaseApiTest
         Response response = sendAuhtorizedRequests.sendingPostReq("/login", parsedJson);
         String tokenGenerated = response.jsonPath().get("jwtToken");
 
-        response = sendAuhtorizedRequests.sendingPostReqForCreateShelf(tokenGenerated,"ShelfName123");
+        String shelfName = responseToJson.setShelfName("shelfName123");
+        parsedJson = gson.toJson(shelfName);
+        response = sendAuhtorizedRequests.sendingPostReqForCreateShelf(tokenGenerated,parsedJson);
 
         assertEquals("Shelf created", response.jsonPath().get("message").toString());
         assertEquals("200", response.jsonPath().get("status").toString());

@@ -2,8 +2,10 @@ package helpers.apiHelpers;
 
 import helpers.propertieHelpers.PropertieManager;
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.mapper.ObjectMapperType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import response.ResponseToJson;
 
 public class SendAuhtorizedRequests
 {
@@ -25,7 +27,7 @@ public class SendAuhtorizedRequests
         builder.setBaseUri(PropertieManager.getInstance().getURI(""));
         builder.setBasePath(basePath);
         builder.setContentType("application/json");
-        builder.setBody("{"+"\"token\""+":"+" "+parsedJson+"}");
+        builder.setBody(parsedJson);
         RequestSpecification rSpec = builder.build();
         Response response = RestHelpers.sendPostRequest(rSpec);
         return response;
@@ -57,14 +59,14 @@ public class SendAuhtorizedRequests
         return response;
     }
 
-    public Response sendingPostReqForCreateShelf(String tokenGenerated,String shelfName)
+    public Response sendingPostReqForCreateShelf(String tokenGenerated,String parsedJson)
     {
         RequestSpecBuilder builder = new RequestSpecBuilder();
         builder.setBaseUri(PropertieManager.getInstance().getShelfURI(""));
         builder.setBasePath("/shelf");
         builder.addHeader("Authorization","Bearer "+tokenGenerated);
         builder.setContentType("application/json");
-        builder.setBody("{"+"\"shelfName\""+":"+" "+"\""+shelfName+"\""+"}");
+        builder.setBody(parsedJson);
         RequestSpecification rSpec = builder.build();
         Response response = RestHelpers.sendPostRequest(rSpec);
         return response;

@@ -6,6 +6,7 @@ import helpers.dbHelpers.Cleanup;
 import helpers.excelHelpers.ExcelReader;
 import org.junit.BeforeClass;
 import models.User;
+import response.ResponseToJson;
 
 import java.io.IOException;
 
@@ -17,6 +18,7 @@ public class BaseApiTest {
     public static User user;
     public static Gson gson;
     public static SendAuhtorizedRequests sendAuhtorizedRequests;
+    public static ResponseToJson responseToJson;
 
     @BeforeClass
     public static void initialize() throws IOException
@@ -27,7 +29,7 @@ public class BaseApiTest {
         gson = new Gson();
         sendAuhtorizedRequests = new SendAuhtorizedRequests();
         cleanup = new Cleanup();
-
+        responseToJson = new ResponseToJson();
     }
 
 }
