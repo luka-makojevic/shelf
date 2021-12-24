@@ -76,7 +76,7 @@ public class FileController {
     @PutMapping("/move-to-trash")
     public ResponseEntity<TextResponseMessage> softDeleteFile(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) {
 
-        fileService.updateDeletedFiles(user, fileIds , true);
+        fileService.updateDeletedFiles(user, fileIds , true, true);
         return ResponseEntity.ok().body(new TextResponseMessage(FILES_MOVED_TO_TRASH, HttpStatus.OK.value()));
     }
 

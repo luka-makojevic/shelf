@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -174,6 +175,7 @@ public class FileService {
         fileEntity.setName(fileName);
         fileEntity.setPath(filePath);
         fileEntity.setShelfId(shelfId);
+        fileEntity.setDeleted(false);
         if (folderId != 0) fileEntity.setParentFolderId(folderId);
 
         fileEntity.setCreatedAt(LocalDateTime.now());
@@ -181,7 +183,7 @@ public class FileService {
     }
 
     @Transactional
-    public void updateDeletedFiles(AuthUser user, List<Long> fileIds, Boolean deleted) {
+    public void updateDeletedFiles(AuthUser user, List<Long> fileIds, Boolean deleted, Boolean trashVisible) {
 
         List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndDeletedAndIdIn(user.getId(), !deleted, fileIds);
 
@@ -194,7 +196,7 @@ public class FileService {
         }
 
         if (deleted) {
-            moveToTrash(fileEntities);
+            moveFilesToTrash(fileEntities, trashVisible);
         } else {
             recover(user, fileEntities);
         }
@@ -248,7 +250,7 @@ public class FileService {
         }
     }
 
-    private void moveToTrash(List<FileEntity> fileEntities) {
+    private void moveFilesToTrash(List<FileEntity> fileEntities, Boolean trashVisible) {
 
         for (FileEntity fileEntity : fileEntities) {
             UUID uuid = UUID.randomUUID();
@@ -256,21 +258,30 @@ public class FileService {
 
             String newFileName = fileEntity.getName() + "_" + uuidAsString;
 
-            renameFilesOnFileSystem(newFileName, fileEntity.getPath());
+            String newDbPath = moveFilesInFileSystem(newFileName, fileEntity.getShelfId(), fileEntity.getPath());
 
+            fileEntity.setPath(newDbPath);
             fileEntity.setName(newFileName);
+            fileEntity.setTrashVisible(trashVisible);
         }
     }
 
-    private void renameFilesOnFileSystem(String newFileName, String oldPath) {
+    private String moveFilesInFileSystem(String newFileName, Long shelfId, String oldPath) {
 
         try {
-            int index = oldPath.lastIndexOf(pathSeparator);
-            String newPath = oldPath.substring(0, index);
+            int index = oldPath.indexOf(pathSeparator);
+            String userId = oldPath.substring(0, index);
 
-            newPath = homePath + userPath + newPath + pathSeparator + newFileName;
+            String newPath = homePath + userPath + userId + pathSeparator + "trash" + pathSeparator + newFileName;
+            newPath = newPath.replace("shelves" + pathSeparator + shelfId, "trash");
+
+            Path uploadPath = Paths.get(newPath.replace(newFileName, ""));
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
 
             Files.move(Paths.get(homePath + userPath + oldPath), Paths.get(newPath));
+            return newPath.replace(homePath + userPath, "");
         } catch (IOException e) {
             throw ExceptionSupplier.internalServerError.get();
         }

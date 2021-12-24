@@ -66,6 +66,12 @@ public class FolderService {
             return false;
         }
 
+        String userTrashPath = userDataPath + pathSeparator + "trash";
+
+        if (!new File(userTrashPath).mkdirs()) {
+            return false;
+        }
+
         String userShelvesPath = userDataPath + pathSeparator + "shelves";
 
         return new File(userShelvesPath).mkdirs();
@@ -147,6 +153,7 @@ public class FolderService {
         FolderEntity folderEntity = new FolderEntity();
         folderEntity.setName(name);
         folderEntity.setPath(path);
+        folderEntity.setDeleted(false);
 
         if (parentFolderId != 0)
             folderEntity.setParentFolderId(parentFolderId);
