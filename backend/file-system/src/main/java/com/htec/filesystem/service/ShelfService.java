@@ -31,8 +31,6 @@ public class ShelfService {
     private final ShelfRepository shelfRepository;
     private final FolderRepository folderRepository;
     private final FileRepository fileRepository;
-    private final FileDeletedRepository fileDeletedRepository;
-    private final FolderDeletedRepository folderDeletedRepository;
     private final FileSystemValidator fileSystemValidator;
 
     private final String homePath = System.getProperty("user.home");
@@ -42,14 +40,10 @@ public class ShelfService {
     public ShelfService(ShelfRepository shelfRepository,
                         FolderRepository folderRepository,
                         FileRepository fileRepository,
-                        FileDeletedRepository fileDeletedRepository,
-                        FolderDeletedRepository folderDeletedRepository,
                         FileSystemValidator fileSystemValidator) {
         this.shelfRepository = shelfRepository;
         this.folderRepository = folderRepository;
         this.fileRepository = fileRepository;
-        this.fileDeletedRepository = fileDeletedRepository;
-        this.folderDeletedRepository = folderDeletedRepository;
         this.fileSystemValidator = fileSystemValidator;
     }
 
@@ -174,12 +168,7 @@ public class ShelfService {
         List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserId(userId);
         List<Long> shelfIds = shelfEntities.stream().map(ShelfEntity::getId).collect(Collectors.toList());
 
-        List<FileDeletedEntity> fileDeletedEntities = fileDeletedRepository.findAllByShelfIdInAndParentFolderIdIsNull(shelfIds);
-        List<FolderDeletedEntity> folderDeletedEntities = folderDeletedRepository.findAllByShelfIdInAndParentFolderIdIsNull(shelfIds);
-
         List<ShelfItemDTO> trashItems = new ArrayList<>();
-        trashItems.addAll(ShelfItemMapper.INSTANCE.fileDeletedEntitiesToShelfItemDTOs(fileDeletedEntities));
-        trashItems.addAll(ShelfItemMapper.INSTANCE.folderDeletedEntitiesToShelfItemDTOs(folderDeletedEntities));
 
         return trashItems;
     }
