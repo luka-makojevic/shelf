@@ -126,15 +126,15 @@ public class FolderService {
             fileSystemPath += userId + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator;
         }
 
-        dbPath += folderName;
-        fileSystemPath += folderName;
+        Long newFolderId = createFolderInDb(folderName, dbPath, shelfId, parentFolderId);
 
-        createFolderInDb(folderName, dbPath, shelfId, parentFolderId);
+        dbPath += newFolderId;
+        fileSystemPath += newFolderId;
 
         return new File(fileSystemPath).mkdirs();
     }
 
-    public void createFolderInDb(String name, String path, Long shelfId, Long parentFolderId) {
+    public Long createFolderInDb(String name, String path, Long shelfId, Long parentFolderId) {
 
         if (parentFolderId == 0) {
             if (folderRepository.findByNameAndParentFolderIdAndShelfId(name, null, shelfId).isPresent())
@@ -154,7 +154,13 @@ public class FolderService {
         folderEntity.setShelfId(shelfId);
         folderEntity.setCreatedAt(LocalDateTime.now());
 
+        FolderEntity createdFolder = folderRepository.save(folderEntity);
+
+        folderEntity.setPath(folderEntity.getPath() + createdFolder.getId());
+
         folderRepository.save(folderEntity);
+
+        return folderEntity.getId();
     }
 
     @Transactional
