@@ -307,6 +307,7 @@ public class FileService {
     public void fileRename(Long userId, RenameFileRequestModel renameFileRequestModel) {
 
         String fileName = renameFileRequestModel.getFileName();
+
         Long fileId = renameFileRequestModel.getFileId();
 
         FileEntity fileEntity = fileRepository.findById(fileId)
@@ -322,6 +323,11 @@ public class FileService {
                 fileEntity.getParentFolderId(),
                 fileEntity.getId()).isPresent())
             throw ExceptionSupplier.fileAlreadyExists.get();
+
+        int dotIndex = fileEntity.getName().lastIndexOf(".");
+        String fileExtension = fileEntity.getName().substring(dotIndex);
+
+        fileName += fileExtension;
 
         String oldFilePath = homePath + userPath + fileEntity.getPath();
         File oldFile = new File(oldFilePath);
