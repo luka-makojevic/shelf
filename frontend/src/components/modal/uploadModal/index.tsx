@@ -1,5 +1,5 @@
 import { ChangeEvent, DragEvent, useEffect, useState } from 'react';
-import { FaFolderOpen } from 'react-icons/fa';
+import { FaFolderOpen, FaTimes } from 'react-icons/fa';
 import { useParams } from 'react-router-dom';
 import { useFiles } from '../../../hooks/fileHooks';
 import fileServices from '../../../services/fileServices';
@@ -10,7 +10,9 @@ import { Button } from '../../UI/button';
 import { Footer } from '../modal.styles';
 import { UploadModalProps } from './uploadModal.interfaces';
 import {
-  AddedFilesText,
+  AddedFilesIconButton,
+  AddedFilesList,
+  AddedFilesListItem,
   AddFilesInput,
   AddFilesLabel,
   AddFilesText,
@@ -134,6 +136,24 @@ const UploadModal = ({
     []
   );
 
+  const areFilesForUploadEmpty = filesForUpload.length === 0;
+
+  const ItemWithHandler = ({ file }: { file: File }) => {
+    const handleClick = () => {
+      const newFiles = filesForUpload.filter((f) => f.name !== file.name);
+      setFilesForUpload(newFiles);
+    };
+
+    return (
+      <AddedFilesListItem>
+        {file.name}
+        <AddedFilesIconButton onClick={handleClick}>
+          <FaTimes />
+        </AddedFilesIconButton>
+      </AddedFilesListItem>
+    );
+  };
+
   return (
     <>
       <DropZoneWrapper
@@ -142,22 +162,26 @@ const UploadModal = ({
         onDrop={handleDrop}
         isDragOver={isDragOver}
       >
-        <FaFolderOpen size={theme.size.lg} />
-        <AddFilesText>Drag and Drop</AddFilesText>
-        <AddFilesText>OR</AddFilesText>
+        {areFilesForUploadEmpty ? (
+          <>
+            <FaFolderOpen size={theme.size.lg} />
+            <AddFilesText>Drag and Drop</AddFilesText>
+            <AddFilesText>OR</AddFilesText>
+          </>
+        ) : (
+          <>
+            <AddFilesText>Added files</AddFilesText>
+            <AddedFilesList>
+              {filesForUpload.map((file: File) => (
+                <ItemWithHandler key={file.name} file={file} />
+              ))}
+            </AddedFilesList>
+          </>
+        )}
         <AddFilesLabel>
-          Add Files
+          {areFilesForUploadEmpty ? 'Add Files' : 'Add More Files'}
           <AddFilesInput type="file" multiple onChange={handleAddFiles} />
         </AddFilesLabel>
-        {filesForUpload.length > 0 && (
-          <AddedFilesText>
-            Added files:{' '}
-            {filesForUpload.map(
-              (file: File, i) =>
-                `${file.name}${i < filesForUpload.length - 1 ? ', ' : ''}`
-            )}
-          </AddedFilesText>
-        )}
       </DropZoneWrapper>
       {progress > 0 && <ProgressBar progress={progress} />}
       <Footer>

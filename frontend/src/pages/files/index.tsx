@@ -97,19 +97,11 @@ const Files = () => {
   if (loading) return null;
   return (
     <>
-      {error && (
+      {(error || success) && (
         <AlertPortal
-          type={AlertMessage.ERRROR}
-          title="Error"
-          message={error}
-          onClose={handleAlertClose}
-        />
-      )}
-      {success && (
-        <AlertPortal
-          type={AlertMessage.SUCCESS}
-          title="Success"
-          message={success}
+          type={error ? AlertMessage.ERRROR : AlertMessage.SUCCESS}
+          title={`${error ? 'Error' : 'Success'}`}
+          message={error || success}
           onClose={handleAlertClose}
         />
       )}
