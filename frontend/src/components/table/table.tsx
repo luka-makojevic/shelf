@@ -24,7 +24,6 @@ interface TableProps {
   headers: HeaderTypes[];
   setTableData: (data: TableDataTypes[]) => void;
   path: string;
-  location?: string;
   onDelete?: (shelf: TableDataTypes) => void;
   onEdit?: (data: TableDataTypes) => void;
   onRecoverFromTrash?: (data: TableDataTypes) => void;
@@ -41,7 +40,6 @@ export const Table = ({
   onEdit,
   onRecoverFromTrash,
   getSelectedRows,
-  location,
 }: TableProps) => {
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const [selectedRows, setSelectedRows] = useState<TableDataTypes[]>([]);
@@ -121,7 +119,6 @@ export const Table = ({
               multiSelect={mulitSelect}
               data={item}
               path={path}
-              location={location}
               onDelete={onDelete}
               onRecoverFromTrash={onRecoverFromTrash}
               onEdit={onEdit}

@@ -19,6 +19,7 @@ import fileServices from '../../services/fileServices';
 import { useShelf } from '../../hooks/shelfHooks';
 import { useAppSelector } from '../../store/hooks';
 import TableWrapper from '../../components/table/TableWrapper';
+import { RootState } from '../../store/store';
 
 const headers = [
   {
@@ -43,6 +44,7 @@ const Trash = () => {
   const [openModal, setOpenModal] = useState(false);
   const [error, setError] = useState('');
   const { folderId } = useParams();
+  const isLoading = useAppSelector((state: RootState) => state.loading.loading);
 
   const message =
     trashData.length === 0
@@ -88,6 +90,7 @@ const Trash = () => {
   };
 
   const handleHardDelete = () => {
+    if (selectedRows.length === 0) return;
     setOpenModal(true);
   };
 
@@ -136,6 +139,8 @@ const Trash = () => {
     setSelectedRows([]);
   };
 
+  if (isLoading) return null;
+
   return (
     <>
       {openModal && (
@@ -166,11 +171,7 @@ const Trash = () => {
             searchKey="name"
           />
           <ButtonActionsBox>
-            <Button
-              onClick={handleHardDelete}
-              icon={<FaTrash />}
-              disabled={selectedRows.length === 0}
-            >
+            <Button onClick={handleHardDelete} icon={<FaTrash />}>
               Delete
             </Button>
           </ButtonActionsBox>
@@ -183,7 +184,6 @@ const Trash = () => {
             data={filteredData}
             headers={headers}
             path="folders/"
-            location="trash"
             mulitSelect
             getSelectedRows={getSelectedRows}
             onRecoverFromTrash={handleRecoverFromTrash}

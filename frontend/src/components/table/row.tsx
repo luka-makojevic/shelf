@@ -5,7 +5,7 @@ import {
   FaTrash,
   FaTrashRestore,
 } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { TableDataTypes } from '../../interfaces/dataTypes';
 import CheckBox from '../UI/checkbox/checkBox';
 import {
@@ -22,7 +22,6 @@ interface RowProps {
   setSelectedRows: (data: TableDataTypes[]) => void;
   isChecked?: boolean;
   path: string;
-  location?: string;
   onDelete?: (shelf: TableDataTypes) => void;
   onEdit?: (data: TableDataTypes) => void;
   onRecoverFromTrash?: (data: TableDataTypes) => void;
@@ -35,12 +34,12 @@ export const DashboardTableRow = ({
   setSelectedRows,
   isChecked,
   path,
-  location,
   onDelete,
   onEdit,
   onRecoverFromTrash,
 }: RowProps) => {
   const navigation = useNavigate();
+  const location = useLocation();
 
   const handleChange = () => {
     const alreadySelected = selectedRows.some(
@@ -110,7 +109,7 @@ export const DashboardTableRow = ({
 
         return (
           <CellWithHandler
-            key={rowText}
+            key={`${data.id}-${rowText}`}
             rowText={rowText}
             pathName={`${path}${data.id}`}
           />
@@ -130,7 +129,7 @@ export const DashboardTableRow = ({
       {multiSelect && (
         <StyledCell>
           <IconContainer>
-            {location && location === 'trash' ? (
+            {location.pathname === '/dashboard/trash' ? (
               <FaTrashRestore onClick={handleRecoverFromTrash} />
             ) : (
               <FaEdit onClick={handleEdit} />

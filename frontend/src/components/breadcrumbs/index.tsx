@@ -10,7 +10,7 @@ const Breadcrumbs = () => {
   let rootUrl =
     pathHistory &&
     pathHistory[0] &&
-    `/dashboard/${pathHistory[0].folderName}/${pathHistory[0].folderId}`;
+    `/dashboard/shelves/${pathHistory[0].folderId}`;
   if (pathHistory && pathHistory[0] && pathHistory[0].folderName === 'trash') {
     rootUrl =
       pathHistory &&
@@ -27,8 +27,13 @@ const Breadcrumbs = () => {
           <span key={item.folderId}>
             {i === 0 ? (
               <span>
-                <Link to={rootUrl}>{pathHistory[0].folderName}</Link>
-                {` ${separator} `}
+                {pathHistory.length === 1 ? (
+                  <span>{pathHistory[0].folderName}</span>
+                ) : (
+                  <Link to={rootUrl}>{pathHistory[0].folderName}</Link>
+                )}
+
+                {` ${pathHistory.length > 1 ? separator : ''} `}
               </span>
             ) : (
               <>

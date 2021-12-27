@@ -42,7 +42,6 @@ export const TableHeaderInner = styled.div`
 `;
 
 export const StyledTableContainer = styled.div`
-  height: 650px;
   overflow-y: auto;
 `;
 
@@ -64,7 +63,7 @@ export const StyledRow = styled.tr`
   }
 
   &:hover {
-    background-color: ${theme.colors.hoverRow};
+    background-color: ${theme.colors.lightBlue};
   }
 `;
 
