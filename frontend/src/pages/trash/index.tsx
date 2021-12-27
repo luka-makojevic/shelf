@@ -43,7 +43,6 @@ const Trash = () => {
   const [openModal, setOpenModal] = useState(false);
   const [error, setError] = useState('');
   const { folderId } = useParams();
-  console.log(folderId);
 
   const message =
     trashData.length === 0

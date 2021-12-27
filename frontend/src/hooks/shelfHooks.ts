@@ -1,5 +1,4 @@
 import shelfServices from '../services/shelfServices';
-import { setFiles } from '../store/fileReducer';
 import { useAppDispatch } from '../store/hooks';
 import { setLoading } from '../store/loadingReducer';
 import { setPathHistory } from '../store/pathHistory';
