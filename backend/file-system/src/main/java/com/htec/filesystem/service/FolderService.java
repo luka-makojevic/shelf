@@ -111,7 +111,11 @@ public class FolderService {
         ShelfEntity shelfEntity = folderRepository.getShelfByFolderId(folderId)
                 .orElseThrow(ExceptionSupplier.shelfNotFound);
 
-        breadCrumbs.add(0, new BreadCrumbDTO(shelfEntity.getName(), shelfEntity.getId()));
+        if(!deleted){
+            breadCrumbs.add(0, new BreadCrumbDTO(shelfEntity.getName(), shelfEntity.getId()));
+        }else{
+            breadCrumbs.add(0, new BreadCrumbDTO("trash", shelfEntity.getId()));
+        }
 
         return breadCrumbs;
     }
@@ -187,8 +191,6 @@ public class FolderService {
         List<Long> downStreamFoldersIds = downStreamFolders.stream().map(FolderEntity::getId).collect(Collectors.toList());
 
         List<FileEntity> downStreamFiles = fileRepository.findAllByParentFolderIdIn(downStreamFoldersIds);
-
-        List<Long> downStreamFilesIds = downStreamFiles.stream().map(FileEntity::getId).collect(Collectors.toList());
 
         if (deleted) {
 

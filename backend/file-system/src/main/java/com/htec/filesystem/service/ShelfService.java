@@ -168,7 +168,7 @@ public class ShelfService {
         shelfRepository.save(shelfEntity);
     }
 
-    public List<ShelfItemDTO> getFirstLevelTrash(Long userId) {
+    public ShelfContentResponseModel getFirstLevelTrash(Long userId) {
 
         List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserId(userId);
         List<Long> shelfIds = shelfEntities.stream().map(ShelfEntity::getId).collect(Collectors.toList());
@@ -184,6 +184,9 @@ public class ShelfService {
         trashItems.addAll(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
         trashItems.addAll(ShelfItemMapper.INSTANCE.folderEntitiesToShelfItemDTOs(folderEntities));
 
-        return trashItems;
+        List<BreadCrumbDTO> breadCrumbDTOS = new ArrayList<>();
+        breadCrumbDTOS.add(new BreadCrumbDTO("trash", userId));
+
+        return new ShelfContentResponseModel(breadCrumbDTOS,trashItems);
     }
 }
