@@ -38,6 +38,7 @@ public class FileService {
     private final String homePath = System.getProperty("user.home");
     private final String pathSeparator = FileSystems.getDefault().getSeparator();
     private final String userPath = pathSeparator + "shelf-files" + pathSeparator + "user-data" + pathSeparator;
+    private final String trash = "trash";
 
     private final FileRepository fileRepository;
     private final FolderRepository folderRepository;
@@ -208,19 +209,30 @@ public class FileService {
 
         List<FileEntity> fileEntitiesNotDeleted = fileRepository.findAllByUserIdAndNotDeletedAndParentFolderIdsIn(user.getId(), folderIds);
 
-        Map<Optional<Long>, List<FileEntity>> filesByFolder = fileEntitiesNotDeleted.stream().collect(Collectors.groupingBy(e -> Optional.ofNullable(e.getParentFolderId())));
+        Map<Optional<Long>, List<FileEntity>> filesByFolder = fileEntitiesNotDeleted.stream().
+                collect(Collectors.groupingBy(e -> Optional.ofNullable(e.getParentFolderId())));
 
         Map<String, Integer> filesCount = new HashMap<>();
 
         for (FileEntity fileEntity : fileEntities) {
             List<FileEntity> existingFiles = filesByFolder.getOrDefault(Optional.ofNullable(fileEntity.getParentFolderId()), new ArrayList<>());
 
-            if (existingFiles.stream().anyMatch(e -> e.getName().equals(fileEntity.getName()))) {
+            if (existingFiles.stream().anyMatch(e -> e.getName().equals(fileEntity.getRealName()))) {
                 filesCount.merge(fileEntity.getName(), 1, Integer::sum);
             }
         }
 
         for (FileEntity fileEntity : fileEntities) {
+
+            String newPath = "";
+
+            int extensionIndex = fileEntity.getName().lastIndexOf('.');
+            String nameWithoutExtension = fileEntity.getName().substring(0, extensionIndex);
+
+            String extension = fileEntity.getName().substring(extensionIndex);
+
+            int uuidIndex = extension.lastIndexOf('_');
+            extension = extension.substring(0, uuidIndex);
 
             Integer fileNameCounter = filesCount.getOrDefault(fileEntity.getName(), 0);
 
@@ -228,21 +240,37 @@ public class FileService {
             String fileNameWithUUID = fileEntity.getName();
 
             if (fileNameCounter > 0) {
+
                 filesCount.put(fileEntity.getName(), fileNameCounter - 1);
-
-                int extensionIndex = fileEntity.getName().lastIndexOf('.');
-                String nameWithoutExtension = fileEntity.getName().substring(0, extensionIndex);
-                String extension = fileEntity.getName().substring(extensionIndex);
-
-                int index = fileEntity.getPath().lastIndexOf(pathSeparator);
-                String newPath = fileEntity.getPath().substring(0, index);
-
                 fileEntity.setName(nameWithoutExtension + "(" + fileNameCounter + ")" + extension);
-                fileEntity.setPath(newPath + pathSeparator + fileEntity.getName());
-                fileEntity.setDeletedAt(null);
+            } else {
+
+                fileEntity.setName(nameWithoutExtension + extension);
             }
 
-            recoverFilesOnFileSystem(fileEntity.getPath(), oldPath, fileNameWithUUID);
+            if (fileEntity.getParentFolderId() != null) {
+
+                FolderEntity folderEntity = folderRepository.findById(fileEntity.getParentFolderId())
+                        .orElseThrow(ExceptionSupplier.noFolderWithGivenId);
+
+                if (Boolean.FALSE.equals(folderEntity.getDeleted())) {
+                    newPath = folderEntity.getPath() + pathSeparator + fileEntity.getName();
+                }
+            } else {
+                newPath = fileEntity.getPath().replace(trash, "shelves");
+                newPath = newPath.replace(fileNameWithUUID, fileEntity.getName());
+                int shelfIdIndex = newPath.lastIndexOf(pathSeparator);
+                newPath = newPath.substring(0, shelfIdIndex) + pathSeparator + fileEntity.getShelfId() + newPath.substring(shelfIdIndex);
+            }
+
+
+            fileEntity.setPath(newPath);
+            fileEntity.setDeletedAt(null);
+            fileEntity.setTrashVisible(null);
+
+
+            recoverFilesInFileSystem(newPath, oldPath);
+            fileRepository.save(fileEntity);
         }
     }
 
@@ -269,8 +297,8 @@ public class FileService {
             int index = oldPath.indexOf(pathSeparator);
             String userId = oldPath.substring(0, index);
 
-            String newPath = homePath + userPath + userId + pathSeparator + "trash" + pathSeparator + newFileName;
-            newPath = newPath.replace("shelves" + pathSeparator + shelfId, "trash");
+            String newPath = homePath + userPath + userId + pathSeparator + trash + pathSeparator + newFileName;
+            newPath = newPath.replace("shelves" + pathSeparator + shelfId, trash);
 
             Path uploadPath = Paths.get(newPath.replace(newFileName, ""));
             if (!Files.exists(uploadPath)) {
@@ -284,21 +312,21 @@ public class FileService {
         }
     }
 
-    private void recoverFilesOnFileSystem(String newPath, String oldPath, String fileNameWithUUID) {
+    private void recoverFilesInFileSystem(String newPath, String oldPath) {
 
         try {
+            String newFileSystemPath = homePath + userPath + newPath;
+            String oldFileSystemPath = homePath + userPath + oldPath;
 
-            int index = oldPath.lastIndexOf(pathSeparator);
-            String oldPathWithoutFileName = oldPath.substring(0, index);
-
-            String newPathFull = homePath + userPath + newPath;
-            String oldPathFull = homePath + userPath + oldPathWithoutFileName + pathSeparator + fileNameWithUUID;
-
-            Files.move(Paths.get(oldPathFull), Paths.get(newPathFull));
+            Files.move(Paths.get(oldFileSystemPath), Paths.get(newFileSystemPath));
 
         } catch (IOException e) {
             throw ExceptionSupplier.internalServerError.get();
         }
+    }
+
+    private void recoverFilesInDb() {
+
     }
 
     public void fileRename(Long userId, RenameFileRequestModel renameFileRequestModel) {
@@ -370,4 +398,34 @@ public class FileService {
         fileRepository.deleteAll(fileEntities);
     }
 
+    public void fileRecover(Long userId, Long fileId) {
+
+        FileEntity fileEntity = fileRepository.findById(fileId)
+                .orElseThrow(ExceptionSupplier.noFileWithGivenId);
+
+        ShelfEntity shelfEntity = shelfRepository.findById(fileEntity.getShelfId())
+                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+
+        if (!Objects.equals(shelfEntity.getUserId(), userId)) {
+            throw ExceptionSupplier.userNotAllowedToAccessFile.get();
+        }
+
+        String dbPath = "";
+        String fileSystemPath = "";
+
+        if (fileEntity.getParentFolderId() != null) {
+
+            FolderEntity folderEntity = folderRepository.findById(fileEntity.getParentFolderId())
+                    .orElseThrow(ExceptionSupplier.noFolderWithGivenId);
+
+            if (!Boolean.TRUE.equals(folderEntity.getDeleted())) {
+
+                dbPath = fileEntity.getPath() + pathSeparator + fileEntity.getName();
+
+            }
+        } else {
+            dbPath = fileEntity.getPath().replace(trash, "shelves");
+        }
+        fileSystemPath = homePath + userPath + dbPath;
+    }
 }
