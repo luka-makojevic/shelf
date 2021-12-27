@@ -263,11 +263,9 @@ public class FileService {
                 newPath = newPath.substring(0, shelfIdIndex) + pathSeparator + fileEntity.getShelfId() + newPath.substring(shelfIdIndex);
             }
 
-
             fileEntity.setPath(newPath);
             fileEntity.setDeletedAt(null);
             fileEntity.setTrashVisible(null);
-
 
             recoverFilesInFileSystem(newPath, oldPath);
             fileRepository.save(fileEntity);
