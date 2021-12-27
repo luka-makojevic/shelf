@@ -1,10 +1,5 @@
-import {
-  FaEdit,
-  FaFile,
-  FaFolder,
-  FaTrash,
-  FaTrashRestore,
-} from 'react-icons/fa';
+import { FaEdit, FaFile, FaFolder, FaTrash } from 'react-icons/fa';
+import { RiArrowGoBackFill } from 'react-icons/ri';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { TableDataTypes } from '../../interfaces/dataTypes';
 import CheckBox from '../UI/checkbox/checkBox';
@@ -130,7 +125,7 @@ export const DashboardTableRow = ({
         <StyledCell>
           <IconContainer>
             {location.pathname === '/dashboard/trash' ? (
-              <FaTrashRestore onClick={handleRecoverFromTrash} />
+              <RiArrowGoBackFill onClick={handleRecoverFromTrash} />
             ) : (
               <FaEdit onClick={handleEdit} />
             )}
