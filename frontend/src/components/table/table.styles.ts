@@ -42,7 +42,6 @@ export const TableHeaderInner = styled.div`
 `;
 
 export const StyledTableContainer = styled.div`
-  max-height: 280px;
   overflow-y: auto;
 `;
 
@@ -64,11 +63,23 @@ export const StyledRow = styled.tr`
   }
 
   &:hover {
-    color: ${theme.colors.primary};
+    background-color: ${theme.colors.lightBlue};
   }
 `;
 
 export const IconContainer = styled.div`
   display: inline-block;
   margin-right: ${theme.space.sm};
+
+  &:hover {
+    color: ${theme.colors.primary};
+  }
+`;
+
+export const DeleteActionContainer = styled.span`
+  margin-right: ${theme.space.sm};
+
+  &:hover {
+    color: ${theme.colors.danger};
+  }
 `;

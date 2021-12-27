@@ -6,8 +6,8 @@ import {
   FaPlusCircle,
   FaTrash,
 } from 'react-icons/fa';
+import { useDispatch } from 'react-redux';
 import { Table } from '../../components/table/table';
-import TableWrapper from '../../components/table/TableWrapper';
 import { TableDataTypes } from '../../interfaces/dataTypes';
 import { useAppSelector } from '../../store/hooks';
 import AlertPortal from '../../components/alert/alert';
@@ -17,11 +17,13 @@ import { Button } from '../../components/UI/button';
 import { AlertMessage } from '../../utils/enums/alertMessages';
 import { Description } from '../../components/text/text-styles';
 import Breadcrumbs from '../../components/breadcrumbs';
-import { ButtonContainer } from '../../components/table/tableWrapper-styles';
+import { ButtonContainer } from '../../components/table/tableWrapper.styles';
 import SearchBar from '../../components/UI/searchBar/searchBar';
 import { useFiles } from '../../hooks/fileHooks';
 import FolderModal from '../../components/modal/folderModal';
+import { setPathHistory } from '../../store/pathHistory';
 import fileServices from '../../services/fileServices';
+import TableWrapper from '../../components/table/TableWrapper';
 
 const Files = () => {
   const files = useAppSelector((state) => state.file.files);
@@ -35,6 +37,8 @@ const Files = () => {
   const [selectedFile, setSelectedFile] = useState<TableDataTypes | null>();
   const [success, setSuccess] = useState('');
   const { shelfId, folderId } = useParams();
+
+  const dispatch = useDispatch();
 
   const handleOpenUploadModal = () => {
     setOpenUploadModal(true);
@@ -77,6 +81,13 @@ const Files = () => {
       setFilesForTable(newFiles);
     }
   }, [files]);
+
+  useEffect(
+    () => () => {
+      dispatch(setPathHistory([]));
+    },
+    []
+  );
 
   const message =
     files?.length === 0
