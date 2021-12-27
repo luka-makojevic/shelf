@@ -10,7 +10,9 @@ export interface ShelfModalProps {
 export interface DeleteShelfModalProps {
   onCloseModal: Dispatch<SetStateAction<boolean>>;
   onError: (value: SetStateAction<string>) => void;
-  shelf: TableDataTypes | null;
+  shelf?: TableDataTypes | null;
+  message?: string;
+  selectedData?: TableDataTypes[];
 }
 
 export interface PathType {

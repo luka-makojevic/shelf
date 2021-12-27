@@ -26,13 +26,16 @@ public class GatewayService {
 
     public final static String FILE_NOT_FOUND_MESSAGE = "File not found";
 
+    private final List<String> allowedRouteUrls;
 
     private final Map<String, String> apiServerUrls;
 
     private final RestTemplate restTemplate;
 
-    public GatewayService(@Value("#{${apiServers}}") Map<String, String> apiServerUrls,
+    public GatewayService(@Value("#{${allowedRoutes}}") List<String> allowedRouteUrls,
+                          @Value("#{${apiServers}}") Map<String, String> apiServerUrls,
                           RestTemplate restTemplate) {
+        this.allowedRouteUrls = allowedRouteUrls;
         this.apiServerUrls = apiServerUrls;
         this.restTemplate = restTemplate;
     }
@@ -41,7 +44,7 @@ public class GatewayService {
 
         String microserviceName = getMicroserviceName(request.getUrl().getPath());
 
-        if (!AUTH_MICROSERVICE_NAME.equals(microserviceName)) {
+        if (!AUTH_MICROSERVICE_NAME.equals(microserviceName) && !isAllowedRoute(request.getUrl().getPath())) {
 
             String accountApiUrl = getApiUrl(AUTH_MICROSERVICE_NAME, AUTH_ENDPOINT_PATH, null);
 
@@ -63,6 +66,15 @@ public class GatewayService {
         }
 
         return send(apiUrl, Objects.requireNonNull(request.getMethod()), forwardingRequest);
+    }
+
+    private boolean isAllowedRoute(String path) {
+        for (String allowedRouteUrl : allowedRouteUrls) {
+            if (path.contains(allowedRouteUrl)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private HttpEntity<byte[]> buildHttpEntity(RequestEntity<byte[]> request, HttpServletRequest servletRequest) throws IOException {

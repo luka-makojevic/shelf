@@ -183,10 +183,13 @@ export interface FileDataType {
   id: number;
   name: string;
   path: string;
-  createdAt: number;
+  createdAt: string;
   folder: boolean;
   shelfId: number;
   parentFolderId: number;
+  userId: number;
+  size: number;
+  isDeleted: boolean;
 }
 
 export interface PathHistoryData {

@@ -1,6 +1,6 @@
-package pages;
+package models;
 
-import helpers.ExcelReader;
+import helpers.excelHelpers.ExcelReader;
 
 public class User
 {

@@ -1,4 +1,4 @@
-package tests.suits;
+package tests.suite;
 
 import org.junit.Assume;
 

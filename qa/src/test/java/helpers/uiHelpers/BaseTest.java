@@ -1,9 +1,6 @@
-package helpers;
+package helpers.uiHelpers;
 
-import helpers.BaseWdWaitHelpers;
-import helpers.BaseWebDriverManager;
-import helpers.ExcelReader;
-import helpers.NavigateBrowserHelper;
+import helpers.excelHelpers.ExcelReader;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.openqa.selenium.WebDriver;
@@ -19,8 +16,8 @@ public class BaseTest
 {
     public static WebDriver driver;
     public static Properties prop;
-    public static BaseWebDriverManager baseWebDriverManager;
-    public static BaseWdWaitHelpers baseWdWaitHelpers;
+    public static WebDriverManager webDriverManager;
+    public static WdWaitHelpers wdWaitHelpers;
     public static NavigateBrowserHelper navigateBrowser;
     public static ExcelReader excelReader;
     public static LoginPage loginPage;
@@ -30,15 +27,15 @@ public class BaseTest
     @BeforeClass
     public static void initialize() throws IOException
     {
-        baseWebDriverManager = new BaseWebDriverManager();
-        driver = baseWebDriverManager.initializeDriver();
-        baseWdWaitHelpers = new BaseWdWaitHelpers(driver);
-        navigateBrowser = new NavigateBrowserHelper(driver, prop, baseWdWaitHelpers);
+        webDriverManager = new WebDriverManager();
+        driver = webDriverManager.initializeDriver();
+        wdWaitHelpers = new WdWaitHelpers(driver);
+        navigateBrowser = new NavigateBrowserHelper(driver, prop, wdWaitHelpers);
         driver.manage().window().maximize();
         excelReader = new ExcelReader("src/main/resources/ExcelRead.xlsx");
         loginPage = new LoginPage(driver);
-        loginViaMicrosoft = new LoginViaMicrosoft(driver, baseWdWaitHelpers);
-        regPage = new RegistrationPage(driver, baseWdWaitHelpers);
+        loginViaMicrosoft = new LoginViaMicrosoft(driver, wdWaitHelpers);
+        regPage = new RegistrationPage(driver, wdWaitHelpers);
     }
 
     @AfterClass

@@ -192,8 +192,6 @@ public class FolderService {
 
         List<FileEntity> downStreamFiles = fileRepository.findAllByParentFolderIdIn(downStreamFoldersIds);
 
-        List<Long> downStreamFilesIds = downStreamFiles.stream().map(FileEntity::getId).collect(Collectors.toList());
-
         if (deleted) {
 
             moveFoldersToTrash(folderEntities);

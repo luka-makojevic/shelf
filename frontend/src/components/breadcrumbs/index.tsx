@@ -1,17 +1,23 @@
 import { Link } from '../text/text-styles';
 import { useAppSelector } from '../../store/hooks';
-import { BreadcrumbsContainer } from './breadcrumbs-styles';
+import { BreadcrumbsContainer } from './breadcrumbs.styles';
 import { PathHistoryData } from '../../interfaces/dataTypes';
 
 const Breadcrumbs = () => {
   const pathHistory: PathHistoryData[] = useAppSelector(
     (state) => state.pathHistory.pathHistory
   );
-
-  const rootUrl =
+  let rootUrl =
     pathHistory &&
     pathHistory[0] &&
     `/dashboard/shelves/${pathHistory[0].folderId}`;
+  if (pathHistory && pathHistory[0] && pathHistory[0].folderName === 'trash') {
+    rootUrl =
+      pathHistory &&
+      pathHistory[0] &&
+      `/dashboard/${pathHistory[0].folderName}`;
+  }
+
   const separator = '/';
 
   return (
@@ -21,8 +27,13 @@ const Breadcrumbs = () => {
           <span key={item.folderId}>
             {i === 0 ? (
               <span>
-                <Link to={rootUrl}>{pathHistory[0].folderName}</Link>
-                {` ${separator} `}
+                {pathHistory.length === 1 ? (
+                  <span>{pathHistory[0].folderName}</span>
+                ) : (
+                  <Link to={rootUrl}>{pathHistory[0].folderName}</Link>
+                )}
+
+                {` ${pathHistory.length > 1 ? separator : ''} `}
               </span>
             ) : (
               <>

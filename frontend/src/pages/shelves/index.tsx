@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Table } from '../../components/table/table';
-import TableWrapper from '../../components/table/TableWrapper';
 import { useShelf } from '../../hooks/shelfHooks';
 import { TableDataTypes } from '../../interfaces/dataTypes';
 import { useAppSelector } from '../../store/hooks';
@@ -10,8 +9,13 @@ import Modal from '../../components/modal';
 import { Button } from '../../components/UI/button';
 import { AlertMessage } from '../../utils/enums/alertMessages';
 import { Description } from '../../components/text/text-styles';
-import DeleteShelfModal from '../../components/modal/deleteShelfModal';
+import DeleteShelfModal from '../../components/modal/deleteMessageModal';
 import SearchBar from '../../components/UI/searchBar/searchBar';
+import TableWrapper from '../../components/table/TableWrapper';
+import {
+  ActionsBox,
+  ButtonActionsBox,
+} from '../../components/table/tableWrapper.styles';
 
 const Shelves = () => {
   const shelves = useAppSelector((state) => state.shelf.shelves);
@@ -29,8 +33,6 @@ const Shelves = () => {
   const handleSetError = () => {
     setError('');
   };
-
-  const user = useAppSelector((state) => state.user.user);
 
   const { getShelves } = useShelf();
 
@@ -95,7 +97,7 @@ const Shelves = () => {
           onClose={handleSetError}
         />
       )}
-      
+
       {openModal && (
         <Modal
           title={selectedShelf ? 'Rename shelf' : 'Create shelf'}
@@ -124,15 +126,17 @@ const Shelves = () => {
         title="Shelves"
         description="Shelves are the fundamental containers for data storage."
       >
-        <div>
+        <ActionsBox>
           <SearchBar
             placeholder="Search..."
             data={shelvesForTable}
             setData={setFilteredShelves}
             searchKey="name"
           />
-          <Button onClick={handleOpenModal}>Create shelf</Button>
-        </div>
+          <ButtonActionsBox>
+            <Button onClick={handleOpenModal}>Create shelf</Button>
+          </ButtonActionsBox>
+        </ActionsBox>
         {shelves.length === 0 || filteredShelves.length === 0 ? (
           <Description>{message}</Description>
         ) : (

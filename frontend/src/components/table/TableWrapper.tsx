@@ -3,7 +3,7 @@ import {
   TableContent,
   TableDescription,
   TableTitle,
-} from './tableWrapper-styles';
+} from './tableWrapper.styles';
 
 export interface TableWrapperProps {
   title?: string;

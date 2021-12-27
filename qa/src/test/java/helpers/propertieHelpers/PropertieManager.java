@@ -1,25 +1,26 @@
-package helpers;
+package helpers.propertieHelpers;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class BaseHelperPropertieManager
+public class PropertieManager
 {
-    private static BaseHelperPropertieManager instance;
+    private static PropertieManager instance;
     private static final Object lock = new Object();
 
     private static String baseuri;
+    private static String shelfuri;
     private static String dburl;
     private static String dbtable;
     private static String dbuser;
     private static String dbpass;
 
     //Create a Singleton instance. We need only one instance of Property Manager.
-    public static BaseHelperPropertieManager getInstance() {
+    public static PropertieManager getInstance() {
         if (instance == null) {
             synchronized (lock) {
-                instance = new BaseHelperPropertieManager();
+                instance = new PropertieManager();
                 instance.loadData();
             }
         }
@@ -39,6 +40,7 @@ public class BaseHelperPropertieManager
         }
         //Get properties from configuration.properties
         baseuri = prop.getProperty("base-uri");
+        shelfuri = prop.getProperty("shelf-uri");
         dburl = prop.getProperty("db-url");
         dbtable = prop.getProperty("shelf-table");
         dbuser = prop.getProperty("db-user");
@@ -47,6 +49,9 @@ public class BaseHelperPropertieManager
 
     public String getURI(String s) {
         return baseuri;
+    }
+    public String getShelfURI(String s) {
+        return shelfuri;
     }
     public String getdbURI(String s) {
         return dburl;

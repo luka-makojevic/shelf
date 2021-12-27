@@ -1,9 +1,19 @@
-import { FaEdit, FaTrash, FaFolder, FaFile } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import {
+  FaEdit,
+  FaFile,
+  FaFolder,
+  FaTrash,
+  FaTrashRestore,
+} from 'react-icons/fa';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { TableDataTypes } from '../../interfaces/dataTypes';
-import { theme } from '../../theme';
 import CheckBox from '../UI/checkbox/checkBox';
-import { StyledRow, StyledCell, IconContainer } from './table -styles';
+import {
+  StyledRow,
+  StyledCell,
+  DeleteActionContainer,
+  IconContainer,
+} from './table.styles';
 
 interface RowProps {
   data: TableDataTypes;
@@ -14,6 +24,7 @@ interface RowProps {
   path: string;
   onDelete?: (shelf: TableDataTypes) => void;
   onEdit?: (data: TableDataTypes) => void;
+  onRecoverFromTrash?: (data: TableDataTypes) => void;
 }
 
 export const DashboardTableRow = ({
@@ -25,8 +36,10 @@ export const DashboardTableRow = ({
   path,
   onDelete,
   onEdit,
+  onRecoverFromTrash,
 }: RowProps) => {
   const navigation = useNavigate();
+  const location = useLocation();
 
   const handleChange = () => {
     const alreadySelected = selectedRows.some(
@@ -73,6 +86,10 @@ export const DashboardTableRow = ({
     if (onEdit) onEdit(data);
   };
 
+  const handleRecoverFromTrash = () => {
+    if (onRecoverFromTrash) onRecoverFromTrash(data);
+  };
+
   return (
     <StyledRow>
       {multiSelect && (
@@ -80,7 +97,9 @@ export const DashboardTableRow = ({
           <CheckBox onChange={handleChange} checked={isChecked} />
         </StyledCell>
       )}
+
       {Object.values(data).map((rowText) => {
+        if (rowText === data.id || rowText === data.folder) return null;
         if (
           rowText === data.id ||
           rowText === data.folder ||
@@ -90,7 +109,7 @@ export const DashboardTableRow = ({
 
         return (
           <CellWithHandler
-            key={rowText}
+            key={`${data.id}-${rowText}`}
             rowText={rowText}
             pathName={`${path}${data.id}`}
           />
@@ -98,15 +117,24 @@ export const DashboardTableRow = ({
       })}
       {!multiSelect && (
         <StyledCell>
+          <DeleteActionContainer>
+            <FaTrash onClick={handleDelete} />
+          </DeleteActionContainer>
+
           <IconContainer>
-            <FaTrash fill={theme.colors.danger} onClick={handleDelete} />
+            <FaEdit onClick={handleEdit} />
           </IconContainer>
-          <FaEdit fill={theme.colors.black} onClick={handleEdit} />
         </StyledCell>
       )}
       {multiSelect && (
         <StyledCell>
-          <FaEdit fill={theme.colors.black} onClick={handleEdit} />
+          <IconContainer>
+            {location.pathname === '/dashboard/trash' ? (
+              <FaTrashRestore onClick={handleRecoverFromTrash} />
+            ) : (
+              <FaEdit onClick={handleEdit} />
+            )}
+          </IconContainer>
         </StyledCell>
       )}
     </StyledRow>

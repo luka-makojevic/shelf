@@ -69,23 +69,19 @@ public class FileService {
         FileUtil.saveFile(uploadDir, fileName, bytes);
     }
 
-    public FileResponseModel getFile(AuthUser user, Long id, boolean file) {
+    public FileResponseModel getFile(Long userId, Long id, boolean file) {
 
         String path = "";
 
-        if (file) {
+        if (file && userId != null) {
 
-            FileEntity fileEntity = fileRepository.findByIdAndUserIdAndDeleted(id, user.getId(), false)
+            FileEntity fileEntity = fileRepository.findByIdAndUserIdAndDeleted(id, userId, false)
                     .orElseThrow(ExceptionSupplier.fileNotFound);
 
             path = fileEntity.getPath();
         } else {
 
-            if (!Objects.equals(user.getId(), id)) {
-                throw ExceptionSupplier.userNotAllowedToAccessFile.get();
-            }
-
-            path = userAPICallService.getUserPhotoPath(user.getId());
+            path = userAPICallService.getUserPhotoPath(id);
         }
 
         String folder = homePath + userPath;
@@ -308,6 +304,7 @@ public class FileService {
     public void fileRename(Long userId, RenameFileRequestModel renameFileRequestModel) {
 
         String fileName = renameFileRequestModel.getFileName();
+
         Long fileId = renameFileRequestModel.getFileId();
 
         FileEntity fileEntity = fileRepository.findById(fileId)
@@ -323,6 +320,11 @@ public class FileService {
                 fileEntity.getParentFolderId(),
                 fileEntity.getId()).isPresent())
             throw ExceptionSupplier.fileAlreadyExists.get();
+
+        int dotIndex = fileEntity.getName().lastIndexOf(".");
+        String fileExtension = fileEntity.getName().substring(dotIndex);
+
+        fileName += fileExtension;
 
         String oldFilePath = homePath + userPath + fileEntity.getPath();
         File oldFile = new File(oldFilePath);
