@@ -7,11 +7,17 @@ const Breadcrumbs = () => {
   const pathHistory: PathHistoryData[] = useAppSelector(
     (state) => state.pathHistory.pathHistory
   );
-
-  const rootUrl =
+  let rootUrl =
     pathHistory &&
     pathHistory[0] &&
-    `/dashboard/shelves/${pathHistory[0].folderId}`;
+    `/dashboard/${pathHistory[0].folderName}/${pathHistory[0].folderId}`;
+  if (pathHistory && pathHistory[0] && pathHistory[0].folderName === 'trash') {
+    rootUrl =
+      pathHistory &&
+      pathHistory[0] &&
+      `/dashboard/${pathHistory[0].folderName}`;
+  }
+
   const separator = '/';
 
   return (

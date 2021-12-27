@@ -160,6 +160,7 @@ const Files = () => {
         setError('Failed to download');
       });
   };
+  const rootUrl = '/dashboard/shelves/';
 
   if (loading) return null;
   return (

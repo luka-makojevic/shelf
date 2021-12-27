@@ -17,6 +17,9 @@ const editShelf = (data: { shelfId: number; shelfName: string }) =>
 
 const getTrash = () => instance.get(`${API_URL_FILESYSTEM}shelf/trash`);
 
+const getTrashFiles = (folderId: number) =>
+  instance.get(`${API_URL_FILESYSTEM}folder/trash/${folderId}`);
+
 export default {
   getShelves,
   createShelf,
@@ -24,4 +27,5 @@ export default {
   editShelf,
   hardDeleteShelf,
   getTrash,
+  getTrashFiles,
 };

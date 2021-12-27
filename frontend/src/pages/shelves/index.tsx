@@ -12,6 +12,10 @@ import { Description } from '../../components/text/text-styles';
 import DeleteShelfModal from '../../components/modal/deleteMessageModal';
 import SearchBar from '../../components/UI/searchBar/searchBar';
 import TableWrapper from '../../components/table/TableWrapper';
+import {
+  ActionsBox,
+  ButtonActionsBox,
+} from '../../components/table/tableWrapper.styles';
 
 const Shelves = () => {
   const shelves = useAppSelector((state) => state.shelf.shelves);
@@ -122,15 +126,17 @@ const Shelves = () => {
         title="Shelves"
         description="Shelves are the fundamental containers for data storage."
       >
-        <div>
+        <ActionsBox>
           <SearchBar
             placeholder="Search..."
             data={shelvesForTable}
             setData={setFilteredShelves}
             searchKey="name"
           />
-          <Button onClick={handleOpenModal}>Create shelf</Button>
-        </div>
+          <ButtonActionsBox>
+            <Button onClick={handleOpenModal}>Create shelf</Button>
+          </ButtonActionsBox>
+        </ActionsBox>
         {shelves.length === 0 || filteredShelves.length === 0 ? (
           <Description>{message}</Description>
         ) : (

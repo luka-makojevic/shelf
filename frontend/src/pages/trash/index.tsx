@@ -1,3 +1,4 @@
+import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { FaTrash } from 'react-icons/fa';
 import { Table } from '../../components/table/table';
@@ -41,24 +42,34 @@ const Trash = () => {
   const [tableData, setTableData] = useState<TableDataTypes[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [error, setError] = useState('');
+  const { folderId } = useParams();
+  console.log(folderId);
+
   const message =
     trashData.length === 0
       ? 'Trash is empty'
       : 'Sorry, no matching results found :(';
 
-  const { getTrash } = useShelf();
+  const { getTrash, getTrashFolders } = useShelf();
 
   useEffect(() => {
-    console.log('uzima');
-    console.log(trashData);
-
-    getTrash(
-      () => {},
-      (err) => {
-        setError(err);
-      }
-    );
-  }, []);
+    if (folderId) {
+      getTrashFolders(
+        Number(folderId),
+        () => {},
+        (err) => {
+          setError(err);
+        }
+      );
+    } else {
+      getTrash(
+        () => {},
+        (err) => {
+          setError(err);
+        }
+      );
+    }
+  }, [folderId]);
 
   useEffect(() => {
     const newData = trashData.map((item) => ({
@@ -165,7 +176,7 @@ const Trash = () => {
             </Button>
           </ButtonActionsBox>
         </ActionsBox>
-        {trashData.length === 0 || filteredData.length === 0 ? (
+        {(trashData && trashData.length === 0) || filteredData.length === 0 ? (
           <Description>{message}</Description>
         ) : (
           <Table

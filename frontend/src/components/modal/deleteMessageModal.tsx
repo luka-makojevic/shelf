@@ -48,37 +48,41 @@ const DeleteShelfModal = ({
         else fileIds.push(item.id);
       });
 
-      fileServices
-        .hardDeleteFile(fileIds)
-        .then(() => {
-          getTrash(
-            () => {},
-            () => {}
-          );
-        })
-        .catch((err) => {
-          if (err.response?.status === 500) {
-            onError('Internal server error');
-            return;
-          }
-          onError(err.response?.data?.message);
-        });
+      if (fileIds.length > 0) {
+        fileServices
+          .hardDeleteFile(fileIds)
+          .then(() => {
+            getTrash(
+              () => {},
+              () => {}
+            );
+          })
+          .catch((err) => {
+            if (err.response?.status === 500) {
+              onError('Internal server error');
+              return;
+            }
+            onError(err.response?.data?.message);
+          });
+      }
 
-      fileServices
-        .hardDeleteFolder(folderIds)
-        .then(() => {
-          getTrash(
-            () => {},
-            () => {}
-          );
-        })
-        .catch((err) => {
-          if (err.response?.status === 500) {
-            onError('Internal server error');
-            return;
-          }
-          onError(err.response?.data?.message);
-        });
+      if (folderIds.length > 0) {
+        fileServices
+          .hardDeleteFolder(folderIds)
+          .then(() => {
+            getTrash(
+              () => {},
+              () => {}
+            );
+          })
+          .catch((err) => {
+            if (err.response?.status === 500) {
+              onError('Internal server error');
+              return;
+            }
+            onError(err.response?.data?.message);
+          });
+      }
     }
 
     onCloseModal(false);
