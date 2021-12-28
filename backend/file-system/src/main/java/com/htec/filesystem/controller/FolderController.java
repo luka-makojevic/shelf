@@ -3,7 +3,6 @@ package com.htec.filesystem.controller;
 import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.annotation.AuthenticationUser;
 import com.htec.filesystem.model.request.CreateFolderRequestModel;
-import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.model.request.RenameFolderRequestModel;
 import com.htec.filesystem.model.response.ShelfContentResponseModel;
 import com.htec.filesystem.model.response.TextResponseMessage;
@@ -82,7 +81,7 @@ public class FolderController {
 
     @PutMapping("/rename")
     public ResponseEntity<TextResponseMessage> renameFolder(@AuthenticationUser AuthUser user,
-                                                          @RequestBody RenameFolderRequestModel renameFolderRequestModel) {
+                                                            @RequestBody RenameFolderRequestModel renameFolderRequestModel) {
 
         folderService.folderRename(user.getId(), renameFolderRequestModel);
         return ResponseEntity.ok().body(new TextResponseMessage(FOLDER_RENAMED, HttpStatus.OK.value()));
