@@ -25,67 +25,23 @@ Button next to method signature JUnit @Test annotation will be used for running 
 **Dependencies used in this project:**
 
 
-Dependency which allows triggering those functions for tests defining
+- <artifactId>selenium-java</artifactId> - [ UI Testing ]
 
-- <dependency> 
-    <groupId>org.testng</groupId> 
-    <artifactId>testng</artifactId> 
-    <version>6.8</version> 
-    <scope>test</scope> 
-</dependency> 
-
-- <dependency> 
-    <groupId>junit</groupId> 
-    <artifactId>junit</artifactId> 
-    <version>RELEASE</version> 
-</dependency> 
-
-Dependency used for MySQL database
-
-<dependency> 
-    <groupId>mysql</groupId> 
-    <artifactId>mysql-connector-java</artifactId> 
-    <version>8.0.27</version> 
-</dependency> 
-
-Dependency used for reading csv files
-
-- <dependency> 
-    <groupId>net.sf.opencsv</groupId> 
-    <artifactId>opencsv</artifactId> 
-    <version>2.3</version> 
-</dependency> 
+  
+- <artifactId>junit</artifactId> - [ UI & API Testing ]
 
 
-Dependency for driver management builder
+- <artifactId>mysql-connector-java</artifactId> - [ DB Testing ]
+ 
 
-- <dependency> 
-    <groupId>io.github.bonigarcia</groupId> 
-    <artifactId>webdrivermanager</artifactId> 
-    <version>5.0.3</version> 
-</dependency> 
+- <artifactId>poi-ooxml</artifactId> - [ Reading excel files ]
 
-Dependency used for JSON implementation
 
-- <dependency> 
-    <groupId>com.googlecode.json-simple</groupId> 
-    <artifactId>json-simple</artifactId> 
-    <version>1.1</version> 
-    <scope>test</scope> 
-</dependency> 
+- <artifactId>webdrivermanager</artifactId> - [ UI Testing - Driver builder ]
 
-- <dependency> 
-    <groupId>org.json</groupId> 
-    <artifactId>json</artifactId> 
-    <version>20171018</version> 
-    <scope>test</scope> 
-</dependency> 
 
-Dependency used for easy performing testing of REST services
+- <artifactId>json</artifactId>  - [ API Testing - JSON implementation ]
 
-- <dependency> 
-    <groupId>io.rest-assured</groupId> 
-    <artifactId>rest-assured</artifactId> 
-    <version>4.2.0</version> 
-    <scope>test</scope> 
-</dependency> 
+
+- <artifactId>rest-assured</artifactId> - [ API Testing ]
+    
