@@ -53,15 +53,13 @@ public class FileController {
         return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).body(fileResponseModel.getImageContent());
     }
 
-    @GetMapping(value = "/zip-download")
-    public ResponseEntity<TextResponseMessage> zipDownload(@AuthenticationUser AuthUser user,
-                                                           @RequestParam List<Long> fileIds) {
+    @PostMapping(value = "/zip-download", produces = "application/zip")
+    public ResponseEntity zipDownload(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) {
 
         fileService.downloadFilesToZip(user, fileIds);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("application/zip"))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename\"" + "asde" + "\"")
-                .body(new TextResponseMessage(IMAGE_UPLOADED, HttpStatus.OK.value()));
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename\"" + "asde" + "\"").build();
     }
 
     @GetMapping("/preview/{id}")
