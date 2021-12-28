@@ -127,6 +127,7 @@ const Shelves = () => {
         description="Shelves are the fundamental containers for data storage."
       >
         <ActionsBox>
+          {process.env.REACT_APP_BASE_API_URL}
           <SearchBar
             placeholder="Search..."
             data={shelvesForTable}

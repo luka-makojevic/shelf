@@ -97,7 +97,7 @@ const Trash = () => {
   const handleRecoverFromTrash = (row: TableDataTypes) => {
     if (row.folder) {
       fileServices
-        .recoverFolderFromTrash(row.id)
+        .recoverFolderFromTrash([row.id])
         .then(() =>
           getTrash(
             () => {},
@@ -113,7 +113,7 @@ const Trash = () => {
         });
     } else {
       fileServices
-        .recoverFileFromTrash(row.id)
+        .recoverFileFromTrash([row.id])
         .then(() =>
           getTrash(
             () => {},
