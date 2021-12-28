@@ -187,6 +187,6 @@ public class ShelfService {
         List<BreadCrumbDTO> breadCrumbDTOS = new ArrayList<>();
         breadCrumbDTOS.add(new BreadCrumbDTO("trash", userId));
 
-        return new ShelfContentResponseModel(breadCrumbDTOS,trashItems);
+        return new ShelfContentResponseModel(breadCrumbDTOS, trashItems);
     }
 }

@@ -6,6 +6,7 @@ import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ExceptionSupplier;
+import com.htec.filesystem.exception.ShelfException;
 import com.htec.filesystem.mapper.ShelfItemMapper;
 import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.model.response.FileResponseModel;
@@ -19,8 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StreamUtils;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -29,6 +32,8 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Service
 public class FileService {
@@ -38,6 +43,7 @@ public class FileService {
     private final String homePath = System.getProperty("user.home");
     private final String pathSeparator = FileSystems.getDefault().getSeparator();
     private final String userPath = pathSeparator + "shelf-files" + pathSeparator + "user-data" + pathSeparator;
+    private final String zipName = "shelfFiles.zip";
 
     private final FileRepository fileRepository;
     private final FolderRepository folderRepository;
@@ -370,4 +376,38 @@ public class FileService {
         fileRepository.deleteAll(fileEntities);
     }
 
+    public void downloadFilesToZip(AuthUser user, List<Long> fileIds) {
+
+        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndDeletedAndIdIn(user.getId(), false, fileIds);
+
+        if (fileEntities.size() != fileIds.size()) {
+            throw ExceptionSupplier.filesNotFound.get();
+        }
+
+        if (!fileEntities.stream().map(FileEntity::getId).collect(Collectors.toList()).containsAll(fileIds)) {
+            throw ExceptionSupplier.userNotAllowedToDownloadFile.get();
+        }
+
+        try (FileOutputStream fos = new FileOutputStream("multiCompressed.zip"); ZipOutputStream zipOut = new ZipOutputStream(fos)) {
+
+            for (FileEntity fileEntity : fileEntities) {
+
+                String fullPath = homePath + userPath + fileEntity.getPath();
+                File fileToZip = new File(fullPath);
+                try (FileInputStream fis = new FileInputStream(fileToZip)) {
+                    ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
+                    zipOut.putNextEntry(zipEntry);
+
+                    byte[] bytes = new byte[1024];
+                    int length;
+                    while ((length = fis.read(bytes)) >= 0) {
+                        zipOut.write(bytes, 0, length);
+                    }
+                }
+            }
+            zipOut.finish();
+        } catch (IOException e) {
+            throw ExceptionSupplier.couldNotDownloadFiles.get();
+        }
+    }
 }

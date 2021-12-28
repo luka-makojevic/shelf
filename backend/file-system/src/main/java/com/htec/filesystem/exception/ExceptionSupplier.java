@@ -123,6 +123,13 @@ public class ExceptionSupplier {
             ErrorMessages.NOT_FOUND.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> couldNotDownloadFiles = () -> new ShelfException(
+            ErrorMessages.COULD_NOT_DOWNLOAD_FILES.getErrorMessage(),
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> filesNotFound = () -> new ShelfException(
             ErrorMessages.FILES_NOT_FOUND.getErrorMessage(),
             HttpStatus.NOT_FOUND.value(),
@@ -152,6 +159,13 @@ public class ExceptionSupplier {
     );
 
     public static final Supplier<ShelfException> userNotAllowedToDeleteFile = () -> new ShelfException(
+            ErrorMessages.USER_NOT_ALLOWED_TO_DOWNLOAD_FILE.getErrorMessage(),
+            HttpStatus.FORBIDDEN.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.FORBIDDEN.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> userNotAllowedToDownloadFile = () -> new ShelfException(
             ErrorMessages.USER_NOT_ALLOWED_TO_DELETE_FILE.getErrorMessage(),
             HttpStatus.FORBIDDEN.value(),
             LocalDateTime.now().format(formatter),
