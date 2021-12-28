@@ -271,7 +271,11 @@ public class FolderService {
                 file.setParentFolderId(null);
             }
 
+            if(file.getTrashVisible()){
+                file.setName(file.getRealName());
+            }
             file.setDeletedAt(null);
+            file.setTrashVisible(false);
             file.setDeleted(false);
             file.setPath(newPath);
         }
@@ -331,7 +335,15 @@ public class FolderService {
                 File from = new File(oldPath);
                 File to = new File(newPath);
 
-                FileUtils.moveDirectory(from, to);
+                if (!to.exists()) {
+
+                    FileUtils.moveDirectory(from, to);
+                } else {
+
+                    moveFoldersToExistingShelfFolder(folderEntity, shelfId);
+
+                    FileUtils.deleteDirectory(from);
+                }
             }
         } catch (IOException ex) {
             throw ExceptionSupplier.internalServerError.get();
@@ -381,6 +393,45 @@ public class FolderService {
             }
         } catch (IOException ex) {
             throw ExceptionSupplier.internalServerError.get();
+        }
+    }
+
+
+    private void moveFoldersToExistingShelfFolder(FolderEntity folderEntity, Long shelfId) throws IOException {
+        List<FolderEntity> foldersInsideExistingFolder = folderRepository
+                .findAllByParentFolderIdAndDeleted(folderEntity.getId(), true);
+
+        for (FolderEntity folder : foldersInsideExistingFolder) {
+
+            String oldPathFolder = homePath + userPath + folder.getPath();
+            String newPathFolder = oldPathFolder.replace("trash" , "shelves" + pathSeparator + shelfId);
+
+            File fromFolder = new File(oldPathFolder);
+            File toFolder = new File(newPathFolder);
+
+            if (!toFolder.exists()) {
+
+                FileUtils.moveDirectory(fromFolder, toFolder);
+            } else {
+
+                moveFoldersToExistingShelfFolder(folder, shelfId);
+            }
+        }
+
+        List<FileEntity> filesInsideExistingFolder = fileRepository
+                .findAllByParentFolderIdInAndDeleted(foldersInsideExistingFolder
+                        .stream()
+                        .map(FolderEntity::getId)
+                        .collect(Collectors.toList()), true);
+
+        for (FileEntity file : filesInsideExistingFolder) {
+
+            String oldPathFile = homePath + userPath + file.getPath();
+            String newPathFile = oldPathFile.replace( "trash" , "shelves" + pathSeparator + shelfId);
+
+            File fromFile = new File(oldPathFile);
+            File toFolder = (new File(newPathFile)).getParentFile();
+            FileUtils.moveFileToDirectory(fromFile, toFolder, false);
         }
     }
 
