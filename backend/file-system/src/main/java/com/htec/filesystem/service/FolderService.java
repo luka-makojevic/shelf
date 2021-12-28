@@ -9,11 +9,9 @@ import com.htec.filesystem.exception.ExceptionSupplier;
 import com.htec.filesystem.mapper.BreadCrumbsMapper;
 import com.htec.filesystem.mapper.ShelfItemMapper;
 import com.htec.filesystem.model.request.CreateFolderRequestModel;
+import com.htec.filesystem.model.request.RenameFolderRequestModel;
 import com.htec.filesystem.model.response.ShelfContentResponseModel;
-import com.htec.filesystem.repository.FileRepository;
-import com.htec.filesystem.repository.FileTreeRepository;
-import com.htec.filesystem.repository.FolderRepository;
-import com.htec.filesystem.repository.FolderTreeRepository;
+import com.htec.filesystem.repository.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -40,6 +38,7 @@ public class FolderService {
     private final FileRepository fileRepository;
     private final FolderTreeRepository folderTreeRepository;
     private final FileTreeRepository fileTreeRepository;
+    private final ShelfRepository shelfRepository;
 
     private final FileService fileService;
 
@@ -47,12 +46,14 @@ public class FolderService {
                          FileRepository fileRepository,
                          FolderTreeRepository folderTreeRepository,
                          FileTreeRepository fileTreeRepository,
-                         FileService fileService) {
+                         FileService fileService,
+                         ShelfRepository shelfRepository) {
         this.folderRepository = folderRepository;
         this.fileRepository = fileRepository;
         this.folderTreeRepository = folderTreeRepository;
         this.fileTreeRepository = fileTreeRepository;
         this.fileService = fileService;
+        this.shelfRepository = shelfRepository;
     }
 
     public boolean initializeFolders(Long userId) {
@@ -421,4 +422,33 @@ public class FolderService {
         }
     }
 
+    public void folderRename(Long userId, RenameFolderRequestModel renameFolderRequestModel) {
+
+        Long folderId = renameFolderRequestModel.getFolderId();
+        String folderName = renameFolderRequestModel.getFolderName();
+
+        FolderEntity folderEntity = folderRepository.findById(folderId)
+                .orElseThrow(ExceptionSupplier.noFolderWithGivenId);
+
+        ShelfEntity shelfEntity = shelfRepository.findById(folderEntity.getShelfId())
+                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+
+        if (!Objects.equals(shelfEntity.getUserId(), userId))
+            throw ExceptionSupplier.userNotAllowedToAccessFolder.get();
+
+        if (folderEntity.getParentFolderId() != null) {
+
+            if (folderRepository.findByNameAndParentFolderIdAndIdNot(folderName, folderEntity.getParentFolderId(), folderId).isPresent()) {
+                throw ExceptionSupplier.folderAlreadyExists.get();
+            }
+        } else {
+            if (folderRepository.findByNameAndShelfIdAndIdNot(folderName, folderEntity.getShelfId(), folderId)
+                    .isPresent()) {
+                throw ExceptionSupplier.folderAlreadyExists.get();
+            }
+        }
+
+        folderEntity.setName(folderName);
+        folderRepository.save(folderEntity);
+    }
 }

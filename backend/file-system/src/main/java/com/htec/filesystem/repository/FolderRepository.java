@@ -35,6 +35,8 @@ public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
 
     Optional<FolderEntity> findByNameAndParentFolderId(String name, Long parentFolderId);
 
+    Optional<FolderEntity> findByNameAndParentFolderIdAndIdNot(String name, Long parentFolderId, Long folderId);
+
     @Query("SELECT f " +
             "FROM FolderEntity f JOIN ShelfEntity s ON (f.shelfId = s.id)" +
             "WHERE s.userId = :userId AND f.id IN (:folderIds)")
@@ -67,4 +69,6 @@ public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
     Optional<FolderEntity> findByNameAndParentFolderIdAndShelfId(String name, Long parentFolderId, Long shelfId);
 
     List<FolderEntity> findAllByShelfIdInAndTrashVisible(List<Long> shelfId, Boolean trashVisible);
+
+    Optional<FolderEntity> findByNameAndShelfIdAndIdNot(String name, Long shelfId, Long folderId);
 }

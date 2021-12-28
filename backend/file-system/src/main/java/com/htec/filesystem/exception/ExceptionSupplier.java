@@ -179,6 +179,13 @@ public class ExceptionSupplier {
             ErrorMessages.FORBIDDEN.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> userNotAllowedToAccessFolder = () -> new ShelfException(
+            ErrorMessages.USER_NOT_ALLOWED_TO_ACCESS_THIS_FOLDER.getErrorMessage(),
+            HttpStatus.FORBIDDEN.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.FORBIDDEN.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> shelfWithProvidedIdNotFound = () -> new ShelfException(
             ErrorMessages.SHELF_WITH_PROVIDED_ID_NOT_FOUND.getErrorMessage(),
             HttpStatus.NOT_FOUND.value(),
