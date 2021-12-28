@@ -93,7 +93,7 @@ public class UserService {
 
     public UserResponseModel getUserById(Long id) {
 
-        UserEntity user = userRepository.findById(id)
+        UserEntity user = userRepository.getUserByIdAndRoleIdNot(id, 1L)
                 .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         return UserMapper.INSTANCE.userEntityToUserResponseModel(user);

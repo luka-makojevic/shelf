@@ -17,4 +17,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     @Query("SELECT u.pictureName FROM UserEntity u WHERE u.id = :userId")
     Optional<String> getPicturePathByUserId(@Param("userId") Long userId);
+
+    @Query("SELECT u FROM UserEntity u WHERE u.id= :userId AND u.role.id != :roleId")
+    Optional<UserEntity> getUserByIdAndRoleIdNot(@Param("userId") Long userId,
+                                                 @Param("roleId") Long roleId);
 }
