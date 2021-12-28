@@ -267,6 +267,7 @@ public class FolderService {
                 file.setParentFolderId(null);
             }
 
+            file.setDeletedAt(null);
             file.setDeleted(false);
             file.setPath(newPath);
         }
@@ -292,6 +293,7 @@ public class FolderService {
                 folder.setParentFolderId(null);
             }
 
+            folder.setDeletedAt(null);
             folder.setTrashVisible(false);
             folder.setDeleted(false);
             folder.setPath(newPath);
@@ -337,6 +339,7 @@ public class FolderService {
             String path = folder.getPath();
             folder.setPath(path.replace("shelves" + pathSeparator + folder.getShelfId(), "trash"));
             folder.setDeleted(true);
+            folder.setDeletedAt(LocalDateTime.now());
         }
     }
 
@@ -345,6 +348,7 @@ public class FolderService {
             String path = file.getPath();
             file.setPath(path.replace("shelves" + pathSeparator + file.getShelfId(), "trash"));
             file.setDeleted(true);
+            file.setDeletedAt(LocalDateTime.now());
         }
     }
 
