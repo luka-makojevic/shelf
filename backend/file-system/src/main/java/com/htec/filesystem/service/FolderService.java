@@ -90,6 +90,9 @@ public class FolderService {
         List<FileEntity> allFiles = fileRepository
                 .findAllByUserIdAndParentFolderIdAndDeleted(userId, folderId, deleted);
 
+        for (FileEntity fileEntity : allFiles) {
+            fileEntity.setName(fileEntity.getRealName());
+        }
 
         itemDTOs.addAll(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(allFiles));
         itemDTOs.addAll(ShelfItemMapper.INSTANCE.folderEntitiesToShelfItemDTOs(allFolders));
