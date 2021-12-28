@@ -205,6 +205,15 @@ public class FileService {
 
     void recover(AuthUser user, List<FileEntity> fileEntities) {
 
+        for (FileEntity fileEntity : fileEntities) {
+            Long parentFolderId = fileEntity.getParentFolderId();
+            Optional<FolderEntity> folderEntity = folderRepository.findById(parentFolderId);
+            if (!folderEntity.isPresent())
+                fileEntity.setParentFolderId(null);
+            if (folderEntity.get().getDeleted())
+                fileEntity.setParentFolderId(null);
+        }
+
         List<Long> folderIds = fileEntities.stream().map(FileEntity::getParentFolderId).collect(Collectors.toList());
 
         List<FileEntity> fileEntitiesNotDeleted = fileRepository.findAllByUserIdAndNotDeletedAndParentFolderIdsIn(user.getId(), folderIds);
@@ -241,8 +250,13 @@ public class FileService {
 
             if (fileNameCounter > 0) {
 
-                filesCount.put(fileEntity.getName(), fileNameCounter - 1);
-                fileEntity.setName(nameWithoutExtension + "(" + fileNameCounter + ")" + extension);
+                List<FileEntity> existingFiles = filesByFolder.getOrDefault(Optional.ofNullable(fileEntity.getParentFolderId()), new ArrayList<>());
+
+                do {
+                    fileEntity.setName(nameWithoutExtension + "(" + filesCount.get(fileEntity.getName()) + ")" + extension);
+                    filesCount.put(fileEntity.getName(), fileNameCounter + 1);
+                } while (existingFiles.stream().anyMatch(e -> e.getName().equals(fileEntity.getName())));
+
             } else {
 
                 fileEntity.setName(nameWithoutExtension + extension);
@@ -255,6 +269,11 @@ public class FileService {
 
                 if (Boolean.FALSE.equals(folderEntity.getDeleted())) {
                     newPath = folderEntity.getPath() + pathSeparator + fileEntity.getName();
+                } else {
+                    newPath = fileEntity.getPath().replace(trash, "shelves");
+                    newPath = newPath.replace(fileNameWithUUID, fileEntity.getName());
+                    int shelfIdIndex = newPath.lastIndexOf(pathSeparator);
+                    newPath = newPath.substring(0, shelfIdIndex) + pathSeparator + fileEntity.getShelfId() + newPath.substring(shelfIdIndex);
                 }
             } else {
                 newPath = fileEntity.getPath().replace(trash, "shelves");
