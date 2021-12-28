@@ -1,4 +1,5 @@
 import { useMsal } from '@azure/msal-react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -42,6 +43,12 @@ const LoginForm = () => {
       }
     );
   };
+
+  useEffect(() => {
+    if (location.state) {
+      toast.info('Go to your email');
+    }
+  }, []);
 
   const handleMicrosoftSignIn = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();

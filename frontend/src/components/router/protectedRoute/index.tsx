@@ -1,13 +1,12 @@
-import axios from 'axios';
 import { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
+import jwt_decode from 'jwt-decode';
 import { API_URL_ACCOUNT } from '../../../api/api';
 import instance from '../../../api/axiosInstance';
 import { LocalStorage } from '../../../services/localStorage';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { setUser } from '../../../store/userReducer';
 import { Routes } from '../../../utils/enums/routes';
-import jwt_decode from 'jwt-decode';
 
 type ProtectedRouteProps = {
   children: JSX.Element;

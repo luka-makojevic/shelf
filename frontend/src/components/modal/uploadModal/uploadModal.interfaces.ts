@@ -1,7 +1,6 @@
-import { Dispatch, SetStateAction } from 'react';
-
 export interface UploadModalProps {
-  onCloseModal: Dispatch<SetStateAction<boolean>>;
+  onGetData: () => void;
+  onCloseModal: () => void;
 }
 
 export interface DropZoneWrapperProps {

@@ -9,8 +9,11 @@ import {
 import { toast } from 'react-toastify';
 import { Table } from '../../components/table/table';
 import TableWrapper from '../../components/table/TableWrapper';
-import { TableDataTypes } from '../../interfaces/dataTypes';
-import { useAppSelector } from '../../store/hooks';
+import {
+  FileDataType,
+  PathHistoryData,
+  TableDataTypes,
+} from '../../interfaces/dataTypes';
 import Modal from '../../components/modal';
 import UploadModal from '../../components/modal/uploadModal';
 import { Button } from '../../components/UI/button';
@@ -18,13 +21,11 @@ import { Description } from '../../components/text/text-styles';
 import Breadcrumbs from '../../components/breadcrumbs';
 import { ButtonContainer } from '../../components/table/tableWrapper-styles';
 import SearchBar from '../../components/UI/searchBar/searchBar';
-import { useFiles } from '../../hooks/fileHooks';
 import FolderModal from '../../components/modal/folderModal';
 import fileServices from '../../services/fileServices';
 
 const Files = () => {
-  const files = useAppSelector((state) => state.file.files);
-  const loading = useAppSelector((state) => state.loading.loading);
+  const [files, setFiles] = useState<FileDataType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState(false);
   const [openUploadModal, setOpenUploadModal] = useState(false);
@@ -33,34 +34,32 @@ const Files = () => {
   const [selectedRows, setSelectedRows] = useState<TableDataTypes[]>([]);
   const [selectedFile, setSelectedFile] = useState<TableDataTypes | null>();
   const { shelfId, folderId } = useParams();
+  const [pathHistory, setPathHistory] = useState<PathHistoryData[]>([]);
 
   const handleOpenUploadModal = () => {
     setOpenUploadModal(true);
   };
 
-  const { getShelfFiles, getFolderFiles } = useFiles();
   const getData = () => {
     setIsLoading(true);
     if (folderId) {
-      getFolderFiles(
-        Number(folderId),
-        () => {
-          setIsLoading(false);
-        },
-        () => {
-          setIsLoading(false);
-        }
-      );
+      fileServices
+        .getFolderFiles(Number(folderId))
+        .then((res) => {
+          setPathHistory(res.data.breadCrumbs);
+          setFiles(res.data.shelfItems);
+        })
+        .catch((err) => toast.error(err))
+        .finally(() => setIsLoading(false));
     } else
-      getShelfFiles(
-        Number(shelfId),
-        () => {
-          setIsLoading(false);
-        },
-        () => {
-          setIsLoading(false);
-        }
-      );
+      fileServices
+        .getShelfFiles(Number(shelfId))
+        .then((res) => {
+          setPathHistory(res.data.breadCrumbs);
+          setFiles(res.data.shelfItems);
+        })
+        .catch((err) => toast.error(err))
+        .finally(() => setIsLoading(false));
   };
 
   useEffect(() => {
@@ -71,7 +70,7 @@ const Files = () => {
     if (files) {
       const newFiles = files.map((file) => ({
         name: file.name,
-        createdAt: new Date(file.createdAt).toLocaleDateString('en-US'),
+        createdAt: new Date(file.createdAt).toLocaleString('en-US'),
         id: file.id,
         folder: file.folder ? 1 : 0,
       }));
@@ -110,19 +109,30 @@ const Files = () => {
         .catch((err) => {
           toast.error(err.response?.data?.message);
         });
+
     if (folderIds.length !== 0)
       fileServices
         .softDeleteFolder(folderIds)
         .then(() => {
           toast.success('Folders moved to trash');
-
           getData();
         })
         .catch((err) => {
           toast.error(err.response?.data?.message);
         });
   };
-  const handleEdit = (file: TableDataTypes) => {
+
+  const handleEdit = (file: TableDataTypes, newName: string) => {
+    const newFiles = files.map((item) => {
+      if (item.id === file.id) {
+        return { ...item, name: newName };
+      }
+      return item;
+    });
+    setFiles(newFiles);
+  };
+
+  const handleOpenEditModal = (file: TableDataTypes) => {
     setSelectedFile(file);
     setOpenModal(true);
   };
@@ -138,6 +148,7 @@ const Files = () => {
   const getSelectedRows = (selectedRowsData: TableDataTypes[]) => {
     setSelectedRows(selectedRowsData);
   };
+
   const handleDownload = () => {
     if (selectedRows.length === 0) return;
     fileServices
@@ -156,6 +167,10 @@ const Files = () => {
       });
   };
 
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
   if (isLoading) return null;
 
   return (
@@ -167,10 +182,11 @@ const Files = () => {
           closeIcon
         >
           <FolderModal
+            onEdit={handleEdit}
             onCloseModal={handleModalClose}
             shelfId={shelfId}
             folderId={folderId}
-            getData={getData}
+            onGetData={getData}
             placeholder={selectedFile ? '' : 'Folder Name'}
             buttonText={selectedFile ? 'Rename' : 'Create'}
             file={selectedFile}
@@ -178,13 +194,13 @@ const Files = () => {
         </Modal>
       )}
       {openUploadModal && (
-        <Modal title="Upload files" onCloseModal={setOpenUploadModal} closeIcon>
-          <UploadModal onCloseModal={setOpenUploadModal} />
+        <Modal title="Upload files" onCloseModal={handleCloseModal} closeIcon>
+          <UploadModal onCloseModal={handleCloseModal} onGetData={getData} />
         </Modal>
       )}
 
       <TableWrapper>
-        <Breadcrumbs />
+        <Breadcrumbs pathHistory={pathHistory} />
         <SearchBar
           placeholder="Search..."
           data={filesforTable}
@@ -215,7 +231,7 @@ const Files = () => {
             headers={headers}
             path="folders/"
             getSelectedRows={getSelectedRows}
-            onEdit={handleEdit}
+            onEdit={handleOpenEditModal}
           />
         )}
       </TableWrapper>

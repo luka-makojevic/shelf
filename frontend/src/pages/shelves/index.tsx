@@ -2,48 +2,48 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Table } from '../../components/table/table';
 import TableWrapper from '../../components/table/TableWrapper';
-import { useShelf } from '../../hooks/shelfHooks';
-import { TableDataTypes } from '../../interfaces/dataTypes';
-import { useAppSelector } from '../../store/hooks';
+import { ShelfDataType, TableDataTypes } from '../../interfaces/dataTypes';
 import ShelfModal from '../../components/modal/shelfModal';
 import Modal from '../../components/modal';
 import { Button } from '../../components/UI/button';
 import { Description } from '../../components/text/text-styles';
 import DeleteShelfModal from '../../components/modal/deleteShelfModal';
 import SearchBar from '../../components/UI/searchBar/searchBar';
+import shelfServices from '../../services/shelfServices';
+
+const headers = [
+  { header: 'Name', key: 'name' },
+  { header: 'Creation date', key: 'createdAt' },
+];
 
 const Shelves = () => {
-  const shelves = useAppSelector((state) => state.shelf.shelves);
+  const [shelves, setShelves] = useState<ShelfDataType[]>([]);
 
   const [openModal, setOpenModal] = useState(false);
   const [selectedShelf, setSelectedShelf] = useState<TableDataTypes | null>(
     null
   );
 
-  const handleOpenModal = () => {
-    setOpenModal(true);
-  };
-
-  const { getShelves } = useShelf();
-
   const [shelvesForTable, setShelvesForTable] = useState<TableDataTypes[]>([]);
   const [filteredShelves, setFilteredShelves] = useState<TableDataTypes[]>([]);
 
   const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
 
+  const getData = () => {
+    shelfServices
+      .getShelves()
+      .then((res) => setShelves(res.data))
+      .catch((err) => toast.error(err));
+  };
+
   useEffect(() => {
-    getShelves(
-      () => {},
-      (err: string) => {
-        toast.error(err);
-      }
-    );
+    getData();
   }, []);
 
   useEffect(() => {
     const newShelves = shelves.map((shelf) => ({
       name: shelf.name,
-      createdAt: new Date(shelf.createdAt).toLocaleDateString('en-US'),
+      createdAt: new Date(shelf.createdAt).toLocaleString('en-US'),
       id: shelf.id,
     }));
 
@@ -51,24 +51,38 @@ const Shelves = () => {
     setFilteredShelves(newShelves);
   }, [shelves]);
 
-  const headers = [
-    { header: 'Name', key: 'name' },
-    { header: 'Creation date', key: 'createdAt' },
-  ];
-
   const handleModalClose = () => {
     setDeleteModalOpen(false);
     setSelectedShelf(null);
     setOpenModal(false);
   };
 
-  const handleDelete = (shelf: TableDataTypes) => {
+  const handleOpenDeleteModal = (shelf: TableDataTypes) => {
     setDeleteModalOpen(true);
     setSelectedShelf(shelf);
   };
 
-  const handleEdit = (shelf: TableDataTypes) => {
+  const handleDelete = (shelf: TableDataTypes) => {
+    const newShelves = shelves.filter((item) => item.id !== shelf.id);
+    setShelves(newShelves);
+  };
+
+  const handleEdit = (shelf: TableDataTypes, newName: string) => {
+    const newShelves = shelves.map((item) => {
+      if (item.id === shelf.id) {
+        return { ...item, name: newName };
+      }
+      return item;
+    });
+    setShelves(newShelves);
+  };
+
+  const handleOpenEditModal = (shelf: TableDataTypes) => {
     setSelectedShelf(shelf);
+    setOpenModal(true);
+  };
+
+  const handleOpenModal = () => {
     setOpenModal(true);
   };
 
@@ -85,13 +99,19 @@ const Shelves = () => {
           onCloseModal={handleModalClose}
           closeIcon
         >
-          <ShelfModal onCloseModal={handleModalClose} shelf={selectedShelf} />
+          <ShelfModal
+            onGetData={getData}
+            onCloseModal={handleModalClose}
+            shelf={selectedShelf}
+            onEdit={handleEdit}
+          />
         </Modal>
       )}
 
       {deleteModalOpen && (
         <Modal title="Delete shelf" onCloseModal={handleModalClose}>
           <DeleteShelfModal
+            onDelete={handleDelete}
             onCloseModal={handleModalClose}
             shelf={selectedShelf}
           />
@@ -119,8 +139,8 @@ const Shelves = () => {
             data={filteredShelves}
             headers={headers}
             path="shelves/"
-            onDelete={handleDelete}
-            onEdit={handleEdit}
+            onDelete={handleOpenDeleteModal}
+            onEdit={handleOpenEditModal}
           />
         )}
       </TableWrapper>

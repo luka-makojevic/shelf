@@ -6,7 +6,6 @@ import { InputField } from '../UI/input/InputField';
 import { ModalButtonDivider } from '../layout/layout.styles';
 import { Button } from '../UI/button';
 import { FolderModalProps } from './modal.interfaces';
-import { useFiles } from '../../hooks/fileHooks';
 import fileServices from '../../services/fileServices';
 
 export const ROOT_FOLDER = { name: 'Root', id: null, path: [] };
@@ -18,7 +17,8 @@ const FolderModal = ({
   placeholder,
   buttonText,
   file,
-  getData,
+  onGetData,
+  onEdit,
 }: FolderModalProps) => {
   const {
     register,
@@ -30,7 +30,6 @@ const FolderModal = ({
     onCloseModal(false);
   };
 
-  const { getShelfFiles, getFolderFiles } = useFiles();
   const convertedShelfId = Number(shelfId);
   const convertedFolderId = Number(folderId);
 
@@ -42,7 +41,7 @@ const FolderModal = ({
         fileServices
           .editFile({ fileId: file.id, fileName: newName })
           .then(() => {
-            getData();
+            onEdit(file, newName);
           })
           .catch((err) => {
             toast.error(err.response?.data?.message);
@@ -51,7 +50,7 @@ const FolderModal = ({
         fileServices
           .editFolder({ folderId: file.id, folderName: newName })
           .then(() => {
-            getData();
+            onEdit(file, newName);
           })
           .catch((err) => {
             toast.error(err.response?.data?.message);
@@ -61,11 +60,7 @@ const FolderModal = ({
       fileServices
         .createFolder(newName, convertedShelfId, convertedFolderId)
         .then(() => {
-          getFolderFiles(
-            convertedFolderId,
-            () => {},
-            () => {}
-          );
+          onGetData();
         })
         .catch((err) => {
           toast.error(err.response?.data?.message);
@@ -73,18 +68,11 @@ const FolderModal = ({
     } else if (!folderId) {
       fileServices
         .createFolder(newName, convertedShelfId)
-        .then(() => {
-          getShelfFiles(
-            convertedShelfId,
-            () => {},
-            () => {}
-          );
-        })
+        .then(() => onGetData())
         .catch((err) => {
           toast.error(err.response?.data?.message);
         });
     }
-
     onCloseModal(false);
   };
 

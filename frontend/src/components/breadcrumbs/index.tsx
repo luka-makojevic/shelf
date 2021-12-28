@@ -1,13 +1,8 @@
 import { Link } from '../text/text-styles';
-import { useAppSelector } from '../../store/hooks';
 import { BreadcrumbsContainer } from './breadcrumbs-styles';
 import { PathHistoryData } from '../../interfaces/dataTypes';
 
-const Breadcrumbs = () => {
-  const pathHistory: PathHistoryData[] = useAppSelector(
-    (state) => state.pathHistory.pathHistory
-  );
-
+const Breadcrumbs = ({ pathHistory }: { pathHistory: PathHistoryData[] }) => {
   const rootUrl =
     pathHistory &&
     pathHistory[0] &&

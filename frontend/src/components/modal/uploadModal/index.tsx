@@ -2,7 +2,6 @@ import { ChangeEvent, DragEvent, useEffect, useState } from 'react';
 import { FaFolderOpen, FaTimes } from 'react-icons/fa';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useFiles } from '../../../hooks/fileHooks';
 import fileServices from '../../../services/fileServices';
 import { theme } from '../../../theme';
 import { ModalButtonDivider } from '../../layout/layout.styles';
@@ -20,13 +19,11 @@ import {
   DropZoneWrapper,
 } from './uploadModal.styles';
 
-const UploadModal = ({ onCloseModal }: UploadModalProps) => {
+const UploadModal = ({ onCloseModal, onGetData }: UploadModalProps) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [filesForUpload, setFilesForUpload] = useState<File[]>([]);
   const [progress, setProgress] = useState(0);
   const { shelfId, folderId } = useParams();
-  const { getShelfFiles, getFolderFiles } = useFiles();
-
   const [abortController] = useState<AbortController>(new AbortController());
 
   const addFilesForUpload = (files: FileList) => {
@@ -94,31 +91,18 @@ const UploadModal = ({ onCloseModal }: UploadModalProps) => {
       .uploadFiles(uploadShelfId, uploadFolderId, formData, options)
       .then((res) => {
         toast.success(res.data?.message);
-        if (folderId !== undefined) {
-          getFolderFiles(
-            uploadFolderId,
-            () => {},
-            () => {}
-          );
-        } else {
-          getShelfFiles(
-            uploadShelfId,
-            () => {},
-            () => {}
-          );
-        }
-
-        onCloseModal(false);
+        onGetData();
+        onCloseModal();
       })
       .catch((err) => {
         setProgress(0);
         toast.error(err.response?.data?.message);
-        onCloseModal(false);
+        onCloseModal();
       });
   };
 
   const handleCloseModal = () => {
-    onCloseModal(false);
+    onCloseModal();
   };
 
   const cancelUploadRequest = () => {

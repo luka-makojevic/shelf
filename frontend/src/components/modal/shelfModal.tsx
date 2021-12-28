@@ -7,9 +7,13 @@ import { ModalButtonDivider } from '../layout/layout.styles';
 import { Button } from '../UI/button';
 import shelfServices from '../../services/shelfServices';
 import { ShelfModalProps } from './modal.interfaces';
-import { useShelf } from '../../hooks/shelfHooks';
 
-const ShelfModal = ({ onCloseModal, shelf }: ShelfModalProps) => {
+const ShelfModal = ({
+  onCloseModal,
+  shelf,
+  onEdit,
+  onGetData,
+}: ShelfModalProps) => {
   const {
     register,
     handleSubmit,
@@ -20,8 +24,6 @@ const ShelfModal = ({ onCloseModal, shelf }: ShelfModalProps) => {
     onCloseModal(false);
   };
 
-  const { getShelves } = useShelf();
-
   const onSubmit = (data: ShelfFormData) => {
     const shelfName = data.name;
 
@@ -29,10 +31,7 @@ const ShelfModal = ({ onCloseModal, shelf }: ShelfModalProps) => {
       shelfServices
         .createShelf(shelfName)
         .then(() => {
-          getShelves(
-            () => {},
-            () => {}
-          );
+          onGetData();
         })
         .catch((err) => {
           toast.error(err.response?.data?.message);
@@ -41,10 +40,7 @@ const ShelfModal = ({ onCloseModal, shelf }: ShelfModalProps) => {
       shelfServices
         .editShelf({ shelfId: shelf.id, shelfName: data.name })
         .then(() => {
-          getShelves(
-            () => {},
-            () => {}
-          );
+          onEdit(shelf, shelfName);
         })
         .catch((err) => {
           toast.error(err.response?.data?.message);

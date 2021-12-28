@@ -4,25 +4,23 @@ import { Description } from '../text/text-styles';
 import { Button } from '../UI/button';
 import { DeleteShelfModalProps } from './modal.interfaces';
 import shelfServices from '../../services/shelfServices';
-import { useShelf } from '../../hooks/shelfHooks';
 import { DeleteModalBody } from './modal.styles';
 
-const DeleteShelfModal = ({ onCloseModal, shelf }: DeleteShelfModalProps) => {
+const DeleteShelfModal = ({
+  onCloseModal,
+  shelf,
+  onDelete,
+}: DeleteShelfModalProps) => {
   const handleCloseModal = () => {
     onCloseModal(false);
   };
-
-  const { getShelves } = useShelf();
 
   const handleDeleteShelf = () => {
     if (shelf) {
       shelfServices
         .hardDeleteShelf(shelf.id)
         .then(() => {
-          getShelves(
-            () => {},
-            () => {}
-          );
+          onDelete(shelf);
         })
         .catch((err) => {
           toast.error(err.response?.data?.message);
