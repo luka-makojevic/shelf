@@ -31,6 +31,7 @@ public enum ErrorMessages {
     USER_NOT_ALLOWED_TO_DELETE_FOLDER("You are not allowed to delete this folder."),
     USER_NOT_ALLOWED_TO_ACCESS_THIS_SHELF("You are not allowed to access this shelf."),
     USER_NOT_ALLOWED_TO_ACCESS_THIS_FILE("You are not allowed to access this file."),
+    USER_NOT_ALLOWED_TO_ACCESS_THIS_FOLDER("You are not allowed to access this folder."),
     AUTHENTICATION_CREDENTIALS_NOT_VALID("Authentication credentials not valid."),
     FOLDER_IS_NOT_IN_THE_GIVEN_SHELF("Folder is not in the given shelf."),
     BAD_REQUEST("Bad request."),

@@ -24,6 +24,8 @@ public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
 
     List<FolderEntity> findAllByParentFolderId(Long folderId);
 
+    List<FolderEntity> findAllByParentFolderIdAndDeleted(Long folderId, Boolean deleted);
+
     @Query("SELECT f " +
             "FROM FolderEntity f JOIN ShelfEntity s ON (f.shelfId = s.id)" +
             "WHERE s.userId = :userId AND f.parentFolderId = :folderId AND f.deleted = :deleted")
@@ -32,6 +34,10 @@ public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
                                                                   @Param("deleted") Boolean deleted);
 
     Optional<FolderEntity> findByNameAndParentFolderId(String name, Long parentFolderId);
+
+    Optional<FolderEntity> findByNameAndParentFolderIdAndDeleted(String name, Long parentFolderId, Boolean deleted);
+
+    Optional<FolderEntity> findByNameAndParentFolderIdAndIdNot(String name, Long parentFolderId, Long folderId);
 
     @Query("SELECT f " +
             "FROM FolderEntity f JOIN ShelfEntity s ON (f.shelfId = s.id)" +
@@ -71,5 +77,9 @@ public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
 
     Optional<FolderEntity> findByNameAndParentFolderIdAndShelfId(String name, Long parentFolderId, Long shelfId);
 
+    Optional<FolderEntity> findByNameAndParentFolderIdAndShelfIdAndDeleted(String name, Long parentFolderId, Long shelfId, Boolean deleted);
+
     List<FolderEntity> findAllByShelfIdInAndTrashVisible(List<Long> shelfId, Boolean trashVisible);
+
+    Optional<FolderEntity> findByNameAndShelfIdAndIdNot(String name, Long shelfId, Long folderId);
 }

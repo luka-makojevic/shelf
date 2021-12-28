@@ -5,10 +5,17 @@ import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ShelfException;
+
 import com.htec.filesystem.model.response.ShelfContentResponseModel;
 import com.htec.filesystem.repository.*;
 import com.htec.filesystem.util.ErrorMessages;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
+
+import com.htec.filesystem.model.request.RenameFolderRequestModel;
+import com.htec.filesystem.model.response.ShelfContentResponseModel;
+import com.htec.filesystem.repository.*;
+import com.htec.filesystem.util.ErrorMessages;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,8 +33,11 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import static org.mockito.ArgumentMatchers.any;
+
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class FolderServiceTest {
@@ -157,6 +167,7 @@ class FolderServiceTest {
     }
 
     @Test
+
     void hardDeleteFolder() {
 
         FolderEntity folderEntity = new FolderEntity();
@@ -212,5 +223,134 @@ class FolderServiceTest {
         verify(folderRepository, times(0)).deleteAllInBatch(folderEntities);
 
         assertEquals(ErrorMessages.USER_NOT_ALLOWED_TO_DELETE_FOLDER.getErrorMessage(), exception.getMessage());
+    }
+
+    @Test
+    void folderRename() {
+
+        Long userId = 2L;
+        RenameFolderRequestModel renameFolderRequestModel = new RenameFolderRequestModel();
+        renameFolderRequestModel.setFolderId(3L);
+        renameFolderRequestModel.setFolderName("testName");
+
+        FolderEntity folderEntity = new FolderEntity();
+        folderEntity.setShelfId(1L);
+        folderEntity.setName("test1");
+        folderEntity.setId(3L);
+        folderEntity.setParentFolderId(null);
+
+        ShelfEntity shelfEntity = new ShelfEntity();
+        shelfEntity.setUserId(2L);
+
+        when(folderRepository.findById(anyLong())).thenReturn(Optional.of(folderEntity));
+        when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
+
+        folderService.folderRename(userId, renameFolderRequestModel);
+
+        verify(folderRepository, times(1)).save(any(FolderEntity.class));
+    }
+
+    @Test
+    void folderRename_NoFolderWithGivenId() {
+
+        Long userId = 2L;
+        RenameFolderRequestModel renameFolderRequestModel = new RenameFolderRequestModel();
+        renameFolderRequestModel.setFolderId(3L);
+        renameFolderRequestModel.setFolderName("testName");
+
+        FolderEntity folderEntity = new FolderEntity();
+        folderEntity.setShelfId(1L);
+        folderEntity.setName("test1");
+        folderEntity.setId(3L);
+        folderEntity.setParentFolderId(null);
+
+        ShelfEntity shelfEntity = new ShelfEntity();
+        shelfEntity.setUserId(2L);
+
+        when(folderRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        ShelfException exception = Assertions.assertThrows(ShelfException.class,
+                () -> folderService.folderRename(userId, renameFolderRequestModel));
+
+        assertEquals(ErrorMessages.NO_FOLDER_WITH_GIVEN_ID.getErrorMessage(), exception.getMessage());
+    }
+
+    @Test
+    void folderRename_NoShelfWithGivenId() {
+
+        Long userId = 2L;
+        RenameFolderRequestModel renameFolderRequestModel = new RenameFolderRequestModel();
+        renameFolderRequestModel.setFolderId(3L);
+        renameFolderRequestModel.setFolderName("testName");
+
+        FolderEntity folderEntity = new FolderEntity();
+        folderEntity.setShelfId(1L);
+        folderEntity.setName("test1");
+        folderEntity.setId(3L);
+        folderEntity.setParentFolderId(null);
+
+        ShelfEntity shelfEntity = new ShelfEntity();
+        shelfEntity.setUserId(2L);
+
+        when(folderRepository.findById(anyLong())).thenReturn(Optional.of(folderEntity));
+        when(shelfRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        ShelfException exception = Assertions.assertThrows(ShelfException.class,
+                () -> folderService.folderRename(userId, renameFolderRequestModel));
+
+        assertEquals(ErrorMessages.NO_SHELF_WITH_GIVEN_ID.getErrorMessage(), exception.getMessage());
+    }
+
+   @Test
+    void folderRename_UserNotAllowedToAccessFolder() {
+
+        Long userId = 2L;
+        RenameFolderRequestModel renameFolderRequestModel = new RenameFolderRequestModel();
+        renameFolderRequestModel.setFolderId(3L);
+        renameFolderRequestModel.setFolderName("testName");
+
+        FolderEntity folderEntity = new FolderEntity();
+        folderEntity.setShelfId(1L);
+        folderEntity.setName("test1");
+        folderEntity.setId(3L);
+        folderEntity.setParentFolderId(null);
+
+        ShelfEntity shelfEntity = new ShelfEntity();
+        shelfEntity.setUserId(3L);
+
+       when(folderRepository.findById(anyLong())).thenReturn(Optional.of(folderEntity));
+       when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
+
+        ShelfException exception = Assertions.assertThrows(ShelfException.class,
+                () -> folderService.folderRename(userId, renameFolderRequestModel));
+
+        assertEquals(ErrorMessages.USER_NOT_ALLOWED_TO_ACCESS_THIS_FOLDER.getErrorMessage(), exception.getMessage());
+    }
+
+    @Test
+    void folderRename_FolderAlreadyExists() {
+
+        Long userId = 2L;
+        RenameFolderRequestModel renameFolderRequestModel = new RenameFolderRequestModel();
+        renameFolderRequestModel.setFolderId(3L);
+        renameFolderRequestModel.setFolderName("testName");
+
+        FolderEntity folderEntity = new FolderEntity();
+        folderEntity.setShelfId(1L);
+        folderEntity.setName("testName");
+        folderEntity.setId(3L);
+        folderEntity.setParentFolderId(null);
+
+        ShelfEntity shelfEntity = new ShelfEntity();
+        shelfEntity.setUserId(2L);
+
+        when(folderRepository.findById(anyLong())).thenReturn(Optional.of(folderEntity));
+        when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
+        when(folderRepository.findByNameAndShelfIdAndIdNot(anyString(), anyLong(), anyLong())).thenReturn(Optional.of(folderEntity));
+
+        ShelfException exception = Assertions.assertThrows(ShelfException.class,
+                () -> folderService.folderRename(userId, renameFolderRequestModel));
+
+        assertEquals(ErrorMessages.FOLDER_WITH_THE_SAME_NAME_ALREADY_EXISTS.getErrorMessage(), exception.getMessage());
     }
 }
