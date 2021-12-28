@@ -17,4 +17,8 @@ public interface FolderTreeRepository extends JpaRepository<FolderEntity, Long> 
     @Query(value = SqlConstants.FOLDER_UP_STREAM_TREE_QUERY_SQL, nativeQuery = true)
     List<FolderEntity> getFolderUpStreamTree(@Param("folderId") Long folderId,
                                              @Param("deleted") Boolean deleted);
+
+    @Query(value = SqlConstants.FOLDER_UP_STREAM_TREES_QUERY_SQL, nativeQuery = true)
+    List<FolderEntity> getFolderUpStreamTrees(@Param("folderIds") List<Long> folderIds,
+                                             @Param("deleted") Boolean deleted);
 }
