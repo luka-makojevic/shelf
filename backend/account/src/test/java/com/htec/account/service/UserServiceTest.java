@@ -81,7 +81,8 @@ class UserServiceTest {
     @Test
     void getUserById_NotFound() {
 
-        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+        user.setId(1L);
+        when(userRepository.getUserByIdAndRoleIdNot(user.getId(), 1L)).thenReturn(Optional.empty());
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
             UserResponseModel foundUser = userService.getUserById(1L);
