@@ -21,6 +21,7 @@ import org.springframework.util.StreamUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -29,6 +30,8 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Service
 public class FileService {
@@ -417,5 +420,40 @@ public class FileService {
         }
 
         fileRepository.deleteAll(fileEntities);
+    }
+
+    public void downloadFilesToZip(AuthUser user, List<Long> fileIds) {
+
+        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndDeletedAndIdIn(user.getId(), false, fileIds);
+
+        if (fileEntities.size() != fileIds.size()) {
+            throw ExceptionSupplier.filesNotFound.get();
+        }
+
+        if (!fileEntities.stream().map(FileEntity::getId).collect(Collectors.toList()).containsAll(fileIds)) {
+            throw ExceptionSupplier.userNotAllowedToDownloadFile.get();
+        }
+
+        try (FileOutputStream fos = new FileOutputStream("file-system/src/main/resources/multiCompressed.zip"); ZipOutputStream zipOut = new ZipOutputStream(fos)) {
+
+            for (FileEntity fileEntity : fileEntities) {
+
+                String fullPath = homePath + userPath + fileEntity.getPath();
+                File fileToZip = new File(fullPath);
+                try (FileInputStream fis = new FileInputStream(fileToZip)) {
+                    ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
+                    zipOut.putNextEntry(zipEntry);
+
+                    byte[] bytes = new byte[1024];
+                    int length;
+                    while ((length = fis.read(bytes)) >= 0) {
+                        zipOut.write(bytes, 0, length);
+                    }
+                }
+            }
+            zipOut.finish();
+        } catch (IOException e) {
+            throw ExceptionSupplier.couldNotDownloadFiles.get();
+        }
     }
 }
