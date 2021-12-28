@@ -35,6 +35,8 @@ public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
 
     Optional<FolderEntity> findByNameAndParentFolderId(String name, Long parentFolderId);
 
+    Optional<FolderEntity> findByNameAndParentFolderIdAndDeleted(String name, Long parentFolderId, Boolean deleted);
+
     Optional<FolderEntity> findByNameAndParentFolderIdAndIdNot(String name, Long parentFolderId, Long folderId);
 
     @Query("SELECT f " +
@@ -67,6 +69,8 @@ public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
     Optional<ShelfEntity> getShelfByFolderId(@Param("folderId") Long folderId);
 
     Optional<FolderEntity> findByNameAndParentFolderIdAndShelfId(String name, Long parentFolderId, Long shelfId);
+
+    Optional<FolderEntity> findByNameAndParentFolderIdAndShelfIdAndDeleted(String name, Long parentFolderId, Long shelfId, Boolean deleted);
 
     List<FolderEntity> findAllByShelfIdInAndTrashVisible(List<Long> shelfId, Boolean trashVisible);
 
