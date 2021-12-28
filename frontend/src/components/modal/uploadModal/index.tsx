@@ -1,6 +1,7 @@
 import { ChangeEvent, DragEvent, useEffect, useState } from 'react';
 import { FaFolderOpen, FaTimes } from 'react-icons/fa';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { useFiles } from '../../../hooks/fileHooks';
 import fileServices from '../../../services/fileServices';
 import { theme } from '../../../theme';
@@ -19,11 +20,7 @@ import {
   DropZoneWrapper,
 } from './uploadModal.styles';
 
-const UploadModal = ({
-  onCloseModal,
-  onError,
-  onSuccess,
-}: UploadModalProps) => {
+const UploadModal = ({ onCloseModal }: UploadModalProps) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [filesForUpload, setFilesForUpload] = useState<File[]>([]);
   const [progress, setProgress] = useState(0);
@@ -96,8 +93,7 @@ const UploadModal = ({
     fileServices
       .uploadFiles(uploadShelfId, uploadFolderId, formData, options)
       .then((res) => {
-        onSuccess(res.data.message);
-
+        toast.success(res.data?.message);
         if (folderId !== undefined) {
           getFolderFiles(
             uploadFolderId,
@@ -116,7 +112,7 @@ const UploadModal = ({
       })
       .catch((err) => {
         setProgress(0);
-        onError(err.response?.data?.message);
+        toast.error(err.response?.data?.message);
         onCloseModal(false);
       });
   };

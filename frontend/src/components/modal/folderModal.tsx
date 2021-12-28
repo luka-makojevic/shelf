@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
 import { ShelfDataType } from '../../interfaces/dataTypes';
 import { Base, InputFieldWrapper } from '../form/form-styles';
@@ -12,7 +13,6 @@ export const ROOT_FOLDER = { name: 'Root', id: null, path: [] };
 
 const FolderModal = ({
   onCloseModal,
-  onError,
   shelfId,
   folderId,
   placeholder,
@@ -45,11 +45,7 @@ const FolderModal = ({
             getData();
           })
           .catch((err) => {
-            if (err?.response?.status === 500) {
-              onError('Internal server error');
-              return;
-            }
-            onError(err.response?.data?.message);
+            toast.error(err.response?.data?.message);
           });
       } else if (file?.folder) {
         fileServices
@@ -58,11 +54,7 @@ const FolderModal = ({
             getData();
           })
           .catch((err) => {
-            if (err?.response?.status === 500) {
-              onError('Internal server error');
-              return;
-            }
-            onError(err.response?.data?.message);
+            toast.error(err.response?.data?.message);
           });
       }
     } else if (folderId) {
@@ -76,11 +68,7 @@ const FolderModal = ({
           );
         })
         .catch((err) => {
-          if (err.response?.status === 500) {
-            onError('Internal server error');
-            return;
-          }
-          onError(err.response?.data?.message);
+          toast.error(err.response?.data?.message);
         });
     } else if (!folderId) {
       fileServices
@@ -93,11 +81,7 @@ const FolderModal = ({
           );
         })
         .catch((err) => {
-          if (err.response?.status === 500) {
-            onError('Internal server error');
-            return;
-          }
-          onError(err.response?.data?.message);
+          toast.error(err.response?.data?.message);
         });
     }
 

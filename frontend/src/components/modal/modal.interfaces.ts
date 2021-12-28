@@ -3,13 +3,11 @@ import { TableDataTypes } from '../../interfaces/dataTypes';
 
 export interface ShelfModalProps {
   onCloseModal: Dispatch<SetStateAction<boolean>>;
-  onError: (value: SetStateAction<string>) => void;
   shelf: TableDataTypes | null;
 }
 
 export interface DeleteShelfModalProps {
   onCloseModal: Dispatch<SetStateAction<boolean>>;
-  onError: (value: SetStateAction<string>) => void;
   shelf: TableDataTypes | null;
 }
 
@@ -26,7 +24,6 @@ export interface ModalProps {
 
 export interface FolderModalProps {
   onCloseModal: Dispatch<SetStateAction<boolean>>;
-  onError: (value: SetStateAction<string>) => void;
   shelfId: string | undefined;
   folderId: string | undefined;
   placeholder: string | undefined;

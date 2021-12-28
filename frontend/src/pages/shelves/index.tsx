@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { Table } from '../../components/table/table';
 import TableWrapper from '../../components/table/TableWrapper';
 import { useShelf } from '../../hooks/shelfHooks';
 import { TableDataTypes } from '../../interfaces/dataTypes';
 import { useAppSelector } from '../../store/hooks';
-import AlertPortal from '../../components/alert/alert';
 import ShelfModal from '../../components/modal/shelfModal';
 import Modal from '../../components/modal';
 import { Button } from '../../components/UI/button';
-import { AlertMessage } from '../../utils/enums/alertMessages';
 import { Description } from '../../components/text/text-styles';
 import DeleteShelfModal from '../../components/modal/deleteShelfModal';
 import SearchBar from '../../components/UI/searchBar/searchBar';
@@ -17,7 +16,6 @@ const Shelves = () => {
   const shelves = useAppSelector((state) => state.shelf.shelves);
 
   const [openModal, setOpenModal] = useState(false);
-  const [error, setError] = useState('');
   const [selectedShelf, setSelectedShelf] = useState<TableDataTypes | null>(
     null
   );
@@ -25,12 +23,6 @@ const Shelves = () => {
   const handleOpenModal = () => {
     setOpenModal(true);
   };
-
-  const handleSetError = () => {
-    setError('');
-  };
-
-  const user = useAppSelector((state) => state.user.user);
 
   const { getShelves } = useShelf();
 
@@ -43,7 +35,7 @@ const Shelves = () => {
     getShelves(
       () => {},
       (err: string) => {
-        setError(err);
+        toast.error(err);
       }
     );
   }, []);
@@ -87,26 +79,13 @@ const Shelves = () => {
 
   return (
     <>
-      {error && (
-        <AlertPortal
-          type={AlertMessage.ERRROR}
-          title="Error"
-          message={error}
-          onClose={handleSetError}
-        />
-      )}
-      
       {openModal && (
         <Modal
           title={selectedShelf ? 'Rename shelf' : 'Create shelf'}
           onCloseModal={handleModalClose}
           closeIcon
         >
-          <ShelfModal
-            onCloseModal={handleModalClose}
-            onError={setError}
-            shelf={selectedShelf}
-          />
+          <ShelfModal onCloseModal={handleModalClose} shelf={selectedShelf} />
         </Modal>
       )}
 
@@ -114,7 +93,6 @@ const Shelves = () => {
         <Modal title="Delete shelf" onCloseModal={handleModalClose}>
           <DeleteShelfModal
             onCloseModal={handleModalClose}
-            onError={setError}
             shelf={selectedShelf}
           />
         </Modal>

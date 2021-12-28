@@ -1,7 +1,7 @@
 import { useMsal } from '@azure/msal-react';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { loginRequest } from '../../azure/authConfig';
 import {
   Base,
@@ -13,8 +13,6 @@ import { Routes } from '../../utils/enums/routes';
 import { Button } from '../../components/UI/button';
 import { loginFieldConfig } from '../../utils/validation/config/loginValidationConfig';
 import { LoginData, LoginFieldConfig } from '../../interfaces/dataTypes';
-import AlertPortal from '../../components/alert/alert';
-import { AlertMessage } from '../../utils/enums/alertMessages';
 import { useAppSelector } from '../../store/hooks';
 import { RootState } from '../../store/store';
 import { useAuth } from '../../hooks/authHook';
@@ -26,7 +24,6 @@ const LoginForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginData>({});
-  const [error, setError] = useState<string>();
   const { login, microsoftLogin } = useAuth();
   const { instance } = useMsal();
 
@@ -34,15 +31,14 @@ const LoginForm = () => {
 
   const navigation = useNavigate();
   const location = useLocation();
-
   const submitForm = (data: LoginData) => {
     login(
       data,
       () => {
         navigation(Routes.DASHBOARD);
       },
-      () => {
-        setError('Authentication credentials not valid');
+      (err) => {
+        toast.error(err);
       }
     );
   };
@@ -59,41 +55,20 @@ const LoginForm = () => {
             navigation(Routes.DASHBOARD);
           },
           (err: string) => {
-            setError(err);
+            toast.error(err);
           }
         );
       })
       .catch((err) => {
         if (err.errorCode === 'user_cancelled') return;
-        setError('Authentication credentials not valid');
+        toast.error(err.response?.data?.message);
       });
-  };
-
-  const handleAlertClose = () => {
-    setError('');
-    navigation(Routes.LOGIN);
   };
 
   return (
     <FormContainer>
       <H2>Log in</H2>
       <Base onSubmit={handleSubmit(submitForm)}>
-        {error && (
-          <AlertPortal
-            type={AlertMessage.ERRROR}
-            title="Error"
-            message={error}
-            onClose={handleAlertClose}
-          />
-        )}
-        {location.state && (
-          <AlertPortal
-            type={AlertMessage.INFO}
-            title="Info"
-            message={location.state}
-            onClose={handleAlertClose}
-          />
-        )}
         <InputFieldWrapper>
           {loginFieldConfig.map((fieldConfig: LoginFieldConfig) => (
             <InputField

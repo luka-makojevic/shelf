@@ -6,15 +6,14 @@ import {
   FaPlusCircle,
   FaTrash,
 } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 import { Table } from '../../components/table/table';
 import TableWrapper from '../../components/table/TableWrapper';
 import { TableDataTypes } from '../../interfaces/dataTypes';
 import { useAppSelector } from '../../store/hooks';
-import AlertPortal from '../../components/alert/alert';
 import Modal from '../../components/modal';
 import UploadModal from '../../components/modal/uploadModal';
 import { Button } from '../../components/UI/button';
-import { AlertMessage } from '../../utils/enums/alertMessages';
 import { Description } from '../../components/text/text-styles';
 import Breadcrumbs from '../../components/breadcrumbs';
 import { ButtonContainer } from '../../components/table/tableWrapper-styles';
@@ -26,38 +25,41 @@ import fileServices from '../../services/fileServices';
 const Files = () => {
   const files = useAppSelector((state) => state.file.files);
   const loading = useAppSelector((state) => state.loading.loading);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState(false);
   const [openUploadModal, setOpenUploadModal] = useState(false);
-  const [error, setError] = useState('');
   const [filesforTable, setFilesForTable] = useState<TableDataTypes[]>([]);
   const [filteredFiles, setFilteredFiles] = useState<TableDataTypes[]>([]);
   const [selectedRows, setSelectedRows] = useState<TableDataTypes[]>([]);
   const [selectedFile, setSelectedFile] = useState<TableDataTypes | null>();
-  const [success, setSuccess] = useState('');
   const { shelfId, folderId } = useParams();
 
   const handleOpenUploadModal = () => {
     setOpenUploadModal(true);
   };
 
-  const handleAlertClose = () => {
-    setError('');
-    setSuccess('');
-  };
-
   const { getShelfFiles, getFolderFiles } = useFiles();
   const getData = () => {
+    setIsLoading(true);
     if (folderId) {
       getFolderFiles(
         Number(folderId),
-        () => {},
-        () => {}
+        () => {
+          setIsLoading(false);
+        },
+        () => {
+          setIsLoading(false);
+        }
       );
     } else
       getShelfFiles(
         Number(shelfId),
-        () => {},
-        () => {}
+        () => {
+          setIsLoading(false);
+        },
+        () => {
+          setIsLoading(false);
+        }
       );
   };
 
@@ -101,26 +103,30 @@ const Files = () => {
     if (fileIds.length !== 0)
       fileServices
         .softDeleteFile(fileIds)
-        .then(() => getData())
+        .then(() => {
+          toast.success('Files moved to trash');
+          getData();
+        })
         .catch((err) => {
-          if (err.response?.status === 500) {
-            setError('Internal server error');
-          } else setError('File could not be deleted');
+          toast.error(err.response?.data?.message);
         });
     if (folderIds.length !== 0)
       fileServices
         .softDeleteFolder(folderIds)
-        .then(() => getData())
+        .then(() => {
+          toast.success('Folders moved to trash');
+
+          getData();
+        })
         .catch((err) => {
-          if (err.response?.status === 500) {
-            setError('Internal server error');
-          } else setError('Folder could not be deleted');
+          toast.error(err.response?.data?.message);
         });
   };
   const handleEdit = (file: TableDataTypes) => {
     setSelectedFile(file);
     setOpenModal(true);
   };
+
   const handleCreateFolder = () => {
     setOpenModal(true);
   };
@@ -135,7 +141,7 @@ const Files = () => {
   const handleDownload = () => {
     if (selectedRows.length === 0) return;
     fileServices
-      .downloadFile(selectedRows[0].id)
+      .downloadFile(10)
       .then((res) => {
         const url = window.URL.createObjectURL(new Blob([res.data]));
         const link = document.createElement('a');
@@ -146,21 +152,14 @@ const Files = () => {
         link.remove();
       })
       .catch(() => {
-        setError('Failed to download');
+        toast.error('Failed to download');
       });
   };
 
-  if (loading) return null;
+  if (isLoading) return null;
+
   return (
     <>
-      {(error || success) && (
-        <AlertPortal
-          type={error ? AlertMessage.ERRROR : AlertMessage.SUCCESS}
-          title={`${error ? 'Error' : 'Success'}`}
-          message={error || success}
-          onClose={handleAlertClose}
-        />
-      )}
       {openModal && (
         <Modal
           title={selectedFile ? 'Edit name' : 'Create folder'}
@@ -169,7 +168,6 @@ const Files = () => {
         >
           <FolderModal
             onCloseModal={handleModalClose}
-            onError={setError}
             shelfId={shelfId}
             folderId={folderId}
             getData={getData}
@@ -181,11 +179,7 @@ const Files = () => {
       )}
       {openUploadModal && (
         <Modal title="Upload files" onCloseModal={setOpenUploadModal} closeIcon>
-          <UploadModal
-            onCloseModal={setOpenUploadModal}
-            onError={setError}
-            onSuccess={setSuccess}
-          />
+          <UploadModal onCloseModal={setOpenUploadModal} />
         </Modal>
       )}
 

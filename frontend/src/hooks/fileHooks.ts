@@ -1,5 +1,4 @@
 import { useAppDispatch } from '../store/hooks';
-import { setLoading } from '../store/loadingReducer';
 import { setFiles } from '../store/fileReducer';
 import { setPathHistory } from '../store/pathHistory';
 import fileServices from '../services/fileServices';
@@ -12,8 +11,6 @@ export const useFiles = () => {
     onSuccess: () => void,
     onError: (error: string) => void
   ) => {
-    dispatch(setLoading(true));
-
     fileServices
       .getShelfFiles(id)
       .then((res) => {
@@ -24,9 +21,7 @@ export const useFiles = () => {
       .catch((err) => {
         onError(err.response?.data.message);
       })
-      .finally(() => {
-        dispatch(setLoading(false));
-      });
+      .finally(() => {});
   };
 
   const getFolderFiles = (
@@ -34,8 +29,6 @@ export const useFiles = () => {
     onSuccess: () => void,
     onError: (error: string) => void
   ) => {
-    dispatch(setLoading(true));
-
     fileServices
       .getFolderFiles(id)
       .then((res) => {
@@ -46,9 +39,7 @@ export const useFiles = () => {
       .catch((err) => {
         onError(err.response?.data.message);
       })
-      .finally(() => {
-        dispatch(setLoading(false));
-      });
+      .finally(() => {});
   };
 
   return { getShelfFiles, getFolderFiles };

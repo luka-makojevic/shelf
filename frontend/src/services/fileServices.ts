@@ -32,6 +32,7 @@ const editFile = (data: { fileId: number; fileName: string }) =>
 
 const editFolder = (data: { folderId: number; folderName: string }) =>
   instance.put(`${API_URL_FILES}folder/rename`, data);
+  
 const downloadFile = (fileId: number) =>
   instance({
     url: `${API_URL_FILES}file/download/${fileId}?file=true`,

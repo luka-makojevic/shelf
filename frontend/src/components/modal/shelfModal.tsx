@@ -1,4 +1,5 @@
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import { ShelfFormData } from '../../interfaces/dataTypes';
 import { Base, InputFieldWrapper } from '../form/form-styles';
 import { InputField } from '../UI/input/InputField';
@@ -8,7 +9,7 @@ import shelfServices from '../../services/shelfServices';
 import { ShelfModalProps } from './modal.interfaces';
 import { useShelf } from '../../hooks/shelfHooks';
 
-const ShelfModal = ({ onCloseModal, onError, shelf }: ShelfModalProps) => {
+const ShelfModal = ({ onCloseModal, shelf }: ShelfModalProps) => {
   const {
     register,
     handleSubmit,
@@ -34,11 +35,7 @@ const ShelfModal = ({ onCloseModal, onError, shelf }: ShelfModalProps) => {
           );
         })
         .catch((err) => {
-          if (err?.response?.status === 500) {
-            onError('Internal server error');
-            return;
-          }
-          onError(err.response?.data?.message);
+          toast.error(err.response?.data?.message);
         });
     } else {
       shelfServices
@@ -50,11 +47,7 @@ const ShelfModal = ({ onCloseModal, onError, shelf }: ShelfModalProps) => {
           );
         })
         .catch((err) => {
-          if (err?.response?.status === 500) {
-            onError('Internal server error');
-            return;
-          }
-          onError(err.response?.data?.message);
+          toast.error(err.response?.data?.message);
         });
     }
 

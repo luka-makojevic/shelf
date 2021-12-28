@@ -1,8 +1,7 @@
 import authServices from '../services/authServices';
 import { LocalStorage } from '../services/localStorage';
 import { useAppDispatch } from '../store/hooks';
-import { setLoading } from '../store/loadingReducer';
-import { removeUser, setUser } from '../store/userReducer';
+import { removeUser } from '../store/userReducer';
 import {
   LoginData,
   LogoutData,
@@ -17,10 +16,8 @@ export const useAuth = () => {
   const login = (
     data: LoginData,
     onSuccess: () => void,
-    onError: () => void
+    onError: (err: string) => void
   ) => {
-    dispatch(setLoading(true));
-
     authServices
       .login(data)
       .then((res) => {
@@ -34,16 +31,8 @@ export const useAuth = () => {
           onSuccess();
         }
       })
-      .catch(() => {
-        dispatch(removeUser());
-        onError();
-      })
-      .finally(() => {
-        dispatch(setLoading(false));
-        const user = LocalStorage.get('user')
-          ? JSON.parse(LocalStorage.get('user') || '')
-          : null;
-        dispatch(setUser(user));
+      .catch((err) => {
+        onError(err.response?.data?.message);
       });
   };
 
@@ -52,7 +41,6 @@ export const useAuth = () => {
     onSuccess: () => void,
     onError: (error: string) => void
   ) => {
-    dispatch(setLoading(true));
     authServices
       .microsoftLogin(data)
       .then((res) => {
@@ -66,15 +54,7 @@ export const useAuth = () => {
         }
       })
       .catch((err) => {
-        dispatch(removeUser());
         onError(err.response?.data.message);
-      })
-      .finally(() => {
-        dispatch(setLoading(false));
-        const user = LocalStorage.get('user')
-          ? JSON.parse(LocalStorage.get('user') || '')
-          : null;
-        dispatch(setUser(user));
       });
   };
 
@@ -83,7 +63,6 @@ export const useAuth = () => {
     onSuccess: () => void,
     onError: (error: string) => void
   ) => {
-    dispatch(setLoading(true));
     authServices
       .register(data)
       .then(() => {
@@ -91,8 +70,7 @@ export const useAuth = () => {
       })
       .catch((err) => {
         onError(err.response?.data.message);
-      })
-      .finally(() => dispatch(setLoading(false)));
+      });
   };
 
   const logout = (
@@ -117,7 +95,6 @@ export const useAuth = () => {
     onSuccess: () => void,
     onError: (error: string) => void
   ) => {
-    dispatch(setLoading(true));
     authServices
       .microsoftRegister(data)
       .then(() => {
@@ -125,8 +102,7 @@ export const useAuth = () => {
       })
       .catch((err) => {
         onError(err.response?.data.message);
-      })
-      .finally(() => dispatch(setLoading(false)));
+      });
   };
 
   return { login, microsoftLogin, register, microsoftRegister, logout };

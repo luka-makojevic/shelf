@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import { ModalButtonDivider } from '../layout/layout.styles';
 import { Description } from '../text/text-styles';
 import { Button } from '../UI/button';
@@ -6,11 +7,7 @@ import shelfServices from '../../services/shelfServices';
 import { useShelf } from '../../hooks/shelfHooks';
 import { DeleteModalBody } from './modal.styles';
 
-const DeleteShelfModal = ({
-  onCloseModal,
-  onError,
-  shelf,
-}: DeleteShelfModalProps) => {
+const DeleteShelfModal = ({ onCloseModal, shelf }: DeleteShelfModalProps) => {
   const handleCloseModal = () => {
     onCloseModal(false);
   };
@@ -28,11 +25,7 @@ const DeleteShelfModal = ({
           );
         })
         .catch((err) => {
-          if (err.response?.status === 500) {
-            onError('Internal server error');
-            return;
-          }
-          onError(err.response?.data?.message);
+          toast.error(err.response?.data?.message);
         });
     }
 
