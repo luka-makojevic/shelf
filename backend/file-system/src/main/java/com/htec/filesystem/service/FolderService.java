@@ -248,4 +248,30 @@ public class FolderService {
         }
     }
 
+    public void hardDeleteFolder(Long userId, List<Long> folderIds) {
+
+        List<FolderEntity> folderEntities = folderRepository.findByUserIdAndFolderIdsAndDeleted(userId, folderIds, true);
+
+        if (!folderEntities.stream().map(FolderEntity::getId).collect(Collectors.toList()).containsAll(folderIds)) {
+            throw ExceptionSupplier.userNotAllowedToDeleteFolder.get();
+        }
+
+        List<FolderEntity> downStreamFolders = folderTreeRepository.getFolderDownStreamTrees(folderIds, true);
+
+        List<Long> downStreamFoldersIds = downStreamFolders.stream().map(FolderEntity::getId).collect(Collectors.toList());
+
+        List<FileEntity> downStreamFiles = fileRepository.findAllByParentFolderIdIn(downStreamFoldersIds);
+
+        try {
+            for (FolderEntity folderEntity : folderEntities) {
+
+                FileUtils.deleteDirectory(new File(homePath + userPath + folderEntity.getPath()));
+            }
+
+            fileRepository.deleteAll(downStreamFiles);
+            folderRepository.deleteAllInBatch(downStreamFolders);
+        } catch (IOException e) {
+            throw ExceptionSupplier.couldNotDeleteFolder.get();
+        }
+    }
 }

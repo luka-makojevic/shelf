@@ -46,6 +46,13 @@ public class ExceptionSupplier {
             ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> couldNotDeleteFolder = () -> new ShelfException(
+            ErrorMessages.COULD_NOT_DELETE_FOLDER.getErrorMessage(),
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> fileAlreadyExists = () -> new ShelfException(
             ErrorMessages.FILE_WITH_THE_SAME_NAME_ALREADY_EXISTS.getErrorMessage(),
             HttpStatus.FORBIDDEN.value(),
@@ -159,14 +166,14 @@ public class ExceptionSupplier {
     );
 
     public static final Supplier<ShelfException> userNotAllowedToDeleteFile = () -> new ShelfException(
-            ErrorMessages.USER_NOT_ALLOWED_TO_DOWNLOAD_FILE.getErrorMessage(),
+            ErrorMessages.USER_NOT_ALLOWED_TO_DELETE_FILE.getErrorMessage(),
             HttpStatus.FORBIDDEN.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.FORBIDDEN.getErrorMessage()
     );
 
     public static final Supplier<ShelfException> userNotAllowedToDownloadFile = () -> new ShelfException(
-            ErrorMessages.USER_NOT_ALLOWED_TO_DELETE_FILE.getErrorMessage(),
+            ErrorMessages.USER_NOT_ALLOWED_TO_DOWNLOAD_FILE.getErrorMessage(),
             HttpStatus.FORBIDDEN.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.FORBIDDEN.getErrorMessage()
