@@ -115,6 +115,7 @@ const Shelves = () => {
       {deleteModalOpen && (
         <Modal title="Delete shelf" onCloseModal={handleModalClose}>
           <DeleteShelfModal
+            onDelete={() => {}} // TODO - replace with onDelete from refactor when merged
             onCloseModal={handleModalClose}
             onError={setError}
             shelf={selectedShelf}
@@ -127,7 +128,6 @@ const Shelves = () => {
         description="Shelves are the fundamental containers for data storage."
       >
         <ActionsBox>
-          {process.env.REACT_APP_BASE_API_URL}
           <SearchBar
             placeholder="Search..."
             data={shelvesForTable}
