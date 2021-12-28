@@ -19,29 +19,26 @@ Functions organized in helpers folder which are divided into sub-packages will b
 Button next to method signature JUnit @Test annotation will be used for running individual tests located in tests package folder, while all Regression, UI and API will be defined in suite folder.
 
 
-![](C:\Users\Srdjan\Desktop\runtest.jpg)
-
-
 **Dependencies used in this project:**
 
 
-- <artifactId>selenium-java</artifactId> - [ UI Testing ]
+* selenium-java - [ UI Testing ]
 
   
-- <artifactId>junit</artifactId> - [ UI & API Testing ]
+* junit - [ UI & API Testing ]
 
 
-- <artifactId>mysql-connector-java</artifactId> - [ DB Testing ]
+* mysql-connector-java - [ DB Testing ]
  
 
-- <artifactId>poi-ooxml</artifactId> - [ Reading excel files ]
+* poi-ooxml - [ Reading excel files ]
 
 
-- <artifactId>webdrivermanager</artifactId> - [ UI Testing - Driver builder ]
+* webdrivermanager - [ UI Testing - Driver builder ]
 
 
-- <artifactId>json</artifactId>  - [ API Testing - JSON implementation ]
+* json  - [ API Testing - JSON implementation ]
 
 
-- <artifactId>rest-assured</artifactId> - [ API Testing ]
+* rest-assured - [ API Testing ]
     
