@@ -27,6 +27,19 @@ public class SqlConstants {
                     ")" +
                     "SELECT * FROM up_stream_tree";
 
+    public static final String FOLDER_UP_STREAM_TREES_QUERY_SQL =
+            "WITH RECURSIVE up_stream_tree AS (" +
+                    "  SELECT     init_fld.*" +
+                    "  FROM       folder init_fld" +
+                    "  WHERE      init_fld.id IN (:folderIds)" +
+                    "  UNION " +
+                    "  SELECT     fld.*" +
+                    "  FROM       up_stream_tree INNER JOIN folder fld " +
+                    "  ON         fld.id = up_stream_tree.parent_folder_id" +
+                    "  WHERE      fld.deleted = :deleted" +
+                    ")" +
+                    "SELECT * FROM up_stream_tree";
+
     public static final String FILE_DOWN_STREAM_TREE_QUERY_SQL =
             "WITH RECURSIVE down_stream_tree AS (" +
                     "   SELECT     init_fld.*" +

@@ -31,6 +31,8 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
                                                                 @Param("folderId") Long folderId,
                                                                 @Param("deleted") Boolean deleted);
 
+    List<FileEntity> findAllByParentFolderIdInAndDeleted(List<Long> folderIds, Boolean deleted);
+
     @Modifying
     @Query("UPDATE FileEntity f SET f.deleted = :deleted WHERE f.parentFolderId IN (:folderIdsToBeDeleted)")
     void updateDeletedByParentFolderIdIn(@Param("deleted") Boolean deleted,

@@ -24,6 +24,8 @@ public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
 
     List<FolderEntity> findAllByParentFolderId(Long folderId);
 
+    List<FolderEntity> findAllByParentFolderIdAndDeleted(Long folderId, Boolean deleted);
+
     @Query("SELECT f " +
             "FROM FolderEntity f JOIN ShelfEntity s ON (f.shelfId = s.id)" +
             "WHERE s.userId = :userId AND f.parentFolderId = :folderId AND f.deleted = :deleted")
