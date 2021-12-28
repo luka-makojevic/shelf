@@ -206,12 +206,15 @@ public class FileService {
     void recover(AuthUser user, List<FileEntity> fileEntities) {
 
         for (FileEntity fileEntity : fileEntities) {
-            Long parentFolderId = fileEntity.getParentFolderId();
-            Optional<FolderEntity> folderEntity = folderRepository.findById(parentFolderId);
-            if (!folderEntity.isPresent())
-                fileEntity.setParentFolderId(null);
-            if (folderEntity.get().getDeleted())
-                fileEntity.setParentFolderId(null);
+
+            if (fileEntity.getParentFolderId() != null) {
+
+                Optional<FolderEntity> folderEntity = folderRepository.findById(fileEntity.getParentFolderId());
+                if (!folderEntity.isPresent())
+                    fileEntity.setParentFolderId(null);
+                if (folderEntity.get().getDeleted())
+                    fileEntity.setParentFolderId(null);
+            }
         }
 
         List<Long> folderIds = fileEntities.stream().map(FileEntity::getParentFolderId).collect(Collectors.toList());
@@ -305,6 +308,7 @@ public class FileService {
             fileEntity.setPath(newDbPath);
             fileEntity.setName(newFileName);
             fileEntity.setTrashVisible(trashVisible);
+            fileEntity.setDeletedAt(LocalDateTime.now());
         }
     }
 
@@ -413,36 +417,5 @@ public class FileService {
         }
 
         fileRepository.deleteAll(fileEntities);
-    }
-
-    public void fileRecover(Long userId, Long fileId) {
-
-        FileEntity fileEntity = fileRepository.findById(fileId)
-                .orElseThrow(ExceptionSupplier.noFileWithGivenId);
-
-        ShelfEntity shelfEntity = shelfRepository.findById(fileEntity.getShelfId())
-                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
-
-        if (!Objects.equals(shelfEntity.getUserId(), userId)) {
-            throw ExceptionSupplier.userNotAllowedToAccessFile.get();
-        }
-
-        String dbPath = "";
-        String fileSystemPath = "";
-
-        if (fileEntity.getParentFolderId() != null) {
-
-            FolderEntity folderEntity = folderRepository.findById(fileEntity.getParentFolderId())
-                    .orElseThrow(ExceptionSupplier.noFolderWithGivenId);
-
-            if (!Boolean.TRUE.equals(folderEntity.getDeleted())) {
-
-                dbPath = fileEntity.getPath() + pathSeparator + fileEntity.getName();
-
-            }
-        } else {
-            dbPath = fileEntity.getPath().replace(trash, "shelves");
-        }
-        fileSystemPath = homePath + userPath + dbPath;
     }
 }
