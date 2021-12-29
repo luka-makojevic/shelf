@@ -22,7 +22,7 @@ public class AuthorizationController {
     }
 
     @PostMapping("/refresh/token")
-    public ResponseEntity<RefreshTokenResponseModel> getNewAcessToken(@RequestBody String refreshToken) {
+    public ResponseEntity<RefreshTokenResponseModel> getNewAccessToken(@RequestBody String refreshToken) {
 
         RefreshTokenResponseModel refreshTokenResponseModel = userService.sendNewAccessToken(refreshToken);
         return ResponseEntity.status(HttpStatus.OK).body(refreshTokenResponseModel);
