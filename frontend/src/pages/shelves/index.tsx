@@ -115,6 +115,7 @@ const Shelves = () => {
       {deleteModalOpen && (
         <Modal title="Delete shelf" onCloseModal={handleModalClose}>
           <DeleteShelfModal
+            onDelete={() => {}} // TODO - replace with onDelete from refactor when merged
             onCloseModal={handleModalClose}
             onError={setError}
             shelf={selectedShelf}

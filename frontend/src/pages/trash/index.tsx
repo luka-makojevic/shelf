@@ -10,16 +10,16 @@ import { Button } from '../../components/UI/button';
 import SearchBar from '../../components/UI/searchBar/searchBar';
 import AlertPortal from '../../components/alert/alert';
 import { AlertMessage } from '../../utils/enums/alertMessages';
-import { TableDataTypes } from '../../interfaces/dataTypes';
+import { FileDataType, TableDataTypes } from '../../interfaces/dataTypes';
 import { Description } from '../../components/text/text-styles';
 import Breadcrumbs from '../../components/breadcrumbs';
 import Modal from '../../components/modal';
 import DeleteShelfModal from '../../components/modal/deleteMessageModal';
 import fileServices from '../../services/fileServices';
-import { useShelf } from '../../hooks/shelfHooks';
 import { useAppSelector } from '../../store/hooks';
 import TableWrapper from '../../components/table/TableWrapper';
 import { RootState } from '../../store/store';
+import shelfServices from '../../services/shelfServices';
 
 const headers = [
   {
@@ -37,7 +37,9 @@ const headers = [
 ];
 
 const Trash = () => {
-  const trashData = useAppSelector((state) => state.trash.trashData);
+  // TODO - add breadcrumbs from refactor branch on merge
+
+  const [trash, setTrash] = useState<FileDataType[]>([]);
   const [filteredData, setFilteredData] = useState<TableDataTypes[]>([]);
   const [selectedRows, setSelectedRows] = useState<TableDataTypes[]>([]);
   const [tableData, setTableData] = useState<TableDataTypes[]>([]);
@@ -47,63 +49,72 @@ const Trash = () => {
   const isLoading = useAppSelector((state: RootState) => state.loading.loading);
 
   const message =
-    trashData.length === 0
+    trash.length === 0
       ? 'Trash is empty'
       : 'Sorry, no matching results found :(';
 
-  const { getTrash, getTrashFolders } = useShelf();
+  const getData = () => {
+    if (folderId) {
+      shelfServices
+        .getTrashFiles(Number(folderId))
+        .then((res) => {
+          setTrash(res.data.shelfItems);
+        })
+        .catch(() => {
+          // TODO - add toaster for err
+        });
+    } else {
+      shelfServices
+        .getTrash()
+        .then((res) => {
+          setTrash(res.data.shelfItems);
+        })
+        .catch(() => {
+          // TODO - add toaster for err
+        });
+    }
+  };
 
   useEffect(() => {
-    if (folderId) {
-      getTrashFolders(
-        Number(folderId),
-        () => {},
-        (err) => {
-          setError(err);
-        }
-      );
-    } else {
-      getTrash(
-        () => {},
-        (err) => {
-          setError(err);
-        }
-      );
-    }
+    getData();
   }, [folderId]);
 
   useEffect(() => {
-    const newData = trashData.map((item) => ({
-      id: item.id,
-      folder: item.folder ? 1 : 0,
-      name: item.name,
-      size: item.size,
-      createdAt: new Date(item.createdAt).toLocaleDateString('en-US'),
-    }));
+    if (trash) {
+      const newData = trash.map((item) => ({
+        id: item.id,
+        folder: item.folder ? 1 : 0,
+        name: item.name,
+        size: item.size,
+        createdAt: new Date(item.createdAt).toLocaleString('en-US'),
+      }));
 
-    setFilteredData(newData);
-    setTableData(newData);
-  }, [trashData]);
+      setFilteredData(newData);
+      setTableData(newData);
+    }
+  }, [trash]);
 
   const getSelectedRows = (selectedRowsData: TableDataTypes[]) => {
     setSelectedRows(selectedRowsData);
   };
 
-  const handleHardDelete = () => {
+  const handleOpenDeleteModal = () => {
     if (selectedRows.length === 0) return;
     setOpenModal(true);
+  };
+
+  const handleHardDelete = () => {
+    getData();
   };
 
   const handleRecoverFromTrash = (row: TableDataTypes) => {
     if (row.folder) {
       fileServices
-        .recoverFolderFromTrash(row.id)
-        .then(() =>
-          getTrash(
-            () => {},
-            () => {}
-          )
-        )
+        .recoverFolderFromTrash([row.id])
+        .then(() => {
+          const newTrash = trash.filter((item) => item.id !== row.id);
+          setTrash(newTrash);
+        })
         .catch((err) => {
           if (err.response?.status === 500) {
             setError('Internal server error');
@@ -113,13 +124,11 @@ const Trash = () => {
         });
     } else {
       fileServices
-        .recoverFileFromTrash(row.id)
-        .then(() =>
-          getTrash(
-            () => {},
-            () => {}
-          )
-        )
+        .recoverFileFromTrash([row.id])
+        .then(() => {
+          const newTrash = trash.filter((item) => item.id !== row.id);
+          setTrash(newTrash);
+        })
         .catch((err) => {
           if (err.response?.status === 500) {
             setError('Internal server error');
@@ -146,6 +155,7 @@ const Trash = () => {
       {openModal && (
         <Modal title="Delete shelf" onCloseModal={handleModalClose}>
           <DeleteShelfModal
+            onDelete={handleHardDelete}
             onCloseModal={handleModalClose}
             onError={setError}
             message="This action will permanently delete this file/folder"
@@ -171,12 +181,12 @@ const Trash = () => {
             searchKey="name"
           />
           <ButtonActionsBox>
-            <Button onClick={handleHardDelete} icon={<FaTrash />}>
+            <Button onClick={handleOpenDeleteModal} icon={<FaTrash />}>
               Delete
             </Button>
           </ButtonActionsBox>
         </ActionsBox>
-        {(trashData && trashData.length === 0) || filteredData.length === 0 ? (
+        {(trash && trash.length === 0) || filteredData.length === 0 ? (
           <Description>{message}</Description>
         ) : (
           <Table
