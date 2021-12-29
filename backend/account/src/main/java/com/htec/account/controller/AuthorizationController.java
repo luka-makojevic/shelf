@@ -29,10 +29,6 @@ public class AuthorizationController {
     public ResponseEntity<RefreshTokenResponseModel> getNewAcessToken(@RequestBody String refreshToken) {
 
         RefreshTokenResponseModel refreshTokenResponseModel = userService.sendNewAccessToken(refreshToken);
-        //UserDTO userDTO = UserMapper.INSTANCE.authUserToUserDTO(authUser);
-        //String jwtToken = tokenGenerator.generateJwtToken(userDTO);
-
-        //RefreshTokenResponseModel refreshTokenResponseModel = new RefreshTokenResponseModel(jwtToken);
         return ResponseEntity.status(HttpStatus.OK).body(refreshTokenResponseModel);
     }
 
