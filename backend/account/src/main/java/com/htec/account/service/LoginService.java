@@ -34,6 +34,7 @@ public class LoginService implements UserDetailsService {
     private final MicrosoftApiService microsoftApiService;
 
     private final Long FREE_SPACE_SIZE;
+    public final String DEFAULT_AVATAR_PATH = "default-avatar.jpg";
 
     @Autowired
     LoginService(UserRepository userRepository,
@@ -96,6 +97,7 @@ public class LoginService implements UserDetailsService {
             userEntity.setEmailVerified(true);
             userEntity.setRole(new RoleEntity(3L));
             userEntity.setFreeSpace(FREE_SPACE_SIZE);
+            userEntity.setPictureName(DEFAULT_AVATAR_PATH);
 
             userRepository.save(userEntity);
 
