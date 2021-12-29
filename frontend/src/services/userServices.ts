@@ -1,22 +1,27 @@
-import axios from 'axios';
-import { API_URL_ACCOUNT } from '../api/api';
+import instance from '../api/axiosInstance';
 import { ForgotPasswordData, ResetPasswordData } from '../interfaces/dataTypes';
 
+const API_URL_ACCOUNT = '/account';
+
 const emailConfirmation = (token: string | undefined) =>
-  axios.post(`${API_URL_ACCOUNT}tokens/confirmation`, { token });
+  instance.post(`${API_URL_ACCOUNT}/tokens/confirmation`, { token });
 
 const resendEmailVerification = (token: string | undefined) =>
-  axios.post(`${API_URL_ACCOUNT}tokens/resend`, { token });
+  instance.post(`${API_URL_ACCOUNT}/tokens/resend`, { token });
 
 const forgotPassword = (data: ForgotPasswordData) =>
-  axios.post(`${API_URL_ACCOUNT}users/password-reset-request`, data);
+  instance.post(`${API_URL_ACCOUNT}/users/password-reset-request`, data);
 
 const resetPassword = (data: ResetPasswordData) =>
-  axios.post(`${API_URL_ACCOUNT}users/password-reset`, data);
+  instance.post(`${API_URL_ACCOUNT}/users/password-reset`, data);
+
+const getUser = (token: string) =>
+  instance.get(`${API_URL_ACCOUNT}/users/${token}`);
 
 export default {
   emailConfirmation,
   resendEmailVerification,
   forgotPassword,
   resetPassword,
+  getUser
 };

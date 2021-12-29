@@ -1,5 +1,4 @@
 import authServices from '../services/authServices';
-import { LocalStorage } from '../services/localStorage';
 import { useAppDispatch } from '../store/hooks';
 import { removeUser } from '../store/userReducer';
 import {
@@ -9,6 +8,7 @@ import {
   MicrosoftRegisterData,
   RegisterData,
 } from '../interfaces/dataTypes';
+import instance from '../api/axiosInstance';
 
 export const useAuth = () => {
   const dispatch = useAppDispatch();
@@ -27,7 +27,7 @@ export const useAuth = () => {
             'refreshToken',
             JSON.stringify(res.data.jwtRefreshToken)
           );
-
+          instance.defaults.headers.common.Authorization = `Bearer ${res.data.jwtToken}`;
           onSuccess();
         }
       })
@@ -81,7 +81,8 @@ export const useAuth = () => {
     authServices
       .logout(data)
       .then(() => {
-        LocalStorage.clear();
+        delete instance.defaults.headers.common.Authorization;
+        localStorage.clear();
         dispatch(removeUser());
         onSuccess();
       })

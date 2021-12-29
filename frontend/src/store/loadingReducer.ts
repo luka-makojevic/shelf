@@ -1,32 +1,20 @@
 /* eslint-disable no-param-reassign */
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export const initialLoadingState: { loadingCounter: number; loading: boolean } =
-  {
-    loadingCounter: 0,
-    loading: false,
-  };
+export const initialLoadingState: { loading: boolean } = {
+  loading: false,
+};
 
 const loadingSlice = createSlice({
   name: 'loading',
   initialState: initialLoadingState,
   reducers: {
-    increaseLoadingCounter: (state) => {
-      state.loadingCounter += 1;
-      if (state.loadingCounter) {
-        state.loading = true;
-      }
-    },
-    decreaseLoadingCounter: (state) => {
-      state.loadingCounter -= 1;
-      if (state.loadingCounter === 0) {
-        state.loading = false;
-      }
+    setIsLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload;
     },
   },
 });
 
-export const { increaseLoadingCounter, decreaseLoadingCounter } =
-  loadingSlice.actions;
+export const { setIsLoading } = loadingSlice.actions;
 
 export default loadingSlice.reducer;

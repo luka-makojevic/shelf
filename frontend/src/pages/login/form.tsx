@@ -26,7 +26,7 @@ const LoginForm = () => {
     formState: { errors },
   } = useForm<LoginData>({});
   const { login, microsoftLogin } = useAuth();
-  const { instance } = useMsal();
+  const { instance: msInstance } = useMsal();
 
   const isLoading = useAppSelector((state: RootState) => state.loading.loading);
 
@@ -53,7 +53,7 @@ const LoginForm = () => {
   const handleMicrosoftSignIn = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    instance
+    msInstance
       .acquireTokenPopup(loginRequest)
       .then(({ accessToken }) => {
         microsoftLogin(

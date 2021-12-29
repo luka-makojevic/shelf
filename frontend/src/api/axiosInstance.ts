@@ -1,18 +1,16 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { toast } from 'react-toastify';
-import { API_URL_ACCOUNT } from './api';
 import { store } from '../store/store';
-import {
-  increaseLoadingCounter,
-  decreaseLoadingCounter,
-} from '../store/loadingReducer';
+import { setIsLoading } from '../store/loadingReducer';
+import { removeUser } from '../store/userReducer';
 
 const instanceConfig: AxiosRequestConfig = {
-  baseURL: API_URL_ACCOUNT,
+  baseURL: process.env.REACT_APP_API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 };
+let loadingCounter = 0;
 
 const token = localStorage.getItem('token')
   ? JSON.parse(localStorage.getItem('token') || '')
@@ -28,7 +26,9 @@ const instance = axios.create(instanceConfig);
 
 instance.interceptors.request.use(
   (config) => {
-    store.dispatch(increaseLoadingCounter());
+    loadingCounter++;
+    if (loadingCounter === 1) store.dispatch(setIsLoading(true));
+
     return config;
   },
   (err) => err
@@ -36,43 +36,42 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (res) => {
-    if (res?.data?.jwtToken) {
-      localStorage.setItem('token', JSON.stringify(res.data.jwtToken));
-      localStorage.setItem(
-        'refreshToken',
-        JSON.stringify(res.data.jwtRefreshToken)
-      );
-      if (instanceConfig.headers)
-        instanceConfig.headers.Authorization = `Bearer ${res.data.jwtToken}`;
-    }
-    store.dispatch(decreaseLoadingCounter());
+    loadingCounter--;
+    if (loadingCounter === 0) store.dispatch(setIsLoading(false));
     return res;
   },
-  async (err) => {
+  (err) => {
     const originalConfig = err.config;
-
-    if (err.response?.data?.message === 'Token expired.') {
-      try {
-        const response = await axios.get(
-          `${API_URL_ACCOUNT}auth/refresh/token`,
+    loadingCounter--;
+    if (loadingCounter === 0) store.dispatch(setIsLoading(false));
+    if (err?.response?.data.status === 401 && !originalConfig.headers.Refresh) {
+      instance
+        .post(
+          `/account/auth/refresh/token`,
+          localStorage.getItem('refreshToken'),
           {
             headers: {
-              Authorization: `Bearer ${JSON.parse(
-                localStorage.getItem('refreshToken') || ''
-              )}`,
+              Authorization: '',
             },
           }
-        );
-
-        const { token: acccesToken } = response.data;
-        localStorage.setItem('token', JSON.stringify(acccesToken));
-
-        return await instance(originalConfig);
-      } catch (_error) {
-        return Promise.reject(_error);
-      }
+        )
+        .then((res) => {
+          localStorage.setItem('token', JSON.stringify(res.data.token));
+          instance.defaults.headers.common.Authorization = `Bearer ${res.data.token}`;
+          if (originalConfig.headers) {
+            originalConfig.headers.Authorization = `Bearer ${res.data.token}`;
+          }
+          return instance(originalConfig).then((response) =>
+            Promise.resolve(response)
+          );
+        })
+        .catch((error) => {
+          localStorage.clear();
+          delete instance.defaults.headers.common.Authorization;
+          store.dispatch(removeUser());
+          Promise.reject(error);
+        });
     }
-    store.dispatch(decreaseLoadingCounter());
 
     if (err.response?.status === 404) {
       toast.error(err.response.data.message);
