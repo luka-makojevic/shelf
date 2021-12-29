@@ -31,7 +31,6 @@ public class TokenService {
     public static final String EMAIL_CONFIRMED = "Email confirmed";
     public static final String TOKEN_RESENT = "Token resent";
     public final String INIT_USER_FOLDER_URL;
-    public final String DEFAULT_AVATAR_PATH = "default-avatar.jpg";
 
     private RestTemplate restTemplate;
 
@@ -102,8 +101,6 @@ public class TokenService {
             if (result.getStatusCode() != HttpStatus.OK) {
                 throw ExceptionSupplier.folderNotInitialized.get();
             }
-
-            userEntity.setPictureName(DEFAULT_AVATAR_PATH);
 
         } catch (HttpClientErrorException ex) {
             throw ExceptionSupplier.folderNotInitialized.get();
