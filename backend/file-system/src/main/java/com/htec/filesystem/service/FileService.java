@@ -387,6 +387,7 @@ public class FileService {
         String dbPath = newFilePath.replace(homePath + userPath, "");
         fileEntity.setPath(dbPath);
         fileEntity.setName(fileName);
+        fileEntity.setUpdatedAt(LocalDateTime.now());
         fileRepository.save(fileEntity);
 
         oldFile.renameTo(newFile);
