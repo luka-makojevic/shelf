@@ -1,8 +1,9 @@
 package helpers.uiHelpers;
 
+import helpers.dbHelpers.Cleanup;
 import helpers.excelHelpers.ExcelReader;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.openqa.selenium.WebDriver;
 import pages.LoginPage;
 import pages.LoginViaMicrosoft;
@@ -14,18 +15,19 @@ import java.util.Properties;
 
 public class BaseTest
 {
-    public static WebDriver driver;
-    public static Properties prop;
-    public static WebDriverManager webDriverManager;
-    public static WdWaitHelpers wdWaitHelpers;
-    public static NavigateBrowserHelper navigateBrowser;
-    public static ExcelReader excelReader;
-    public static LoginPage loginPage;
-    public static LoginViaMicrosoft loginViaMicrosoft;
-    public static RegistrationPage regPage;
+    public WebDriver driver;
+    public Properties prop;
+    public WebDriverManager webDriverManager;
+    public WdWaitHelpers wdWaitHelpers;
+    public NavigateBrowserHelper navigateBrowser;
+    public ExcelReader excelReader;
+    public LoginPage loginPage;
+    public LoginViaMicrosoft loginViaMicrosoft;
+    public RegistrationPage regPage;
+    public static Cleanup cleanup;
 
-    @BeforeClass
-    public static void initialize() throws IOException
+    @Before
+    public void initialize() throws IOException
     {
         webDriverManager = new WebDriverManager();
         driver = webDriverManager.initializeDriver();
@@ -35,11 +37,12 @@ public class BaseTest
         excelReader = new ExcelReader("src/main/resources/ExcelRead.xlsx");
         loginPage = new LoginPage(driver);
         loginViaMicrosoft = new LoginViaMicrosoft(driver, wdWaitHelpers);
-        regPage = new RegistrationPage(driver, wdWaitHelpers);
+        regPage = new RegistrationPage(driver, wdWaitHelpers, excelReader);
+        cleanup = new Cleanup();
     }
 
-    @AfterClass
-    public static void testTearDown() {
+    @After
+    public void testTearDown() {
         driver.close();
         driver.quit();
     }
