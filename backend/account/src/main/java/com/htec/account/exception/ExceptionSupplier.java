@@ -104,16 +104,16 @@ public class ExceptionSupplier {
 
     public static final Supplier<ShelfException> tokenNotFound = () -> new ShelfException(
             ErrorMessages.TOKEN_NOT_FOUND.getErrorMessage(),
-            HttpStatus.BAD_REQUEST.value(),
+            HttpStatus.NOT_FOUND.value(),
             LocalDateTime.now().format(formatter),
-            ErrorMessages.BAD_REQUEST.getErrorMessage()
+            ErrorMessages.NOT_FOUND.getErrorMessage()
     );
 
     public static final Supplier<ShelfException> tokenExpired = () -> new ShelfException(
             ErrorMessages.TOKEN_EXPIRED.getErrorMessage(),
-            HttpStatus.BAD_REQUEST.value(),
+            HttpStatus.UNAUTHORIZED.value(),
             LocalDateTime.now().format(formatter),
-            ErrorMessages.BAD_REQUEST.getErrorMessage()
+            ErrorMessages.UNAUTHORIZED.getErrorMessage()
     );
 
     public static final Supplier<ShelfException> tokenNotExpired = () -> new ShelfException(
@@ -125,16 +125,16 @@ public class ExceptionSupplier {
 
     public static final Supplier<ShelfException> userNotFound = () -> new ShelfException(
             ErrorMessages.USER_NOT_FOUND.getErrorMessage(),
-            HttpStatus.BAD_REQUEST.value(),
+            HttpStatus.NOT_FOUND.value(),
             LocalDateTime.now().format(formatter),
-            ErrorMessages.BAD_REQUEST.getErrorMessage()
+            ErrorMessages.NOT_FOUND.getErrorMessage()
     );
 
     public static final Supplier<ShelfException> tokenNotValid = () -> new ShelfException(
             ErrorMessages.TOKEN_NOT_VALID.getErrorMessage(),
-            HttpStatus.BAD_REQUEST.value(),
+            HttpStatus.UNAUTHORIZED.value(),
             LocalDateTime.now().format(formatter),
-            ErrorMessages.BAD_REQUEST.getErrorMessage()
+            ErrorMessages.UNAUTHORIZED.getErrorMessage()
     );
 
     public static final Supplier<ShelfException> accessTokenNotActive = () -> new ShelfException(
