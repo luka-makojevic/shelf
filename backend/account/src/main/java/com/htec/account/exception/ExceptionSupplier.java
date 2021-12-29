@@ -116,6 +116,13 @@ public class ExceptionSupplier {
             ErrorMessages.UNAUTHORIZED.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> refreshTokenExpired = () -> new ShelfException(
+            ErrorMessages.REFRESH_TOKEN_EXPIRED.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> tokenNotExpired = () -> new ShelfException(
             ErrorMessages.TOKEN_NOT_EXPIRED.getErrorMessage(),
             HttpStatus.BAD_REQUEST.value(),
@@ -135,6 +142,13 @@ public class ExceptionSupplier {
             HttpStatus.UNAUTHORIZED.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.UNAUTHORIZED.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> refreshTokenNotValid = () -> new ShelfException(
+            ErrorMessages.REFRESH_TOKEN_NOT_VALID.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
     );
 
     public static final Supplier<ShelfException> accessTokenNotActive = () -> new ShelfException(

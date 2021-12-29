@@ -3,7 +3,7 @@ package com.htec.account.security;
 public class SecurityConstants {
 
     public static final long JWT_EXPIRATION_TIME = 3600000; // 1 hour
-    public static final long REFRESH_JWT_EXPIRATION_TIME = 864000000; // 10 days
+    public static final long REFRESH_JWT_EXPIRATION_TIME = 1; // 10 days
     public static final long PASSWORD_RESET_EXPIRATION_TIME = 3600000; // 1 hour
 
     public static final String BEARER_TOKEN_PREFIX = "Bearer ";
@@ -18,4 +18,5 @@ public class SecurityConstants {
     public static final String SIGN_UP_MICROSOFT_URL = "/register/microsoft";
     public static final String SIGN_UP_CONFIRM_EMAIL_URL = "/tokens/confirmation";
     public static final String SIGN_UP_RESEND_TOKEN_URL = "/tokens/resend";
+    public static final String REFRESH_TOKEN_URL = "/auth/refresh/token";
 }
