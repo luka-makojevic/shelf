@@ -165,6 +165,7 @@ public class ShelfService {
         if (!shelfEntity.getName().equals(shelfName))
             shelfEntity.setName(shelfName);
 
+        shelfEntity.setUpdatedAt(LocalDateTime.now());
         shelfRepository.save(shelfEntity);
     }
 

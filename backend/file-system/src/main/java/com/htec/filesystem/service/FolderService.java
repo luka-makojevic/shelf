@@ -526,6 +526,7 @@ public class FolderService {
         }
 
         folderEntity.setName(folderName);
+        folderEntity.setUpdatedAt(LocalDateTime.now());
         folderRepository.save(folderEntity);
     }
 }
