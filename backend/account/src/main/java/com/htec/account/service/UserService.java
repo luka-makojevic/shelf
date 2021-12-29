@@ -29,11 +29,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -273,7 +271,7 @@ public class UserService {
         AuthUser authUser;
         try {
             authUser = validateRefreshToken(refreshToken);
-        }catch (ShelfException e) {
+        } catch (ShelfException e) {
 
             throw ExceptionSupplier.userIsNotLoggedIn.get();
         } catch (ExpiredJwtException e) {
@@ -284,7 +282,7 @@ public class UserService {
             throw ExceptionSupplier.refreshTokenNotValid.get();
         }
 
-        if(authUser == null) {
+        if (authUser == null) {
             throw ExceptionSupplier.refreshTokenNotValid.get();
         }
         UserDTO userDTO = UserMapper.INSTANCE.authUserToUserDTO(authUser);
