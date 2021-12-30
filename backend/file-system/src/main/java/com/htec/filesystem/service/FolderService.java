@@ -416,7 +416,15 @@ public class FolderService {
                 FileUtils.deleteDirectory(new File(homePath + userPath + folderEntity.getPath()));
             }
 
-            fileRepository.deleteAll(downStreamFiles);
+            deleteDummyFolders(folderIds);
+
+            downStreamFiles.forEach(fileEntity -> {
+                try {
+                    fileRepository.delete(fileEntity);
+                } catch (Exception ignored) {
+
+                }
+            });
             folderRepository.deleteAllInBatch(downStreamFolders);
         } catch (IOException e) {
             throw ExceptionSupplier.couldNotDeleteFolder.get();

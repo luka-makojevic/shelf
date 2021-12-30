@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -36,6 +37,8 @@ public class ShelfService {
     private final FolderRepository folderRepository;
     private final FileRepository fileRepository;
     private final FileSystemValidator fileSystemValidator;
+    private final FolderService folderService;
+    private final FileService fileService;
 
     private final String homePath = System.getProperty("user.home");
     private final String pathSeparator = FileSystems.getDefault().getSeparator();
@@ -44,11 +47,15 @@ public class ShelfService {
     public ShelfService(ShelfRepository shelfRepository,
                         FolderRepository folderRepository,
                         FileRepository fileRepository,
-                        FileSystemValidator fileSystemValidator) {
+                        FileSystemValidator fileSystemValidator,
+                        FolderService folderService,
+                        FileService fileService) {
         this.shelfRepository = shelfRepository;
         this.folderRepository = folderRepository;
         this.fileRepository = fileRepository;
         this.fileSystemValidator = fileSystemValidator;
+        this.folderService = folderService;
+        this.fileService = fileService;
     }
 
     @Transactional
@@ -106,14 +113,24 @@ public class ShelfService {
     public void hardDeleteShelf(Long shelfId, Long userId) {
 
         ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
-                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+                .orElseThrow(ExceptionSupplier.shelfNotFound);
 
         if (!Objects.equals(shelfEntity.getUserId(), userId))
             throw ExceptionSupplier.userNotAllowedToDeleteShelf.get();
 
+        List<FileEntity> fileEntities = fileRepository.findAllByShelfIdInAndTrashVisible(Collections.singletonList(shelfId), true);
+        List<FolderEntity> folderEntities = folderRepository.findAllByShelfIdInAndTrashVisible(Collections.singletonList(shelfId), true);
+
+        List<Long> fileIds = fileEntities.stream().map(FileEntity::getId).collect(Collectors.toList());
+        List<Long> folderIds = folderEntities.stream().map(FolderEntity::getId).collect(Collectors.toList());
+
         String shelfPath = homePath + userPath + userId + pathSeparator + "shelves" + pathSeparator + shelfId;
 
         try {
+            fileService.deleteFile(userId, fileIds);
+
+            folderService.hardDeleteFolder(userId, folderIds);
+
             FileUtils.deleteDirectory(new File(shelfPath));
             shelfRepository.deleteById(shelfId);
         } catch (IOException e) {
