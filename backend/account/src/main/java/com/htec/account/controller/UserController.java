@@ -25,6 +25,12 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping("/me")
+    public ResponseEntity getMe(@AuthenticationUser AuthUser user) {
+
+        return ResponseEntity.ok(userService.getMe(user.getId()));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity getUserById(@AuthenticationUser AuthUser user, @PathVariable Long id) {
 
