@@ -423,26 +423,6 @@ class FileServiceTest {
     }
 
     @Test
-    void deleteFile() throws IOException {
-
-        user.setId(1L);
-        fileEntity.setId(1L);
-        fileEntity.setPath("test1.jpg");
-        File file = new File("/home/damnjan/shelf-files/user-data/" + fileEntity.getPath());
-        file.createNewFile();
-        fileEntities.add(fileEntity);
-        fileIds.add(1L);
-
-        when(fileRepository.findAllByUserIdAndDeletedAndIdIn(user.getId(), true, fileIds)).thenReturn(fileEntities);
-
-        fileService.deleteFile(user.getId(), fileIds);
-
-        verify(fileRepository, times(1)).findAllByUserIdAndDeletedAndIdIn(user.getId(), true, fileIds);
-//        verify(file, times(1)).delete();
-        verify(fileRepository, times(1)).deleteAll(fileEntities);
-    }
-
-    @Test
     void deleteFile_idsNotFound() {
 
         user.setId(1L);

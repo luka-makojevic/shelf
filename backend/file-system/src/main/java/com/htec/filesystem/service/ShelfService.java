@@ -47,7 +47,9 @@ public class ShelfService {
     public ShelfService(ShelfRepository shelfRepository,
                         FolderRepository folderRepository,
                         FileRepository fileRepository,
-                        FileSystemValidator fileSystemValidator, FolderService folderService, FileService fileService) {
+                        FileSystemValidator fileSystemValidator,
+                        FolderService folderService,
+                        FileService fileService) {
         this.shelfRepository = shelfRepository;
         this.folderRepository = folderRepository;
         this.fileRepository = fileRepository;
