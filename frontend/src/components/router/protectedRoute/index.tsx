@@ -1,7 +1,6 @@
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
-import jwt_decode from 'jwt-decode';
 import { LocalStorage } from '../../../services/localStorage';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { setUser } from '../../../store/userReducer';
@@ -19,16 +18,14 @@ const ProtectedRoute = ({ children, roles }: ProtectedRouteProps) => {
   const user = useAppSelector((state) => state.user.user);
 
   useEffect(() => {
-    if (!accessToken) return;
-    const { jti }: { jti: string } = jwt_decode(accessToken || '');
     if (!user)
       userServices
-        .getUser(jti)
+        .getUser()
         .then((res) => {
           dispatch(setUser(res.data));
         })
         .catch((err) => {
-          toast.error(err.repsonse.data.message);
+          toast.error(err.repsonse?.data?.message);
         });
   }, []);
 

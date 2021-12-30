@@ -15,13 +15,12 @@ const forgotPassword = (data: ForgotPasswordData) =>
 const resetPassword = (data: ResetPasswordData) =>
   instance.post(`${API_URL_ACCOUNT}/users/password-reset`, data);
 
-const getUser = (token: string) =>
-  instance.get(`${API_URL_ACCOUNT}/users/${token}`);
+const getUser = () => instance.get(`${API_URL_ACCOUNT}/users/me`);
 
 export default {
   emailConfirmation,
   resendEmailVerification,
   forgotPassword,
   resetPassword,
-  getUser
+  getUser,
 };

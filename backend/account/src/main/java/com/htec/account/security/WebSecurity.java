@@ -56,12 +56,15 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_URL)
                 .permitAll()
+                .antMatchers(HttpMethod.POST, SecurityConstants.REFRESH_TOKEN_URL)
+                .permitAll()
                 .antMatchers(
                         "/v2/api-docs",
                         "/swagger-resources/**",
                         "/swagger-ui.html",
                         "/webjars/**",
-                        "/swagger.json")
+                        "/swagger.json",
+                        "/users/picture-name/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated().and()

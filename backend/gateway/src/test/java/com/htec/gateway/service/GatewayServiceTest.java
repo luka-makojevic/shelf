@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.*;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -15,6 +16,8 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -29,9 +32,12 @@ public class GatewayServiceTest {
     private Map<String, String> apiServerUrls;
     @Mock
     private RestTemplate restTemplate;
+    @Spy
+    private List<String> allowedRouteUrls = new ArrayList<>();
 
     @InjectMocks
     private GatewayService gatewayService;
+
 
     @BeforeEach
     void setUp() {

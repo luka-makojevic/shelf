@@ -1,7 +1,7 @@
 package pages;
 
-import helpers.BaseWdWaitHelpers;
-import helpers.ExcelReader;
+import helpers.uiHelpers.WdWaitHelpers;
+import helpers.excelHelpers.ExcelReader;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -10,7 +10,7 @@ import java.io.IOException;
 public class RegistrationPage {
 
     WebDriver driver;
-    BaseWdWaitHelpers baseWdWaitHelpers;
+    WdWaitHelpers wdWaitHelpers;
     ExcelReader excelReader;
     String mail;
     String pass;
@@ -37,9 +37,9 @@ public class RegistrationPage {
     public By recordExistsMessage = By.xpath("//*[contains(text(),'Record already exists.')]");
 
 
-    public RegistrationPage(WebDriver driver, BaseWdWaitHelpers baseWdWaitHelpers) {
+    public RegistrationPage(WebDriver driver, WdWaitHelpers wdWaitHelpers) {
         this.driver = driver;
-        this.baseWdWaitHelpers = baseWdWaitHelpers;
+        this.wdWaitHelpers = wdWaitHelpers;
     }
 
     public void insertData(By locator, String data) {
@@ -48,11 +48,11 @@ public class RegistrationPage {
     }
 
     public void clickOnElement(By locator) {
-        baseWdWaitHelpers.waitToBeClickable(driver.findElement(locator)).click();
+        wdWaitHelpers.waitToBeClickable(driver.findElement(locator)).click();
     }
 
     public String getMessageText (By locator) {
-        return baseWdWaitHelpers.waitToBeVisible(locator).getText();
+        return wdWaitHelpers.waitToBeVisible(locator).getText();
     }
 
 

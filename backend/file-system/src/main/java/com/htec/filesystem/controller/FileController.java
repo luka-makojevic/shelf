@@ -6,15 +6,13 @@ import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.model.response.FileResponseModel;
 import com.htec.filesystem.model.response.TextResponseMessage;
 import com.htec.filesystem.service.FileService;
-import com.htec.filesystem.util.FileUtil;
 import org.springframework.data.util.Pair;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +24,7 @@ public class FileController {
     private final FileService fileService;
 
     private final String FILE_UPLOADED = "File Uploaded";
+    private final String FILE_DOWNLOADED = "File Downloaded";
     private final String FILE_RENAMED = "File renamed";
     private final String IMAGE_UPLOADED = "Image Uploaded";
     private final String FILES_MOVED_TO_TRASH = "File/s moved to trash.";
@@ -50,16 +49,24 @@ public class FileController {
                                           @PathVariable Long id,
                                           @RequestParam(value = "file") boolean file) {
 
-        FileResponseModel fileResponseModel = fileService.getFile(user, id, file);
+        FileResponseModel fileResponseModel = fileService.getFile(user.getId(), id, file);
         return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).body(fileResponseModel.getImageContent());
     }
 
+    @PostMapping(value = "/zip-download", produces = "application/zip")
+    public ResponseEntity zipDownload(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) {
+
+        fileService.downloadFilesToZip(user, fileIds);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("application/zip"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename\"" + "asde" + "\"").build();
+    }
+
     @GetMapping("/preview/{id}")
-    public ResponseEntity<byte[]> getImage(@AuthenticationUser AuthUser user,
-                                           @PathVariable Long id,
+    public ResponseEntity<byte[]> getImage(@PathVariable Long id,
                                            @RequestParam(value = "file") boolean file) {
 
-        FileResponseModel fileResponseModel = fileService.getFile(user, id, file);
+        FileResponseModel fileResponseModel = fileService.getFile(null, id, file);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(fileResponseModel.getImageContent());
     }
 
@@ -76,7 +83,7 @@ public class FileController {
     @PutMapping("/move-to-trash")
     public ResponseEntity<TextResponseMessage> softDeleteFile(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) {
 
-        fileService.updateDeletedFiles(user, fileIds , true, true);
+        fileService.updateDeletedFiles(user, fileIds, true, true);
         return ResponseEntity.ok().body(new TextResponseMessage(FILES_MOVED_TO_TRASH, HttpStatus.OK.value()));
     }
 
@@ -101,5 +108,12 @@ public class FileController {
 
         fileService.deleteFile(user, fileIds);
         return ResponseEntity.ok().body(new TextResponseMessage(FILES_DELETED, HttpStatus.OK.value()));
+    }
+
+    @PutMapping("/recover")
+    public ResponseEntity<TextResponseMessage> recoverFile(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) {
+
+        fileService.updateDeletedFiles(user, fileIds , false, true);
+        return ResponseEntity.ok().body(new TextResponseMessage(FILES_RECOVERED_FROM_TRASH, HttpStatus.OK.value()));
     }
 }

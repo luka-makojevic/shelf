@@ -31,10 +31,12 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
                                                                 @Param("folderId") Long folderId,
                                                                 @Param("deleted") Boolean deleted);
 
+    List<FileEntity> findAllByParentFolderIdInAndDeleted(List<Long> folderIds, Boolean deleted);
+
     @Modifying
     @Query("UPDATE FileEntity f SET f.deleted = :deleted WHERE f.parentFolderId IN (:folderIdsToBeDeleted)")
-    void updateDeletedByParentFolderIds(@Param("deleted") Boolean deleted,
-                                        @Param("folderIdsToBeDeleted") List<Long> folderIdsToBeDeleted);
+    void updateDeletedByParentFolderIdIn(@Param("deleted") Boolean deleted,
+                                         @Param("folderIdsToBeDeleted") List<Long> folderIdsToBeDeleted);
 
     @Modifying
     @Query("UPDATE FileEntity f SET f.deleted = :deleted WHERE f.id IN (:fileIdsToBeDeleted)")
@@ -74,4 +76,9 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
     Optional<FileEntity> findByIdAndUserIdAndDeleted(@Param("fileId") Long fileId,
                                                      @Param("userId") Long userId,
                                                      @Param("deleted") Boolean deleted);
+
+
+    List<FileEntity> findAllByShelfIdInAndTrashVisible(List<Long> shelfId, Boolean trashVisible);
+
+    List<FileEntity> findAllByParentFolderIdIn(List<Long> folderIds);
 }

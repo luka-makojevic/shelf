@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Table } from '../../components/table/table';
-import TableWrapper from '../../components/table/TableWrapper';
+import TableWrapper from '../../components/table/tableWrapper';
 import { ShelfDataType, TableDataTypes } from '../../interfaces/dataTypes';
 import ShelfModal from '../../components/modal/shelfModal';
 import Modal from '../../components/modal';
 import { Button } from '../../components/UI/button';
 import { Description } from '../../components/text/text-styles';
-import DeleteShelfModal from '../../components/modal/deleteShelfModal';
+import DeleteModal from '../../components/modal/deleteModal';
 import SearchBar from '../../components/UI/searchBar/searchBar';
 import shelfServices from '../../services/shelfServices';
+import {
+  ActionsBox,
+  ButtonActionsBox,
+} from '../../components/table/tableWrapper.styles';
 
 const headers = [
   { header: 'Name', key: 'name' },
@@ -23,17 +27,21 @@ const Shelves = () => {
   const [selectedShelf, setSelectedShelf] = useState<TableDataTypes | null>(
     null
   );
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [shelvesForTable, setShelvesForTable] = useState<TableDataTypes[]>([]);
   const [filteredShelves, setFilteredShelves] = useState<TableDataTypes[]>([]);
 
   const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
 
   const getData = () => {
+    setIsLoading(true);
     shelfServices
       .getShelves()
       .then((res) => setShelves(res.data))
-      .catch((err) => toast.error(err));
+      .catch((err) => toast.error(err))
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -90,7 +98,7 @@ const Shelves = () => {
     shelves.length === 0
       ? 'No shelves have been created yet'
       : 'Sorry, no matching results found';
-
+  if (isLoading) return null;
   return (
     <>
       {openModal && (
@@ -110,8 +118,8 @@ const Shelves = () => {
 
       {deleteModalOpen && (
         <Modal title="Delete shelf" onCloseModal={handleModalClose}>
-          <DeleteShelfModal
-            onDelete={handleDelete}
+          <DeleteModal
+            onDeleteShelf={handleDelete}
             onCloseModal={handleModalClose}
             shelf={selectedShelf}
           />
@@ -122,15 +130,17 @@ const Shelves = () => {
         title="Shelves"
         description="Shelves are the fundamental containers for data storage."
       >
-        <div>
+        <ActionsBox>
           <SearchBar
             placeholder="Search..."
             data={shelvesForTable}
             setData={setFilteredShelves}
             searchKey="name"
           />
-          <Button onClick={handleOpenModal}>Create shelf</Button>
-        </div>
+          <ButtonActionsBox>
+            <Button onClick={handleOpenModal}>Create shelf</Button>
+          </ButtonActionsBox>
+        </ActionsBox>
         {shelves.length === 0 || filteredShelves.length === 0 ? (
           <Description>{message}</Description>
         ) : (

@@ -76,6 +76,12 @@ const Router = () => {
         {
           path: Routes.TRASH,
           element: <Trash />,
+          children: [
+            {
+              path: Routes.FOLDERS,
+              element: <Trash />,
+            },
+          ],
         },
         {
           path: Routes.FUNCTIONS,

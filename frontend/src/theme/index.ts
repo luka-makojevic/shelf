@@ -49,5 +49,6 @@ export const theme = {
     danger: '#E13E3E',
     success: 'green',
     info: '#1E90FF',
+    lightBlue: '#f1f8fe',
   },
 };

@@ -20,11 +20,19 @@ const FolderModal = ({
   onGetData,
   onEdit,
 }: FolderModalProps) => {
+  const defaultName = file?.folder
+    ? file.name
+    : file?.name.substring(0, file.name.lastIndexOf('.'));
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ShelfDataType>({ defaultValues: { name: file?.name } });
+  } = useForm<ShelfDataType>({
+    defaultValues: {
+      name: defaultName,
+    },
+  });
 
   const handleCloseModal = () => {
     onCloseModal(false);

@@ -21,7 +21,6 @@ export const SearchInputContainer = styled.div`
 export const SearchIconContainer = styled.div`
   position: absolute;
   width: 20px;
-  height: 20px;
   left: ${theme.space.sm};
   top: ${theme.space.sm};
 `;

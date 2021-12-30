@@ -17,7 +17,6 @@ const token = localStorage.getItem('token')
   : '';
 
 if (token) {
-  // eslint-disable-next-line no-param-reassign
   if (instanceConfig.headers)
     instanceConfig.headers.Authorization = `Bearer ${token}`;
 }
@@ -44,22 +43,23 @@ instance.interceptors.response.use(
     const originalConfig = err.config;
     loadingCounter--;
     if (loadingCounter === 0) store.dispatch(setIsLoading(false));
-    if (err?.response?.data.status === 401 && !originalConfig.headers.Refresh) {
+    if (err?.response?.status === 401) {
+      delete instance.defaults.headers.common.Authorization;
       instance
         .post(
           `/account/auth/refresh/token`,
-          localStorage.getItem('refreshToken'),
+          JSON.parse(localStorage.getItem('refreshToken') || ''),
           {
             headers: {
-              Authorization: '',
+              'Content-Type': 'text/plain',
             },
           }
         )
         .then((res) => {
-          localStorage.setItem('token', JSON.stringify(res.data.token));
-          instance.defaults.headers.common.Authorization = `Bearer ${res.data.token}`;
+          localStorage.setItem('token', JSON.stringify(res?.data?.token));
+          instance.defaults.headers.common.Authorization = `Bearer ${res?.data?.token}`;
           if (originalConfig.headers) {
-            originalConfig.headers.Authorization = `Bearer ${res.data.token}`;
+            originalConfig.headers.Authorization = `Bearer ${res?.data?.token}`;
           }
           return instance(originalConfig).then((response) =>
             Promise.resolve(response)
@@ -74,15 +74,18 @@ instance.interceptors.response.use(
     }
 
     if (err.response?.status === 404) {
-      toast.error(err.response.data.message);
-    } else if (err.response?.status === 500) {
-      toast.error('Internal server error');
-    } else if (err?.message === 'Network Error') {
-      toast.error('Network Error');
-    } else {
+      toast.error(err.response?.data?.message);
       return Promise.reject(err);
     }
-    return null;
+    if (err.response?.status === 500) {
+      toast.error('Internal server error');
+      return Promise.reject(err);
+    }
+    if (err?.message === 'Network Error') {
+      toast.error('Network Error');
+      return Promise.reject(err);
+    }
+    return Promise.reject(err);
   }
 );
 

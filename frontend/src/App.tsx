@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => (
   <ThemeProvider theme={theme}>
-    <ToastContainer />
+    <ToastContainer limit={3} />
     <Router />
   </ThemeProvider>
 );

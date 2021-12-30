@@ -26,6 +26,18 @@ const softDeleteFolder = (folderIds: number[]) =>
 const softDeleteFile = (fileIds: number[]) =>
   instance.put(`${API_URL_FILES}/file/move-to-trash`, fileIds);
 
+const hardDeleteFile = (data: number[]) =>
+  instance.delete(`${API_URL_FILES}/file`, { data });
+
+const hardDeleteFolder = (data: number[]) =>
+  instance.delete(`${API_URL_FILES}/folder`, { data });
+
+const recoverFileFromTrash = (data: number[]) =>
+  instance.put(`${API_URL_FILES}/file/recover`, data);
+
+const recoverFolderFromTrash = (data: number[]) =>
+  instance.put(`${API_URL_FILES}/folder/recover`, data);
+
 const editFile = (data: { fileId: number; fileName: string }) =>
   instance.put(`${API_URL_FILES}/file/rename`, data);
 
@@ -57,6 +69,10 @@ export default {
   createFolder,
   softDeleteFolder,
   softDeleteFile,
+  hardDeleteFile,
+  hardDeleteFolder,
+  recoverFileFromTrash,
+  recoverFolderFromTrash,
   editFile,
   editFolder,
   downloadFile,

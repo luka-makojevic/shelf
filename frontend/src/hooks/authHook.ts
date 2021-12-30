@@ -50,6 +50,7 @@ export const useAuth = () => {
             'refreshToken',
             JSON.stringify(res.data.jwtRefreshToken)
           );
+          instance.defaults.headers.common.Authorization = `Bearer ${res.data.jwtToken}`;
           onSuccess();
         }
       })
@@ -73,6 +74,21 @@ export const useAuth = () => {
       });
   };
 
+  const microsoftRegister = (
+    data: MicrosoftRegisterData,
+    onSuccess: () => void,
+    onError: (error: string) => void
+  ) => {
+    authServices
+      .microsoftRegister(data)
+      .then(() => {
+        onSuccess();
+      })
+      .catch((err) => {
+        onError(err.response?.data.message);
+      });
+  };
+
   const logout = (
     data: LogoutData,
     onSuccess: () => void,
@@ -84,21 +100,6 @@ export const useAuth = () => {
         delete instance.defaults.headers.common.Authorization;
         localStorage.clear();
         dispatch(removeUser());
-        onSuccess();
-      })
-      .catch((err) => {
-        onError(err.response?.data.message);
-      });
-  };
-
-  const microsoftRegister = (
-    data: MicrosoftRegisterData,
-    onSuccess: () => void,
-    onError: (error: string) => void
-  ) => {
-    authServices
-      .microsoftRegister(data)
-      .then(() => {
         onSuccess();
       })
       .catch((err) => {

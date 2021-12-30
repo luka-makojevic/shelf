@@ -8,10 +8,13 @@ export interface ShelfModalProps {
   shelf: TableDataTypes | null;
 }
 
-export interface DeleteShelfModalProps {
-  onDelete: (shelf: TableDataTypes) => void;
-  onCloseModal: Dispatch<SetStateAction<boolean>>;
-  shelf: TableDataTypes | null;
+export interface DeleteModalProps {
+  onCloseModal: () => void;
+  onDeleteShelf?: (shelf: TableDataTypes) => void;
+  onDeleteFiles?: (files: TableDataTypes[]) => void;
+  shelf?: TableDataTypes | null;
+  message?: string;
+  selectedData?: TableDataTypes[];
 }
 
 export interface PathType {

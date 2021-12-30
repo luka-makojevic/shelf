@@ -10,7 +10,7 @@ import {
   CheckBoxTableHeader,
   TableHeaderInner,
   StyledTableContainer,
-} from './table -styles';
+} from './table.styles';
 import {
   HeaderTypes,
   SortingDirectionTypes,
@@ -26,6 +26,7 @@ interface TableProps {
   path: string;
   onDelete?: (shelf: TableDataTypes) => void;
   onEdit?: (data: TableDataTypes) => void;
+  onRecoverFromTrash?: (data: TableDataTypes) => void;
   getSelectedRows?: (data: TableDataTypes[]) => void;
 }
 
@@ -37,6 +38,7 @@ export const Table = ({
   path,
   onDelete,
   onEdit,
+  onRecoverFromTrash,
   getSelectedRows,
 }: TableProps) => {
   const [selectAll, setSelectAll] = useState<boolean>(false);
@@ -77,6 +79,7 @@ export const Table = ({
       return <FaCaretDown />;
     return <FaCaretUp />;
   };
+
   const handleClick = (key: string) => {
     sortColumn(
       key,
@@ -118,6 +121,7 @@ export const Table = ({
               data={item}
               path={path}
               onDelete={onDelete}
+              onRecoverFromTrash={onRecoverFromTrash}
               onEdit={onEdit}
               isChecked={selectedRows.some(
                 (rowData: TableDataTypes) =>

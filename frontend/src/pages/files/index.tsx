@@ -8,7 +8,7 @@ import {
 } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { Table } from '../../components/table/table';
-import TableWrapper from '../../components/table/TableWrapper';
+import TableWrapper from '../../components/table/tableWrapper';
 import {
   FileDataType,
   PathHistoryData,
@@ -19,15 +19,20 @@ import UploadModal from '../../components/modal/uploadModal';
 import { Button } from '../../components/UI/button';
 import { Description } from '../../components/text/text-styles';
 import Breadcrumbs from '../../components/breadcrumbs';
-import { ButtonContainer } from '../../components/table/tableWrapper-styles';
+import { ButtonContainer } from '../../components/table/tableWrapper.styles';
 import SearchBar from '../../components/UI/searchBar/searchBar';
 import FolderModal from '../../components/modal/folderModal';
 import fileServices from '../../services/fileServices';
 
+const headers = [
+  { header: 'Name', key: 'name' },
+  { header: 'Creation date', key: 'createdAt' },
+];
+
 const Files = () => {
   const [files, setFiles] = useState<FileDataType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [openModal, setOpenModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
   const [openUploadModal, setOpenUploadModal] = useState(false);
   const [filesforTable, setFilesForTable] = useState<TableDataTypes[]>([]);
   const [filteredFiles, setFilteredFiles] = useState<TableDataTypes[]>([]);
@@ -35,10 +40,10 @@ const Files = () => {
   const [selectedFile, setSelectedFile] = useState<TableDataTypes | null>();
   const { shelfId, folderId } = useParams();
   const [pathHistory, setPathHistory] = useState<PathHistoryData[]>([]);
-
-  const handleOpenUploadModal = () => {
-    setOpenUploadModal(true);
-  };
+  const message =
+    files?.length === 0
+      ? 'You dont have any files to display'
+      : 'Sorry, no matching results found';
 
   const getData = () => {
     setIsLoading(true);
@@ -79,15 +84,9 @@ const Files = () => {
     }
   }, [files]);
 
-  const message =
-    files?.length === 0
-      ? 'You dont have any files to display'
-      : 'Sorry, no matching results found';
-
-  const headers = [
-    { header: 'Name', key: 'name' },
-    { header: 'Creation date', key: 'createdAt' },
-  ];
+  const getSelectedRows = (selectedRowsData: TableDataTypes[]) => {
+    setSelectedRows(selectedRowsData);
+  };
 
   const handleDelete = () => {
     const fileIds: number[] = [];
@@ -125,28 +124,16 @@ const Files = () => {
   const handleEdit = (file: TableDataTypes, newName: string) => {
     const newFiles = files.map((item) => {
       if (item.id === file.id) {
-        return { ...item, name: newName };
+        const extension = item.name.substring(item.name.lastIndexOf('.'));
+        return { ...item, name: newName + extension };
       }
       return item;
     });
     setFiles(newFiles);
   };
 
-  const handleOpenEditModal = (file: TableDataTypes) => {
-    setSelectedFile(file);
-    setOpenModal(true);
-  };
-
   const handleCreateFolder = () => {
-    setOpenModal(true);
-  };
-  const handleModalClose = () => {
-    setSelectedFile(null);
-    setOpenModal(false);
-  };
-
-  const getSelectedRows = (selectedRowsData: TableDataTypes[]) => {
-    setSelectedRows(selectedRowsData);
+    setOpenEditModal(true);
   };
 
   const handleDownload = () => {
@@ -167,23 +154,34 @@ const Files = () => {
       });
   };
 
-  const handleCloseModal = () => {
-    setOpenModal(false);
+  const handleOpenUploadModal = () => {
+    setOpenUploadModal(true);
+  };
+  const handleCloseUploadModal = () => {
+    setOpenUploadModal(false);
+  };
+  const handleEditModalClose = () => {
+    setSelectedFile(null);
+    setOpenEditModal(false);
+  };
+  const handleOpenEditModal = (file: TableDataTypes) => {
+    setSelectedFile(file);
+    setOpenEditModal(true);
   };
 
   if (isLoading) return null;
 
   return (
     <>
-      {openModal && (
+      {openEditModal && (
         <Modal
           title={selectedFile ? 'Edit name' : 'Create folder'}
-          onCloseModal={handleModalClose}
+          onCloseModal={handleEditModalClose}
           closeIcon
         >
           <FolderModal
             onEdit={handleEdit}
-            onCloseModal={handleModalClose}
+            onCloseModal={handleEditModalClose}
             shelfId={shelfId}
             folderId={folderId}
             onGetData={getData}
@@ -194,8 +192,15 @@ const Files = () => {
         </Modal>
       )}
       {openUploadModal && (
-        <Modal title="Upload files" onCloseModal={handleCloseModal} closeIcon>
-          <UploadModal onCloseModal={handleCloseModal} onGetData={getData} />
+        <Modal
+          title="Upload files"
+          onCloseModal={handleCloseUploadModal}
+          closeIcon
+        >
+          <UploadModal
+            onCloseModal={handleCloseUploadModal}
+            onGetData={getData}
+          />
         </Modal>
       )}
 

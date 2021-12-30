@@ -165,16 +165,29 @@ public class ShelfService {
         if (!shelfEntity.getName().equals(shelfName))
             shelfEntity.setName(shelfName);
 
+        shelfEntity.setUpdatedAt(LocalDateTime.now());
         shelfRepository.save(shelfEntity);
     }
 
-    public List<ShelfItemDTO> getAllFilesFromTrash(Long userId) {
+    public ShelfContentResponseModel getFirstLevelTrash(Long userId) {
 
         List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserId(userId);
         List<Long> shelfIds = shelfEntities.stream().map(ShelfEntity::getId).collect(Collectors.toList());
 
-        List<ShelfItemDTO> trashItems = new ArrayList<>();
+        List<FileEntity> fileEntities = fileRepository.findAllByShelfIdInAndTrashVisible(shelfIds, true);
+        List<FolderEntity> folderEntities = folderRepository.findAllByShelfIdInAndTrashVisible(shelfIds, true);
 
-        return trashItems;
+        for (FileEntity fileEntity : fileEntities) {
+            fileEntity.setName(fileEntity.getRealName());
+        }
+
+        List<ShelfItemDTO> trashItems = new ArrayList<>();
+        trashItems.addAll(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
+        trashItems.addAll(ShelfItemMapper.INSTANCE.folderEntitiesToShelfItemDTOs(folderEntities));
+
+        List<BreadCrumbDTO> breadCrumbDTOS = new ArrayList<>();
+        breadCrumbDTOS.add(new BreadCrumbDTO("trash", userId));
+
+        return new ShelfContentResponseModel(breadCrumbDTOS, trashItems);
     }
 }
