@@ -37,6 +37,8 @@ public class ShelfService {
     private final FolderRepository folderRepository;
     private final FileRepository fileRepository;
     private final FileSystemValidator fileSystemValidator;
+    private final FolderService folderService;
+    private final FileService fileService;
 
     private final String homePath = System.getProperty("user.home");
     private final String pathSeparator = FileSystems.getDefault().getSeparator();
@@ -45,11 +47,13 @@ public class ShelfService {
     public ShelfService(ShelfRepository shelfRepository,
                         FolderRepository folderRepository,
                         FileRepository fileRepository,
-                        FileSystemValidator fileSystemValidator) {
+                        FileSystemValidator fileSystemValidator, FolderService folderService, FileService fileService) {
         this.shelfRepository = shelfRepository;
         this.folderRepository = folderRepository;
         this.fileRepository = fileRepository;
         this.fileSystemValidator = fileSystemValidator;
+        this.folderService = folderService;
+        this.fileService = fileService;
     }
 
     @Transactional
@@ -112,23 +116,18 @@ public class ShelfService {
         List<FileEntity> fileEntities = fileRepository.findAllByShelfIdInAndTrashVisible(Collections.singletonList(shelfId), true);
         List<FolderEntity> folderEntities = folderRepository.findAllByShelfIdInAndTrashVisible(Collections.singletonList(shelfId), true);
 
+        List<Long> fileIds = fileEntities.stream().map(FileEntity::getId).collect(Collectors.toList());
+        List<Long> folderIds = folderEntities.stream().map(FolderEntity::getId).collect(Collectors.toList());
+
         if (!Objects.equals(shelfEntity.getUserId(), userId))
             throw ExceptionSupplier.userNotAllowedToDeleteShelf.get();
 
         String shelfPath = homePath + userPath + userId + pathSeparator + "shelves" + pathSeparator + shelfId;
 
         try {
-            for (FileEntity fileEntity : fileEntities) {
-                String fullPath = homePath + userPath + fileEntity.getPath();
-                if (!(new File(fullPath)).delete()) {
-                    throw ExceptionSupplier.couldNotDeleteFile.get();
-                }
-            }
+            fileService.deleteFile(userId, fileIds);
 
-            for (FolderEntity folderEntity : folderEntities) {
-                String fullPath = homePath + userPath + folderEntity.getPath();
-                FileUtils.deleteDirectory(new File(fullPath));
-            }
+            folderService.hardDeleteFolder(userId, folderIds);
 
             FileUtils.deleteDirectory(new File(shelfPath));
             shelfRepository.deleteById(shelfId);
@@ -181,6 +180,7 @@ public class ShelfService {
         if (!shelfEntity.getName().equals(shelfName))
             shelfEntity.setName(shelfName);
 
+        shelfEntity.setUpdatedAt(LocalDateTime.now());
         shelfRepository.save(shelfEntity);
     }
 

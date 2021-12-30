@@ -31,6 +31,7 @@ public class RegisterService {
     private final MicrosoftApiService microsoftApiService;
     private final UserValidator userValidator;
     private final Long FREE_SPACE_SIZE;
+    public final String DEFAULT_AVATAR_PATH = "default-avatar.jpg";
 
     private final String emailVerificationLink;
 
@@ -70,6 +71,7 @@ public class RegisterService {
         userEntity.setEmailVerified(false);
         userEntity.setRole(new RoleEntity(3L));
         userEntity.setFreeSpace(FREE_SPACE_SIZE);
+        userEntity.setPictureName(DEFAULT_AVATAR_PATH);
 
         String salt = tokenGenerator.generateSalt(8);
         userEntity.setSalt(salt);
@@ -97,6 +99,7 @@ public class RegisterService {
         userEntity.setEmailVerified(true);
         userEntity.setRole(new RoleEntity(3L));
         userEntity.setFreeSpace(FREE_SPACE_SIZE);
+        userEntity.setPictureName(DEFAULT_AVATAR_PATH);
 
         userRepository.save(userEntity);
     }

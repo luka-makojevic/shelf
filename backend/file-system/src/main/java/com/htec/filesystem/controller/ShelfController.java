@@ -3,7 +3,6 @@ package com.htec.filesystem.controller;
 import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.annotation.AuthenticationUser;
 import com.htec.filesystem.dto.ShelfDTO;
-import com.htec.filesystem.dto.ShelfItemDTO;
 import com.htec.filesystem.model.request.CreateShelfRequestModel;
 import com.htec.filesystem.model.request.ShelfEditRequestModel;
 import com.htec.filesystem.model.response.ShelfContentResponseModel;
@@ -27,7 +26,7 @@ public class ShelfController {
 
     @PostMapping
     public ResponseEntity<TextResponseMessage> createShelf(@RequestBody CreateShelfRequestModel createShelfRequestModel,
-                                      @AuthenticationUser AuthUser authUser) {
+                                                           @AuthenticationUser AuthUser authUser) {
 
         HttpStatus retStatus = HttpStatus.OK;
 
@@ -53,7 +52,7 @@ public class ShelfController {
 
     @DeleteMapping("/{shelfId}")
     public ResponseEntity<TextResponseMessage> deleteShelf(@AuthenticationUser AuthUser authUser,
-                                      @PathVariable Long shelfId) {
+                                                           @PathVariable Long shelfId) {
 
         shelfService.hardDeleteShelf(shelfId, authUser.getId());
         return ResponseEntity.ok().body(new TextResponseMessage("Successfully deleted shelves.", HttpStatus.OK.value()));

@@ -7,17 +7,21 @@ import com.htec.account.entity.PasswordResetTokenEntity;
 import com.htec.account.entity.RoleEntity;
 import com.htec.account.entity.UserEntity;
 import com.htec.account.exception.ExceptionSupplier;
+import com.htec.account.exception.ShelfException;
 import com.htec.account.mapper.UserMapper;
 import com.htec.account.model.request.PasswordResetModel;
 import com.htec.account.model.request.UpdateUserPhotoByIdRequestModel;
+import com.htec.account.model.response.RefreshTokenResponseModel;
 import com.htec.account.model.response.UserPageResponseModel;
 import com.htec.account.model.response.UserResponseModel;
+import com.htec.account.repository.cassandra.InvalidJwtTokenRepository;
 import com.htec.account.repository.mysql.PasswordResetTokenRepository;
 import com.htec.account.repository.mysql.RoleRepository;
 import com.htec.account.repository.mysql.UserRepository;
 import com.htec.account.security.SecurityConstants;
 import com.htec.account.util.TokenGenerator;
 import com.htec.account.validator.UserValidator;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +47,7 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final String emailPasswordResetTokenLink;
     private final RoleRepository roleRepository;
+    private final InvalidJwtTokenRepository invalidJwtTokenRepository;
 
     @Autowired
     public UserService(PasswordResetTokenRepository passwordResetTokenRepository,
@@ -52,7 +57,8 @@ public class UserService {
                        UserValidator userValidator,
                        BCryptPasswordEncoder bCryptPasswordEncoder,
                        @Value("${emailPasswordResetTokenLink}") String emailPasswordResetTokenLink,
-                       RoleRepository roleRepository) {
+                       RoleRepository roleRepository,
+                       InvalidJwtTokenRepository invalidJwtTokenRepository) {
 
         this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.userRepository = userRepository;
@@ -62,6 +68,7 @@ public class UserService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.emailPasswordResetTokenLink = emailPasswordResetTokenLink;
         this.roleRepository = roleRepository;
+        this.invalidJwtTokenRepository = invalidJwtTokenRepository;
     }
 
     public UserDTO getUser(String email) {
@@ -92,6 +99,14 @@ public class UserService {
     }
 
     public UserResponseModel getUserById(Long id) {
+
+        UserEntity user = userRepository.getUserByIdAndRoleIdNot(id, 1L)
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+
+        return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
+    }
+
+    public UserResponseModel getMe(Long id) {
 
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
@@ -258,4 +273,64 @@ public class UserService {
         return userRepository.getPicturePathByUserId(userId)
                 .orElseThrow(ExceptionSupplier.userNotFound);
     }
+
+    public RefreshTokenResponseModel sendNewAccessToken(String refreshToken) {
+
+        AuthUser authUser;
+        try {
+            authUser = validateRefreshToken(refreshToken);
+        } catch (ShelfException e) {
+
+            throw ExceptionSupplier.userIsNotLoggedIn.get();
+        } catch (ExpiredJwtException e) {
+
+            throw ExceptionSupplier.refreshTokenExpired.get();
+        } catch (Exception e) {
+
+            throw ExceptionSupplier.refreshTokenNotValid.get();
+        }
+
+        if (authUser == null) {
+            throw ExceptionSupplier.refreshTokenNotValid.get();
+        }
+        UserDTO userDTO = UserMapper.INSTANCE.authUserToUserDTO(authUser);
+        String jwtToken = tokenGenerator.generateJwtToken(userDTO);
+
+        return new RefreshTokenResponseModel(jwtToken);
+    }
+
+    public AuthUser validateRefreshToken(String refreshToken) {
+
+        if (refreshToken != null) {
+
+            if (invalidJwtTokenRepository.findByJwt(refreshToken).isPresent()) {
+                throw new ShelfException();
+            }
+
+            String email;
+
+            Claims body = Jwts.parser()
+                    .setSigningKey(SecurityConstants.TOKEN_SECRET)
+                    .parseClaimsJws(refreshToken)
+                    .getBody();
+
+            email = body
+                    .getSubject();
+
+            if (email.isEmpty()) {
+                throw ExceptionSupplier.refreshTokenNotValid.get();
+            }
+
+            userRepository.findByEmail(email)
+                    .orElseThrow(ExceptionSupplier.refreshTokenNotValid);
+
+            Long userId = Long.valueOf(body.getId());
+            Long roleId = body.get("role_id", Long.class);
+
+            return new AuthUser(userId, email, roleId);
+        } else {
+            throw ExceptionSupplier.tokenNotFound.get();
+        }
+    }
+
 }

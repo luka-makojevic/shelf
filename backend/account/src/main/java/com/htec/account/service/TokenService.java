@@ -31,7 +31,6 @@ public class TokenService {
     public static final String EMAIL_CONFIRMED = "Email confirmed";
     public static final String TOKEN_RESENT = "Token resent";
     public final String INIT_USER_FOLDER_URL;
-    public final String DEFAULT_AVATAR_PATH = "default-avatar.jpg";
 
     private RestTemplate restTemplate;
 
@@ -59,7 +58,7 @@ public class TokenService {
                     .getBody()
                     .getId();
         } catch (JwtException ex) {
-            throw ExceptionSupplier.tokenNotValid.get();
+            throw ExceptionSupplier.emailTokenNotValid.get();
         }
 
         UserEntity userEntity = userRepository.findById(Long.parseLong(userId))
@@ -75,7 +74,7 @@ public class TokenService {
         LocalDateTime expiredAt = confirmationToken.getExpiresAt();
 
         if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw ExceptionSupplier.tokenExpired.get();
+            throw ExceptionSupplier.emailTokenExpired.get();
         }
 
         initializeUserFolders(userEntity);
@@ -103,8 +102,6 @@ public class TokenService {
                 throw ExceptionSupplier.folderNotInitialized.get();
             }
 
-            userEntity.setPictureName(DEFAULT_AVATAR_PATH);
-
         } catch (HttpClientErrorException ex) {
             throw ExceptionSupplier.folderNotInitialized.get();
         }
@@ -121,7 +118,7 @@ public class TokenService {
                     .getBody()
                     .getId();
         } catch (JwtException ex) {
-            throw ExceptionSupplier.tokenNotValid.get();
+            throw ExceptionSupplier.emailTokenNotValid.get();
         }
 
         UserEntity userEntity = userRepository.findById(Long.parseLong(userId))
@@ -137,7 +134,7 @@ public class TokenService {
         LocalDateTime expiredAt = oldConfirmationToken.getExpiresAt();
 
         if (expiredAt.isAfter(LocalDateTime.now())) {
-            throw ExceptionSupplier.tokenNotExpired.get();
+            throw ExceptionSupplier.emailTokenNotExpired.get();
         }
 
         tokenRepository.delete(oldConfirmationToken);

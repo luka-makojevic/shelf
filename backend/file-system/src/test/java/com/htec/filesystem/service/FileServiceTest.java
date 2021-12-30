@@ -437,7 +437,7 @@ class FileServiceTest {
 
             mocked.when(() -> FileUtils.forceDelete(any())).then(invocationOnMock -> null);
 
-            fileService.deleteFile(user, fileIds);
+            fileService.deleteFile(user.getId(), fileIds);
 
         }
 
@@ -453,7 +453,7 @@ class FileServiceTest {
         fileIds.add(1L);
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
-                () -> fileService.deleteFile(user, fileIds));
+                () -> fileService.deleteFile(user.getId(), fileIds));
 
         verify(fileRepository, times(1)).findAllByUserIdAndDeletedAndIdIn(user.getId(), true, fileIds);
         verify(fileRepository, times(0)).deleteAll(fileEntities);
@@ -472,7 +472,7 @@ class FileServiceTest {
         when(fileRepository.findAllByUserIdAndDeletedAndIdIn(user.getId(), true, fileIds)).thenReturn(fileEntities);
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class,
-                () -> fileService.deleteFile(user, fileIds));
+                () -> fileService.deleteFile(user.getId(), fileIds));
 
         verify(fileRepository, times(1)).findAllByUserIdAndDeletedAndIdIn(user.getId(), true, fileIds);
         verify(fileRepository, times(0)).deleteAll(fileEntities);

@@ -1,35 +1,30 @@
 package com.htec.account.controller;
 
-import com.htec.account.annotation.AuthenticationUser;
-import com.htec.account.dto.AuthUser;
-import com.htec.account.dto.UserDTO;
-import com.htec.account.mapper.UserMapper;
 import com.htec.account.model.response.RefreshTokenResponseModel;
+import com.htec.account.service.UserService;
 import com.htec.account.util.TokenGenerator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthorizationController {
 
     private final TokenGenerator tokenGenerator;
+    private final UserService userService;
 
-    public AuthorizationController(TokenGenerator tokenGenerator) {
+    public AuthorizationController(TokenGenerator tokenGenerator,
+                                   UserService userService) {
 
         this.tokenGenerator = tokenGenerator;
+        this.userService = userService;
     }
 
-    @GetMapping("/refresh/token")
-    public ResponseEntity getUserById(@AuthenticationUser AuthUser authUser) {
+    @PostMapping("/refresh/token")
+    public ResponseEntity<RefreshTokenResponseModel> getNewAccessToken(@RequestBody String refreshToken) {
 
-        UserDTO userDTO = UserMapper.INSTANCE.authUserToUserDTO(authUser);
-        String jwtToken = tokenGenerator.generateJwtToken(userDTO);
-
-        RefreshTokenResponseModel refreshTokenResponseModel = new RefreshTokenResponseModel(jwtToken);
+        RefreshTokenResponseModel refreshTokenResponseModel = userService.sendNewAccessToken(refreshToken);
         return ResponseEntity.status(HttpStatus.OK).body(refreshTokenResponseModel);
     }
 

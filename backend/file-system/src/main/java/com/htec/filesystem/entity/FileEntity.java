@@ -47,7 +47,7 @@ public class FileEntity {
     private LocalDateTime updatedAt;
 
     public String getRealName() {
-        if (deleted) {
+        if (Boolean.TRUE.equals(deleted) && Boolean.TRUE.equals(trashVisible) && name != null) {
             int index = name.lastIndexOf("_");
 
             return name.substring(0, index);

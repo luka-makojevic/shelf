@@ -66,13 +66,13 @@ class UserServiceTest {
     @Test
     void getUserById() {
 
-        user.setId(1L);
+        user.setId(3L);
 
-        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        when(userRepository.getUserByIdAndRoleIdNot(user.getId(), 1L)).thenReturn(Optional.of(user));
 
-        UserResponseModel foundUser = userService.getUserById(1L);
+        UserResponseModel foundUser = userService.getUserById(3L);
 
-        verify(userRepository).findById(anyLong());
+        verify(userRepository).getUserByIdAndRoleIdNot(user.getId(), 1L);
 
         assertEquals(user.getId(), foundUser.getId());
 
@@ -81,7 +81,8 @@ class UserServiceTest {
     @Test
     void getUserById_NotFound() {
 
-        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+        user.setId(1L);
+        when(userRepository.getUserByIdAndRoleIdNot(user.getId(), 1L)).thenReturn(Optional.empty());
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
             UserResponseModel foundUser = userService.getUserById(1L);
