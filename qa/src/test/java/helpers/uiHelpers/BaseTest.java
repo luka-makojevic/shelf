@@ -25,7 +25,6 @@ public class BaseTest
     public static NavigateBrowserHelper navigateBrowser;
     public static ExcelReader excelReader;
     public static LoginPage loginPage;
-    public static LoginTest loginTest;
     public static LoginViaMicrosoft loginViaMicrosoft;
     public static RegistrationPage regPage;
     public static DashboardPage dashboardPage;
@@ -40,7 +39,6 @@ public class BaseTest
         driver.manage().window().maximize();
         excelReader = new ExcelReader("src/main/resources/ExcelRead.xlsx");
         loginPage = new LoginPage(driver, wdWaitHelpers, excelReader, navigateBrowser);
-        loginTest = new LoginTest();
         loginViaMicrosoft = new LoginViaMicrosoft(driver, wdWaitHelpers);
         regPage = new RegistrationPage(driver, wdWaitHelpers);
         dashboardPage = new DashboardPage(driver, wdWaitHelpers);
