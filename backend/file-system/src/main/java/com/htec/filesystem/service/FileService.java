@@ -353,7 +353,7 @@ public class FileService {
         return new ArrayList<>(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
     }
 
-    public void deleteFile(AuthUser user, List<Long> fileIds) throws IOException {
+    public void deleteFile(AuthUser user, List<Long> fileIds) {
 
         List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndDeletedAndIdIn(user.getId(), true, fileIds);
 
@@ -367,7 +367,10 @@ public class FileService {
 
         for (FileEntity fileEntity : fileEntities) {
             String fullPath = homePath + userPath + fileEntity.getPath();
-            FileUtils.forceDelete(new File(fullPath));
+            boolean deleted = (new File(fullPath)).delete();
+            if (!deleted) {
+                throw ExceptionSupplier.couldNotDeleteFile.get();
+            }
         }
 
         fileRepository.deleteAll(fileEntities);

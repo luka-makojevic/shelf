@@ -46,6 +46,13 @@ public class ExceptionSupplier {
             ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> couldNotDeleteFile = () -> new ShelfException(
+            ErrorMessages.COULD_NOT_DELETE_FILE.getErrorMessage(),
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> fileAlreadyExists = () -> new ShelfException(
             ErrorMessages.FILE_WITH_THE_SAME_NAME_ALREADY_EXISTS.getErrorMessage(),
             HttpStatus.FORBIDDEN.value(),

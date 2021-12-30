@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -108,12 +109,27 @@ public class ShelfService {
         ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
                 .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
 
+        List<FileEntity> fileEntities = fileRepository.findAllByShelfIdInAndTrashVisible(Collections.singletonList(shelfId), true);
+        List<FolderEntity> folderEntities = folderRepository.findAllByShelfIdInAndTrashVisible(Collections.singletonList(shelfId), true);
+
         if (!Objects.equals(shelfEntity.getUserId(), userId))
             throw ExceptionSupplier.userNotAllowedToDeleteShelf.get();
 
         String shelfPath = homePath + userPath + userId + pathSeparator + "shelves" + pathSeparator + shelfId;
 
         try {
+            for (FileEntity fileEntity : fileEntities) {
+                String fullPath = homePath + userPath + fileEntity.getPath();
+                if (!(new File(fullPath)).delete()) {
+                    throw ExceptionSupplier.couldNotDeleteFile.get();
+                }
+            }
+
+            for (FolderEntity folderEntity : folderEntities) {
+                String fullPath = homePath + userPath + folderEntity.getPath();
+                FileUtils.deleteDirectory(new File(fullPath));
+            }
+
             FileUtils.deleteDirectory(new File(shelfPath));
             shelfRepository.deleteById(shelfId);
         } catch (IOException e) {
