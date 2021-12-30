@@ -104,19 +104,33 @@ public class ExceptionSupplier {
 
     public static final Supplier<ShelfException> tokenNotFound = () -> new ShelfException(
             ErrorMessages.TOKEN_NOT_FOUND.getErrorMessage(),
-            HttpStatus.BAD_REQUEST.value(),
+            HttpStatus.NOT_FOUND.value(),
             LocalDateTime.now().format(formatter),
-            ErrorMessages.BAD_REQUEST.getErrorMessage()
+            ErrorMessages.NOT_FOUND.getErrorMessage()
     );
 
     public static final Supplier<ShelfException> tokenExpired = () -> new ShelfException(
+            ErrorMessages.TOKEN_EXPIRED.getErrorMessage(),
+            HttpStatus.UNAUTHORIZED.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.UNAUTHORIZED.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> emailTokenExpired = () -> new ShelfException(
             ErrorMessages.TOKEN_EXPIRED.getErrorMessage(),
             HttpStatus.BAD_REQUEST.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.BAD_REQUEST.getErrorMessage()
     );
 
-    public static final Supplier<ShelfException> tokenNotExpired = () -> new ShelfException(
+    public static final Supplier<ShelfException> refreshTokenExpired = () -> new ShelfException(
+            ErrorMessages.REFRESH_TOKEN_EXPIRED.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> emailTokenNotExpired = () -> new ShelfException(
             ErrorMessages.TOKEN_NOT_EXPIRED.getErrorMessage(),
             HttpStatus.BAD_REQUEST.value(),
             LocalDateTime.now().format(formatter),
@@ -125,13 +139,27 @@ public class ExceptionSupplier {
 
     public static final Supplier<ShelfException> userNotFound = () -> new ShelfException(
             ErrorMessages.USER_NOT_FOUND.getErrorMessage(),
+            HttpStatus.NOT_FOUND.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.NOT_FOUND.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> tokenNotValid = () -> new ShelfException(
+            ErrorMessages.TOKEN_NOT_VALID.getErrorMessage(),
+            HttpStatus.UNAUTHORIZED.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.UNAUTHORIZED.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> emailTokenNotValid = () -> new ShelfException(
+            ErrorMessages.TOKEN_NOT_VALID.getErrorMessage(),
             HttpStatus.BAD_REQUEST.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.BAD_REQUEST.getErrorMessage()
     );
 
-    public static final Supplier<ShelfException> tokenNotValid = () -> new ShelfException(
-            ErrorMessages.TOKEN_NOT_VALID.getErrorMessage(),
+    public static final Supplier<ShelfException> refreshTokenNotValid = () -> new ShelfException(
+            ErrorMessages.REFRESH_TOKEN_NOT_VALID.getErrorMessage(),
             HttpStatus.BAD_REQUEST.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.BAD_REQUEST.getErrorMessage()

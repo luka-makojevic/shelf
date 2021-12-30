@@ -1,12 +1,12 @@
 package tests.frontendTests;
-        import helpers.uiHelpers.BaseTest;
-        import org.junit.Assert;
-        import org.junit.Before;
-        import org.junit.Test;
-        import org.junit.jupiter.api.Order;
-        import org.openqa.selenium.By;
 
-        import java.io.IOException;
+import helpers.uiHelpers.BaseTest;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.By;
+
+import java.io.IOException;
 
 public class DashboardTest extends BaseTest {
 

@@ -1,16 +1,14 @@
 package helpers.uiHelpers;
 
+import helpers.dbHelpers.Cleanup;
 import helpers.excelHelpers.ExcelReader;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.openqa.selenium.WebDriver;
 import pages.DashboardPage;
 import pages.LoginPage;
 import pages.LoginViaMicrosoft;
 import pages.RegistrationPage;
-import tests.frontendTests.LoginTest;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -18,16 +16,18 @@ import java.util.Properties;
 
 public class BaseTest
 {
-    public static WebDriver driver;
-    public static Properties prop;
-    public static WebDriverManager webDriverManager;
-    public static WdWaitHelpers wdWaitHelpers;
-    public static NavigateBrowserHelper navigateBrowser;
-    public static ExcelReader excelReader;
-    public static LoginPage loginPage;
-    public static LoginViaMicrosoft loginViaMicrosoft;
-    public static RegistrationPage regPage;
-    public static DashboardPage dashboardPage;
+
+    public WebDriver driver;
+    public Properties prop;
+    public WebDriverManager webDriverManager;
+    public WdWaitHelpers wdWaitHelpers;
+    public NavigateBrowserHelper navigateBrowser;
+    public ExcelReader excelReader;
+    public LoginPage loginPage;
+    public LoginViaMicrosoft loginViaMicrosoft;
+    public RegistrationPage regPage;
+    public DashboardPage dashboardPage;
+    public static Cleanup cleanup;
 
     @Before
     public void initialize() throws IOException
@@ -40,7 +40,8 @@ public class BaseTest
         excelReader = new ExcelReader("src/main/resources/ExcelRead.xlsx");
         loginPage = new LoginPage(driver, wdWaitHelpers, excelReader, navigateBrowser);
         loginViaMicrosoft = new LoginViaMicrosoft(driver, wdWaitHelpers);
-        regPage = new RegistrationPage(driver, wdWaitHelpers);
+        regPage = new RegistrationPage(driver, wdWaitHelpers, excelReader);
+        cleanup = new Cleanup();
         dashboardPage = new DashboardPage(driver, wdWaitHelpers);
     }
 

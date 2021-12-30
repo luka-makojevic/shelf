@@ -46,6 +46,13 @@ public class ExceptionSupplier {
             ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> couldNotDeleteFile = () -> new ShelfException(
+            ErrorMessages.COULD_NOT_DELETE_FILE.getErrorMessage(),
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> couldNotDeleteFolder = () -> new ShelfException(
             ErrorMessages.COULD_NOT_DELETE_FOLDER.getErrorMessage(),
             HttpStatus.INTERNAL_SERVER_ERROR.value(),

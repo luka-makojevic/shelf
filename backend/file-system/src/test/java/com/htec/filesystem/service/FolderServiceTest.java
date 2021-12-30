@@ -193,7 +193,7 @@ class FolderServiceTest {
         verify(folderRepository, times(1)).findByUserIdAndFolderIdsAndDeleted(user.getId(), folderIds, true);
         verify(folderTreeRepository, times(1)).getFolderDownStreamTrees(folderIds, true);
         verify(fileRepository, times(1)).findAllByParentFolderIdIn(folderIds);
-        verify(fileRepository, times(1)).deleteAll(fileEntities);
+        verify(fileRepository, times(1)).delete(fileEntity);
         verify(folderRepository, times(1)).deleteAllInBatch(folderEntities);
     }
 
@@ -219,7 +219,7 @@ class FolderServiceTest {
         verify(folderRepository, times(1)).findByUserIdAndFolderIdsAndDeleted(user.getId(), folderIds, true);
         verify(folderTreeRepository, times(0)).getFolderDownStreamTrees(folderIds, true);
         verify(fileRepository, times(0)).findAllByParentFolderIdIn(folderIds);
-        verify(fileRepository, times(0)).deleteAll(fileEntities);
+        verify(fileRepository, times(0)).delete(fileEntity);
         verify(folderRepository, times(0)).deleteAllInBatch(folderEntities);
 
         assertEquals(ErrorMessages.USER_NOT_ALLOWED_TO_DELETE_FOLDER.getErrorMessage(), exception.getMessage());

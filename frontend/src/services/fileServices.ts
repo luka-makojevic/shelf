@@ -31,11 +31,11 @@ const hardDeleteFile = (data: number[]) =>
 const hardDeleteFolder = (data: number[]) =>
   instance.delete(`${API_URL_FILESYSTEM}folder`, { data });
 
-const recoverFileFromTrash = (data: number) =>
-  instance.put(`${API_URL_FILESYSTEM}trash/file`, data);
+const recoverFileFromTrash = (data: number[]) =>
+  instance.put(`${API_URL_FILESYSTEM}file/recover`, data);
 
-const recoverFolderFromTrash = (data: number) =>
-  instance.put(`${API_URL_FILESYSTEM}trash/file`, data);
+const recoverFolderFromTrash = (data: number[]) =>
+  instance.put(`${API_URL_FILESYSTEM}folder/recover`, data);
 
 const editFile = (data: { fileId: number; fileName: string }) =>
   instance.put(`${API_URL_FILESYSTEM}file/rename`, data);

@@ -1,6 +1,5 @@
 package helpers.uiHelpers;
 
-import helpers.uiHelpers.WdWaitHelpers;
 import org.openqa.selenium.WebDriver;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -19,33 +18,40 @@ public class NavigateBrowserHelper {
     }
 
     /**
-     * Navigate to the desired page
-     *
-     * @param page
-     * @author stefan.gajic
-     */
-    public void navigateToPageUrl(String page) throws IOException {
+     //     * Method for reading data from property file
+     //     *
+     //     * @param page
+     //     * @return String
+     //     * @author stefan.gajic
+     //     */
+    public String getProperty (String page) throws IOException {
         prop = new Properties();
         FileInputStream fis = new FileInputStream (".\\datafiles\\data.properties");
         prop.load(fis);
-        String pageUrl = prop.getProperty(page);
-        driver.navigate().to(pageUrl);
+        String property = prop.getProperty(page);
+        return property;
     }
 
     /**
-     * Method for getting the URL of the desired page
-     *
-     * @param page
-     * @return String
-     * @author stefan.gajic
-     */
+     //     * Navigate to the desired page
+     //     *
+     //     * @param page
+     //     * @author stefan.gajic
+     //     */
+    public void navigateToPageUrl(String page) throws IOException {
+        driver.navigate().to(getProperty(page));
+    }
+
+    /**
+     //     * Method for getting the URL of the desired page
+     //     *
+     //     * @param page
+     //     * @return String
+     //     * @author stefan.gajic
+     //     */
     public String getPageUrl(String page) throws IOException {
-        prop = new Properties();
-        FileInputStream fis = new FileInputStream (".\\datafiles\\data.properties");
-        prop.load(fis);
-        String pageUrl = prop.getProperty(page);
-        wdWaitHelpers.waitUrlToBe(pageUrl);
-        return pageUrl;
+        wdWaitHelpers.waitUrlToBe(getProperty(page));
+        return getProperty(page);
     }
 
     /**

@@ -271,7 +271,7 @@ public class FolderService {
                 file.setParentFolderId(null);
             }
 
-            if(file.getTrashVisible()){
+            if (file.getTrashVisible() != null) {
                 file.setName(file.getRealName());
             }
             file.setDeletedAt(null);
@@ -416,7 +416,15 @@ public class FolderService {
                 FileUtils.deleteDirectory(new File(homePath + userPath + folderEntity.getPath()));
             }
 
-            fileRepository.deleteAll(downStreamFiles);
+            deleteDummyFolders(folderIds);
+
+            downStreamFiles.forEach(fileEntity -> {
+                try {
+                    fileRepository.delete(fileEntity);
+                } catch (Exception ignored) {
+
+                }
+            });
             folderRepository.deleteAllInBatch(downStreamFolders);
         } catch (IOException e) {
             throw ExceptionSupplier.couldNotDeleteFolder.get();
@@ -430,7 +438,7 @@ public class FolderService {
         for (FolderEntity folder : foldersInsideExistingFolder) {
 
             String oldPathFolder = homePath + userPath + folder.getPath();
-            String newPathFolder = oldPathFolder.replace("trash" , "shelves" + pathSeparator + shelfId);
+            String newPathFolder = oldPathFolder.replace("trash", "shelves" + pathSeparator + shelfId);
 
             File fromFolder = new File(oldPathFolder);
             File toFolder = new File(newPathFolder);
@@ -453,7 +461,7 @@ public class FolderService {
         for (FileEntity file : filesInsideExistingFolder) {
 
             String oldPathFile = homePath + userPath + file.getPath();
-            String newPathFile = oldPathFile.replace( "trash" , "shelves" + pathSeparator + shelfId);
+            String newPathFile = oldPathFile.replace("trash", "shelves" + pathSeparator + shelfId);
 
             File fromFile = new File(oldPathFile);
             File toFolder = (new File(newPathFile)).getParentFile();
@@ -526,6 +534,7 @@ public class FolderService {
         }
 
         folderEntity.setName(folderName);
+        folderEntity.setUpdatedAt(LocalDateTime.now());
         folderRepository.save(folderEntity);
     }
 }

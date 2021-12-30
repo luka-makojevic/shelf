@@ -10,15 +10,16 @@ import fileServices from '../../services/fileServices';
 const DeleteShelfModal = ({
   onCloseModal,
   onError,
+  onDelete,
   shelf,
   message,
   selectedData,
 }: DeleteShelfModalProps) => {
   const handleCloseModal = () => {
-    onCloseModal(false);
+    onCloseModal();
   };
 
-  const { getShelves, getTrash } = useShelf();
+  const { getShelves } = useShelf();
 
   const handleDelete = () => {
     if (shelf) {
@@ -52,10 +53,7 @@ const DeleteShelfModal = ({
         fileServices
           .hardDeleteFile(fileIds)
           .then(() => {
-            getTrash(
-              () => {},
-              () => {}
-            );
+            onDelete(selectedData);
           })
           .catch((err) => {
             if (err.response?.status === 500) {
@@ -69,12 +67,7 @@ const DeleteShelfModal = ({
       if (folderIds.length > 0) {
         fileServices
           .hardDeleteFolder(folderIds)
-          .then(() => {
-            getTrash(
-              () => {},
-              () => {}
-            );
-          })
+          .then(() => onDelete(selectedData))
           .catch((err) => {
             if (err.response?.status === 500) {
               onError('Internal server error');
@@ -85,7 +78,7 @@ const DeleteShelfModal = ({
       }
     }
 
-    onCloseModal(false);
+    onCloseModal();
   };
 
   return (

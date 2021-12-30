@@ -24,19 +24,19 @@ public class UserValidator {
         }
 
         String email = userDTO.getEmail();
-        if (!EmailValidator.getInstance().isValid(email)) {
+        if (!EmailValidator.getInstance().isValid(email) || email.length() > 50) {
             throw ExceptionSupplier.emailNotValid.get();
         }
 
         String firstName = userDTO.getFirstName();
 
-        if (ObjectUtils.isEmpty(firstName)) {
+        if (ObjectUtils.isEmpty(firstName) || firstName.length() > 50) {
             throw ExceptionSupplier.firstNameNotValid.get();
         }
 
         String lastName = userDTO.getLastName();
 
-        if (ObjectUtils.isEmpty(lastName)) {
+        if (ObjectUtils.isEmpty(lastName) || lastName.length() > 50) {
             throw ExceptionSupplier.lastNameNotValid.get();
         }
     }

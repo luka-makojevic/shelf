@@ -13,7 +13,6 @@ import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FolderRepository;
 import com.htec.filesystem.repository.ShelfRepository;
 import com.htec.filesystem.util.FileUtil;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -387,6 +386,7 @@ public class FileService {
         String dbPath = newFilePath.replace(homePath + userPath, "");
         fileEntity.setPath(dbPath);
         fileEntity.setName(fileName);
+        fileEntity.setUpdatedAt(LocalDateTime.now());
         fileRepository.save(fileEntity);
 
         oldFile.renameTo(newFile);
@@ -402,9 +402,9 @@ public class FileService {
         return new ArrayList<>(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
     }
 
-    public void deleteFile(AuthUser user, List<Long> fileIds) throws IOException {
+    public void deleteFile(Long userId, List<Long> fileIds) {
 
-        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndDeletedAndIdIn(user.getId(), true, fileIds);
+        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndDeletedAndIdIn(userId, true, fileIds);
 
         if (fileEntities.size() != fileIds.size()) {
             throw ExceptionSupplier.filesNotFound.get();
@@ -416,7 +416,9 @@ public class FileService {
 
         for (FileEntity fileEntity : fileEntities) {
             String fullPath = homePath + userPath + fileEntity.getPath();
-            FileUtils.forceDelete(new File(fullPath));
+            if (!(new File(fullPath)).delete()) {
+                throw ExceptionSupplier.couldNotDeleteFile.get();
+            }
         }
 
         fileRepository.deleteAll(fileEntities);
