@@ -15,11 +15,7 @@ public class LoginTest extends BaseTest {
     }
     @Test
     public void userShouldBeLoggedIn() throws IOException {
-
-        String email = excelReader.getStringData("LoginTest", 1,0);
-        String password = excelReader.getStringData("LoginTest", 1, 1);
-        loginPage.loginAsUser(email, password);
-        wdWaitHelpers.waitUrlToBe(navigateBrowser.getPageUrl("dashboardPageUrl"));
+        loginPage.successfulLoggIn();
         Assert.assertEquals(driver.getCurrentUrl(), navigateBrowser.getPageUrl("dashboardPageUrl"));
     }
     @Test
