@@ -100,7 +100,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
             ShelfException ex = exception;
             ErrorMessage jsonResponse = new ErrorMessage(ex.getMessage(), ex.getStatus(), ex.getTimestamp(), ex.getErrorMessage());
             String userResponseJson = new ObjectMapper().writeValueAsString(jsonResponse);
-            res.setStatus(HttpStatus.FORBIDDEN.value());
+            res.setStatus(HttpStatus.UNAUTHORIZED.value());
             res.setContentType("application/json");
             res.getWriter().write(userResponseJson);
         } catch (IOException e) {

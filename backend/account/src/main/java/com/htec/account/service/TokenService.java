@@ -58,7 +58,7 @@ public class TokenService {
                     .getBody()
                     .getId();
         } catch (JwtException ex) {
-            throw ExceptionSupplier.tokenNotValid.get();
+            throw ExceptionSupplier.emailTokenNotValid.get();
         }
 
         UserEntity userEntity = userRepository.findById(Long.parseLong(userId))
@@ -74,7 +74,7 @@ public class TokenService {
         LocalDateTime expiredAt = confirmationToken.getExpiresAt();
 
         if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw ExceptionSupplier.tokenExpired.get();
+            throw ExceptionSupplier.emailTokenExpired.get();
         }
 
         initializeUserFolders(userEntity);
@@ -118,7 +118,7 @@ public class TokenService {
                     .getBody()
                     .getId();
         } catch (JwtException ex) {
-            throw ExceptionSupplier.tokenNotValid.get();
+            throw ExceptionSupplier.emailTokenNotValid.get();
         }
 
         UserEntity userEntity = userRepository.findById(Long.parseLong(userId))
@@ -134,7 +134,7 @@ public class TokenService {
         LocalDateTime expiredAt = oldConfirmationToken.getExpiresAt();
 
         if (expiredAt.isAfter(LocalDateTime.now())) {
-            throw ExceptionSupplier.tokenNotExpired.get();
+            throw ExceptionSupplier.emailTokenNotExpired.get();
         }
 
         tokenRepository.delete(oldConfirmationToken);
