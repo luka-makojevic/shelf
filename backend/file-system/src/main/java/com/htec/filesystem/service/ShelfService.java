@@ -111,16 +111,16 @@ public class ShelfService {
     public void hardDeleteShelf(Long shelfId, Long userId) {
 
         ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
-                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+                .orElseThrow(ExceptionSupplier.shelfNotFound);
+
+        if (!Objects.equals(shelfEntity.getUserId(), userId))
+            throw ExceptionSupplier.userNotAllowedToDeleteShelf.get();
 
         List<FileEntity> fileEntities = fileRepository.findAllByShelfIdInAndTrashVisible(Collections.singletonList(shelfId), true);
         List<FolderEntity> folderEntities = folderRepository.findAllByShelfIdInAndTrashVisible(Collections.singletonList(shelfId), true);
 
         List<Long> fileIds = fileEntities.stream().map(FileEntity::getId).collect(Collectors.toList());
         List<Long> folderIds = folderEntities.stream().map(FolderEntity::getId).collect(Collectors.toList());
-
-        if (!Objects.equals(shelfEntity.getUserId(), userId))
-            throw ExceptionSupplier.userNotAllowedToDeleteShelf.get();
 
         String shelfPath = homePath + userPath + userId + pathSeparator + "shelves" + pathSeparator + shelfId;
 

@@ -26,8 +26,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,6 +44,12 @@ class ShelfServiceTest {
 
     @Mock
     FileSystemValidator fileSystemValidator;
+
+    @Mock
+    FileService fileService;
+
+    @Mock
+    FolderService folderService;
 
     @Mock
     FileRepository fileRepository;
@@ -172,20 +180,89 @@ class ShelfServiceTest {
 
         Long shelfId = 1L;
         Long userId = 2L;
-
+        file.setId(1L);
+        folder.setId(1L);
+        fileEntities.add(file);
+        folderEntities.add(folder);
         ShelfEntity shelfEntity = new ShelfEntity();
         shelfEntity.setUserId(userId);
+        shelfIds.add(shelfId);
 
         when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
 
-        try (MockedStatic<FileUtils> mocked = mockStatic(FileUtils.class)) {
+        when(fileRepository.findAllByShelfIdInAndTrashVisible(shelfIds, true)).thenReturn(fileEntities);
+        when(folderRepository.findAllByShelfIdInAndTrashVisible(shelfIds, true)).thenReturn(folderEntities);
 
+        try (MockedStatic<FileUtils> mocked = mockStatic(FileUtils.class)) {
 
             shelfService.hardDeleteShelf(shelfId, userId);
 
             mocked.verify(() -> FileUtils.deleteDirectory(any(File.class)));
 
         }
+
+        verify(shelfRepository, times(1)).findById(shelfId);
+        verify(fileRepository, times(1)).findAllByShelfIdInAndTrashVisible(shelfIds, true);
+        verify(folderRepository, times(1)).findAllByShelfIdInAndTrashVisible(shelfIds, true);
+        verify(fileService, times(1)).deleteFile(userId, fileEntities.stream().map(FileEntity::getId).collect(Collectors.toList()));
+        verify(folderService, times(1)).hardDeleteFolder(userId, folderEntities.stream().map(FolderEntity::getId).collect(Collectors.toList()));
+        verify(shelfRepository, times(1)).deleteById(shelfId);
+    }
+
+    @Test
+    void hardDeleteShelf_ShelfNotFound() {
+
+        Long shelfId = 1L;
+        Long userId = 2L;
+        file.setId(1L);
+        folder.setId(1L);
+        fileEntities.add(file);
+        folderEntities.add(folder);
+        ShelfEntity shelfEntity = new ShelfEntity();
+        shelfEntity.setUserId(userId);
+        shelfIds.add(shelfId);
+
+        when(shelfRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        ShelfException exception = Assertions.assertThrows(ShelfException.class,
+                () -> shelfService.hardDeleteShelf(shelfId, userId));
+
+        verify(shelfRepository, times(1)).findById(shelfId);
+        verify(fileRepository, times(0)).findAllByShelfIdInAndTrashVisible(shelfIds, true);
+        verify(folderRepository, times(0)).findAllByShelfIdInAndTrashVisible(shelfIds, true);
+        verify(fileService, times(0)).deleteFile(userId, fileEntities.stream().map(FileEntity::getId).collect(Collectors.toList()));
+        verify(folderService, times(0)).hardDeleteFolder(userId, folderEntities.stream().map(FolderEntity::getId).collect(Collectors.toList()));
+        verify(shelfRepository, times(0)).deleteById(shelfId);
+
+        assertEquals(ErrorMessages.SHELF_NOT_FOUND.getErrorMessage(), exception.getMessage());
+    }
+
+    @Test
+    void hardDeleteShelf_UserNotValid() {
+
+        Long shelfId = 1L;
+        Long userId = 2L;
+        file.setId(1L);
+        folder.setId(1L);
+        fileEntities.add(file);
+        folderEntities.add(folder);
+        ShelfEntity shelfEntity = new ShelfEntity();
+        shelfEntity.setUserId(3L);
+        shelfIds.add(shelfId);
+
+        when(shelfRepository.findById(anyLong())).thenReturn(Optional.of(shelfEntity));
+
+        ShelfException exception = Assertions.assertThrows(ShelfException.class,
+                () -> shelfService.hardDeleteShelf(shelfId, userId));
+
+        verify(shelfRepository, times(1)).findById(shelfId);
+        verify(fileRepository, times(0)).findAllByShelfIdInAndTrashVisible(shelfIds, true);
+        verify(folderRepository, times(0)).findAllByShelfIdInAndTrashVisible(shelfIds, true);
+        verify(fileService, times(0)).deleteFile(userId, fileEntities.stream().map(FileEntity::getId).collect(Collectors.toList()));
+        verify(folderService, times(0)).hardDeleteFolder(userId, folderEntities.stream().map(FolderEntity::getId).collect(Collectors.toList()));
+        verify(shelfRepository, times(0)).deleteById(shelfId);
+
+        assertEquals(ErrorMessages.USER_NOT_ALLOWED_TO_DELETE_SHELF.getErrorMessage(), exception.getMessage());
     }
 
     @Test
@@ -196,8 +273,6 @@ class ShelfServiceTest {
 
         ShelfEntity shelfEntity = new ShelfEntity();
         shelfEntity.setUserId(userId);
-
-
 
         FileEntity fileEntity = new FileEntity();
         List<FileEntity> fileList = new ArrayList<>();
