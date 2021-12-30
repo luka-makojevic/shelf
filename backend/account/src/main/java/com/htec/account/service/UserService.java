@@ -106,6 +106,14 @@ public class UserService {
         return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
     }
 
+    public UserResponseModel getMe(Long id) {
+
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
+
+        return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
+    }
+
     public void deleteUserById(Long id) {
 
         UserEntity user = userRepository.findById(id)
