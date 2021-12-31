@@ -101,7 +101,7 @@ export interface RegisterFormData {
 
 export interface LogoutData {
   jwtRefreshToken: string | undefined;
-  jwtToken: string | undefined;
+  jwtToken: string;
 }
 export type InputFieldType = 'text' | 'password' | 'email';
 

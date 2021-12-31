@@ -42,16 +42,19 @@ instance.interceptors.response.use(
   (err) => {
     const originalConfig = err.config;
     loadingCounter--;
-    if (loadingCounter === 0) store.dispatch(setIsLoading(false));
+    if (loadingCounter === 0) {
+      store.dispatch(setIsLoading(false));
+    }
     if (err?.response?.status === 401) {
       delete instance.defaults.headers.common.Authorization;
-      instance
+      return instance
         .post(
           `/account/auth/refresh/token`,
           JSON.parse(localStorage.getItem('refreshToken') || ''),
           {
             headers: {
               'Content-Type': 'text/plain',
+              Authorization: '',
             },
           }
         )

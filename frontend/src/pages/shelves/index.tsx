@@ -98,6 +98,7 @@ const Shelves = () => {
     shelves.length === 0
       ? 'No shelves have been created yet'
       : 'Sorry, no matching results found';
+      
   if (isLoading) return null;
   return (
     <>

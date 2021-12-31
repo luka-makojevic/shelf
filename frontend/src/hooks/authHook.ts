@@ -103,6 +103,9 @@ export const useAuth = () => {
         onSuccess();
       })
       .catch((err) => {
+        delete instance.defaults.headers.common.Authorization;
+        localStorage.clear();
+        dispatch(removeUser());
         onError(err.response?.data.message);
       });
   };

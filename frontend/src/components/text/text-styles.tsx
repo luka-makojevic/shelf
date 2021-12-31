@@ -15,6 +15,7 @@ export const H2 = styled.h2<TextProps>`
 
 export const Description = styled.p<TextProps>`
   text-align: center;
+  margin-top: 0;
 `;
 export const AccentText = styled.p<TextProps>`
   color: ${theme.colors.primary};

@@ -16,17 +16,10 @@ const hardDeleteShelf = (shelfId: number) =>
 const editShelf = (data: { shelfId: number; shelfName: string }) =>
   instance.put(`${API_URL_FILESYSTEM}/shelf/rename`, data);
 
-const getTrash = () => instance.get(`${API_URL_FILESYSTEM}/shelf/trash`);
-
-const getTrashFiles = (folderId: number) =>
-  instance.get(`${API_URL_FILESYSTEM}/folder/trash/${folderId}`);
-
 export default {
   getShelves,
   createShelf,
   softDeleteShelf,
   editShelf,
   hardDeleteShelf,
-  getTrash,
-  getTrashFiles,
 };

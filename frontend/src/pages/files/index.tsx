@@ -23,6 +23,7 @@ import { ButtonContainer } from '../../components/table/tableWrapper.styles';
 import SearchBar from '../../components/UI/searchBar/searchBar';
 import FolderModal from '../../components/modal/folderModal';
 import fileServices from '../../services/fileServices';
+import folderService from '../../services/folderService';
 
 const headers = [
   { header: 'Name', key: 'name' },
@@ -48,7 +49,7 @@ const Files = () => {
   const getData = () => {
     setIsLoading(true);
     if (folderId) {
-      fileServices
+      folderService
         .getFolderFiles(Number(folderId))
         .then((res) => {
           setPathHistory(res.data.breadCrumbs);
@@ -110,7 +111,7 @@ const Files = () => {
         });
 
     if (folderIds.length !== 0)
-      fileServices
+      folderService
         .softDeleteFolder(folderIds)
         .then(() => {
           toast.success('Folders moved to trash');
@@ -124,8 +125,11 @@ const Files = () => {
   const handleEdit = (file: TableDataTypes, newName: string) => {
     const newFiles = files.map((item) => {
       if (item.id === file.id) {
-        const extension = item.name.substring(item.name.lastIndexOf('.'));
-        return { ...item, name: newName + extension };
+        if (!file.folder) {
+          const extension = item.name.substring(item.name.lastIndexOf('.'));
+          return { ...item, name: newName + extension };
+        }
+        return { ...item, name: newName };
       }
       return item;
     });
@@ -139,7 +143,7 @@ const Files = () => {
   const handleDownload = () => {
     if (selectedRows.length === 0) return;
     fileServices
-      .downloadFile(10)
+      .downloadFile(selectedRows[0].id)
       .then((res) => {
         const url = window.URL.createObjectURL(new Blob([res.data]));
         const link = document.createElement('a');

@@ -6,6 +6,7 @@ import { DeleteModalProps } from './modal.interfaces';
 import shelfServices from '../../services/shelfServices';
 import { DeleteModalBody } from './modal.styles';
 import fileServices from '../../services/fileServices';
+import folderService from '../../services/folderService';
 
 const DeleteModal = ({
   onCloseModal,
@@ -52,7 +53,7 @@ const DeleteModal = ({
       }
 
       if (folderIds.length > 0 && onDeleteFiles) {
-        fileServices
+        folderService
           .hardDeleteFolder(folderIds)
           .then(() => onDeleteFiles(selectedData))
           .catch((err) => {
@@ -68,7 +69,7 @@ const DeleteModal = ({
     <DeleteModalBody>
       <Description>
         {shelf &&
-          `Are you sure you want to delete '${shelf?.name}' shelf? This action will permanently delete all data inside this shelf!!!`}
+          `Are you sure you want to delete '${shelf?.name}' shelf? This action will permanently delete all data inside this shelf!`}
         {message}
       </Description>
       <ModalButtonDivider>

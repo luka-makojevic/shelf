@@ -20,7 +20,8 @@ import Modal from '../../components/modal';
 import DeleteModal from '../../components/modal/deleteModal';
 import fileServices from '../../services/fileServices';
 import TableWrapper from '../../components/table/tableWrapper';
-import shelfServices from '../../services/shelfServices';
+import trashService from '../../services/trashService';
+import folderService from '../../services/folderService';
 
 const headers = [
   {
@@ -53,7 +54,7 @@ const Trash = () => {
   const getData = () => {
     setIsLoading(true);
     if (folderId) {
-      shelfServices
+      trashService
         .getTrashFiles(Number(folderId))
         .then((res) => {
           setPathHistory(res.data.breadCrumbs);
@@ -62,7 +63,7 @@ const Trash = () => {
         .catch((err) => toast.error(err))
         .finally(() => setIsLoading(false));
     } else {
-      shelfServices
+      trashService
         .getTrash()
         .then((res) => {
           setTrash(res.data.shelfItems);
@@ -106,7 +107,7 @@ const Trash = () => {
 
   const handleRecoverFromTrash = (row: TableDataTypes) => {
     if (row.folder) {
-      fileServices
+      folderService
         .recoverFolderFromTrash([row.id])
         .then(() => {
           getData();
@@ -134,11 +135,11 @@ const Trash = () => {
   return (
     <>
       {openModal && (
-        <Modal title="Delete shelf" onCloseModal={handleModalClose}>
+        <Modal title="Delete from trash" onCloseModal={handleModalClose}>
           <DeleteModal
             onDeleteFiles={handleHardDelete}
             onCloseModal={handleModalClose}
-            message="This action will permanently delete this file/folder"
+            message="This action will permanently delete selected items"
             selectedData={selectedRows}
           />
         </Modal>

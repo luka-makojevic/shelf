@@ -7,6 +7,7 @@ import { ModalButtonDivider } from '../layout/layout.styles';
 import { Button } from '../UI/button';
 import { FolderModalProps } from './modal.interfaces';
 import fileServices from '../../services/fileServices';
+import folderService from '../../services/folderService';
 
 export const ROOT_FOLDER = { name: 'Root', id: null, path: [] };
 
@@ -55,7 +56,7 @@ const FolderModal = ({
             toast.error(err.response?.data?.message);
           });
       } else if (file?.folder) {
-        fileServices
+        folderService
           .editFolder({ folderId: file.id, folderName: newName })
           .then(() => {
             onEdit(file, newName);
@@ -65,7 +66,7 @@ const FolderModal = ({
           });
       }
     } else if (folderId) {
-      fileServices
+      folderService
         .createFolder(newName, convertedShelfId, convertedFolderId)
         .then(() => {
           onGetData();
@@ -74,7 +75,7 @@ const FolderModal = ({
           toast.error(err.response?.data?.message);
         });
     } else if (!folderId) {
-      fileServices
+      folderService
         .createFolder(newName, convertedShelfId)
         .then(() => onGetData())
         .catch((err) => {
