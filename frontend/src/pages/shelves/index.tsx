@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Table } from '../../components/table/table';
-import TableWrapper from '../../components/table/tableWrapper';
 import { ShelfDataType, TableDataTypes } from '../../interfaces/dataTypes';
 import ShelfModal from '../../components/modal/shelfModal';
 import Modal from '../../components/modal';
@@ -14,6 +13,12 @@ import {
   ActionsBox,
   ButtonActionsBox,
 } from '../../components/table/tableWrapper.styles';
+import TableWrapper from '../../components/table/TableWrapper';
+import {
+  ActionType,
+  Delete,
+  Edit,
+} from '../../components/table/table.interfaces';
 
 const headers = [
   { header: 'Name', key: 'name' },
@@ -94,11 +99,16 @@ const Shelves = () => {
     setOpenModal(true);
   };
 
+  const actions: ActionType[] = [
+    { comp: Delete, handler: handleOpenDeleteModal, key: 1 },
+    { comp: Edit, handler: handleOpenEditModal, key: 2 },
+  ];
+
   const message =
     shelves.length === 0
       ? 'No shelves have been created yet'
       : 'Sorry, no matching results found';
-      
+
   if (isLoading) return null;
   return (
     <>
@@ -150,8 +160,7 @@ const Shelves = () => {
             data={filteredShelves}
             headers={headers}
             path="shelves/"
-            onDelete={handleOpenDeleteModal}
-            onEdit={handleOpenEditModal}
+            actions={actions}
           />
         )}
       </TableWrapper>

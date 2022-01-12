@@ -19,9 +19,10 @@ import Breadcrumbs from '../../components/breadcrumbs';
 import Modal from '../../components/modal';
 import DeleteModal from '../../components/modal/deleteModal';
 import fileServices from '../../services/fileServices';
-import TableWrapper from '../../components/table/tableWrapper';
 import trashService from '../../services/trashService';
 import folderService from '../../services/folderService';
+import TableWrapper from '../../components/table/TableWrapper';
+import { ActionType, Recover } from '../../components/table/table.interfaces';
 
 const headers = [
   {
@@ -111,7 +112,7 @@ const Trash = () => {
         .recoverFolderFromTrash([row.id])
         .then(() => {
           getData();
-          toast.success('Folder recovered from trash');
+          toast.success('Folder recoverd from trash');
         })
         .catch((err) => toast.error(err));
     } else {
@@ -119,7 +120,7 @@ const Trash = () => {
         .recoverFileFromTrash([row.id])
         .then(() => {
           getData();
-          toast.success('File recovered from trash');
+          toast.success('File recoverd from trash');
         })
         .catch((err) => toast.error(err));
     }
@@ -131,6 +132,10 @@ const Trash = () => {
   };
 
   if (isLoading) return null;
+
+  const actions: ActionType[] = [
+    { comp: Recover, handler: handleRecoverFromTrash, key: 1 },
+  ];
 
   return (
     <>
@@ -170,7 +175,7 @@ const Trash = () => {
             path="folders/"
             mulitSelect
             getSelectedRows={getSelectedRows}
-            onRecoverFromTrash={handleRecoverFromTrash}
+            actions={actions}
           />
         )}
       </TableWrapper>

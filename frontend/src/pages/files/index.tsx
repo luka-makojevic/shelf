@@ -8,7 +8,6 @@ import {
 } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { Table } from '../../components/table/table';
-import TableWrapper from '../../components/table/tableWrapper';
 import {
   FileDataType,
   PathHistoryData,
@@ -24,6 +23,8 @@ import SearchBar from '../../components/UI/searchBar/searchBar';
 import FolderModal from '../../components/modal/folderModal';
 import fileServices from '../../services/fileServices';
 import folderService from '../../services/folderService';
+import TableWrapper from '../../components/table/TableWrapper';
+import { ActionType, Edit } from '../../components/table/table.interfaces';
 
 const headers = [
   { header: 'Name', key: 'name' },
@@ -175,6 +176,10 @@ const Files = () => {
 
   if (isLoading) return null;
 
+  const actions: ActionType[] = [
+    { comp: Edit, handler: handleOpenEditModal, key: 1 },
+  ];
+
   return (
     <>
       {openEditModal && (
@@ -240,7 +245,7 @@ const Files = () => {
             headers={headers}
             path="folders/"
             getSelectedRows={getSelectedRows}
-            onEdit={handleOpenEditModal}
+            actions={actions}
           />
         )}
       </TableWrapper>

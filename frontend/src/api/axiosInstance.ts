@@ -12,9 +12,7 @@ const instanceConfig: AxiosRequestConfig = {
 };
 let loadingCounter = 0;
 
-const token = localStorage.getItem('token')
-  ? JSON.parse(localStorage.getItem('token') || '')
-  : '';
+const token = JSON.parse(localStorage.getItem('token') || 'null');
 
 if (token) {
   if (instanceConfig.headers)
