@@ -111,7 +111,7 @@ const Trash = () => {
         .recoverFolderFromTrash([row.id])
         .then(() => {
           getData();
-          toast.success('Folder recoverd from trash');
+          toast.success('Folder recovered from trash');
         })
         .catch((err) => toast.error(err));
     } else {
@@ -119,7 +119,7 @@ const Trash = () => {
         .recoverFileFromTrash([row.id])
         .then(() => {
           getData();
-          toast.success('File recoverd from trash');
+          toast.success('File recovered from trash');
         })
         .catch((err) => toast.error(err));
     }

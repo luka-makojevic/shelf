@@ -25,7 +25,7 @@ const ProtectedRoute = ({ children, roles }: ProtectedRouteProps) => {
           dispatch(setUser(res.data));
         })
         .catch((err) => {
-          toast.error(err.repsonse?.data?.message);
+          toastWithCheese.error(err.repsonse?.data?.message);
         });
   }, []);
 
