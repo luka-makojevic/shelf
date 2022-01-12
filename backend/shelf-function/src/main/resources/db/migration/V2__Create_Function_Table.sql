@@ -1,5 +1,5 @@
 CREATE TABLE `function` (
-  `id` bigint NOT NULL,
+  `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `path` varchar(255) DEFAULT NULL,
   `event_id` bigint NOT NULL,
