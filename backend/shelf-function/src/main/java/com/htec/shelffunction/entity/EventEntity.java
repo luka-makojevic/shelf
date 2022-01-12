@@ -15,6 +15,10 @@ import javax.persistence.*;
 @Table(name = "event")
 public class EventEntity {
 
+    public EventEntity(Long eventId) {
+        this.id = eventId;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

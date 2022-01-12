@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "function")
+@Table(catalog = "shelf_function", name = "function")
 public class FunctionEntity {
 
     @Id
@@ -25,12 +25,16 @@ public class FunctionEntity {
     @Column(name = "path")
     private String path;
 
-    @Column(name = "event_id")
-    private Long eventId;
-
     @Column(name = "shelf_id")
     private Long shelfId;
 
     @Column(name = "custom")
     private Boolean custom;
+
+    @OneToOne
+    private EventEntity event;
+
+    public static EventEntity createEvent(Long id) {
+        return new EventEntity(id);
+    }
 }
