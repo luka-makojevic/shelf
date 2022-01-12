@@ -1,7 +1,7 @@
 import { ChangeEvent, DragEvent, useEffect, useState } from 'react';
 import { FaFolderOpen, FaTimes } from 'react-icons/fa';
 import { useParams } from 'react-router-dom';
-import { useFiles } from '../../../hooks/fileHooks';
+import { toast } from 'react-toastify';
 import fileServices from '../../../services/fileServices';
 import { theme } from '../../../theme';
 import { ModalButtonDivider } from '../../layout/layout.styles';
@@ -19,17 +19,11 @@ import {
   DropZoneWrapper,
 } from './uploadModal.styles';
 
-const UploadModal = ({
-  onCloseModal,
-  onError,
-  onSuccess,
-}: UploadModalProps) => {
+const UploadModal = ({ onCloseModal, onGetData }: UploadModalProps) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [filesForUpload, setFilesForUpload] = useState<File[]>([]);
   const [progress, setProgress] = useState(0);
   const { shelfId, folderId } = useParams();
-  const { getShelfFiles, getFolderFiles } = useFiles();
-
   const [abortController] = useState<AbortController>(new AbortController());
 
   const addFilesForUpload = (files: FileList) => {
@@ -96,33 +90,19 @@ const UploadModal = ({
     fileServices
       .uploadFiles(uploadShelfId, uploadFolderId, formData, options)
       .then((res) => {
-        onSuccess(res.data.message);
-
-        if (folderId !== undefined) {
-          getFolderFiles(
-            uploadFolderId,
-            () => {},
-            () => {}
-          );
-        } else {
-          getShelfFiles(
-            uploadShelfId,
-            () => {},
-            () => {}
-          );
-        }
-
-        onCloseModal(false);
+        toast.success(res.data?.message);
+        onGetData();
+        onCloseModal();
       })
       .catch((err) => {
         setProgress(0);
-        onError(err.response?.data?.message);
-        onCloseModal(false);
+        toast.error(err.response?.data?.message);
+        onCloseModal();
       });
   };
 
   const handleCloseModal = () => {
-    onCloseModal(false);
+    onCloseModal();
   };
 
   const cancelUploadRequest = () => {

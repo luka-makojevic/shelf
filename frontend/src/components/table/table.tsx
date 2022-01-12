@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FaCaretDown, FaCaretUp } from 'react-icons/fa';
 import CheckBox from '../UI/checkbox/checkBox';
-import { DashboardTableRow } from './row';
 import { createSortingDirectons, sortColumn } from './sorter';
 import {
   StyledTable,
@@ -17,6 +16,8 @@ import {
   TableDataTypes,
 } from '../../interfaces/dataTypes';
 import { SortingDirection } from '../../utils/enums/table';
+import { ActionType } from './table.interfaces';
+import { Row } from './row';
 
 interface TableProps {
   mulitSelect?: boolean;
@@ -24,10 +25,8 @@ interface TableProps {
   headers: HeaderTypes[];
   setTableData: (data: TableDataTypes[]) => void;
   path: string;
-  onDelete?: (shelf: TableDataTypes) => void;
-  onEdit?: (data: TableDataTypes) => void;
-  onRecoverFromTrash?: (data: TableDataTypes) => void;
   getSelectedRows?: (data: TableDataTypes[]) => void;
+  actions?: ActionType[];
 }
 
 export const Table = ({
@@ -36,10 +35,8 @@ export const Table = ({
   headers,
   setTableData,
   path,
-  onDelete,
-  onEdit,
-  onRecoverFromTrash,
   getSelectedRows,
+  actions,
 }: TableProps) => {
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const [selectedRows, setSelectedRows] = useState<TableDataTypes[]>([]);
@@ -79,6 +76,7 @@ export const Table = ({
       return <FaCaretDown />;
     return <FaCaretUp />;
   };
+
   const handleClick = (key: string) => {
     sortColumn(
       key,
@@ -112,16 +110,14 @@ export const Table = ({
         </Thead>
         <tbody>
           {data.map((item) => (
-            <DashboardTableRow
+            <Row
+              actions={actions}
               key={item.name}
               selectedRows={selectedRows}
               setSelectedRows={setSelectedRows}
               multiSelect={mulitSelect}
               data={item}
               path={path}
-              onDelete={onDelete}
-              onRecoverFromTrash={onRecoverFromTrash}
-              onEdit={onEdit}
               isChecked={selectedRows.some(
                 (rowData: TableDataTypes) =>
                   rowData.id === item.id && rowData.folder === item.folder

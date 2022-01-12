@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
 import { ShelfDataType } from '../../interfaces/dataTypes';
 import { Base, InputFieldWrapper } from '../form/form-styles';
@@ -5,20 +6,20 @@ import { InputField } from '../UI/input/InputField';
 import { ModalButtonDivider } from '../layout/layout.styles';
 import { Button } from '../UI/button';
 import { FolderModalProps } from './modal.interfaces';
-import { useFiles } from '../../hooks/fileHooks';
 import fileServices from '../../services/fileServices';
+import folderService from '../../services/folderService';
 
 export const ROOT_FOLDER = { name: 'Root', id: null, path: [] };
 
 const FolderModal = ({
   onCloseModal,
-  onError,
   shelfId,
   folderId,
   placeholder,
   buttonText,
   file,
-  getData,
+  onGetData,
+  onEdit,
 }: FolderModalProps) => {
   const defaultName = file?.folder
     ? file.name
@@ -38,7 +39,6 @@ const FolderModal = ({
     onCloseModal(false);
   };
 
-  const { getShelfFiles, getFolderFiles } = useFiles();
   const convertedShelfId = Number(shelfId);
   const convertedFolderId = Number(folderId);
 
@@ -50,65 +50,38 @@ const FolderModal = ({
         fileServices
           .editFile({ fileId: file.id, fileName: newName })
           .then(() => {
-            getData();
+            onEdit(file, newName);
           })
           .catch((err) => {
-            if (err?.response?.status === 500) {
-              onError('Internal server error');
-              return;
-            }
-            onError(err.response?.data?.message);
+            toast.error(err.response?.data?.message);
           });
       } else if (file?.folder) {
-        fileServices
+        folderService
           .editFolder({ folderId: file.id, folderName: newName })
           .then(() => {
-            getData();
+            onEdit(file, newName);
           })
           .catch((err) => {
-            if (err?.response?.status === 500) {
-              onError('Internal server error');
-              return;
-            }
-            onError(err.response?.data?.message);
+            toast.error(err.response?.data?.message);
           });
       }
     } else if (folderId) {
-      fileServices
+      folderService
         .createFolder(newName, convertedShelfId, convertedFolderId)
         .then(() => {
-          getFolderFiles(
-            convertedFolderId,
-            () => {},
-            () => {}
-          );
+          onGetData();
         })
         .catch((err) => {
-          if (err.response?.status === 500) {
-            onError('Internal server error');
-            return;
-          }
-          onError(err.response?.data?.message);
+          toast.error(err.response?.data?.message);
         });
     } else if (!folderId) {
-      fileServices
+      folderService
         .createFolder(newName, convertedShelfId)
-        .then(() => {
-          getShelfFiles(
-            convertedShelfId,
-            () => {},
-            () => {}
-          );
-        })
+        .then(() => onGetData())
         .catch((err) => {
-          if (err.response?.status === 500) {
-            onError('Internal server error');
-            return;
-          }
-          onError(err.response?.data?.message);
+          toast.error(err.response?.data?.message);
         });
     }
-
     onCloseModal(false);
   };
 

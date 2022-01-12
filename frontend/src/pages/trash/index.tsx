@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { FaTrash } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 import { Table } from '../../components/table/table';
 import {
   ActionsBox,
@@ -8,27 +9,25 @@ import {
 } from '../../components/table/tableWrapper.styles';
 import { Button } from '../../components/UI/button';
 import SearchBar from '../../components/UI/searchBar/searchBar';
-import AlertPortal from '../../components/alert/alert';
-import { AlertMessage } from '../../utils/enums/alertMessages';
-import { FileDataType, TableDataTypes } from '../../interfaces/dataTypes';
+import {
+  FileDataType,
+  PathHistoryData,
+  TableDataTypes,
+} from '../../interfaces/dataTypes';
 import { Description } from '../../components/text/text-styles';
 import Breadcrumbs from '../../components/breadcrumbs';
 import Modal from '../../components/modal';
-import DeleteShelfModal from '../../components/modal/deleteMessageModal';
+import DeleteModal from '../../components/modal/deleteModal';
 import fileServices from '../../services/fileServices';
-import { useAppSelector } from '../../store/hooks';
+import trashService from '../../services/trashService';
+import folderService from '../../services/folderService';
 import TableWrapper from '../../components/table/TableWrapper';
-import { RootState } from '../../store/store';
-import shelfServices from '../../services/shelfServices';
+import { ActionType, Recover } from '../../components/table/table.interfaces';
 
 const headers = [
   {
     header: 'Name',
     key: 'name',
-  },
-  {
-    header: 'Size',
-    key: 'size',
   },
   {
     header: 'Creation Date',
@@ -37,46 +36,47 @@ const headers = [
 ];
 
 const Trash = () => {
-  // TODO - add breadcrumbs from refactor branch on merge
-
   const [trash, setTrash] = useState<FileDataType[]>([]);
   const [filteredData, setFilteredData] = useState<TableDataTypes[]>([]);
   const [selectedRows, setSelectedRows] = useState<TableDataTypes[]>([]);
   const [tableData, setTableData] = useState<TableDataTypes[]>([]);
   const [openModal, setOpenModal] = useState(false);
-  const [error, setError] = useState('');
   const { folderId } = useParams();
-  const isLoading = useAppSelector((state: RootState) => state.loading.loading);
+  const [isLoading, setIsLoading] = useState(false);
+  const [pathHistory, setPathHistory] = useState<PathHistoryData[]>([]);
 
-  const message =
-    trash.length === 0
-      ? 'Trash is empty'
-      : 'Sorry, no matching results found :(';
+  const setMessage = () => {
+    if (trash.length === 0 && pathHistory.length === 0) return 'Trash is empty';
+    if (pathHistory.length > 0) return 'There are no further folders or files';
+    return 'Sorry, no matching results found';
+  };
+  const message = setMessage();
 
   const getData = () => {
+    setIsLoading(true);
     if (folderId) {
-      shelfServices
+      trashService
         .getTrashFiles(Number(folderId))
         .then((res) => {
+          setPathHistory(res.data.breadCrumbs);
           setTrash(res.data.shelfItems);
         })
-        .catch(() => {
-          // TODO - add toaster for err
-        });
+        .catch((err) => toast.error(err))
+        .finally(() => setIsLoading(false));
     } else {
-      shelfServices
+      trashService
         .getTrash()
         .then((res) => {
           setTrash(res.data.shelfItems);
         })
-        .catch(() => {
-          // TODO - add toaster for err
-        });
+        .catch((err) => toast.error(err.response?.data?.message))
+        .finally(() => setIsLoading(false));
     }
   };
 
   useEffect(() => {
     getData();
+    setPathHistory([]);
   }, [folderId]);
 
   useEffect(() => {
@@ -85,7 +85,6 @@ const Trash = () => {
         id: item.id,
         folder: item.folder ? 1 : 0,
         name: item.name,
-        size: item.size,
         createdAt: new Date(item.createdAt).toLocaleString('en-US'),
       }));
 
@@ -109,38 +108,22 @@ const Trash = () => {
 
   const handleRecoverFromTrash = (row: TableDataTypes) => {
     if (row.folder) {
-      fileServices
+      folderService
         .recoverFolderFromTrash([row.id])
         .then(() => {
-          const newTrash = trash.filter((item) => item.id !== row.id);
-          setTrash(newTrash);
+          getData();
+          toast.success('Folder recoverd from trash');
         })
-        .catch((err) => {
-          if (err.response?.status === 500) {
-            setError('Internal server error');
-            return;
-          }
-          setError(err.response?.data?.message);
-        });
+        .catch((err) => toast.error(err));
     } else {
       fileServices
         .recoverFileFromTrash([row.id])
         .then(() => {
-          const newTrash = trash.filter((item) => item.id !== row.id);
-          setTrash(newTrash);
+          getData();
+          toast.success('File recoverd from trash');
         })
-        .catch((err) => {
-          if (err.response?.status === 500) {
-            setError('Internal server error');
-            return;
-          }
-          setError(err.response?.data?.message);
-        });
+        .catch((err) => toast.error(err));
     }
-  };
-
-  const handleSetError = () => {
-    setError('');
   };
 
   const handleModalClose = () => {
@@ -150,29 +133,25 @@ const Trash = () => {
 
   if (isLoading) return null;
 
+  const actions: ActionType[] = [
+    { comp: Recover, handler: handleRecoverFromTrash, key: 1 },
+  ];
+
   return (
     <>
       {openModal && (
-        <Modal title="Delete shelf" onCloseModal={handleModalClose}>
-          <DeleteShelfModal
-            onDelete={handleHardDelete}
+        <Modal title="Delete from trash" onCloseModal={handleModalClose}>
+          <DeleteModal
+            onDeleteFiles={handleHardDelete}
             onCloseModal={handleModalClose}
-            onError={setError}
-            message="This action will permanently delete this file/folder"
+            message="This action will permanently delete selected items"
             selectedData={selectedRows}
           />
         </Modal>
       )}
-      {error && (
-        <AlertPortal
-          type={AlertMessage.ERRROR}
-          title="Error"
-          message={error}
-          onClose={handleSetError}
-        />
-      )}
+
       <TableWrapper title="Trash">
-        <Breadcrumbs />
+        <Breadcrumbs pathHistory={pathHistory} />
         <ActionsBox>
           <SearchBar
             placeholder="Search..."
@@ -196,7 +175,7 @@ const Trash = () => {
             path="folders/"
             mulitSelect
             getSelectedRows={getSelectedRows}
-            onRecoverFromTrash={handleRecoverFromTrash}
+            actions={actions}
           />
         )}
       </TableWrapper>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMsal } from '@azure/msal-react';
+import { toast } from 'react-toastify';
 import {
   Base,
   FormContainer,
@@ -16,8 +17,6 @@ import { Error, H2, Link, PlainText } from '../../components/text/text-styles';
 import CheckBox from '../../components/UI/checkbox/checkBox';
 import { loginRequest } from '../../azure/authConfig';
 import { Button } from '../../components/UI/button';
-import AlertPortal from '../../components/alert/alert';
-import { AlertMessage } from '../../utils/enums/alertMessages';
 import { Routes } from '../../utils/enums/routes';
 import { config } from '../../utils/validation/config/registerValidationConfig';
 import { useAppSelector } from '../../store/hooks';
@@ -33,8 +32,6 @@ const RegisterForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<RegisterFormData>();
-  const [error, setError] = useState<string>('');
-  const [success, setSuccess] = useState<string>('');
 
   const { register: httpRegister, microsoftRegister } = useAuth();
   const { instance } = useMsal();
@@ -48,13 +45,14 @@ const RegisterForm = () => {
     httpRegister(
       { password, email, firstName, lastName },
       () => {
-        setSuccess('A verification link has been sent to your email address.');
-        setError('');
+        toast.success(
+          'A verification link has been sent to your email address.'
+        );
+
         reset();
       },
       (err) => {
-        setError(err);
-        setSuccess('');
+        toast.error(err);
       }
     );
   };
@@ -71,24 +69,17 @@ const RegisterForm = () => {
         microsoftRegister(
           { bearerToken: accessToken },
           () => {
-            setSuccess('Registered Successfully');
-            setError('');
+            toast.success('Registered Successfully');
           },
           (err) => {
-            setError(err);
-            setSuccess('');
+            toast.error(err);
           }
         );
       })
       .catch((err) => {
         if (err.errorCode === 'user_cancelled') return;
-        setError(err.message);
+        toast.error(err.message);
       });
-  };
-
-  const handleAlertClose = () => {
-    setError('');
-    setSuccess('');
   };
 
   const [isPasswordTooltipVisible, setIsPasswordTooltipVisible] =
@@ -111,22 +102,6 @@ const RegisterForm = () => {
       <H2>Register</H2>
 
       <Base onSubmit={handleSubmit(submitForm)}>
-        {error && (
-          <AlertPortal
-            type={AlertMessage.ERRROR}
-            title="Error"
-            message={error}
-            onClose={handleAlertClose}
-          />
-        )}
-        {success && (
-          <AlertPortal
-            type={AlertMessage.INFO}
-            title="Info"
-            message={success}
-            onClose={handleAlertClose}
-          />
-        )}
         <InputFieldWrapper>
           {registeFieldConfig.map((fieldConfig: RegisterFieldConfig) => (
             <InputField

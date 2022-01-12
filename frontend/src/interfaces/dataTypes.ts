@@ -101,7 +101,7 @@ export interface RegisterFormData {
 
 export interface LogoutData {
   jwtRefreshToken: string | undefined;
-  jwtToken: string | undefined;
+  jwtToken: string;
 }
 export type InputFieldType = 'text' | 'password' | 'email';
 
@@ -152,7 +152,6 @@ export interface ShelfTableDataTypes {
 export interface FileTableDataTypes {
   [key: string]: string | number;
   name: string;
-  size: number;
   createdAt: string;
   id: number;
   folder: number;

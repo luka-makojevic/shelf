@@ -6,63 +6,67 @@ import {
   FaPlusCircle,
   FaTrash,
 } from 'react-icons/fa';
-import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 import { Table } from '../../components/table/table';
-import { TableDataTypes } from '../../interfaces/dataTypes';
-import { useAppSelector } from '../../store/hooks';
-import AlertPortal from '../../components/alert/alert';
+import {
+  FileDataType,
+  PathHistoryData,
+  TableDataTypes,
+} from '../../interfaces/dataTypes';
 import Modal from '../../components/modal';
 import UploadModal from '../../components/modal/uploadModal';
 import { Button } from '../../components/UI/button';
-import { AlertMessage } from '../../utils/enums/alertMessages';
 import { Description } from '../../components/text/text-styles';
 import Breadcrumbs from '../../components/breadcrumbs';
 import { ButtonContainer } from '../../components/table/tableWrapper.styles';
 import SearchBar from '../../components/UI/searchBar/searchBar';
-import { useFiles } from '../../hooks/fileHooks';
 import FolderModal from '../../components/modal/folderModal';
-import { setPathHistory } from '../../store/pathHistory';
 import fileServices from '../../services/fileServices';
+import folderService from '../../services/folderService';
 import TableWrapper from '../../components/table/TableWrapper';
+import { ActionType, Edit } from '../../components/table/table.interfaces';
+
+const headers = [
+  { header: 'Name', key: 'name' },
+  { header: 'Creation date', key: 'createdAt' },
+];
 
 const Files = () => {
-  const files = useAppSelector((state) => state.file.files);
-  const loading = useAppSelector((state) => state.loading.loading);
-  const [openModal, setOpenModal] = useState(false);
+  const [files, setFiles] = useState<FileDataType[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
   const [openUploadModal, setOpenUploadModal] = useState(false);
-  const [error, setError] = useState('');
   const [filesforTable, setFilesForTable] = useState<TableDataTypes[]>([]);
   const [filteredFiles, setFilteredFiles] = useState<TableDataTypes[]>([]);
   const [selectedRows, setSelectedRows] = useState<TableDataTypes[]>([]);
   const [selectedFile, setSelectedFile] = useState<TableDataTypes | null>();
-  const [success, setSuccess] = useState('');
   const { shelfId, folderId } = useParams();
+  const [pathHistory, setPathHistory] = useState<PathHistoryData[]>([]);
+  const message =
+    files?.length === 0
+      ? 'You dont have any files to display'
+      : 'Sorry, no matching results found';
 
-  const dispatch = useDispatch();
-
-  const handleOpenUploadModal = () => {
-    setOpenUploadModal(true);
-  };
-
-  const handleAlertClose = () => {
-    setError('');
-    setSuccess('');
-  };
-
-  const { getShelfFiles, getFolderFiles } = useFiles();
   const getData = () => {
+    setIsLoading(true);
     if (folderId) {
-      getFolderFiles(
-        Number(folderId),
-        () => {},
-        () => {}
-      );
+      folderService
+        .getFolderFiles(Number(folderId))
+        .then((res) => {
+          setPathHistory(res.data.breadCrumbs);
+          setFiles(res.data.shelfItems);
+        })
+        .catch((err) => toast.error(err))
+        .finally(() => setIsLoading(false));
     } else
-      getShelfFiles(
-        Number(shelfId),
-        () => {},
-        () => {}
-      );
+      fileServices
+        .getShelfFiles(Number(shelfId))
+        .then((res) => {
+          setPathHistory(res.data.breadCrumbs);
+          setFiles(res.data.shelfItems);
+        })
+        .catch((err) => toast.error(err))
+        .finally(() => setIsLoading(false));
   };
 
   useEffect(() => {
@@ -73,7 +77,7 @@ const Files = () => {
     if (files) {
       const newFiles = files.map((file) => ({
         name: file.name,
-        createdAt: new Date(file.createdAt).toLocaleDateString('en-US'),
+        createdAt: new Date(file.createdAt).toLocaleString('en-US'),
         id: file.id,
         folder: file.folder ? 1 : 0,
       }));
@@ -82,22 +86,9 @@ const Files = () => {
     }
   }, [files]);
 
-  useEffect(
-    () => () => {
-      dispatch(setPathHistory([]));
-    },
-    []
-  );
-
-  const message =
-    files?.length === 0
-      ? 'You dont have any files to display'
-      : 'Sorry, no matching results found';
-
-  const headers = [
-    { header: 'Name', key: 'name' },
-    { header: 'Creation date', key: 'createdAt' },
-  ];
+  const getSelectedRows = (selectedRowsData: TableDataTypes[]) => {
+    setSelectedRows(selectedRowsData);
+  };
 
   const handleDelete = () => {
     const fileIds: number[] = [];
@@ -112,37 +103,44 @@ const Files = () => {
     if (fileIds.length !== 0)
       fileServices
         .softDeleteFile(fileIds)
-        .then(() => getData())
+        .then(() => {
+          toast.success('Files moved to trash');
+          getData();
+        })
         .catch((err) => {
-          if (err.response?.status === 500) {
-            setError('Internal server error');
-          } else setError('File could not be deleted');
+          toast.error(err.response?.data?.message);
         });
+
     if (folderIds.length !== 0)
-      fileServices
+      folderService
         .softDeleteFolder(folderIds)
-        .then(() => getData())
+        .then(() => {
+          toast.success('Folders moved to trash');
+          getData();
+        })
         .catch((err) => {
-          if (err.response?.status === 500) {
-            setError('Internal server error');
-          } else setError('Folder could not be deleted');
+          toast.error(err.response?.data?.message);
         });
-  };
-  const handleEdit = (file: TableDataTypes) => {
-    setSelectedFile(file);
-    setOpenModal(true);
-  };
-  const handleCreateFolder = () => {
-    setOpenModal(true);
-  };
-  const handleModalClose = () => {
-    setSelectedFile(null);
-    setOpenModal(false);
   };
 
-  const getSelectedRows = (selectedRowsData: TableDataTypes[]) => {
-    setSelectedRows(selectedRowsData);
+  const handleEdit = (file: TableDataTypes, newName: string) => {
+    const newFiles = files.map((item) => {
+      if (item.id === file.id) {
+        if (!file.folder) {
+          const extension = item.name.substring(item.name.lastIndexOf('.'));
+          return { ...item, name: newName + extension };
+        }
+        return { ...item, name: newName };
+      }
+      return item;
+    });
+    setFiles(newFiles);
   };
+
+  const handleCreateFolder = () => {
+    setOpenEditModal(true);
+  };
+
   const handleDownload = () => {
     if (selectedRows.length === 0) return;
     fileServices
@@ -157,33 +155,45 @@ const Files = () => {
         link.remove();
       })
       .catch(() => {
-        setError('Failed to download');
+        toast.error('Failed to download');
       });
   };
 
-  if (loading) return null;
+  const handleOpenUploadModal = () => {
+    setOpenUploadModal(true);
+  };
+  const handleCloseUploadModal = () => {
+    setOpenUploadModal(false);
+  };
+  const handleEditModalClose = () => {
+    setSelectedFile(null);
+    setOpenEditModal(false);
+  };
+  const handleOpenEditModal = (file: TableDataTypes) => {
+    setSelectedFile(file);
+    setOpenEditModal(true);
+  };
+
+  if (isLoading) return null;
+
+  const actions: ActionType[] = [
+    { comp: Edit, handler: handleOpenEditModal, key: 1 },
+  ];
+
   return (
     <>
-      {(error || success) && (
-        <AlertPortal
-          type={error ? AlertMessage.ERRROR : AlertMessage.SUCCESS}
-          title={`${error ? 'Error' : 'Success'}`}
-          message={error || success}
-          onClose={handleAlertClose}
-        />
-      )}
-      {openModal && (
+      {openEditModal && (
         <Modal
           title={selectedFile ? 'Edit name' : 'Create folder'}
-          onCloseModal={handleModalClose}
+          onCloseModal={handleEditModalClose}
           closeIcon
         >
           <FolderModal
-            onCloseModal={handleModalClose}
-            onError={setError}
+            onEdit={handleEdit}
+            onCloseModal={handleEditModalClose}
             shelfId={shelfId}
             folderId={folderId}
-            getData={getData}
+            onGetData={getData}
             placeholder={selectedFile ? '' : 'Folder Name'}
             buttonText={selectedFile ? 'Rename' : 'Create'}
             file={selectedFile}
@@ -191,17 +201,20 @@ const Files = () => {
         </Modal>
       )}
       {openUploadModal && (
-        <Modal title="Upload files" onCloseModal={setOpenUploadModal} closeIcon>
+        <Modal
+          title="Upload files"
+          onCloseModal={handleCloseUploadModal}
+          closeIcon
+        >
           <UploadModal
-            onCloseModal={setOpenUploadModal}
-            onError={setError}
-            onSuccess={setSuccess}
+            onCloseModal={handleCloseUploadModal}
+            onGetData={getData}
           />
         </Modal>
       )}
 
       <TableWrapper>
-        <Breadcrumbs />
+        <Breadcrumbs pathHistory={pathHistory} />
         <SearchBar
           placeholder="Search..."
           data={filesforTable}
@@ -232,7 +245,7 @@ const Files = () => {
             headers={headers}
             path="folders/"
             getSelectedRows={getSelectedRows}
-            onEdit={handleEdit}
+            actions={actions}
           />
         )}
       </TableWrapper>

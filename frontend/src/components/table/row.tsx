@@ -1,40 +1,22 @@
-import { FaEdit, FaFile, FaFolder, FaTrash } from 'react-icons/fa';
-import { RiArrowGoBackFill } from 'react-icons/ri';
-import { useNavigate, useLocation } from 'react-router-dom';
+/* eslint-disable react/prop-types */
+import { FaFile, FaFolder } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import { TableDataTypes } from '../../interfaces/dataTypes';
+import { Role } from '../../utils/enums/roles';
 import CheckBox from '../UI/checkbox/checkBox';
-import {
-  StyledRow,
-  StyledCell,
-  DeleteActionContainer,
-  IconContainer,
-} from './table.styles';
+import { ActionType, RowProps } from './table.interfaces';
+import { StyledRow, StyledCell, IconContainer } from './table.styles';
 
-interface RowProps {
-  data: TableDataTypes;
-  multiSelect?: boolean;
-  selectedRows: TableDataTypes[];
-  setSelectedRows: (data: TableDataTypes[]) => void;
-  isChecked?: boolean;
-  path: string;
-  onDelete?: (shelf: TableDataTypes) => void;
-  onEdit?: (data: TableDataTypes) => void;
-  onRecoverFromTrash?: (data: TableDataTypes) => void;
-}
-
-export const DashboardTableRow = ({
+export const Row = ({
   data,
   multiSelect,
   selectedRows,
   setSelectedRows,
   isChecked,
   path,
-  onDelete,
-  onEdit,
-  onRecoverFromTrash,
+  actions,
 }: RowProps) => {
   const navigation = useNavigate();
-  const location = useLocation();
 
   const handleChange = () => {
     const alreadySelected = selectedRows.some(
@@ -54,7 +36,7 @@ export const DashboardTableRow = ({
     rowText,
     pathName,
   }: {
-    rowText: string | number;
+    rowText: string | number | { id: Role; name: string };
     pathName: string;
   }) => {
     const handleClick = () => {
@@ -73,16 +55,12 @@ export const DashboardTableRow = ({
     );
   };
 
-  const handleDelete = () => {
-    if (onDelete) onDelete(data);
-  };
+  const ActionWithHandler = ({ action }: { action: ActionType }) => {
+    const handleClick = () => {
+      action.handler(data);
+    };
 
-  const handleEdit = () => {
-    if (onEdit) onEdit(data);
-  };
-
-  const handleRecoverFromTrash = () => {
-    if (onRecoverFromTrash) onRecoverFromTrash(data);
+    return <action.comp key={action.key} onClick={handleClick} />;
   };
 
   return (
@@ -110,28 +88,12 @@ export const DashboardTableRow = ({
           />
         );
       })}
-      {!multiSelect && (
-        <StyledCell>
-          <DeleteActionContainer>
-            <FaTrash onClick={handleDelete} />
-          </DeleteActionContainer>
-
-          <IconContainer>
-            <FaEdit onClick={handleEdit} />
-          </IconContainer>
-        </StyledCell>
-      )}
-      {multiSelect && (
-        <StyledCell>
-          <IconContainer>
-            {location.pathname === '/dashboard/trash' ? (
-              <RiArrowGoBackFill onClick={handleRecoverFromTrash} />
-            ) : (
-              <FaEdit onClick={handleEdit} />
-            )}
-          </IconContainer>
-        </StyledCell>
-      )}
+      <StyledCell>
+        {actions &&
+          actions.map((action: ActionType) => (
+            <ActionWithHandler action={action} key={action.key} />
+          ))}
+      </StyledCell>
     </StyledRow>
   );
 };
