@@ -16,6 +16,7 @@ import SharedShelves from '../../pages/sharedShelves';
 import Trash from '../../pages/trash';
 import Functions from '../../pages/functions';
 import Files from '../../pages/files';
+import Profile from '../../pages/profileManagement';
 
 const Router = () => {
   const routes: RouteProps[] = [
@@ -40,6 +41,14 @@ const Router = () => {
       element: (
         <PublicOnlyRoute>
           <Register />
+        </PublicOnlyRoute>
+      ),
+    },
+    {
+      path: Routes.PROFILE,
+      element: (
+        <PublicOnlyRoute>
+          <Profile />
         </PublicOnlyRoute>
       ),
     },

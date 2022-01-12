@@ -1,6 +1,7 @@
 export enum Routes {
   HOME = '/',
   REGISTER = '/register',
+  PROFILE= '/profile',
   LOGIN = '/login',
   DASHBOARD = '/dashboard',
   TERMS_AND_CONDITIONS = '/shelf-terms-and-conditions',

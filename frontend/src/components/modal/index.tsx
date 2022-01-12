@@ -20,22 +20,24 @@ const Modal = ({ onCloseModal, children, title, closeIcon }: ModalProps) => {
   const modal = (
     <Backdrop>
       <ModalContainer>
-        <Header>
-          <HeaderItem>
-            <H2>{title}</H2>
-          </HeaderItem>
-
-          {closeIcon && (
+        {title && (
+          <Header>
             <HeaderItem>
-              <Close onClick={handleCloseModal}>
-                <FaRegTimesCircle
-                  color={theme.colors.primary}
-                  size={theme.space.lg}
-                />
-              </Close>
+              <H2>{title}</H2>
             </HeaderItem>
-          )}
-        </Header>
+
+            {closeIcon && (
+              <HeaderItem>
+                <Close onClick={handleCloseModal}>
+                  <FaRegTimesCircle
+                    color={theme.colors.primary}
+                    size={theme.space.lg}
+                  />
+                </Close>
+              </HeaderItem>
+            )}
+          </Header>
+        )}
         <Body>{children}</Body>
       </ModalContainer>
     </Backdrop>

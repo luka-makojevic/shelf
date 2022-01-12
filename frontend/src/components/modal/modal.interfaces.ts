@@ -23,7 +23,7 @@ export interface PathType {
 export interface ModalProps {
   onCloseModal: Dispatch<SetStateAction<boolean>>;
   children: JSX.Element;
-  title: string;
+  title?: string;
   closeIcon?: boolean;
 }
 
