@@ -3,6 +3,7 @@ import { theme } from '../../theme';
 import {
   HeaderContainerProps,
   HeaderStyleProps,
+  ProfilePictureProps,
   ProfileProps,
 } from './header.interface';
 
@@ -41,12 +42,12 @@ export const DropDown = styled.div`
   height: 140px;
   border-radius: 20px;
 `;
-export const ProfilePicture = styled.div`
+export const ProfilePicture = styled.div<ProfilePictureProps>`
   border: 2px solid #006fd1;
   border-radius: 999px;
   width: 45px;
   height: 45px;
-  background: url('./assets/images/profile.jpg');
+  background: ${({ imgUrl }) => `url('${imgUrl}')`};
   background-size: contain;
   background-repeat: no-repeat;
   cursor: pointer;

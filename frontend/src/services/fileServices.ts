@@ -37,6 +37,9 @@ const uploadFiles = (
     options
   );
 
+const getProfilePicture = (userId?: number) =>
+  `${process.env.REACT_APP_API_URL}${API_URL_FILES}/file/preview/${userId}?file=false`;
+
 export default {
   getShelfFiles,
   softDeleteFile,
@@ -45,4 +48,5 @@ export default {
   editFile,
   downloadFile,
   uploadFiles,
+  getProfilePicture,
 };
