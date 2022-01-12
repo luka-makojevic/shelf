@@ -42,10 +42,9 @@ export interface ForgotPasswordConfig {
 }
 
 export interface UpdateProfileData {
-  email?: string;
-  password?: string;
-  firstName?: string;
-  lastName?: string;
+  password: string | null;
+  firstName: string | null;
+  lastName: string | null;
 }
 
 export interface ResetPasswordFieldConfig {
@@ -89,6 +88,7 @@ export interface UserType {
   firstName: string;
   lastName: string;
   email: string;
+  password: string;
   jwtToken: string;
   jwtRefreshToken: string;
   role: {
@@ -116,7 +116,7 @@ export interface ManageProfileFormData {
 
 export interface LogoutData {
   jwtRefreshToken: string | undefined;
-  jwtToken: string | undefined;
+  jwtToken: string;
 }
 export type InputFieldType = 'text' | 'password' | 'email';
 
@@ -174,7 +174,6 @@ export interface ShelfTableDataTypes {
 export interface FileTableDataTypes {
   [key: string]: string | number;
   name: string;
-  size: number;
   createdAt: string;
   id: number;
   folder: number;

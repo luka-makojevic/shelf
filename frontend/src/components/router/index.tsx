@@ -47,9 +47,9 @@ const Router = () => {
     {
       path: Routes.PROFILE,
       element: (
-        <PublicOnlyRoute>
+        <ProtectedRoute roles={[Role.USER, Role.ADMIN, Role.MASTER_ADMIN]}>
           <Profile />
-        </PublicOnlyRoute>
+        </ProtectedRoute>
       ),
     },
     {

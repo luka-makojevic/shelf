@@ -1,5 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios';
-import { API_URL_ACCOUNT } from '../api/api';
+import { AxiosRequestConfig } from 'axios';
 import instance from '../api/axiosInstance';
 import {
   ForgotPasswordData,
@@ -7,23 +6,27 @@ import {
   UpdateProfileData,
 } from '../interfaces/dataTypes';
 
+const API_URL_ACCOUNT = '/account';
+
 const emailConfirmation = (token: string | undefined) =>
-  axios.post(`${API_URL_ACCOUNT}tokens/confirmation`, { token });
+  instance.post(`${API_URL_ACCOUNT}/tokens/confirmation`, { token });
 
 const resendEmailVerification = (token: string | undefined) =>
-  axios.post(`${API_URL_ACCOUNT}tokens/resend`, { token });
+  instance.post(`${API_URL_ACCOUNT}/tokens/resend`, { token });
 
 const forgotPassword = (data: ForgotPasswordData) =>
-  axios.post(`${API_URL_ACCOUNT}users/password-reset-request`, data);
+  instance.post(`${API_URL_ACCOUNT}/users/password-reset-request`, data);
 
 const resetPassword = (data: ResetPasswordData) =>
-  axios.post(`${API_URL_ACCOUNT}users/password-reset`, data);
+  instance.post(`${API_URL_ACCOUNT}/users/password-reset`, data);
 
-const updateProfile = (data: UpdateProfileData) =>
-  instance.put(`${API_URL_ACCOUNT}/update`, data);
+const getUser = () => instance.get(`${API_URL_ACCOUNT}/users/me`);
 
-const uploadProfilePicture = (files: FormData, options: AxiosRequestConfig) =>
-  instance.post(`${API_URL_ACCOUNT}/upload`, files, options);
+const updateProfile = (data: UpdateProfileData, id: number) =>
+  instance.put(`${API_URL_ACCOUNT}/users/${id}`, data);
+
+const uploadProfilePicture = (data: FormData, options: AxiosRequestConfig) =>
+  instance.put(`${API_URL_ACCOUNT}/users/update/photo`, data, options);
 
 export default {
   emailConfirmation,
@@ -32,4 +35,5 @@ export default {
   resetPassword,
   updateProfile,
   uploadProfilePicture,
+  getUser,
 };

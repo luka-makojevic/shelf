@@ -20,10 +20,11 @@ export const InputField = React.forwardRef(
           type={!passwordShown || disabled ? type : 'text'}
           ref={ref}
           disabled={disabled}
+          autoComplete="off"
           {...restProps}
         />
         {type === 'password' &&
-        !disabled && ( // TODO - maybe solve diferently
+          !disabled && ( // TODO - maybe solve diferently
             <SeenIcon
               src={
                 passwordShown

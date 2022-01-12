@@ -51,6 +51,7 @@ export const Body = styled.div`
   width: 100%;
 
   padding: ${theme.space.md};
+  padding-top: 0;
 
   display: flex;
   flex-direction: column;

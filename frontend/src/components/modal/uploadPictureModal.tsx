@@ -1,10 +1,9 @@
 import { ChangeEvent, DragEvent, useState } from 'react';
 import { BsCloudUpload } from 'react-icons/bs';
 import { RiCloseCircleFill } from 'react-icons/ri';
+import { toast } from 'react-toastify';
 import userServices from '../../services/userServices';
 import { theme } from '../../theme';
-import { AlertMessage } from '../../utils/enums/alertMessages';
-import AlertPortal from '../alert/alert';
 import { ButtonWrapper } from '../profile/profile.styles';
 import { Button } from '../UI/button';
 import {
@@ -21,14 +20,12 @@ interface UploadPictureModalProps {
 
 const UploadPictureModal = ({ onCloseModal }: UploadPictureModalProps) => {
   const [image, setImage] = useState<File | null>(null);
-  const [error, setError] = useState<string>('');
   const [isDragOver, setIsDragOver] = useState(false);
   const [previewImage, setPreviewImage] = useState(
     './assets/images/profile.jpg'
   );
   const [abortController] = useState<AbortController>(new AbortController());
 
-  const handleAlertClose = () => setError('');
   const handleCloseModal = () => onCloseModal();
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -45,7 +42,7 @@ const UploadPictureModal = ({ onCloseModal }: UploadPictureModalProps) => {
         extension !== '.jpeg' &&
         extension !== '.png'
       ) {
-        setError('You must select an image');
+        toast.error('You must select an image');
         return;
       }
       setImage(files[0]);
@@ -73,7 +70,7 @@ const UploadPictureModal = ({ onCloseModal }: UploadPictureModalProps) => {
 
   const handleUpload = () => {
     if (!image) {
-      setError('You must select an image');
+      toast.error('You must select an image');
       return;
     }
     const formData = new FormData();
@@ -97,14 +94,6 @@ const UploadPictureModal = ({ onCloseModal }: UploadPictureModalProps) => {
 
   return (
     <>
-      {error && (
-        <AlertPortal
-          type={AlertMessage.ERRROR}
-          title="Error"
-          message={error}
-          onClose={handleAlertClose}
-        />
-      )}
       <DropZoneWrapperImage
         isDragOver={isDragOver}
         onDragOver={handleDragOver}

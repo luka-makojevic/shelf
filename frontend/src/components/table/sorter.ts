@@ -14,6 +14,13 @@ const sortData = (
   data.sort((a: SorterDataTypes, b: SorterDataTypes) => {
     let relevantValueA = a[sortKey];
     let relevantValueB = b[sortKey];
+    if (
+      typeof relevantValueA === 'string' &&
+      typeof relevantValueB === 'string'
+    ) {
+      relevantValueA = relevantValueA.toLowerCase();
+      relevantValueB = relevantValueB.toLowerCase();
+    }
 
     if (sortKey === 'createdAt') {
       relevantValueA = new Date(a[sortKey]).getTime();
@@ -58,6 +65,7 @@ export const sortColumn = (
   const nextSortingDirection = getNextSortingDirection(currentSortingDirection);
   const newSortingDirections = { ...sortingDirections };
   newSortingDirections[sortKey] = nextSortingDirection;
+
   setTableData(newTableData);
   setSortingDirections(newSortingDirections);
 };

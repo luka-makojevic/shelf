@@ -1,59 +1,62 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { Table } from '../../components/table/table';
-import { useShelf } from '../../hooks/shelfHooks';
-import { TableDataTypes } from '../../interfaces/dataTypes';
-import { useAppSelector } from '../../store/hooks';
-import AlertPortal from '../../components/alert/alert';
+import { ShelfDataType, TableDataTypes } from '../../interfaces/dataTypes';
 import ShelfModal from '../../components/modal/shelfModal';
 import Modal from '../../components/modal';
 import { Button } from '../../components/UI/button';
-import { AlertMessage } from '../../utils/enums/alertMessages';
 import { Description } from '../../components/text/text-styles';
-import DeleteShelfModal from '../../components/modal/deleteMessageModal';
+import DeleteModal from '../../components/modal/deleteModal';
 import SearchBar from '../../components/UI/searchBar/searchBar';
-import TableWrapper from '../../components/table/TableWrapper';
+import shelfServices from '../../services/shelfServices';
 import {
   ActionsBox,
   ButtonActionsBox,
 } from '../../components/table/tableWrapper.styles';
+import TableWrapper from '../../components/table/TableWrapper';
+import {
+  ActionType,
+  Delete,
+  Edit,
+} from '../../components/table/table.interfaces';
+
+const headers = [
+  { header: 'Name', key: 'name' },
+  { header: 'Creation date', key: 'createdAt' },
+];
 
 const Shelves = () => {
-  const shelves = useAppSelector((state) => state.shelf.shelves);
+  const [shelves, setShelves] = useState<ShelfDataType[]>([]);
 
   const [openModal, setOpenModal] = useState(false);
-  const [error, setError] = useState('');
   const [selectedShelf, setSelectedShelf] = useState<TableDataTypes | null>(
     null
   );
-
-  const handleOpenModal = () => {
-    setOpenModal(true);
-  };
-
-  const handleSetError = () => {
-    setError('');
-  };
-
-  const { getShelves } = useShelf();
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [shelvesForTable, setShelvesForTable] = useState<TableDataTypes[]>([]);
   const [filteredShelves, setFilteredShelves] = useState<TableDataTypes[]>([]);
 
   const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
 
+  const getData = () => {
+    setIsLoading(true);
+    shelfServices
+      .getShelves()
+      .then((res) => setShelves(res.data))
+      .catch((err) => toast.error(err))
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
   useEffect(() => {
-    getShelves(
-      () => {},
-      (err: string) => {
-        setError(err);
-      }
-    );
+    getData();
   }, []);
 
   useEffect(() => {
     const newShelves = shelves.map((shelf) => ({
       name: shelf.name,
-      createdAt: new Date(shelf.createdAt).toLocaleDateString('en-US'),
+      createdAt: new Date(shelf.createdAt).toLocaleString('en-US'),
       id: shelf.id,
     }));
 
@@ -61,43 +64,54 @@ const Shelves = () => {
     setFilteredShelves(newShelves);
   }, [shelves]);
 
-  const headers = [
-    { header: 'Name', key: 'name' },
-    { header: 'Creation date', key: 'createdAt' },
-  ];
-
   const handleModalClose = () => {
     setDeleteModalOpen(false);
     setSelectedShelf(null);
     setOpenModal(false);
   };
 
-  const handleDelete = (shelf: TableDataTypes) => {
+  const handleOpenDeleteModal = (shelf: TableDataTypes) => {
     setDeleteModalOpen(true);
     setSelectedShelf(shelf);
   };
 
-  const handleEdit = (shelf: TableDataTypes) => {
+  const handleDelete = (shelf: TableDataTypes) => {
+    const newShelves = shelves.filter((item) => item.id !== shelf.id);
+    setShelves(newShelves);
+  };
+
+  const handleEdit = (shelf: TableDataTypes, newName: string) => {
+    const newShelves = shelves.map((item) => {
+      if (item.id === shelf.id) {
+        return { ...item, name: newName };
+      }
+      return item;
+    });
+    setShelves(newShelves);
+  };
+
+  const handleOpenEditModal = (shelf: TableDataTypes) => {
     setSelectedShelf(shelf);
     setOpenModal(true);
   };
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const actions: ActionType[] = [
+    { comp: Delete, handler: handleOpenDeleteModal, key: 1 },
+    { comp: Edit, handler: handleOpenEditModal, key: 2 },
+  ];
 
   const message =
     shelves.length === 0
       ? 'No shelves have been created yet'
       : 'Sorry, no matching results found';
 
+  if (isLoading) return null;
   return (
     <>
-      {error && (
-        <AlertPortal
-          type={AlertMessage.ERRROR}
-          title="Error"
-          message={error}
-          onClose={handleSetError}
-        />
-      )}
-
       {openModal && (
         <Modal
           title={selectedShelf ? 'Rename shelf' : 'Create shelf'}
@@ -105,19 +119,19 @@ const Shelves = () => {
           closeIcon
         >
           <ShelfModal
+            onGetData={getData}
             onCloseModal={handleModalClose}
-            onError={setError}
             shelf={selectedShelf}
+            onEdit={handleEdit}
           />
         </Modal>
       )}
 
       {deleteModalOpen && (
         <Modal title="Delete shelf" onCloseModal={handleModalClose}>
-          <DeleteShelfModal
-            onDelete={() => {}} // TODO - replace with onDelete from refactor when merged
+          <DeleteModal
+            onDeleteShelf={handleDelete}
             onCloseModal={handleModalClose}
-            onError={setError}
             shelf={selectedShelf}
           />
         </Modal>
@@ -146,8 +160,7 @@ const Shelves = () => {
             data={filteredShelves}
             headers={headers}
             path="shelves/"
-            onDelete={handleDelete}
-            onEdit={handleEdit}
+            actions={actions}
           />
         )}
       </TableWrapper>

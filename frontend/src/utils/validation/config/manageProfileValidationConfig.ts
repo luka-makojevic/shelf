@@ -3,11 +3,17 @@ import {
   ManageProfileFieldConfig,
   ManageProfileFormData,
 } from '../../../interfaces/dataTypes';
-import { emailRegex, passwordRegex } from '../regex';
+import { passwordRegex } from '../regex';
 
 export const config = (
   watch: UseFormWatch<ManageProfileFormData>
 ): ManageProfileFieldConfig[] => [
+  {
+    type: 'text',
+    placeholder: 'Email',
+    name: 'email',
+    validations: {},
+  },
   {
     type: 'text',
     placeholder: 'First Name',
@@ -30,21 +36,7 @@ export const config = (
       },
     },
   },
-  {
-    type: 'text',
-    placeholder: 'Email',
-    name: 'email',
-    validations: {
-      maxLength: {
-        value: 50,
-        message: 'Email can not be longer than 50 characters',
-      },
-      pattern: {
-        value: emailRegex,
-        message: 'Invalid email format',
-      },
-    },
-  },
+
   {
     type: 'password',
     placeholder: 'Password',

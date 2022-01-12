@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../hooks/authHook';
-import { LocalStorage } from '../../services/localStorage';
 import { useAppSelector } from '../../store/hooks';
 import { PlainText, Link } from '../text/text-styles';
 import { Button } from '../UI/button';
@@ -14,8 +13,8 @@ const Profile = () => {
   const user = useAppSelector((state) => state.user.user);
 
   const data = {
-    jwtRefreshToken: LocalStorage.get('refreshToken') || '',
-    jwtToken: LocalStorage.get('token') || '',
+    jwtRefreshToken: JSON.parse(localStorage.getItem('refreshToken') || ''),
+    jwtToken: JSON.parse(localStorage.getItem('token') || ''),
   };
 
   const handleDropdownVisibility = () => {
@@ -63,7 +62,7 @@ const Profile = () => {
               {user?.firstName} {user?.lastName}
             </PlainText>
             <PlainText>{user?.email}</PlainText>
-            <Link to="/manage-account">manage account</Link>
+            <Link to={`/profile/${user?.id}`}>manage account</Link>
             <div>
               <Button onClick={handleLogout} size="small">
                 log out

@@ -7,6 +7,8 @@ export const DropZoneWrapper = styled.div<DropZoneWrapperProps>`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  overflow-y: auto;
+  max-height: 300px;
   width: 100%;
   min-height: 260px;
   background: ${({ isDragOver }) =>

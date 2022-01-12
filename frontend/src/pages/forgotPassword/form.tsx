@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import {
   Base,
@@ -11,8 +12,6 @@ import { ForgotPasswordData } from '../../interfaces/dataTypes';
 import { forgotPasswordFieldConfig } from '../../utils/validation/config/forgotPasswordValidationConfig';
 import userServices from '../../services/userServices';
 import { Button } from '../../components/UI/button';
-import AlertPortal from '../../components/alert/alert';
-import { AlertMessage } from '../../utils/enums/alertMessages';
 import { H2 } from '../../components/text/text-styles';
 import { Routes } from '../../utils/enums/routes';
 
@@ -27,7 +26,6 @@ const ForgotPasswordForm = () => {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
 
   const submitData = (data: ForgotPasswordData) => {
     setIsLoading(true);
@@ -41,27 +39,15 @@ const ForgotPasswordForm = () => {
         }
       })
       .catch((err) => {
-        setError(err.response?.data?.message);
+        toast.error(err.response?.data?.message);
       })
       .finally(() => setIsLoading(false));
-  };
-
-  const handleAlertClose = () => {
-    setError('');
   };
 
   return (
     <FormContainer>
       <H2>Send email</H2>
       <Base onSubmit={handleSubmit(submitData)}>
-        {error && (
-          <AlertPortal
-            type={AlertMessage.ERRROR}
-            title="Error"
-            message={error}
-            onClose={handleAlertClose}
-          />
-        )}
         <InputFieldWrapper>
           <InputField
             placeholder="Enter your email"

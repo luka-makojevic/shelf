@@ -1,8 +1,6 @@
 import authServices from '../services/authServices';
-import { LocalStorage } from '../services/localStorage';
 import { useAppDispatch } from '../store/hooks';
-import { setLoading } from '../store/loadingReducer';
-import { removeUser, setUser } from '../store/userReducer';
+import { removeUser } from '../store/userReducer';
 import {
   LoginData,
   LogoutData,
@@ -10,6 +8,7 @@ import {
   MicrosoftRegisterData,
   RegisterData,
 } from '../interfaces/dataTypes';
+import instance from '../api/axiosInstance';
 
 export const useAuth = () => {
   const dispatch = useAppDispatch();
@@ -17,10 +16,8 @@ export const useAuth = () => {
   const login = (
     data: LoginData,
     onSuccess: () => void,
-    onError: () => void
+    onError: (err: string) => void
   ) => {
-    dispatch(setLoading(true));
-
     authServices
       .login(data)
       .then((res) => {
@@ -30,20 +27,12 @@ export const useAuth = () => {
             'refreshToken',
             JSON.stringify(res.data.jwtRefreshToken)
           );
-
+          instance.defaults.headers.common.Authorization = `Bearer ${res.data.jwtToken}`;
           onSuccess();
         }
       })
-      .catch(() => {
-        dispatch(removeUser());
-        onError();
-      })
-      .finally(() => {
-        dispatch(setLoading(false));
-        const user = LocalStorage.get('user')
-          ? JSON.parse(LocalStorage.get('user') || '')
-          : null;
-        dispatch(setUser(user));
+      .catch((err) => {
+        onError(err.response?.data?.message);
       });
   };
 
@@ -52,7 +41,6 @@ export const useAuth = () => {
     onSuccess: () => void,
     onError: (error: string) => void
   ) => {
-    dispatch(setLoading(true));
     authServices
       .microsoftLogin(data)
       .then((res) => {
@@ -62,19 +50,12 @@ export const useAuth = () => {
             'refreshToken',
             JSON.stringify(res.data.jwtRefreshToken)
           );
+          instance.defaults.headers.common.Authorization = `Bearer ${res.data.jwtToken}`;
           onSuccess();
         }
       })
       .catch((err) => {
-        dispatch(removeUser());
         onError(err.response?.data.message);
-      })
-      .finally(() => {
-        dispatch(setLoading(false));
-        const user = LocalStorage.get('user')
-          ? JSON.parse(LocalStorage.get('user') || '')
-          : null;
-        dispatch(setUser(user));
       });
   };
 
@@ -83,28 +64,9 @@ export const useAuth = () => {
     onSuccess: () => void,
     onError: (error: string) => void
   ) => {
-    dispatch(setLoading(true));
     authServices
       .register(data)
       .then(() => {
-        onSuccess();
-      })
-      .catch((err) => {
-        onError(err.response?.data.message);
-      })
-      .finally(() => dispatch(setLoading(false)));
-  };
-
-  const logout = (
-    data: LogoutData,
-    onSuccess: () => void,
-    onError: (error: string) => void
-  ) => {
-    authServices
-      .logout(data)
-      .then(() => {
-        LocalStorage.clear();
-        dispatch(removeUser());
         onSuccess();
       })
       .catch((err) => {
@@ -117,7 +79,6 @@ export const useAuth = () => {
     onSuccess: () => void,
     onError: (error: string) => void
   ) => {
-    dispatch(setLoading(true));
     authServices
       .microsoftRegister(data)
       .then(() => {
@@ -125,8 +86,28 @@ export const useAuth = () => {
       })
       .catch((err) => {
         onError(err.response?.data.message);
+      });
+  };
+
+  const logout = (
+    data: LogoutData,
+    onSuccess: () => void,
+    onError: (error: string) => void
+  ) => {
+    authServices
+      .logout(data)
+      .then(() => {
+        delete instance.defaults.headers.common.Authorization;
+        localStorage.clear();
+        dispatch(removeUser());
+        onSuccess();
       })
-      .finally(() => dispatch(setLoading(false)));
+      .catch((err) => {
+        delete instance.defaults.headers.common.Authorization;
+        localStorage.clear();
+        dispatch(removeUser());
+        onError(err.response?.data.message);
+      });
   };
 
   return { login, microsoftLogin, register, microsoftRegister, logout };

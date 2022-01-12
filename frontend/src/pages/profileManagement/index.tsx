@@ -1,16 +1,16 @@
 /* eslint-disable no-plusplus */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { AiFillEdit } from 'react-icons/ai';
+import { toast } from 'react-toastify';
 import { Header } from '../../components';
-import { Title } from '../../components/alert/alert-styles';
 import { Base, InputFieldWrapper } from '../../components/form/form-styles';
+import { ProfilePicture } from '../../components/header/header-styles';
 import { Container, Wrapper } from '../../components/layout/layout.styles';
 import Modal from '../../components/modal';
 import UploadPictureModal from '../../components/modal/uploadPictureModal';
 import {
   ProfileLeft,
-  ProfileImage,
   ProfileWrapper,
   EditImageContainer,
   ProfileImageContainer,
@@ -18,6 +18,7 @@ import {
   ProfileRight,
   ButtonWrapper,
 } from '../../components/profile/profile.styles';
+import { H2 } from '../../components/text/text-styles';
 import { Button } from '../../components/UI/button';
 import { InputField } from '../../components/UI/input/InputField';
 import {
@@ -25,46 +26,48 @@ import {
   ManageProfileFormData,
 } from '../../interfaces/dataTypes';
 import userServices from '../../services/userServices';
-// import { useAppSelector } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { setUser } from '../../store/userReducer';
 import { theme } from '../../theme';
 import { config } from '../../utils/validation/config/manageProfileValidationConfig';
 
-const user = {
-  id: 1,
-  firstName: 'Sanja',
-  lastName: 'Nikolic',
-  email: 'sanja@nikolic.com',
-  createdAt: new Date(),
-  password: 'sanjaNikolic@1',
-};
-
 const Profile = () => {
-  //   const user = useAppSelector((state) => state.user.user); - get user from global storage
+  const user = useAppSelector((state) => state.user.user);
+  const passwordDefault = 'passwordD@123';
   const {
     register,
     watch,
     handleSubmit,
-    reset,
+    setValue,
     formState: { errors },
-  } = useForm<ManageProfileFormData>({
-    defaultValues: {
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      password: user.password,
-      confirmPassword: user.password,
-    },
-  });
-  const manageProfileFieldConfig: ManageProfileFieldConfig[] = config(watch);
+  } = useForm<ManageProfileFormData>();
 
+  const manageProfileFieldConfig: ManageProfileFieldConfig[] = config(watch);
   const [isDisabled, setIsDisabled] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useAppDispatch();
+
+  const resetPassword = () => {
+    setValue('password', passwordDefault, { shouldValidate: true });
+    setValue('confirmPassword', passwordDefault, { shouldValidate: true });
+  };
+
+  useEffect(() => {
+    if (user) {
+      setValue('firstName', user.firstName, { shouldValidate: true });
+      setValue('lastName', user.lastName, { shouldValidate: true });
+      setValue('email', user.email, { shouldValidate: true });
+      resetPassword();
+    }
+  }, [user]);
 
   const handleToggleDisability = () => {
     setIsDisabled(!isDisabled);
+    setValue('password', '', { shouldValidate: true });
+    setValue('confirmPassword', '', { shouldValidate: true });
   };
   const handleCancelEditProfile = () => {
-    reset();
+    resetPassword();
     setIsDisabled(!isDisabled);
   };
   const handleOpenModal = () => {
@@ -74,38 +77,65 @@ const Profile = () => {
     setIsOpen(false);
   };
 
-  const onSubmit = ({
-    firstName,
-    lastName,
-    email,
-    password,
-  }: ManageProfileFormData) => {
+  const onSubmit = (data: ManageProfileFormData) => {
+    let newPassword: string | null = data.password.trim();
+    let newFirstName: string | null = data.firstName.trim();
+    let newLastName: string | null = data.lastName.trim();
+
     if (
       (user &&
-        firstName === user.firstName &&
-        lastName === user.lastName &&
-        email === user.email &&
-        password === user.password) ||
-      (firstName.trim().split('').join('') === '' &&
-        lastName.trim().split('').join('') === '' &&
-        email.trim().split('').join('') === '' &&
-        password.trim().split('').join('') === '')
+        newFirstName === user.firstName &&
+        newLastName === user.lastName &&
+        newPassword === '') ||
+      (newFirstName === '' && newLastName === '' && newPassword === '')
     ) {
-      reset();
       handleToggleDisability();
+      resetPassword();
       return;
     }
 
+    if (newPassword === '') {
+      newPassword = null;
+    }
+    if (newFirstName === user?.firstName) {
+      newFirstName = null;
+    }
+    if (newLastName === user?.lastName) {
+      newLastName = null;
+    }
+
     userServices
-      .updateProfile({ lastName, firstName, email, password })
-      .then((/* res */) => {
-        // TODO - add logic for when successful
+      .updateProfile(
+        {
+          password: newPassword,
+          firstName: newFirstName,
+          lastName: newLastName,
+        },
+        20
+      )
+      .then((res) => {
+        if (user) {
+          setValue('firstName', res.data.firstName, { shouldValidate: true });
+          setValue('lastName', res.data.lastName, { shouldValidate: true });
+          setValue('email', res.data.email, { shouldValidate: true });
+
+          dispatch(
+            setUser({
+              ...user,
+              firstName: data.firstName,
+              lastName: data.lastName,
+            })
+          );
+        }
+
+        toast.success('User successfully updated');
       })
-      .catch((/* err */) => {
-        // TODO - add logic for when error
+      .catch((err) => {
+        toast.success(err.response?.data?.message);
       })
       .finally(() => {
         handleToggleDisability();
+        resetPassword();
       });
   };
 
@@ -116,31 +146,30 @@ const Profile = () => {
           <UploadPictureModal onCloseModal={handleCloseModal} />
         </Modal>
       )}
-      <Header hideProfile position="absolute" />
+      <Header position="absolute" />
       <Wrapper>
         <Container>
           <ProfileWrapper>
             <ProfileLeft>
               <ProfileImageContainer>
-                <ProfileImage
-                  src="./assets/images/profile.jpg"
-                  alt="profile.jpg"
-                />
+                <ProfilePicture />
                 <EditImageContainer>
                   <AiFillEdit size={theme.space.lg} onClick={handleOpenModal} />
                 </EditImageContainer>
               </ProfileImageContainer>
-              <About>Member since {user?.createdAt.toLocaleDateString()}</About>
+              <About>Member since March</About>
             </ProfileLeft>
             <ProfileRight>
               <Base onSubmit={handleSubmit(onSubmit)}>
-                <Title>My Profile</Title>
+                <H2>My Profile</H2>
                 <InputFieldWrapper>
                   {manageProfileFieldConfig.map(
                     (fieldConfig: ManageProfileFieldConfig) => (
                       <InputField
                         key={fieldConfig.name}
-                        disabled={isDisabled}
+                        disabled={
+                          fieldConfig.name === 'email' ? true : isDisabled
+                        }
                         error={errors[fieldConfig.name]}
                         type={fieldConfig.type}
                         {...register(fieldConfig.name, fieldConfig.validations)}
