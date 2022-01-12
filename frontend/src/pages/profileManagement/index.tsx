@@ -14,7 +14,6 @@ import {
   ProfileWrapper,
   EditImageContainer,
   ProfileImageContainer,
-  About,
   ProfileRight,
   ButtonWrapper,
 } from '../../components/profile/profile.styles';
@@ -25,6 +24,7 @@ import {
   ManageProfileFieldConfig,
   ManageProfileFormData,
 } from '../../interfaces/dataTypes';
+import fileServices from '../../services/fileServices';
 import userServices from '../../services/userServices';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setUser } from '../../store/userReducer';
@@ -46,6 +46,7 @@ const Profile = () => {
   const [isDisabled, setIsDisabled] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useAppDispatch();
+  const imgUrl = fileServices.getProfilePicture(user?.id);
 
   const resetPassword = () => {
     setValue('password', passwordDefault, { shouldValidate: true });
@@ -152,12 +153,12 @@ const Profile = () => {
           <ProfileWrapper>
             <ProfileLeft>
               <ProfileImageContainer>
-                <ProfilePicture />
+                <ProfilePicture imgUrl={imgUrl} size={theme.space.xxl} />
                 <EditImageContainer>
                   <AiFillEdit size={theme.space.lg} onClick={handleOpenModal} />
                 </EditImageContainer>
               </ProfileImageContainer>
-              <About>Member since March</About>
+              {/* <About>Member since March</About> TODO - get createdAt from BE */}
             </ProfileLeft>
             <ProfileRight>
               <Base onSubmit={handleSubmit(onSubmit)}>

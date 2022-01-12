@@ -18,4 +18,5 @@ export interface HeaderContainerProps {
 
 export interface ProfilePictureProps {
   imgUrl: string;
+  size?: string;
 }

@@ -32,11 +32,13 @@ const UploadPictureModal = ({ onCloseModal }: UploadPictureModalProps) => {
     const { files } = e.target;
 
     if (files?.length === 0) {
-      return; // if no image is selected keep previous image in state
+      return;
     }
 
     if (files) {
-      const extension = files[0].name.substring(files[0].name.lastIndexOf('.'));
+      const extension = files[0].name
+        .substring(files[0].name.lastIndexOf('.'))
+        .toLowerCase();
       if (
         extension !== '.jpg' &&
         extension !== '.jpeg' &&
@@ -84,11 +86,11 @@ const UploadPictureModal = ({ onCloseModal }: UploadPictureModalProps) => {
 
     userServices
       .uploadProfilePicture(formData, options)
-      .then(() => {
-        // TODO - add logic for when successful
+      .then((res) => {
+        toast.success(res.data.message);
       })
-      .catch(() => {
-        // TODO - add logic for when error
+      .catch((err) => {
+        toast.error(err.response?.data?.message);
       });
   };
 
@@ -109,7 +111,7 @@ const UploadPictureModal = ({ onCloseModal }: UploadPictureModalProps) => {
               src={previewImage}
               alt="profileImage.jpg"
               id="qa-profileImage"
-              style={{ height: '200px' }}
+              style={{ height: '100%', width: '100%', objectFit: 'contain' }}
             />
           </ImageWrapper>
         ) : (

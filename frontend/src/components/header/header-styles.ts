@@ -51,6 +51,8 @@ export const ProfilePicture = styled.div<ProfilePictureProps>`
   background-size: contain;
   background-repeat: no-repeat;
   cursor: pointer;
+  height: ${({ size }) => size};
+  width: ${({ size }) => size};
 `;
 
 export const ProfileContainer = styled.div<ProfileProps>`

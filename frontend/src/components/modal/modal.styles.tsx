@@ -19,6 +19,7 @@ export const Backdrop = styled.div`
 
 export const ModalContainer = styled.div`
   min-width: 300px;
+  max-width: 500px;
   position: absolute;
 
   background-color: ${theme.colors.white};

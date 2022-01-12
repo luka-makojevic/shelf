@@ -71,6 +71,7 @@ export const AddedFilesIconButton = styled.button`
 export const ImageWrapper = styled.div`
   position: relative;
   height: 200px;
+  max-width: 700px;
   display: flex;
   flex-direction: column;
   align-items: center;
