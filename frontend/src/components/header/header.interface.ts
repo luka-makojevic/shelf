@@ -15,3 +15,7 @@ export type HeaderProps = {
 export interface HeaderContainerProps {
   position?: string;
 }
+
+export interface ProfilePictureProps {
+  imgUrl: string;
+}
