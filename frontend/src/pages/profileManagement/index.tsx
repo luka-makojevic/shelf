@@ -60,6 +60,20 @@ const Profile = () => {
   const [isDisabled, setIsDisabled] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
 
+  const handleToggleDisability = () => {
+    setIsDisabled(!isDisabled);
+  };
+  const handleCancelEditProfile = () => {
+    reset();
+    setIsDisabled(!isDisabled);
+  };
+  const handleOpenModal = () => {
+    setIsOpen(true);
+  };
+  const handleCloseModal = () => {
+    setIsOpen(false);
+  };
+
   const onSubmit = ({
     firstName,
     lastName,
@@ -78,39 +92,21 @@ const Profile = () => {
         password.trim().split('').join('') === '')
     ) {
       reset();
-      console.log('staje');
+      handleToggleDisability();
       return;
     }
-    console.log('ide dalje');
 
     userServices
       .updateProfile({ lastName, firstName, email, password })
-      .then((res) => {
-        console.log(res);
+      .then((/* res */) => {
+        // TODO - add logic for when successful
       })
-      .catch((err) => console.log(err))
-      .finally(() => reset());
-  };
-
-  const handleToggleDisability = () => {
-    if (!isDisabled && Object.keys(errors).length !== 0) {
-      return;
-    }
-
-    setIsDisabled(!isDisabled);
-  };
-  const handleCancelEditProfile = () => {
-    reset();
-    setIsDisabled(!isDisabled);
-  };
-
-  const handleUpdateProfilePicture = () => {
-    // TODO - add update profile picture logic
-    setIsOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsOpen(false);
+      .catch((/* err */) => {
+        // TODO - add logic for when error
+      })
+      .finally(() => {
+        handleToggleDisability();
+      });
   };
 
   return (
@@ -131,10 +127,7 @@ const Profile = () => {
                   alt="profile.jpg"
                 />
                 <EditImageContainer>
-                  <AiFillEdit
-                    size={theme.space.lg}
-                    onClick={handleUpdateProfilePicture}
-                  />
+                  <AiFillEdit size={theme.space.lg} onClick={handleOpenModal} />
                 </EditImageContainer>
               </ProfileImageContainer>
               <About>Member since {user?.createdAt.toLocaleDateString()}</About>
@@ -158,11 +151,13 @@ const Profile = () => {
 
                 <ButtonWrapper>
                   <Button
-                    type={!isDisabled ? 'button' : 'submit'}
+                    type="button"
                     onClick={handleToggleDisability}
+                    disabled={!isDisabled}
                   >
-                    {isDisabled ? 'Edit' : 'Update'}
+                    Edit
                   </Button>
+                  {!isDisabled && <Button type="submit">Update</Button>}
                   <Button
                     disabled={isDisabled}
                     type="button"

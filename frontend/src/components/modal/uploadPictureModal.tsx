@@ -87,8 +87,12 @@ const UploadPictureModal = ({ onCloseModal }: UploadPictureModalProps) => {
 
     userServices
       .uploadProfilePicture(formData, options)
-      .then(() => console.log('ok'))
-      .catch(() => console.log('nope'));
+      .then(() => {
+        // TODO - add logic for when successful
+      })
+      .catch(() => {
+        // TODO - add logic for when error
+      });
   };
 
   return (
