@@ -14,28 +14,6 @@ export const config = (
     name: 'email',
     validations: {},
   },
-  {
-    type: 'text',
-    placeholder: 'First Name',
-    name: 'firstName',
-    validations: {
-      maxLength: {
-        value: 50,
-        message: 'First name can not be longer than 50 characters',
-      },
-    },
-  },
-  {
-    type: 'text',
-    placeholder: 'Last Name',
-    name: 'lastName',
-    validations: {
-      maxLength: {
-        value: 50,
-        message: 'Last name can not be longer than 50 characters',
-      },
-    },
-  },
 
   {
     type: 'password',
@@ -63,6 +41,28 @@ export const config = (
     validations: {
       validate: (value: string) =>
         value === watch('password') || 'Passwords must match',
+    },
+  },
+  {
+    type: 'text',
+    placeholder: 'First Name',
+    name: 'firstName',
+    validations: {
+      maxLength: {
+        value: 50,
+        message: 'First name can not be longer than 50 characters',
+      },
+    },
+  },
+  {
+    type: 'text',
+    placeholder: 'Last Name',
+    name: 'lastName',
+    validations: {
+      maxLength: {
+        value: 50,
+        message: 'Last name can not be longer than 50 characters',
+      },
     },
   },
 ];

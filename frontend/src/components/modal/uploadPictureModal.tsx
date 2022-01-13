@@ -2,7 +2,7 @@ import { ChangeEvent, DragEvent, useState } from 'react';
 import { BsCloudUpload } from 'react-icons/bs';
 import { RiCloseCircleFill } from 'react-icons/ri';
 import { toast } from 'react-toastify';
-import userServices from '../../services/userServices';
+import fileServices from '../../services/fileServices';
 import { theme } from '../../theme';
 import { ButtonWrapper } from '../profile/profile.styles';
 import { Button } from '../UI/button';
@@ -16,9 +16,15 @@ import {
 
 interface UploadPictureModalProps {
   onCloseModal: () => void;
+  id: number;
+  onUpdatePicture: (url: string) => void;
 }
 
-const UploadPictureModal = ({ onCloseModal }: UploadPictureModalProps) => {
+const UploadPictureModal = ({
+  onCloseModal,
+  id,
+  onUpdatePicture,
+}: UploadPictureModalProps) => {
   const [image, setImage] = useState<File | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const [previewImage, setPreviewImage] = useState(
@@ -44,7 +50,7 @@ const UploadPictureModal = ({ onCloseModal }: UploadPictureModalProps) => {
         extension !== '.jpeg' &&
         extension !== '.png'
       ) {
-        toast.error('You must select an image');
+        toast.error('You must select a file of type .jpg, .jpeg or .png');
         return;
       }
       setImage(files[0]);
@@ -77,17 +83,22 @@ const UploadPictureModal = ({ onCloseModal }: UploadPictureModalProps) => {
     }
     const formData = new FormData();
     const options = {
+      headers: {
+        'Shelf-Header': 'File-request',
+      },
       signal: abortController.signal,
     };
 
     if (image) {
-      formData.append(image.name, image);
+      formData.append('image', image);
     }
 
-    userServices
-      .uploadProfilePicture(formData, options)
+    fileServices
+      .uploadProfilePicture(id, formData, options)
       .then((res) => {
         toast.success(res.data.message);
+        onUpdatePicture(URL.createObjectURL(image));
+        onCloseModal();
       })
       .catch((err) => {
         toast.error(err.response?.data?.message);

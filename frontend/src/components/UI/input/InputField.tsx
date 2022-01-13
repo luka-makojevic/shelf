@@ -20,7 +20,7 @@ export const InputField = React.forwardRef(
           type={!passwordShown || disabled ? type : 'text'}
           ref={ref}
           disabled={disabled}
-          autoComplete="off"
+          // autoComplete="off"
           {...restProps}
         />
         {type === 'password' &&

@@ -1,4 +1,3 @@
-/* eslint-disable no-plusplus */
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { AiFillEdit } from 'react-icons/ai';
@@ -30,6 +29,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setUser } from '../../store/userReducer';
 import { theme } from '../../theme';
 import { config } from '../../utils/validation/config/manageProfileValidationConfig';
+import PasswordRequirementsTooltip from '../register/passwordRequirementsTooltip';
 
 const Profile = () => {
   const user = useAppSelector((state) => state.user.user);
@@ -45,8 +45,12 @@ const Profile = () => {
   const manageProfileFieldConfig: ManageProfileFieldConfig[] = config(watch);
   const [isDisabled, setIsDisabled] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const [isPasswordTooltipVisible, setIsPasswordTooltipVisible] =
+    useState(false);
+  const [imgUrl, setImgUrl] = useState<string>(
+    fileServices.getProfilePicture(user?.id)
+  );
   const dispatch = useAppDispatch();
-  const imgUrl = fileServices.getProfilePicture(user?.id);
 
   const resetPassword = () => {
     setValue('password', passwordDefault, { shouldValidate: true });
@@ -59,10 +63,23 @@ const Profile = () => {
       setValue('lastName', user.lastName, { shouldValidate: true });
       setValue('email', user.email, { shouldValidate: true });
       resetPassword();
+      setImgUrl(fileServices.getProfilePicture(user.id));
     }
   }, [user]);
 
-  const handleToggleDisability = () => {
+  const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (e.target.name === 'password') {
+      setIsPasswordTooltipVisible(true);
+    }
+  };
+
+  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (e.target.name === 'password') {
+      setIsPasswordTooltipVisible(false);
+    }
+  };
+
+  const handleToggleIsDisabled = () => {
     setIsDisabled(!isDisabled);
     setValue('password', '', { shouldValidate: true });
     setValue('confirmPassword', '', { shouldValidate: true });
@@ -79,43 +96,42 @@ const Profile = () => {
   };
 
   const onSubmit = (data: ManageProfileFormData) => {
-    let newPassword: string | null = data.password.trim();
-    let newFirstName: string | null = data.firstName.trim();
-    let newLastName: string | null = data.lastName.trim();
+    if (user) {
+      let newPassword: string | null = data.password.trim();
+      let newFirstName: string | null = data.firstName.trim();
+      let newLastName: string | null = data.lastName.trim();
 
-    if (
-      (user &&
-        newFirstName === user.firstName &&
-        newLastName === user.lastName &&
-        newPassword === '') ||
-      (newFirstName === '' && newLastName === '' && newPassword === '')
-    ) {
-      handleToggleDisability();
-      resetPassword();
-      return;
-    }
+      if (
+        (newFirstName === user.firstName &&
+          newLastName === user.lastName &&
+          newPassword === '') ||
+        (newFirstName === '' && newLastName === '' && newPassword === '')
+      ) {
+        handleToggleIsDisabled();
+        resetPassword();
+        return;
+      }
 
-    if (newPassword === '') {
-      newPassword = null;
-    }
-    if (newFirstName === user?.firstName) {
-      newFirstName = null;
-    }
-    if (newLastName === user?.lastName) {
-      newLastName = null;
-    }
+      if (newPassword === '') {
+        newPassword = null;
+      }
+      if (newFirstName === user?.firstName) {
+        newFirstName = null;
+      }
+      if (newLastName === user?.lastName) {
+        newLastName = null;
+      }
 
-    userServices
-      .updateProfile(
-        {
-          password: newPassword,
-          firstName: newFirstName,
-          lastName: newLastName,
-        },
-        20
-      )
-      .then((res) => {
-        if (user) {
+      userServices
+        .updateProfile(
+          {
+            password: newPassword,
+            firstName: newFirstName,
+            lastName: newLastName,
+          },
+          user.id
+        )
+        .then((res) => {
           setValue('firstName', res.data.firstName, { shouldValidate: true });
           setValue('lastName', res.data.lastName, { shouldValidate: true });
           setValue('email', res.data.email, { shouldValidate: true });
@@ -127,24 +143,32 @@ const Profile = () => {
               lastName: data.lastName,
             })
           );
-        }
 
-        toast.success('User successfully updated');
-      })
-      .catch((err) => {
-        toast.success(err.response?.data?.message);
-      })
-      .finally(() => {
-        handleToggleDisability();
-        resetPassword();
-      });
+          toast.success('User successfully updated');
+        })
+        .catch((err) => {
+          toast.success(err.response?.data?.message);
+        })
+        .finally(() => {
+          handleToggleIsDisabled();
+          resetPassword();
+        });
+    }
+  };
+
+  const handleUpdateImage = (url: string) => {
+    setImgUrl(url);
   };
 
   return (
     <>
-      {isOpen && (
+      {isOpen && user && (
         <Modal onCloseModal={handleCloseModal}>
-          <UploadPictureModal onCloseModal={handleCloseModal} />
+          <UploadPictureModal
+            onCloseModal={handleCloseModal}
+            id={user.id}
+            onUpdatePicture={handleUpdateImage}
+          />
         </Modal>
       )}
       <Header position="absolute" />
@@ -153,12 +177,13 @@ const Profile = () => {
           <ProfileWrapper>
             <ProfileLeft>
               <ProfileImageContainer>
-                <ProfilePicture imgUrl={imgUrl} size={theme.space.xxl} />
+                {imgUrl && (
+                  <ProfilePicture imgUrl={imgUrl} size={theme.space.xxl} />
+                )}
                 <EditImageContainer>
                   <AiFillEdit size={theme.space.lg} onClick={handleOpenModal} />
                 </EditImageContainer>
               </ProfileImageContainer>
-              {/* <About>Member since March</About> TODO - get createdAt from BE */}
             </ProfileLeft>
             <ProfileRight>
               <Base onSubmit={handleSubmit(onSubmit)}>
@@ -174,15 +199,18 @@ const Profile = () => {
                         error={errors[fieldConfig.name]}
                         type={fieldConfig.type}
                         {...register(fieldConfig.name, fieldConfig.validations)}
+                        onFocus={handleInputFocus}
+                        onBlur={handleInputBlur}
                       />
                     )
                   )}
+                  {isPasswordTooltipVisible && <PasswordRequirementsTooltip />}
                 </InputFieldWrapper>
 
                 <ButtonWrapper>
                   <Button
                     type="button"
-                    onClick={handleToggleDisability}
+                    onClick={handleToggleIsDisabled}
                     disabled={!isDisabled}
                   >
                     Edit

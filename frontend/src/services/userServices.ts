@@ -1,4 +1,3 @@
-import { AxiosRequestConfig } from 'axios';
 import instance from '../api/axiosInstance';
 import {
   ForgotPasswordData,
@@ -25,15 +24,11 @@ const getUser = () => instance.get(`${API_URL_ACCOUNT}/users/me`);
 const updateProfile = (data: UpdateProfileData, id: number) =>
   instance.put(`${API_URL_ACCOUNT}/users/${id}`, data);
 
-const uploadProfilePicture = (data: FormData, options: AxiosRequestConfig) =>
-  instance.put(`${API_URL_ACCOUNT}/users/update/photo`, data, options);
-
 export default {
   emailConfirmation,
   resendEmailVerification,
   forgotPassword,
   resetPassword,
   updateProfile,
-  uploadProfilePicture,
   getUser,
 };
