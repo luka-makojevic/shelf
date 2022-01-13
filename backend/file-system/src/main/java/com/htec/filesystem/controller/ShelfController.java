@@ -77,4 +77,12 @@ public class ShelfController {
 
         return ResponseEntity.ok(shelfService.getFirstLevelTrash(authUser.getId()));
     }
+
+    @GetMapping("/check/{shelfId}")
+    public ResponseEntity<Object> checkShelfAccessRights(@AuthenticationUser AuthUser authUser, @PathVariable Long shelfId) {
+
+        shelfService.checkShelfAccessRights(shelfId, authUser.getId());
+
+        return ResponseEntity.ok().build();
+    }
 }
