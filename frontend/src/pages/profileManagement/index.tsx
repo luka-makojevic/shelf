@@ -229,22 +229,21 @@ const Profile = () => {
                 </InputFieldWrapper>
 
                 <ButtonWrapper>
-                  <Button
-                    type="button"
-                    onClick={handleNotDisabled}
-                    visible={!isDisabled}
-                  >
-                    Edit
-                  </Button>
+                  {isDisabled && (
+                    <Button type="button" onClick={handleNotDisabled}>
+                      Edit
+                    </Button>
+                  )}
                   {!isDisabled && <Button type="submit">Update</Button>}
-                  <Button
-                    visible={isDisabled}
-                    type="button"
-                    variant={isDisabled ? 'secondary' : 'secondary'}
-                    onClick={handleCancelEditProfile}
-                  >
-                    Cancel
-                  </Button>
+                  {!isDisabled && (
+                    <Button
+                      type="button"
+                      variant={isDisabled ? 'secondary' : 'secondary'}
+                      onClick={handleCancelEditProfile}
+                    >
+                      Cancel
+                    </Button>
+                  )}
                 </ButtonWrapper>
               </Base>
             </ProfileRight>

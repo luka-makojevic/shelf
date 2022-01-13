@@ -20,8 +20,6 @@ export const StyledButton = styled('button')<ButtonStyleProps>`
     color: ${theme.colors.primary};
   }
 
-  display: ${({ visible }) => (visible ? 'none' : 'inline')};
-
   ${(props) =>
     props.size === 'large' &&
     css`

@@ -3,7 +3,6 @@ export interface ButtonStyleProps {
   variant?: string;
   size?: string;
   fullwidth?: boolean;
-  visible?: boolean;
 }
 
 export interface ButtonProps {
