@@ -1,42 +1,34 @@
+import { toast } from 'react-toastify';
 import { ModalButtonDivider } from '../layout/layout.styles';
 import { Description } from '../text/text-styles';
 import { Button } from '../UI/button';
-import { DeleteShelfModalProps } from './modal.interfaces';
+import { DeleteModalProps } from './modal.interfaces';
 import shelfServices from '../../services/shelfServices';
-import { useShelf } from '../../hooks/shelfHooks';
 import { DeleteModalBody } from './modal.styles';
 import fileServices from '../../services/fileServices';
+import folderService from '../../services/folderService';
 
-const DeleteShelfModal = ({
+const DeleteModal = ({
   onCloseModal,
-  onError,
-  onDelete,
+  onDeleteShelf,
+  onDeleteFiles,
   shelf,
   message,
   selectedData,
-}: DeleteShelfModalProps) => {
+}: DeleteModalProps) => {
   const handleCloseModal = () => {
     onCloseModal();
   };
 
-  const { getShelves } = useShelf();
-
   const handleDelete = () => {
-    if (shelf) {
+    if (shelf && onDeleteShelf) {
       shelfServices
         .hardDeleteShelf(shelf.id)
         .then(() => {
-          getShelves(
-            () => {},
-            () => {}
-          );
+          onDeleteShelf(shelf);
         })
         .catch((err) => {
-          if (err.response?.status === 500) {
-            onError('Internal server error');
-            return;
-          }
-          onError(err.response?.data?.message);
+          toast.error(err.response?.data?.message);
         });
     }
 
@@ -49,31 +41,23 @@ const DeleteShelfModal = ({
         else fileIds.push(item.id);
       });
 
-      if (fileIds.length > 0) {
+      if (fileIds.length > 0 && onDeleteFiles) {
         fileServices
           .hardDeleteFile(fileIds)
           .then(() => {
-            onDelete(selectedData);
+            onDeleteFiles(selectedData);
           })
           .catch((err) => {
-            if (err.response?.status === 500) {
-              onError('Internal server error');
-              return;
-            }
-            onError(err.response?.data?.message);
+            toast.error(err.response?.data?.message);
           });
       }
 
-      if (folderIds.length > 0) {
-        fileServices
+      if (folderIds.length > 0 && onDeleteFiles) {
+        folderService
           .hardDeleteFolder(folderIds)
-          .then(() => onDelete(selectedData))
+          .then(() => onDeleteFiles(selectedData))
           .catch((err) => {
-            if (err.response?.status === 500) {
-              onError('Internal server error');
-              return;
-            }
-            onError(err.response?.data?.message);
+            toast.error(err.response?.data?.message);
           });
       }
     }
@@ -85,7 +69,7 @@ const DeleteShelfModal = ({
     <DeleteModalBody>
       <Description>
         {shelf &&
-          `Are you sure you want to delete '${shelf?.name}' shelf? This action will permanently delete all data inside this shelf!!!`}
+          `Are you sure you want to delete '${shelf?.name}' shelf? This action will permanently delete all data inside this shelf!`}
         {message}
       </Description>
       <ModalButtonDivider>
@@ -98,4 +82,4 @@ const DeleteShelfModal = ({
   );
 };
 
-export default DeleteShelfModal;
+export default DeleteModal;

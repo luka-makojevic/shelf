@@ -2,15 +2,16 @@ import { Dispatch, SetStateAction } from 'react';
 import { TableDataTypes } from '../../interfaces/dataTypes';
 
 export interface ShelfModalProps {
+  onGetData: () => void;
+  onEdit: (data: TableDataTypes, newName: string) => void;
   onCloseModal: Dispatch<SetStateAction<boolean>>;
-  onError: (value: SetStateAction<string>) => void;
   shelf: TableDataTypes | null;
 }
 
-export interface DeleteShelfModalProps {
+export interface DeleteModalProps {
   onCloseModal: () => void;
-  onError: (value: SetStateAction<string>) => void;
-  onDelete: (file: TableDataTypes[]) => void;
+  onDeleteShelf?: (shelf: TableDataTypes) => void;
+  onDeleteFiles?: (files: TableDataTypes[]) => void;
   shelf?: TableDataTypes | null;
   message?: string;
   selectedData?: TableDataTypes[];
@@ -29,11 +30,11 @@ export interface ModalProps {
 
 export interface FolderModalProps {
   onCloseModal: Dispatch<SetStateAction<boolean>>;
-  onError: (value: SetStateAction<string>) => void;
   shelfId: string | undefined;
   folderId: string | undefined;
   placeholder: string | undefined;
   buttonText: string | undefined;
   file?: TableDataTypes | null;
-  getData: () => void;
+  onGetData: () => void;
+  onEdit: (file: TableDataTypes, newName: string) => void;
 }

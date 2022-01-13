@@ -1,52 +1,91 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { API_URL_ACCOUNT } from './api';
+import { toast } from 'react-toastify';
+import { store } from '../store/store';
+import { setIsLoading } from '../store/loadingReducer';
+import { removeUser } from '../store/userReducer';
 
-const instance = axios.create({
-  baseURL: API_URL_ACCOUNT,
+const instanceConfig: AxiosRequestConfig = {
+  baseURL: process.env.REACT_APP_API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-});
+};
+let loadingCounter = 0;
+
+const token = JSON.parse(localStorage.getItem('token') || 'null');
+
+if (token) {
+  if (instanceConfig.headers)
+    instanceConfig.headers.Authorization = `Bearer ${token}`;
+}
+
+const instance = axios.create(instanceConfig);
 
 instance.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
-    const token = JSON.parse(localStorage.getItem('token') || '');
+  (config) => {
+    loadingCounter++;
+    if (loadingCounter === 1) store.dispatch(setIsLoading(true));
 
-    if (token) {
-      // eslint-disable-next-line no-param-reassign
-      if (config.headers) config.headers.Authorization = `Bearer ${token}`;
-    }
     return config;
   },
-  (error) => Promise.reject(error)
+  (err) => err
 );
 
 instance.interceptors.response.use(
-  (res) => res,
-  async (err) => {
+  (res) => {
+    loadingCounter--;
+    if (loadingCounter === 0) store.dispatch(setIsLoading(false));
+    return res;
+  },
+  (err) => {
     const originalConfig = err.config;
-    if (err.response.data.message === 'Token expired.') {
-      try {
-        const response = await axios.get(
-          `${API_URL_ACCOUNT}auth/refresh/token`,
+    loadingCounter--;
+    if (loadingCounter === 0) {
+      store.dispatch(setIsLoading(false));
+    }
+    if (err?.response?.status === 401) {
+      delete instance.defaults.headers.common.Authorization;
+      return instance
+        .post(
+          `/account/auth/refresh/token`,
+          JSON.parse(localStorage.getItem('refreshToken') || ''),
           {
             headers: {
-              Authorization: `Bearer ${JSON.parse(
-                localStorage.getItem('refreshToken') || ''
-              )}`,
+              'Content-Type': 'text/plain',
+              Authorization: '',
             },
           }
-        );
-
-        const { token: acccesToken } = response.data;
-        localStorage.setItem('token', JSON.stringify(acccesToken));
-
-        return await instance(originalConfig);
-      } catch (_error) {
-        return Promise.reject(_error);
-      }
+        )
+        .then((res) => {
+          localStorage.setItem('token', JSON.stringify(res?.data?.token));
+          instance.defaults.headers.common.Authorization = `Bearer ${res?.data?.token}`;
+          if (originalConfig.headers) {
+            originalConfig.headers.Authorization = `Bearer ${res?.data?.token}`;
+          }
+          return instance(originalConfig).then((response) =>
+            Promise.resolve(response)
+          );
+        })
+        .catch((error) => {
+          localStorage.clear();
+          delete instance.defaults.headers.common.Authorization;
+          store.dispatch(removeUser());
+          Promise.reject(error);
+        });
     }
 
+    if (err.response?.status === 404) {
+      toast.error(err.response?.data?.message);
+      return Promise.reject(err);
+    }
+    if (err.response?.status === 500) {
+      toast.error('Internal server error');
+      return Promise.reject(err);
+    }
+    if (err?.message === 'Network Error') {
+      toast.error('Network Error');
+      return Promise.reject(err);
+    }
     return Promise.reject(err);
   }
 );

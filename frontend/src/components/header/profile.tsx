@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../hooks/authHook';
-import { LocalStorage } from '../../services/localStorage';
+import fileServices from '../../services/fileServices';
 import { useAppSelector } from '../../store/hooks';
 import { PlainText, Link } from '../text/text-styles';
 import { Button } from '../UI/button';
@@ -14,8 +14,8 @@ const Profile = () => {
   const user = useAppSelector((state) => state.user.user);
 
   const data = {
-    jwtRefreshToken: LocalStorage.get('refreshToken') || '',
-    jwtToken: LocalStorage.get('token') || '',
+    jwtRefreshToken: JSON.parse(localStorage.getItem('refreshToken') || ''),
+    jwtToken: JSON.parse(localStorage.getItem('token') || ''),
   };
 
   const handleDropdownVisibility = () => {
@@ -50,13 +50,19 @@ const Profile = () => {
     };
   }, [dropDownRef, profileRef]);
 
+  const imgUrl = fileServices.getProfilePicture(user?.id);
+
   return (
     <>
-      <ProfilePicture ref={profileRef} onClick={handleDropdownVisibility} />
+      <ProfilePicture
+        imgUrl={imgUrl}
+        ref={profileRef}
+        onClick={handleDropdownVisibility}
+      />
       {showDropdown && (
         <DropDown ref={dropDownRef}>
           <div>
-            <ProfilePicture />
+            <ProfilePicture imgUrl={imgUrl} />
           </div>
           <ProfileInfoWrapper>
             <PlainText>

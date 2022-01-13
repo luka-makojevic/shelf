@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import { InputField } from '../../components/UI/input/InputField';
 import { H2 } from '../../components/text/text-styles';
 import {
@@ -15,8 +16,6 @@ import {
 } from '../../interfaces/dataTypes';
 import userServices from '../../services/userServices';
 
-import AlertPortal from '../../components/alert/alert';
-import { AlertMessage } from '../../utils/enums/alertMessages';
 import { Routes } from '../../utils/enums/routes';
 import { config } from '../../utils/validation/config/resetPasswordValidationConfig';
 
@@ -29,7 +28,6 @@ const ResetPasswordForm = () => {
   } = useForm();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
 
   const { jwtToken } = useParams();
 
@@ -47,27 +45,15 @@ const ResetPasswordForm = () => {
         navigation(Routes.LOGIN);
       })
       .catch((err) => {
-        setError(err.response?.data.message);
+        toast.error(err.response?.data.message);
       })
       .finally(() => setIsLoading(false));
-  };
-
-  const handleAlertClose = () => {
-    setError('');
   };
 
   return (
     <FormContainer>
       <H2>Reset Password</H2>
       <Base onSubmit={handleSubmit(onSubmit)}>
-        {error && (
-          <AlertPortal
-            type={AlertMessage.ERRROR}
-            title="Error"
-            message={error}
-            onClose={handleAlertClose}
-          />
-        )}
         <InputFieldWrapper>
           {registerFieldConfig.map((fieldConfig) => (
             <InputField
