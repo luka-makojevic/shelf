@@ -16,8 +16,11 @@ export const StyledButton = styled('button')<ButtonStyleProps>`
 
   &:disabled,
   &[disabled] {
-    display: none;
+    background-color: ${theme.colors.secondary};
+    color: ${theme.colors.primary};
   }
+
+  display: ${({ visible }) => (visible ? 'none' : 'inline')};
 
   ${(props) =>
     props.size === 'large' &&
@@ -38,26 +41,26 @@ export const StyledButton = styled('button')<ButtonStyleProps>`
     `}
 
     ${({ variant }) => {
-      switch (variant) {
-        case 'primary':
-          return css`
-            color: white;
-            background: ${theme.colors.primary};
-          `;
-        case 'secondary':
-          return css`
-            color: white;
-            background: ${theme.colors.secondary};
-          `;
-        case 'light':
-          return css`
-            color: ${theme.colors.primary};
-            background: white;
-          `;
-        default:
-          return null;
-      }
-    }}
+    switch (variant) {
+      case 'primary':
+        return css`
+          color: white;
+          background: ${theme.colors.primary};
+        `;
+      case 'secondary':
+        return css`
+          color: white;
+          background: ${theme.colors.secondary};
+        `;
+      case 'light':
+        return css`
+          color: ${theme.colors.primary};
+          background: white;
+        `;
+      default:
+        return null;
+    }
+  }}
 `;
 export const SpinnerButton = styled(StyledButton)`
   padding: 0;
@@ -95,26 +98,26 @@ export const StyledLink = styled(ReachRouterLink)<ButtonStyleProps>`
       width: 100%;
     `}    
     ${({ variant }) => {
-      switch (variant) {
-        case 'primary':
-          return css`
-            color: white;
-            background: ${theme.colors.primary};
-          `;
-        case 'secondary':
-          return css`
-            color: white;
-            background: ${theme.colors.secondary};
-          `;
-        case 'light':
-          return css`
-            color: ${theme.colors.primary};
-            background: white;
-          `;
-        default:
-          return null;
-      }
-    }}
+    switch (variant) {
+      case 'primary':
+        return css`
+          color: white;
+          background: ${theme.colors.primary};
+        `;
+      case 'secondary':
+        return css`
+          color: white;
+          background: ${theme.colors.secondary};
+        `;
+      case 'light':
+        return css`
+          color: ${theme.colors.primary};
+          background: white;
+        `;
+      default:
+        return null;
+    }
+  }}
 `;
 
 export const IconButton = styled(StyledButton)`

@@ -31,9 +31,11 @@ import { theme } from '../../theme';
 import { config } from '../../utils/validation/config/manageProfileValidationConfig';
 import PasswordRequirementsTooltip from '../register/passwordRequirementsTooltip';
 
+const passwordDefault = 'passwordD@123';
+
 const Profile = () => {
   const user = useAppSelector((state) => state.user.user);
-  const passwordDefault = 'passwordD@123';
+  const dispatch = useAppDispatch();
   const {
     register,
     watch,
@@ -50,18 +52,22 @@ const Profile = () => {
   const [imgUrl, setImgUrl] = useState<string>(
     fileServices.getProfilePicture(user?.id)
   );
-  const dispatch = useAppDispatch();
 
   const resetPassword = () => {
     setValue('password', passwordDefault, { shouldValidate: true });
     setValue('confirmPassword', passwordDefault, { shouldValidate: true });
   };
-
-  useEffect(() => {
+  const resetData = () => {
     if (user) {
       setValue('firstName', user.firstName, { shouldValidate: true });
       setValue('lastName', user.lastName, { shouldValidate: true });
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
       setValue('email', user.email, { shouldValidate: true });
+      resetData();
       resetPassword();
       setImgUrl(fileServices.getProfilePicture(user.id));
     }
@@ -72,20 +78,21 @@ const Profile = () => {
       setIsPasswordTooltipVisible(true);
     }
   };
-
   const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     if (e.target.name === 'password') {
       setIsPasswordTooltipVisible(false);
     }
   };
 
-  const handleToggleIsDisabled = () => {
+  const handleNotDisabled = () => {
     setIsDisabled(!isDisabled);
     setValue('password', '', { shouldValidate: true });
     setValue('confirmPassword', '', { shouldValidate: true });
   };
+
   const handleCancelEditProfile = () => {
     resetPassword();
+    resetData();
     setIsDisabled(!isDisabled);
   };
   const handleOpenModal = () => {
@@ -95,6 +102,8 @@ const Profile = () => {
     setIsOpen(false);
   };
 
+  const onlySpaces = (str: string) => /^\s*$/.test(str); // checks if user input a string of only space characters
+
   const onSubmit = (data: ManageProfileFormData) => {
     if (user) {
       let newPassword: string | null = data.password.trim();
@@ -102,23 +111,31 @@ const Profile = () => {
       let newLastName: string | null = data.lastName.trim();
 
       if (
-        (newFirstName === user.firstName &&
-          newLastName === user.lastName &&
-          newPassword === '') ||
-        (newFirstName === '' && newLastName === '' && newPassword === '')
+        newFirstName === user.firstName &&
+        newLastName === user.lastName &&
+        newPassword === ''
       ) {
-        handleToggleIsDisabled();
-        resetPassword();
+        handleCancelEditProfile();
         return;
       }
 
-      if (newPassword === '') {
+      if (newPassword === '' || onlySpaces(newPassword)) {
         newPassword = null;
       }
-      if (newFirstName === user?.firstName) {
+
+      if (
+        newFirstName === user?.firstName ||
+        newFirstName === '' ||
+        onlySpaces(newFirstName)
+      ) {
         newFirstName = null;
       }
-      if (newLastName === user?.lastName) {
+
+      if (
+        newLastName === user?.lastName ||
+        newLastName === '' ||
+        onlySpaces(newLastName)
+      ) {
         newLastName = null;
       }
 
@@ -132,15 +149,18 @@ const Profile = () => {
           user.id
         )
         .then((res) => {
-          setValue('firstName', res.data.firstName, { shouldValidate: true });
-          setValue('lastName', res.data.lastName, { shouldValidate: true });
-          setValue('email', res.data.email, { shouldValidate: true });
+          const fn =
+            res.data.firstName === null ? user.firstName : res.data.firstName;
+          const ln =
+            res.data.lastName === null ? user.lastName : res.data.lastName;
+          setValue('firstName', fn);
+          setValue('lastName', ln);
 
           dispatch(
             setUser({
               ...user,
-              firstName: data.firstName,
-              lastName: data.lastName,
+              firstName: fn,
+              lastName: ln,
             })
           );
 
@@ -150,7 +170,7 @@ const Profile = () => {
           toast.success(err.response?.data?.message);
         })
         .finally(() => {
-          handleToggleIsDisabled();
+          setIsDisabled(true);
           resetPassword();
         });
     }
@@ -196,6 +216,7 @@ const Profile = () => {
                         disabled={
                           fieldConfig.name === 'email' ? true : isDisabled
                         }
+                        placeholder={fieldConfig.placeholder}
                         error={errors[fieldConfig.name]}
                         type={fieldConfig.type}
                         {...register(fieldConfig.name, fieldConfig.validations)}
@@ -210,14 +231,14 @@ const Profile = () => {
                 <ButtonWrapper>
                   <Button
                     type="button"
-                    onClick={handleToggleIsDisabled}
-                    disabled={!isDisabled}
+                    onClick={handleNotDisabled}
+                    visible={!isDisabled}
                   >
                     Edit
                   </Button>
                   {!isDisabled && <Button type="submit">Update</Button>}
                   <Button
-                    disabled={isDisabled}
+                    visible={isDisabled}
                     type="button"
                     variant={isDisabled ? 'secondary' : 'secondary'}
                     onClick={handleCancelEditProfile}

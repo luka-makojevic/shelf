@@ -3,6 +3,7 @@ export interface ButtonStyleProps {
   variant?: string;
   size?: string;
   fullwidth?: boolean;
+  visible?: boolean;
 }
 
 export interface ButtonProps {
@@ -16,5 +17,6 @@ export interface ButtonProps {
   size?: string;
   fullwidth?: boolean;
   disabled?: boolean;
+  visible?: boolean;
   type?: 'button' | 'reset' | 'submit' | undefined;
 }

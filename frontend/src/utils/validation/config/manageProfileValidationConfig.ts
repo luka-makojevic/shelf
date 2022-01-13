@@ -48,10 +48,13 @@ export const config = (
     placeholder: 'First Name',
     name: 'firstName',
     validations: {
+      required: 'This field is required',
       maxLength: {
         value: 50,
         message: 'First name can not be longer than 50 characters',
       },
+      validate: (value: string) =>
+        !/^\s*$/.test(value) || 'You cannot leave only empty spaces ',
     },
   },
   {
@@ -59,10 +62,13 @@ export const config = (
     placeholder: 'Last Name',
     name: 'lastName',
     validations: {
+      required: 'This field is required',
       maxLength: {
         value: 50,
         message: 'Last name can not be longer than 50 characters',
       },
+      validate: (value: string) =>
+        !/^\s*$/.test(value) || 'You cannot leave only empty spaces ',
     },
   },
 ];
