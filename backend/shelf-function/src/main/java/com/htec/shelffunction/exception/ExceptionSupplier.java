@@ -24,4 +24,11 @@ public class ExceptionSupplier {
             LocalDateTime.now().format(formatter),
             ErrorMessages.NOT_FOUND.getErrorMessage()
     );
+
+    public static final Supplier<ShelfException> userNotAllowedToAccessShelf = () -> new ShelfException(
+            ErrorMessages.USER_NOT_ALLOWED_TO_ACCESS_THIS_SHELF.getErrorMessage(),
+            HttpStatus.FORBIDDEN.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.FORBIDDEN.getErrorMessage()
+    );
 }

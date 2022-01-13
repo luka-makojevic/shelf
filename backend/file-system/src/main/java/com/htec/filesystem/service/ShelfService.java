@@ -140,11 +140,7 @@ public class ShelfService {
 
     public ShelfContentResponseModel getShelfContent(Long shelfId, Long userId) {
 
-        ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
-                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
-
-        if (!Objects.equals(shelfEntity.getUserId(), userId))
-            throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
+        ShelfEntity shelfEntity = checkShelfAccessRights(shelfId, userId);
 
         List<ShelfItemDTO> dtoItems = new ArrayList<>();
 
@@ -206,5 +202,16 @@ public class ShelfService {
         breadCrumbDTOS.add(new BreadCrumbDTO("trash", userId));
 
         return new ShelfContentResponseModel(breadCrumbDTOS, trashItems);
+    }
+
+    public ShelfEntity checkShelfAccessRights(Long shelfId, Long userId) {
+
+        ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
+                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+
+        if (!Objects.equals(shelfEntity.getUserId(), userId))
+            throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
+
+        return shelfEntity;
     }
 }
