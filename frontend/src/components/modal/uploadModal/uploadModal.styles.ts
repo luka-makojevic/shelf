@@ -89,3 +89,9 @@ export const RemoveImageIconButton = styled.div`
   cursor: pointer;
   background: white;
 `;
+
+export const ModalImage = styled.img`
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+`;

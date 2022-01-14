@@ -11,6 +11,7 @@ import {
   AddFilesLabel,
   DropZoneWrapperImage,
   ImageWrapper,
+  ModalImage,
   RemoveImageIconButton,
 } from './uploadModal/uploadModal.styles';
 
@@ -118,12 +119,7 @@ const UploadPictureModal = ({
             <RemoveImageIconButton onClick={handleRemoveImage}>
               <RiCloseCircleFill color={theme.colors.secondary} size="23px" />
             </RemoveImageIconButton>
-            <img
-              src={previewImage}
-              alt="profileImage.jpg"
-              id="qa-profileImage"
-              style={{ height: '100%', width: '100%', objectFit: 'contain' }}
-            />
+            <ModalImage src={previewImage} alt="profileImage.jpg" />
           </ImageWrapper>
         ) : (
           <ImageWrapper>
