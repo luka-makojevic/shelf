@@ -33,6 +33,7 @@ public class FunctionService {
 
     private final String CHECK_SHELF_ACCESS_URL = "http://localhost:8082/shelf/check/";
     private final String JAVA_COMPILE_CMD = "javac -cp ";
+    private final String JARS_PATH = "/home/stefan/shelf-files/user-data/predefined_functions/jars/*";
     private final String homePath = System.getProperty("user.home");
     private final String pathSeparator = FileSystems.getDefault().getSeparator();
     private final String userPath = pathSeparator + "shelf-files" + pathSeparator + "user-data" + pathSeparator;
@@ -94,16 +95,10 @@ public class FunctionService {
             Files.writeString(Path.of(tempSourceFilePath), sourceFileContent);
             Runtime runTime = Runtime.getRuntime();
 
-            Process compileProcess = runTime.exec(JAVA_COMPILE_CMD + tempFolderPath +
-                    ":/home/stefan/shelf-files/user-data/predefined_functions/jars/*" +
-                    " " + tempSourceFilePath);
+            Process compileProcess = runTime.exec(JAVA_COMPILE_CMD + tempFolderPath + ":" +
+                    JARS_PATH + " " + tempSourceFilePath);
 
             compileProcess.waitFor(5, TimeUnit.SECONDS);
-
-            InputStream inputStream = compileProcess.getErrorStream();
-
-            String result = new BufferedReader(new InputStreamReader(inputStream))
-                    .lines().collect(Collectors.joining("\n"));
 
             compileProcess.destroy();
 
