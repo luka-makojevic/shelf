@@ -138,6 +138,20 @@ export interface ShelfDataType {
   userId: number;
 }
 
+export interface RoleDataType {
+  id: number;
+  name: string;
+}
+
+export interface UserDataType {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  pictureName: string | null;
+  role: RoleDataType;
+}
+
 export interface HeaderTypes {
   header: string;
   key: string;
@@ -165,7 +179,16 @@ export interface FunctionTableDataTypes {
   id: number;
 }
 
+export interface UserTableDataType {
+  [key: string]: string | number;
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+}
+
 export type TableDataTypes =
+  | UserTableDataType
   | FunctionTableDataTypes
   | FileTableDataTypes
   | ShelfTableDataTypes;
