@@ -157,9 +157,7 @@ public class FunctionService {
             return new ArrayList<>();
         }
 
-        List<ShelfDTO> shelfDtos = Arrays.stream(responseBody).collect(Collectors.toList());
-
-        return shelfDtos.stream().map(ShelfDTO::getId).collect(Collectors.toList());
+        return Arrays.stream(responseBody).map(ShelfDTO::getId).collect(Collectors.toList());
     }
 }
 
