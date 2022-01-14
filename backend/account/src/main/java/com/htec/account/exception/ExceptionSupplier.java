@@ -48,9 +48,9 @@ public class ExceptionSupplier {
 
     public static final Supplier<ShelfException> userIsNotLoggedIn = () -> new ShelfException(
             ErrorMessages.USER_IS_NOT_LOGGED_IN.getErrorMessage(),
-            HttpStatus.UNAUTHORIZED.value(),
+            HttpStatus.BAD_REQUEST.value(),
             LocalDateTime.now().format(formatter),
-            ErrorMessages.UNAUTHORIZED.getErrorMessage()
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
     );
 
     public static final Supplier<ShelfException> emailNotValid = () -> new ShelfException(

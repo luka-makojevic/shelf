@@ -22,10 +22,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -179,6 +176,42 @@ public class FileService {
 
         fileEntity.setCreatedAt(LocalDateTime.now());
         fileRepository.save(fileEntity);
+    }
+
+    public void copyFile(Long fileId, Long shelfId, Long userId) {
+
+        List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserId(userId);
+
+        FileEntity fileEntity = fileRepository.findById(fileId)
+                .orElseThrow(ExceptionSupplier.noFileWithGivenId);
+
+        shelfRepository.findById(shelfId)
+                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+
+        if(!shelfEntities.stream().map(ShelfEntity::getId).collect((Collectors.toList())).contains(fileEntity.getShelfId())) {
+            throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
+        }
+
+        String src = homePath + userPath + fileEntity.getPath();
+        String dst = homePath + userPath + userId + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator + fileEntity.getName();
+
+        if (fileRepository.findByNameAndShelfId(fileEntity.getName(), shelfId).isPresent()) {
+            throw ExceptionSupplier.fileAlreadyExists.get();
+        }
+
+        FileEntity backupFile = new FileEntity();
+        backupFile.setName(fileEntity.getName());
+        backupFile.setCreatedAt(LocalDateTime.now());
+        backupFile.setShelfId(shelfId);
+        backupFile.setDeleted(false);
+        backupFile.setPath(userId + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator + fileEntity.getName());
+        fileRepository.save(backupFile);
+
+        try {
+            Files.copy(Paths.get(src),Paths.get(dst), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw ExceptionSupplier.couldNotCopyFile.get();
+        }
     }
 
     @Transactional

@@ -17,7 +17,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -89,13 +92,18 @@ public class FunctionService {
                     JAVA_EXTENSION;
 
             Files.writeString(Path.of(tempSourceFilePath), sourceFileContent);
-
             Runtime runTime = Runtime.getRuntime();
 
-            Process compileProcess = runTime.exec(JAVA_COMPILE_CMD + tempFolderPath + ":" + tempFolderPath +
+            Process compileProcess = runTime.exec(JAVA_COMPILE_CMD + tempFolderPath +
+                    ":/home/stefan/shelf-files/user-data/predefined_functions/jars/*" +
                     " " + tempSourceFilePath);
 
             compileProcess.waitFor(5, TimeUnit.SECONDS);
+
+            InputStream inputStream = compileProcess.getErrorStream();
+
+            String result = new BufferedReader(new InputStreamReader(inputStream))
+                    .lines().collect(Collectors.joining("\n"));
 
             compileProcess.destroy();
 
