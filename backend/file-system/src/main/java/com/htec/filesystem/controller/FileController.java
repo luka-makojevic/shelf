@@ -24,6 +24,7 @@ public class FileController {
     private final FileService fileService;
 
     private final String FILE_UPLOADED = "File Uploaded";
+    private final String FILE_COPIED = "File Copied";
     private final String FILE_DOWNLOADED = "File Downloaded";
     private final String FILE_RENAMED = "File renamed";
     private final String IMAGE_UPLOADED = "Image Uploaded";
@@ -78,6 +79,15 @@ public class FileController {
 
         fileService.saveFile(shelfId, folderId, files, authUser.getId());
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_UPLOADED, HttpStatus.OK.value()));
+    }
+
+    @PostMapping("/copy/{fileId}/shelf/{shelfId}/user/{userId}")
+    public ResponseEntity<TextResponseMessage> copyFile(@PathVariable Long fileId,
+                                                        @PathVariable Long shelfId,
+                                                        @PathVariable Long userId) {
+
+        fileService.copyFile(fileId, shelfId, userId);
+        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_COPIED, HttpStatus.OK.value()));
     }
 
     @PutMapping("/move-to-trash")

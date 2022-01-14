@@ -25,6 +25,13 @@ public class ExceptionSupplier {
             ErrorMessages.BAD_REQUEST.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> couldNotCopyFile = () -> new ShelfException(
+            ErrorMessages.COULD_NOT_COPY_FILE.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> shelfNameNotValid = () -> new ShelfException(
             ErrorMessages.SHELF_NAME_NOT_VALID.getErrorMessage(),
             HttpStatus.BAD_REQUEST.value(),
