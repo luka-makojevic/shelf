@@ -49,9 +49,9 @@ public class ApiUserTest extends BaseApiTest {
     @Test
     public void apiPostEmailVerifyToken() throws SQLException, ClassNotFoundException {
 
-//        user.setValuesForValidUser(excelReader);
-//        String parsedJson = gson.toJson(user);
-//        sendAuhtorizedRequests.sendingPostReq("/register", parsedJson);
+        user.setValuesForValidUser(excelReader);
+        String parsedJson = gson.toJson(user);
+        sendAuhtorizedRequests.sendingPostReq("/register", parsedJson);
         String sql = null;
 
         ResultSet rs = sheldDBServer.testDB(DbQueryHelpers.fetchEmailTokenVerify("srdjan.rados@htecgroup.com"));
@@ -60,7 +60,7 @@ public class ApiUserTest extends BaseApiTest {
         }
 
         String token = responseToJson.setToken(sql);
-        String parsedJson = gson.toJson(token);
+        parsedJson = gson.toJson(token);
         Response response = sendAuhtorizedRequests.sendingPostReqForEmailVerifyToken("/tokens/confirmation", parsedJson);
 
         //Assertions

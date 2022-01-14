@@ -1,126 +1,204 @@
 package tests.backendTests;
 
 import helpers.apiHelpers.BaseApiTest;
-import helpers.dbHelpers.DbQueryHelpers;
 import io.restassured.response.Response;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
 public class ApiFileSysTest extends BaseApiTest
 {
-    @Test
-    public void apiCreateShelfPTC() throws SQLException, ClassNotFoundException {
+    public static String tokenGenerated;
 
-        user.setValuesForValidUser(excelReader);
-        String parsedJson = gson.toJson(user);
-        sendAuhtorizedRequests.sendingPostReq("/register", parsedJson);
-
-        String sql = null;
-        ResultSet rs = sheldDBServer.testDB(DbQueryHelpers.fetchEmailTokenVerify("srdjan.rados@htecgroup.com"));
-        while (rs.next()) {
-            sql = rs.getString("token");
-        }
-        String token = responseToJson.setToken(sql);
-        parsedJson = gson.toJson(token);
-        sendAuhtorizedRequests.sendingPostReqForEmailVerifyToken("/tokens/confirmation", parsedJson);
+    @BeforeClass
+    public static void createValidUserAndGenerateToken() throws SQLException, ClassNotFoundException
+    {
+        createValidUser.createValidUser("srdjan.rados@htecgroup.com","Srdjan","Rados");
 
         user.setValuesForValidUserToLogin(excelReader);
-        parsedJson = gson.toJson(user);
+        String parsedJson = gson.toJson(user);
 
-        Response response = sendAuhtorizedRequests.sendingPostReq("/login", parsedJson);
-        String tokenGenerated = response.jsonPath().get("jwtToken");
-
-        String shelfName = responseToJson.setShelfName("shelfName123");
-        parsedJson = gson.toJson(shelfName);
-        response = sendAuhtorizedRequests.sendingPostReqForCreateShelf(tokenGenerated,parsedJson);
-
-        assertEquals("Shelf created", response.jsonPath().get("message").toString());
-        assertEquals("200", response.jsonPath().get("status").toString());
-
+        Response response = sendAuhtorizedRequests.sendingPostReq("/login",parsedJson);
+        tokenGenerated = response.jsonPath().get("jwtToken");
     }
 
     @Test
-    public void apiCreateFolderfPTC() throws SQLException, ClassNotFoundException {
+    public void apiCreateShelfPTC()
+    {
+        Response response = sendAuhtorizedRequests.setShelf("Shelf123", tokenGenerated);
 
-        user.setValuesForValidUser(excelReader);
-        String parsedJson = gson.toJson(user);
-        sendAuhtorizedRequests.sendingPostReq("/register", parsedJson);
+        assertEquals("Shelf created", response.jsonPath().get("message").toString());
+        assertEquals("200", response.jsonPath().get("status").toString());
+    }
 
-        String sql = null;
-        ResultSet rs = sheldDBServer.testDB(DbQueryHelpers.fetchEmailTokenVerify("srdjan.rados@htecgroup.com"));
-        while (rs.next()) {
-            sql = rs.getString("token");
-        }
-        String token = responseToJson.setToken(sql);
-        parsedJson = gson.toJson(token);
-        sendAuhtorizedRequests.sendingPostReqForEmailVerifyToken("/tokens/confirmation", parsedJson);
+    @Test
+    public void apiRenameShelf()
+    {
+        sendAuhtorizedRequests.setShelf("Shelfara123",tokenGenerated);
+        sendAuhtorizedRequests.renameShelf(tokenGenerated, "Shelfara");
+        String parsedJson = gson.toJson(fileSys);
 
-        user.setValuesForValidUserToLogin(excelReader);
-        parsedJson = gson.toJson(user);
+        Response response = sendAuhtorizedRequests.sendingPutReqForRenameShelf(tokenGenerated, parsedJson);
 
-        Response response = sendAuhtorizedRequests.sendingPostReq("/login", parsedJson);
-        String tokenGenerated = response.jsonPath().get("jwtToken");
+        assertEquals("Shelf name updated.", response.jsonPath().get("message").toString());
+        assertEquals("200", response.jsonPath().get("status").toString());
+    }
 
-        String shelfName = responseToJson.setShelfName("shelfName123");
-        parsedJson = gson.toJson(shelfName);
-        sendAuhtorizedRequests.sendingPostReqForCreateShelf(tokenGenerated,parsedJson);
+    @Test
+    public void apiDeleteShelf()
+    {
+        sendAuhtorizedRequests.setShelf("Shelfara123",tokenGenerated);
 
-        response = sendAuhtorizedRequests.sendingGetShelfReq(tokenGenerated);
-        ArrayList<Integer> shelfId = response.jsonPath().get("id");
-        fileSys.setValues("FolderName",0, shelfId.get(0));
-        parsedJson = gson.toJson(fileSys);
-        System.out.println("ovo je:"+parsedJson);
+        Response response = sendAuhtorizedRequests.sendingGetShelfReq(tokenGenerated);
+        ArrayList<Integer> shelfIdArray = response.jsonPath().get("id");
+        Integer shelfId = shelfIdArray.get(0);
 
-        response = sendAuhtorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
+        response = sendAuhtorizedRequests.sendingDeleteReqForDeleteShelf(tokenGenerated, shelfId);
+
+        assertEquals("Successfully deleted shelves.", response.jsonPath().get("message").toString());
+        assertEquals("200", response.jsonPath().get("status").toString());
+    }
+
+    @Test
+    public void apiCreateFolderfPTC()
+    {
+        sendAuhtorizedRequests.setShelf("Shelf123",tokenGenerated);
+        sendAuhtorizedRequests.setFolder(tokenGenerated,"FolderName123");
+
+        String parsedJson = gson.toJson(fileSys);
+
+        Response response = sendAuhtorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
 
         assertEquals("Folder created", response.jsonPath().get("message").toString());
         assertEquals("200", response.jsonPath().get("status").toString());
     }
 
     @Test
-    public void apiUploadFilesfPTC() throws SQLException, ClassNotFoundException {
+    public void apiCantCreateFolderWithTheSameName()
+    {
+        sendAuhtorizedRequests.setShelf("ShelfName123",tokenGenerated);
+        sendAuhtorizedRequests.setFolder(tokenGenerated,"FolderName123");
 
-        user.setValuesForValidUser(excelReader);
-        String parsedJson = gson.toJson(user);
-        sendAuhtorizedRequests.sendingPostReq("/register", parsedJson);
-
-        String sql = null;
-        ResultSet rs = sheldDBServer.testDB(DbQueryHelpers.fetchEmailTokenVerify("srdjan.rados@htecgroup.com"));
-        while (rs.next()) {
-            sql = rs.getString("token");
-        }
-        String token = responseToJson.setToken(sql);
-        parsedJson = gson.toJson(token);
-        sendAuhtorizedRequests.sendingPostReqForEmailVerifyToken("/tokens/confirmation", parsedJson);
-
-        user.setValuesForValidUserToLogin(excelReader);
-        parsedJson = gson.toJson(user);
-
-        Response response = sendAuhtorizedRequests.sendingPostReq("/login", parsedJson);
-        String tokenGenerated = response.jsonPath().get("jwtToken");
-
-        String shelfName = responseToJson.setShelfName("shelfName123");
-        parsedJson = gson.toJson(shelfName);
-        sendAuhtorizedRequests.sendingPostReqForCreateShelf(tokenGenerated,parsedJson);
-
-        response = sendAuhtorizedRequests.sendingGetShelfReq(tokenGenerated);
-        ArrayList<Integer> shelfIdArray = response.jsonPath().get("id");
-        Integer shelfId = shelfIdArray.get(0);
-        fileSys.setValues("FolderName",0, shelfId);
-        parsedJson = gson.toJson(fileSys);
-        System.out.println("ovo je:"+parsedJson);
+        String parsedJson = gson.toJson(fileSys);
 
         sendAuhtorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
-        response = sendAuhtorizedRequests.sendingPostReqForUploadFile(tokenGenerated,file,shelfId,0);
 
+        sendAuhtorizedRequests.setFolder(tokenGenerated,"FolderName123");
+
+        parsedJson = gson.toJson(fileSys);
+
+        Response response = sendAuhtorizedRequests.sendingPostReqForCreateFolder(tokenGenerated, parsedJson);
+
+        assertEquals("Folder with the same name already exists.", response.jsonPath().get("message").toString());
+        assertEquals("403", response.jsonPath().get("status").toString());
+    }
+
+    @Test
+    public void apiMovedFolderToTrash()
+    {
+        sendAuhtorizedRequests.setShelf("ShelfName123",tokenGenerated);
+        sendAuhtorizedRequests.setFolder(tokenGenerated,"FolderName");
+        String parsedJson = gson.toJson(fileSys);
+
+        sendAuhtorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
+
+        sendAuhtorizedRequests.setFolder(tokenGenerated,"FolderName123");
+        parsedJson = gson.toJson(fileSys);
+
+        sendAuhtorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
+
+        Response response = sendAuhtorizedRequests.setShelfFolderId(tokenGenerated);
+
+        List<Map<String,Object>> shelfItems = responseToJson.setShelfItems(response.jsonPath().get("shelfItems"));
+        Integer folderId = (Integer) shelfItems.get(0).get("id");
+
+        List<Long> list = new ArrayList<>();
+        list.add(Long.valueOf(folderId));
+
+        response = sendAuhtorizedRequests.sendingPutReqToMoveFolderToTrash(tokenGenerated, list);
+
+        assertEquals("Folders moved to trash", response.jsonPath().get("message").toString());
+    }
+
+    @Test
+    public void apiDeleteFolderFromTrash()
+    {
+        sendAuhtorizedRequests.setShelf("Shelfara123",tokenGenerated);
+        sendAuhtorizedRequests.setFolder(tokenGenerated,"Fascikla");
+        String parsedJson = gson.toJson(fileSys);
+
+        sendAuhtorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
+
+        Response response = sendAuhtorizedRequests.setShelfFolderId(tokenGenerated);
+
+        List<Map<String,Object>> shelfItems = responseToJson.setShelfItems(response.jsonPath().get("shelfItems"));
+        Integer folderId = (Integer) shelfItems.get(0).get("id");
+
+        List<Long> list = new ArrayList<>();
+        list.add(Long.valueOf(folderId));
+
+        sendAuhtorizedRequests.sendingPutReqToMoveFolderToTrash(tokenGenerated, list);
+        response = sendAuhtorizedRequests.sendingDeleteReqToDeleteFolderFromTrash(tokenGenerated, list);
+
+        assertEquals("Folders deleted", response.jsonPath().get("message").toString());
+        assertEquals("200", response.jsonPath().get("status").toString());
+    }
+
+    @Test
+    public void apiRecoverFolderFromTrash()
+    {
+        sendAuhtorizedRequests.setShelf("Shelfara123",tokenGenerated);
+        sendAuhtorizedRequests.setFolder(tokenGenerated,"Fascikla");
+        String parsedJson = gson.toJson(fileSys);
+
+        sendAuhtorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
+        Response response = sendAuhtorizedRequests.setShelfFolderId(tokenGenerated);
+
+        List<Map<String,Object>> shelfItems = responseToJson.setShelfItems(response.jsonPath().get("shelfItems"));
+        Integer folderId = (Integer) shelfItems.get(0).get("id");
+
+        List<Long> list = new ArrayList<>();
+        list.add(Long.valueOf(folderId));
+
+        sendAuhtorizedRequests.sendingPutReqToMoveFolderToTrash(tokenGenerated, list);
+        response = sendAuhtorizedRequests.sendingPutReqToRecoverFolderFromTrash(tokenGenerated, list);
+
+        assertEquals("Folders recovered from trash", response.jsonPath().get("message").toString());
+        assertEquals("200", response.jsonPath().get("status").toString());
+    }
+
+    @Test
+    public void apiUploadFilefPTC()
+    {
+        sendAuhtorizedRequests.setShelf("ShelfName123",tokenGenerated);
+        sendAuhtorizedRequests.setFolder(tokenGenerated,"FolderName");
+        String parsedJson = gson.toJson(fileSys);
+
+        sendAuhtorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
+
+        Response response = sendAuhtorizedRequests.sendingPostReqForUploadFile(tokenGenerated,file, fileSys.shelfId, 0);
         assertEquals("File Uploaded", response.jsonPath().get("message").toString());
     }
+
+    @Test
+    public void apiUploadFilesfPTC()
+    {
+        sendAuhtorizedRequests.setShelf("ShelfName123",tokenGenerated);
+        sendAuhtorizedRequests.setFolder(tokenGenerated,"FolderName");
+        String parsedJson = gson.toJson(fileSys);
+
+        sendAuhtorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
+
+        Response response = sendAuhtorizedRequests.sendingPostReqForUploadFiles(tokenGenerated, files, fileSys.shelfId, 0);
+        assertEquals("File Uploaded", response.jsonPath().get("message").toString());
+    }
+
+
     @AfterClass
     public static void setUp() throws SQLException, ClassNotFoundException
     {

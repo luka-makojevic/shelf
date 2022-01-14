@@ -18,7 +18,7 @@ public class SheldDBServer
                 return rs;
         }
 
-        public void deleteQuery(String query) throws ClassNotFoundException, SQLException {
+        public void executeQuery(String query) throws ClassNotFoundException, SQLException {
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 Connection con = DriverManager.getConnection(DB_URL+DB_TABLE, DB_USER, DB_PASSWORD);
                 Statement smt = con.createStatement();
