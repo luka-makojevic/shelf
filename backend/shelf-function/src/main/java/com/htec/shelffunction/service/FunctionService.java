@@ -134,4 +134,3 @@ public class FunctionService {
         return FunctionMapper.INSTANCE.functionEntitiesToFunctionDtos(functionEntities);
     }
 }
-

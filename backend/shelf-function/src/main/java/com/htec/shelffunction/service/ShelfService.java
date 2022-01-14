@@ -3,8 +3,10 @@ package com.htec.shelffunction.service;
 import com.htec.shelffunction.dto.ShelfDTO;
 import com.htec.shelffunction.filter.JwtStorageFilter;
 import com.htec.shelffunction.security.SecurityConstants;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -36,17 +38,17 @@ public class ShelfService {
 
         HttpEntity<Object> request = new HttpEntity<>(headers);
 
-        ShelfDTO[] responseBody = restTemplate.exchange(
+        List<ShelfDTO> responseBody = restTemplate.exchange(
                 apiUrl,
                 HttpMethod.GET,
                 request,
-                ShelfDTO[].class
+                new ParameterizedTypeReference<List<ShelfDTO>>() {                }
         ).getBody();
 
         if (responseBody == null) {
             return new ArrayList<>();
         }
 
-        return Arrays.stream(responseBody).map(ShelfDTO::getId).collect(Collectors.toList());
+        return responseBody.stream().map(ShelfDTO::getId).collect(Collectors.toList());
     }
 }
