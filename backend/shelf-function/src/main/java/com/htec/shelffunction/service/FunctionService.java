@@ -1,5 +1,6 @@
 package com.htec.shelffunction.service;
 
+import com.htec.shelffunction.dto.FunctionDto;
 import com.htec.shelffunction.entity.FunctionEntity;
 import com.htec.shelffunction.exception.ExceptionSupplier;
 import com.htec.shelffunction.filter.JwtStorageFilter;
@@ -21,6 +22,7 @@ import java.net.URI;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -118,6 +120,13 @@ public class FunctionService {
         } catch (HttpClientErrorException ex) {
             throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
         }
+    }
+
+    public List<FunctionDto> getAllFunctionsByUserId(Long userId) {
+
+        List<FunctionEntity> functionEntities = functionRepository.findAllByUserId(userId);
+
+        return FunctionMapper.INSTANCE.functionEntitiesToFunctionDtos(functionEntities);
     }
 }
 
