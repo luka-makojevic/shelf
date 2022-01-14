@@ -87,14 +87,6 @@ public class FileController {
         return ResponseEntity.ok().body(new TextResponseMessage(FILES_MOVED_TO_TRASH, HttpStatus.OK.value()));
     }
 
-//    @PutMapping("/recover")
-//    public ResponseEntity<TextResponseMessage> recoverSoftDeletedFile(@AuthenticationUser AuthUser user,
-//                                                                      @RequestBody List<Long> fileIds) {
-//
-//        fileService.updateDeletedFiles(user, fileIds, false);
-//        return ResponseEntity.ok().body(new TextResponseMessage(FILES_RECOVERED_FROM_TRASH, HttpStatus.OK.value()));
-//    }
-
     @PutMapping("/rename")
     public ResponseEntity<TextResponseMessage> renameFile(@AuthenticationUser AuthUser user,
                                                           @RequestBody RenameFileRequestModel renameFileRequestModel) {
