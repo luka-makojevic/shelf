@@ -71,3 +71,21 @@ export const InputFieldWrapper = styled.div`
   min-height: 75px;
   position: relative;
 `;
+
+export const FunctionForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  margin-bottom: ${theme.space.md};
+
+  @media (max-width: ${theme.breakpoints.md}) {
+    width: 100%;
+  }
+`;
+export const FunctionFormInner = styled.div`
+  width: 70%;
+  @media (max-width: ${theme.breakpoints.md}) {
+    width: 100%;
+  }
+`;

@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from 'react';
 import { RegisterOptions } from 'react-hook-form';
 import { Role } from '../utils/enums/roles';
 import { SortingDirection } from '../utils/enums/table';
@@ -159,9 +160,7 @@ export interface FileTableDataTypes {
 export interface FunctionTableDataTypes {
   [key: string]: string | number;
   name: string;
-  last_modified: string;
-  description: string;
-  runtime: string;
+
   id: number;
 }
 
@@ -195,3 +194,35 @@ export interface PathHistoryData {
   folderName: string;
   folderId: number;
 }
+
+export interface FunctionFromScratchData {
+  [key: string]: string;
+  name: string;
+  language: string;
+  shelfId: string;
+  trigger: string;
+}
+export interface BackupFunctionData {
+  [key: string]: string | number;
+  name: string;
+  function: string;
+  shelfId: string;
+  functionParam: string;
+  eventId: number;
+}
+
+export interface LogFunctionData {
+  [key: string]: string;
+  name: string;
+  function: string;
+  shelfId: string;
+  trigger: string;
+}
+
+export type FunctionFormData =
+  | FunctionFromScratchData
+  | BackupFunctionData
+  | LogFunctionData;
+
+
+
