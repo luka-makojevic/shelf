@@ -9,8 +9,5 @@ import java.util.List;
 
 public interface FunctionRepository extends JpaRepository<FunctionEntity, Long> {
 
-    @Query("SELECT f " +
-            "FROM FunctionEntity f JOIN ShelfEntity s ON (f.shelfId = s.id)" +
-            "WHERE s.userId = :userId")
-    List<FunctionEntity> findAllByUserId(@Param("userId") Long userId);
+    List<FunctionEntity> findAllByShelfIdIn(List<Long> shelfIds);
 }

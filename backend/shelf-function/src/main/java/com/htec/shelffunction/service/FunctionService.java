@@ -1,6 +1,7 @@
 package com.htec.shelffunction.service;
 
 import com.htec.shelffunction.dto.FunctionDto;
+import com.htec.shelffunction.dto.ShelfDTO;
 import com.htec.shelffunction.entity.FunctionEntity;
 import com.htec.shelffunction.exception.ExceptionSupplier;
 import com.htec.shelffunction.filter.JwtStorageFilter;
@@ -22,13 +23,17 @@ import java.net.URI;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class FunctionService {
 
     private final String CHECK_SHELF_ACCESS_URL = "http://localhost:8082/shelf/check/";
+    private final String GET_SHELVES_BY_USER_ID_URL = "http://localhost:8082/shelf/";
     private final String JAVA_COMPILE_CMD = "javac -cp ";
     private final String homePath = System.getProperty("user.home");
     private final String pathSeparator = FileSystems.getDefault().getSeparator();
@@ -124,9 +129,37 @@ public class FunctionService {
 
     public List<FunctionDto> getAllFunctionsByUserId(Long userId) {
 
-        List<FunctionEntity> functionEntities = functionRepository.findAllByUserId(userId);
+        List<Long> shelfIds = getUsersShelfIds();
+
+        List<FunctionEntity> functionEntities = functionRepository.findAllByShelfIdIn(shelfIds);
 
         return FunctionMapper.INSTANCE.functionEntitiesToFunctionDtos(functionEntities);
+    }
+
+    private List<Long> getUsersShelfIds() {
+
+        URI apiUrl = URI.create(GET_SHELVES_BY_USER_ID_URL);
+
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add(SecurityConstants.AUTHORIZATION_HEADER_STRING,
+                JwtStorageFilter.jwtThreadLocal.get());
+
+        HttpEntity<Object> request = new HttpEntity<>(headers);
+
+        ShelfDTO[] responseBody = restTemplate.exchange(
+                apiUrl,
+                HttpMethod.GET,
+                request,
+                ShelfDTO[].class
+        ).getBody();
+
+        if (responseBody == null) {
+            return new ArrayList<>();
+        }
+
+        List<ShelfDTO> shelfDtos = Arrays.stream(responseBody).collect(Collectors.toList());
+
+        return shelfDtos.stream().map(ShelfDTO::getId).collect(Collectors.toList());
     }
 }
 
