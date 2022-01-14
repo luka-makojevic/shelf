@@ -26,3 +26,5 @@ jobs:
         run: mvn  -f ./backend/gateway/pom.xml clean test
       - name: Build and run tests - file-system
         run: mvn  -f ./backend/file-system/pom.xml clean test
+      - name: Build and run tests - shelf-function
+        run: mvn  -f ./backend/shelf-function/pom.xml clean test
