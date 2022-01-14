@@ -81,7 +81,7 @@ public class FileController {
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_UPLOADED, HttpStatus.OK.value()));
     }
 
-    @PostMapping("/copy/{fileId}/{shelfId}/{userId}")
+    @PostMapping("/copy/{fileId}/shelf/{shelfId}/user/{userId}")
     public ResponseEntity<TextResponseMessage> copyFile(@PathVariable Long fileId,
                                                         @PathVariable Long shelfId,
                                                         @PathVariable Long userId) {

@@ -2,8 +2,8 @@ package com.htec.account.security;
 
 public class SecurityConstants {
 
-    public static final long JWT_EXPIRATION_TIME = 1000000000; // 1 hour
-    public static final long REFRESH_JWT_EXPIRATION_TIME = 1000000000; // 10 days
+    public static final long JWT_EXPIRATION_TIME = 3600000; // 1 hour
+    public static final long REFRESH_JWT_EXPIRATION_TIME = 864000000; // 10 days
     public static final long PASSWORD_RESET_EXPIRATION_TIME = 3600000; // 1 hour
 
     public static final String BEARER_TOKEN_PREFIX = "Bearer ";
