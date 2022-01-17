@@ -16,6 +16,7 @@ import SharedShelves from '../../pages/sharedShelves';
 import Trash from '../../pages/trash';
 import Functions from '../../pages/functions';
 import Files from '../../pages/files';
+import Users from '../../pages/users';
 
 const Router = () => {
   const routes: RouteProps[] = [
@@ -86,6 +87,10 @@ const Router = () => {
         {
           path: Routes.FUNCTIONS,
           element: <Functions />,
+        },
+        {
+          path: Routes.USERS,
+          element: <Users />,
         },
       ],
     },

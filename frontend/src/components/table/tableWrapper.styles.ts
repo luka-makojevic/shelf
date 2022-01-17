@@ -46,6 +46,7 @@ export const ActionsBox = styled.div`
   align-items: center;
 
   margin-top: ${theme.space.lg};
+  margin-bottom: ${theme.space.sm};
 `;
 
 export const ButtonActionsBox = styled.div`
