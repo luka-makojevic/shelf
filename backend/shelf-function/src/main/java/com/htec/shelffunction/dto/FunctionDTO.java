@@ -9,10 +9,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FunctionDto {
+public class FunctionDTO {
     private Long id;
     private String name;
     private Long shelfId;
     private Boolean custom;
     private Long eventId;
+    private String language;
 }
