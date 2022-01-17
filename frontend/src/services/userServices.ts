@@ -1,5 +1,9 @@
 import instance from '../api/axiosInstance';
-import { ForgotPasswordData, ResetPasswordData } from '../interfaces/dataTypes';
+import {
+  ForgotPasswordData,
+  ResetPasswordData,
+  UpdateProfileData,
+} from '../interfaces/dataTypes';
 
 const API_URL_ACCOUNT = '/account';
 
@@ -17,10 +21,14 @@ const resetPassword = (data: ResetPasswordData) =>
 
 const getUser = () => instance.get(`${API_URL_ACCOUNT}/users/me`);
 
+const updateProfile = (data: UpdateProfileData, id: number) =>
+  instance.put(`${API_URL_ACCOUNT}/users/${id}`, data);
+
 export default {
   emailConfirmation,
   resendEmailVerification,
   forgotPassword,
   resetPassword,
+  updateProfile,
   getUser,
 };

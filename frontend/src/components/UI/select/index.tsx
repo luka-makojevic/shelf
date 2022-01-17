@@ -1,4 +1,3 @@
-import React from 'react';
 import { FieldValues, UseFormRegister } from 'react-hook-form';
 import { RiArrowDownSFill } from 'react-icons/ri';
 import { Error } from '../../text/text-styles';

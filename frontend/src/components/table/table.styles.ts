@@ -42,14 +42,27 @@ export const TableHeaderInner = styled.div`
 `;
 
 export const StyledTableContainer = styled.div`
-  overflow-y: auto;
+  overflow: auto;
   max-height: 390px;
+  position: relative;
 `;
 
 export const StyledTable = styled.table`
   width: 100%;
   border-collapse: collapse;
+  height: 100%;
+  position: relative;
+
+  @media (max-width: ${theme.breakpoints.sm}) {
+    display: block;
+    white-space: nowrap;
+  }
+  @media (max-width: ${theme.breakpoints.md}) {
+    display: block;
+    white-space: nowrap;
+  }
 `;
+
 export const StyledCell = styled.td`
   border-bottom: 1px solid #d0d0d0;
   padding: ${theme.space.sm};

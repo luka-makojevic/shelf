@@ -40,6 +40,7 @@ export const Row = ({
     pathName: string;
   }) => {
     const handleClick = () => {
+      if (data.role) return;
       if (data.folder || data.folder === undefined) navigation(pathName);
     };
 

@@ -19,6 +19,16 @@ export const ButtonContainer = styled.div`
   button {
     margin-right: 10px;
   }
+
+  @media (max-width: ${theme.breakpoints.sm}) {
+    display: grid;
+    grid-template-columns: 3fr 3fr;
+    justify-items: center;
+
+    button {
+      margin-right: 0px;
+    }
+  }
 `;
 
 export const TableDescription = styled.div`
@@ -36,6 +46,7 @@ export const ActionsBox = styled.div`
   align-items: center;
 
   margin-top: ${theme.space.lg};
+  margin-bottom: ${theme.space.sm};
 `;
 
 export const ButtonActionsBox = styled.div`

@@ -18,6 +18,17 @@ export const DropZoneWrapper = styled.div<DropZoneWrapperProps>`
   transition: all 500ms;
 `;
 
+export const DropZoneWrapperImage = styled.div<DropZoneWrapperProps>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 230px;
+  width: 100%;
+  background: ${({ isDragOver }) =>
+    isDragOver ? `${theme.colors.primary}55` : 'transparent'};
+  transition: all 500ms;
+`;
+
 export const AddFilesLabel = styled.label`
   border: 1px solid ${theme.colors.primary};
   border-radius: ${theme.space.sm};
@@ -55,4 +66,32 @@ export const AddedFilesIconButton = styled.button`
   padding: 0;
   color: ${theme.colors.primary};
   cursor: pointer;
+`;
+
+export const ImageWrapper = styled.div`
+  position: relative;
+  height: 200px;
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  text-align: center;
+`;
+
+export const RemoveImageIconButton = styled.div`
+  position: absolute;
+  right: -11px;
+  top: -11px;
+  display: flex;
+  border-radius: 50px;
+  padding: 0;
+  cursor: pointer;
+  background: white;
+`;
+
+export const ModalImage = styled.img`
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
 `;

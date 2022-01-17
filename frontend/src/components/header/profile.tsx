@@ -69,7 +69,7 @@ const Profile = () => {
               {user?.firstName} {user?.lastName}
             </PlainText>
             <PlainText>{user?.email}</PlainText>
-            <Link to="/manage-account">manage account</Link>
+            <Link to={`/profile/${user?.id}`}>manage account</Link>
             <div>
               <Button onClick={handleLogout} size="small">
                 log out

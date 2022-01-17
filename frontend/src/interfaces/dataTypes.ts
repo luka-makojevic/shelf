@@ -42,6 +42,12 @@ export interface ForgotPasswordConfig {
   validations: RegisterOptions;
 }
 
+export interface UpdateProfileData {
+  password: string | null;
+  firstName: string | null;
+  lastName: string | null;
+}
+
 export interface ResetPasswordFieldConfig {
   type: InputFieldType;
   placeholder: string;
@@ -83,6 +89,7 @@ export interface UserType {
   firstName: string;
   lastName: string;
   email: string;
+  password: string;
   jwtToken: string;
   jwtRefreshToken: string;
   role: {
@@ -93,6 +100,14 @@ export interface UserType {
 
 export interface RegisterFormData {
   areTermsRead: boolean;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  firstName: string;
+  lastName: string;
+}
+
+export interface ManageProfileFormData {
   email: string;
   password: string;
   confirmPassword: string;
@@ -127,6 +142,13 @@ export interface RegisterFieldConfig {
   validations: RegisterOptions;
 }
 
+export interface ManageProfileFieldConfig {
+  type: InputFieldType;
+  placeholder: string;
+  name: 'email' | 'password' | 'confirmPassword' | 'firstName' | 'lastName';
+  validations: RegisterOptions;
+}
+
 export interface ShelfFormData {
   name: string;
 }
@@ -137,6 +159,20 @@ export interface ShelfDataType {
   createdAt: string;
   isDeleted: boolean;
   userId: number;
+}
+
+export interface RoleDataType {
+  id: number;
+  name: string;
+}
+
+export interface UserDataType {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  pictureName: string | null;
+  role: RoleDataType;
 }
 
 export interface HeaderTypes {
@@ -164,7 +200,16 @@ export interface FunctionTableDataTypes {
   id: number;
 }
 
+export interface UserTableDataType {
+  [key: string]: string | number;
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+}
+
 export type TableDataTypes =
+  | UserTableDataType
   | FunctionTableDataTypes
   | FileTableDataTypes
   | ShelfTableDataTypes;

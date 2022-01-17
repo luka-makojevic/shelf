@@ -78,7 +78,13 @@ public class FolderService {
 
         String userShelvesPath = userDataPath + pathSeparator + "shelves";
 
-        return new File(userShelvesPath).mkdirs();
+        if (!new File(userShelvesPath).mkdirs()) {
+            return false;
+        }
+
+        String userFunctionsPath = userDataPath + pathSeparator + "functions";
+
+        return new File(userFunctionsPath).mkdirs();
     }
 
     public ResponseEntity<ShelfContentResponseModel> getItems(Long userId, Long folderId, Boolean deleted) {

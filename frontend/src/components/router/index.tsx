@@ -16,6 +16,9 @@ import SharedShelves from '../../pages/sharedShelves';
 import Trash from '../../pages/trash';
 import Functions from '../../pages/functions';
 import Files from '../../pages/files';
+import Profile from '../../pages/profileManagement';
+import Users from '../../pages/users';
+
 
 const Router = () => {
   const routes: RouteProps[] = [
@@ -41,6 +44,14 @@ const Router = () => {
         <PublicOnlyRoute>
           <Register />
         </PublicOnlyRoute>
+      ),
+    },
+    {
+      path: Routes.PROFILE,
+      element: (
+        <ProtectedRoute roles={[Role.USER, Role.ADMIN, Role.MASTER_ADMIN]}>
+          <Profile />
+        </ProtectedRoute>
       ),
     },
     {
@@ -86,6 +97,10 @@ const Router = () => {
         {
           path: Routes.FUNCTIONS,
           element: <Functions />,
+        },
+        {
+          path: Routes.USERS,
+          element: <Users />,
         },
       ],
     },

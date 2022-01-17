@@ -1,5 +1,6 @@
 package com.htec.shelffunction.service;
 
+import com.htec.shelffunction.dto.FunctionDto;
 import com.htec.shelffunction.entity.FunctionEntity;
 import com.htec.shelffunction.exception.ExceptionSupplier;
 import com.htec.shelffunction.filter.JwtStorageFilter;
@@ -16,11 +17,15 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -28,6 +33,7 @@ public class FunctionService {
 
     private final String CHECK_SHELF_ACCESS_URL = "http://localhost:8082/shelf/check/";
     private final String JAVA_COMPILE_CMD = "javac -cp ";
+    private final String JARS_PATH = "/home/stefan/shelf-files/user-data/predefined_functions/jars/*";
     private final String homePath = System.getProperty("user.home");
     private final String pathSeparator = FileSystems.getDefault().getSeparator();
     private final String userPath = pathSeparator + "shelf-files" + pathSeparator + "user-data" + pathSeparator;
@@ -37,11 +43,14 @@ public class FunctionService {
 
     private final FunctionRepository functionRepository;
     private final RestTemplate restTemplate;
+    private final ShelfService shelfService;
 
     public FunctionService(FunctionRepository functionRepository,
-                           RestTemplate restTemplate) {
+                           RestTemplate restTemplate,
+                           ShelfService shelfService) {
         this.functionRepository = functionRepository;
         this.restTemplate = restTemplate;
+        this.shelfService = shelfService;
     }
 
     public void createPredefinedFunction(PredefinedFunctionRequestModel functionRequestModel, Long userId) {
@@ -84,11 +93,10 @@ public class FunctionService {
                     JAVA_EXTENSION;
 
             Files.writeString(Path.of(tempSourceFilePath), sourceFileContent);
-
             Runtime runTime = Runtime.getRuntime();
 
-            Process compileProcess = runTime.exec(JAVA_COMPILE_CMD + tempFolderPath + ":" + tempFolderPath +
-                    " " + tempSourceFilePath);
+            Process compileProcess = runTime.exec(JAVA_COMPILE_CMD + tempFolderPath + ":" +
+                    JARS_PATH + " " + tempSourceFilePath);
 
             compileProcess.waitFor(5, TimeUnit.SECONDS);
 
@@ -119,5 +127,13 @@ public class FunctionService {
             throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
         }
     }
-}
 
+    public List<FunctionDto> getAllFunctionsByUserId(Long userId) {
+
+        List<Long> shelfIds = shelfService.getUsersShelfIds();
+
+        List<FunctionEntity> functionEntities = functionRepository.findAllByShelfIdIn(shelfIds);
+
+        return FunctionMapper.INSTANCE.functionEntitiesToFunctionDtos(functionEntities);
+    }
+}
