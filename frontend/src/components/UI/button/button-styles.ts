@@ -17,7 +17,7 @@ export const StyledButton = styled('button')<ButtonStyleProps>`
   &:disabled,
   &[disabled] {
     background-color: ${theme.colors.secondary};
-    color: ${theme.colors.shadow};
+    color: ${theme.colors.primary};
   }
 
   ${(props) =>

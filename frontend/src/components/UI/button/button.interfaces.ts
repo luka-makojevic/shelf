@@ -16,4 +16,6 @@ export interface ButtonProps {
   size?: string;
   fullwidth?: boolean;
   disabled?: boolean;
+  visible?: boolean;
+  type?: 'button' | 'reset' | 'submit' | undefined;
 }

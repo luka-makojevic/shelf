@@ -3,7 +3,7 @@ import {
   List,
   Text,
   TooltipWrapper,
-} from './passwordRequirementsTooltip-styles';
+} from './passwordRequirementsTooltip.styles';
 
 const PasswordRequirementsTooltip = () => (
   <TooltipWrapper>

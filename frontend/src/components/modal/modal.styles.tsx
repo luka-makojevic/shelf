@@ -18,12 +18,12 @@ export const Backdrop = styled.div`
 `;
 
 export const ModalContainer = styled.div`
-  width: 500px;
+  min-width: 300px;
+  max-width: 500px;
   position: absolute;
 
   background-color: ${theme.colors.white};
   border-radius: 10px;
-  box-shadow: 0 0 8px 0 ${theme.colors.shadow};
 
   display: flex;
   flex-direction: column;
@@ -36,7 +36,7 @@ export const Header = styled.div`
   align-items: center;
   justify-content: space-between;
 
-  height: 70px;
+  max-height: 70px;
   padding: ${theme.space.none} ${theme.space.sm};
 
   width: 100%;

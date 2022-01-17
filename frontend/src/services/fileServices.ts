@@ -40,6 +40,12 @@ const uploadFiles = (
 const getProfilePicture = (userId?: number) =>
   `${process.env.REACT_APP_API_URL}${API_URL_FILES}/file/preview/${userId}?file=false`;
 
+const uploadProfilePicture = (
+  id: number,
+  data: FormData,
+  options: AxiosRequestConfig
+) => instance.post(`${API_URL_FILES}/file/upload/profile/${id}`, data, options);
+
 export default {
   getShelfFiles,
   softDeleteFile,
@@ -49,4 +55,5 @@ export default {
   downloadFile,
   uploadFiles,
   getProfilePicture,
+  uploadProfilePicture,
 };

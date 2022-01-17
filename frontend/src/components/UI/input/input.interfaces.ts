@@ -15,4 +15,5 @@ export type InputFieldProps = {
   value?: string;
   onFocus?: FocusEventHandler;
   onBlur?: FocusEventHandler;
+  disabled?: boolean;
 };

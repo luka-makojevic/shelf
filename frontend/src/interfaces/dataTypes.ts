@@ -41,6 +41,12 @@ export interface ForgotPasswordConfig {
   validations: RegisterOptions;
 }
 
+export interface UpdateProfileData {
+  password: string | null;
+  firstName: string | null;
+  lastName: string | null;
+}
+
 export interface ResetPasswordFieldConfig {
   type: InputFieldType;
   placeholder: string;
@@ -82,6 +88,7 @@ export interface UserType {
   firstName: string;
   lastName: string;
   email: string;
+  password: string;
   jwtToken: string;
   jwtRefreshToken: string;
   role: {
@@ -92,6 +99,14 @@ export interface UserType {
 
 export interface RegisterFormData {
   areTermsRead: boolean;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  firstName: string;
+  lastName: string;
+}
+
+export interface ManageProfileFormData {
   email: string;
   password: string;
   confirmPassword: string;
@@ -123,6 +138,13 @@ export interface RegisterFieldConfig {
     | 'confirmPassword'
     | 'firstName'
     | 'lastName';
+  validations: RegisterOptions;
+}
+
+export interface ManageProfileFieldConfig {
+  type: InputFieldType;
+  placeholder: string;
+  name: 'email' | 'password' | 'confirmPassword' | 'firstName' | 'lastName';
   validations: RegisterOptions;
 }
 
