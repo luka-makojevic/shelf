@@ -18,7 +18,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -26,7 +27,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Service
 public class FunctionService {
@@ -215,11 +215,8 @@ public class FunctionService {
                     "hello" +
                     extension;
 
-            String sourceFileContent;
-
-            sourceFileContent = Files.readString(Path.of(sourceFilePath));
-
-            sourceFileContent = sourceFileContent.replace("${className}", "Function" + functionEntityId);
+            String sourceFileContent = Files.readString(Path.of(sourceFilePath))
+                    .replace("${className}", "Function" + functionEntityId);
 
             String tempFolderPath = homePath +
                     userPath +
