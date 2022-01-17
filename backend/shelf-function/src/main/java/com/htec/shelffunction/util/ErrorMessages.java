@@ -10,7 +10,8 @@ public enum ErrorMessages {
     COULD_NOT_DELETE_FILE("Could not delete file."),
     NOT_FOUND("Not found."),
     INTERNAL_SERVER_ERROR("Internal server error."),
-    FORBIDDEN("Forbidden.");
+    FORBIDDEN("Forbidden."),
+    DESERIALIZING_ERROR("Error when deserializing byte[] to KafkaRequestModel");
 
     private String errorMessage;
 

@@ -1,6 +1,7 @@
 package com.htec.shelffunction.exception;
 
 import com.htec.shelffunction.util.ErrorMessages;
+import com.zaxxer.hikari.util.FastList;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
@@ -51,5 +52,12 @@ public class ExceptionSupplier {
             HttpStatus.INTERNAL_SERVER_ERROR.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.INTERNAL_SERVER_ERROR.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> deserializationException = () -> new ShelfException(
+            ErrorMessages.DESERIALIZING_ERROR.getErrorMessage(),
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.DESERIALIZING_ERROR.getErrorMessage()
     );
 }
