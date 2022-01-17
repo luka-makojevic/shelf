@@ -107,7 +107,7 @@ const FunctionModal = ({
         <FunctionContainer>
           <p>choose one of the following options:</p>
           <RadioContainer>
-            <RadioLabel for="scratch">
+            <RadioLabel htmlFor="scratch">
               <RadioInner>
                 <div>
                   <RadioTitle>Author from scratch</RadioTitle>
@@ -128,13 +128,13 @@ const FunctionModal = ({
                 alt="gear with coding symbol"
               />
             </RadioLabel>
-            <RadioLabel for="blueprint">
+            <RadioLabel htmlFor="blueprint">
               <RadioInner>
                 <div>
                   <RadioTitle>Use a blueprint</RadioTitle>
                   <RadioSubTitle>
-                    Build Lambda with sample code and configuration preset for
-                    common use cases.
+                    Build Shelf Function with sample code and configuration
+                    preset for common use cases.
                   </RadioSubTitle>
                 </div>
 

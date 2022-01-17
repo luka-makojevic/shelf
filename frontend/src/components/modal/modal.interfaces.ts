@@ -54,5 +54,5 @@ export interface FunctionModalProps {
 }
 
 export interface FunctionStyleProps {
-  for: string;
+  htmlFor: string;
 }
