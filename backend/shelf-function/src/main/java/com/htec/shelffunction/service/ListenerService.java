@@ -25,12 +25,13 @@ public class ListenerService {
     private final String CS = "csharp";
 
     private final String JAVA_EXECUTE_CMD = "java -cp ";
+    private final String CS_EXECUTE_CMD = "mcs ";
 
     public ListenerService(FunctionRepository functionRepository) {
         this.functionRepository = functionRepository;
     }
 
-    @KafkaListener(topics = "test", groupId = "event")
+    @KafkaListener(topics = "event", groupId = "event")
     public void listenGroupEvent(KafkaRequestModel message) {
 
         List<FunctionEntity> functionEntities = functionRepository.findAllByIdIn(message.getFunctionIds());
@@ -49,11 +50,26 @@ public class ListenerService {
         }
     }
 
-    private void executeCsFunction(Long userId, Long id) {
-        //todo: Implement function for executing C# code
+    private void executeCsFunction(Long userId, Long functionId) {
+
+        try {
+            String folderPath = homePath + userPath + userId + pathSeparator + "functions";
+
+            Process process = runTime.exec(CS_EXECUTE_CMD +
+                    folderPath + pathSeparator +
+                    "Function" + functionId + ".exe");
+
+            process.waitFor(5, TimeUnit.SECONDS);
+
+            process.destroy();
+
+        } catch (InterruptedException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void executeJavaFunction(Long userId, Long functionId) {
+
         try {
             String classPath = homePath + userPath + userId + pathSeparator + "functions";
 

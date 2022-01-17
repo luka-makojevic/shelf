@@ -11,7 +11,7 @@ public enum ErrorMessages {
     NOT_FOUND("Not found."),
     INTERNAL_SERVER_ERROR("Internal server error."),
     FORBIDDEN("Forbidden."),
-    DESERIALIZING_ERROR("Error when deserializing byte[] to KafkaRequestModel");
+    DESERIALIZING_ERROR("Error when deserializing byte[] to KafkaRequestModel.");
 
     private String errorMessage;
 

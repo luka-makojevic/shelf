@@ -20,11 +20,15 @@ public class KafkaTopicConfig {
     public KafkaAdmin kafkaAdmin() {
         Map<String, Object> configs = new HashMap<>();
         configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
-        return new KafkaAdmin(configs);
+        KafkaAdmin kafkaAdmin = new KafkaAdmin(configs);
+
+        kafkaAdmin.createOrModifyTopics(new NewTopic("event", 1, (short) 1));
+
+        return kafkaAdmin;
     }
 
     @Bean
-    public NewTopic testTopic() {
-        return new NewTopic("test", 1, (short) 1);
+    public NewTopic eventTopic() {
+        return new NewTopic("event", 1, (short) 1);
     }
 }
