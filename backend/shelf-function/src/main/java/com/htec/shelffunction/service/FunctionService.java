@@ -216,11 +216,8 @@ public class FunctionService {
                     "hello" +
                     extension;
 
-            String sourceFileContent;
-
-            sourceFileContent = Files.readString(Path.of(sourceFilePath));
-
-            sourceFileContent = sourceFileContent.replace("${className}", "Function" + functionEntityId);
+            String sourceFileContent = Files.readString(Path.of(sourceFilePath))
+                    .replace("${className}", "Function" + functionEntityId);
 
             String tempFolderPath = homePath +
                     userPath +
