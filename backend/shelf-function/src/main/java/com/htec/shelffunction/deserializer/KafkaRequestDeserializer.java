@@ -5,7 +5,6 @@ import com.htec.shelffunction.exception.ExceptionSupplier;
 import com.htec.shelffunction.model.request.KafkaRequestModel;
 import org.apache.kafka.common.serialization.Deserializer;
 
-
 public class KafkaRequestDeserializer implements Deserializer<KafkaRequestModel> {
 
     private ObjectMapper objectMapper = new ObjectMapper();
