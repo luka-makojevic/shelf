@@ -5,6 +5,7 @@ import com.htec.shelffunction.entity.FunctionEntity;
 import com.htec.shelffunction.exception.ExceptionSupplier;
 import com.htec.shelffunction.filter.JwtStorageFilter;
 import com.htec.shelffunction.mapper.FunctionMapper;
+import com.htec.shelffunction.model.request.CustomFunctionRequestModel;
 import com.htec.shelffunction.model.request.PredefinedFunctionRequestModel;
 import com.htec.shelffunction.repository.FunctionRepository;
 import com.htec.shelffunction.security.SecurityConstants;
@@ -32,13 +33,15 @@ public class FunctionService {
 
     private final String CHECK_SHELF_ACCESS_URL = "http://localhost:8082/shelf/check/";
     private final String JAVA_COMPILE_CMD = "javac -cp ";
-    private final String JARS_PATH = "/home/stefan/shelf-files/user-data/predefined_functions/jars/*";
+    private final String CSHARP_COMPILE_CMD = "mcs ";
     private final String homePath = System.getProperty("user.home");
     private final String pathSeparator = FileSystems.getDefault().getSeparator();
     private final String userPath = pathSeparator + "shelf-files" + pathSeparator + "user-data" + pathSeparator;
+    private final String JARS_PATH = homePath + userPath + "predefined_functions/jars/*";
 
     private final String PREDEFINED_FUNCTION_FOLDER = "predefined_functions";
     private final String JAVA_EXTENSION = ".java";
+    private final String CSHARP_EXTENSION = ".cs";
 
     private final FunctionRepository functionRepository;
     private final RestTemplate restTemplate;
@@ -174,5 +177,75 @@ public class FunctionService {
         }
 
         functionRepository.delete(functionEntity);
+    }
+
+    public void createCustomFunction(CustomFunctionRequestModel customFunctionRequestModel, Long userId) {
+
+        FunctionEntity functionEntity = FunctionMapper.INSTANCE
+                .customFunctionRequestModelToFunctionEntity(customFunctionRequestModel);
+
+        functionEntity.setLanguage(customFunctionRequestModel.getLanguage());
+        functionEntity.setCustom(true);
+
+        functionRepository.saveAndFlush(functionEntity);
+
+        functionEntity.setPath(userId + pathSeparator + "functions" + pathSeparator + "Function" + functionEntity.getId());
+
+        functionRepository.save(functionEntity);
+
+        compileCustomFunction(functionEntity.getId(), customFunctionRequestModel, userId);
+    }
+
+    public void compileCustomFunction(Long functionEntityId, CustomFunctionRequestModel customFunctionRequestModel, Long userId) {
+
+        try {
+            String extension = "";
+            String compileCommand = "";
+
+            if (Objects.equals(customFunctionRequestModel.getLanguage(), "java")) {
+                extension += JAVA_EXTENSION;
+            } else {
+                extension += CSHARP_EXTENSION;
+            }
+
+            String sourceFilePath = homePath +
+                    userPath +
+                    PREDEFINED_FUNCTION_FOLDER +
+                    pathSeparator +
+                    "hello" +
+                    extension;
+
+            String sourceFileContent = Files.readString(Path.of(sourceFilePath))
+                    .replace("${className}", "Function" + functionEntityId);
+
+            String tempFolderPath = homePath +
+                    userPath +
+                    userId +
+                    pathSeparator +
+                    "functions";
+
+            String tempSourceFilePath = tempFolderPath +
+                    pathSeparator +
+                    "Function" + functionEntityId +
+                    extension;
+
+            Files.writeString(Path.of(tempSourceFilePath), sourceFileContent);
+            Runtime runTime = Runtime.getRuntime();
+
+            if (Objects.equals(customFunctionRequestModel.getLanguage(), "java")) {
+                compileCommand += JAVA_COMPILE_CMD + tempFolderPath + ":" + JARS_PATH + " " + tempSourceFilePath;
+            } else {
+                compileCommand += CSHARP_COMPILE_CMD + tempSourceFilePath;
+            }
+
+            Process compileProcess = runTime.exec(compileCommand);
+
+            compileProcess.waitFor(5, TimeUnit.SECONDS);
+
+            compileProcess.destroy();
+
+        } catch (InterruptedException | IOException e) {
+            e.printStackTrace();
+        }
     }
 }

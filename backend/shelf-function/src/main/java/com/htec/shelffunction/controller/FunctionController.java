@@ -3,6 +3,7 @@ package com.htec.shelffunction.controller;
 import com.htec.shelffunction.annotation.AuthUser;
 import com.htec.shelffunction.annotation.AuthenticationUser;
 import com.htec.shelffunction.dto.FunctionDTO;
+import com.htec.shelffunction.model.request.CustomFunctionRequestModel;
 import com.htec.shelffunction.model.request.PredefinedFunctionRequestModel;
 import com.htec.shelffunction.model.response.TextResponseMessage;
 import com.htec.shelffunction.service.FunctionService;
@@ -30,6 +31,15 @@ public class FunctionController {
                                                                         @AuthenticationUser AuthUser authUser) {
 
         functionService.createPredefinedFunction(functionRequestModel, authUser.getId());
+
+        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FUNCTION_CREATED, HttpStatus.OK.value()));
+    }
+
+    @PostMapping("/custom")
+    public ResponseEntity<TextResponseMessage> createCustomFunction(@RequestBody CustomFunctionRequestModel customFunctionRequestModel,
+                                                                    @AuthenticationUser AuthUser authUser) {
+
+        functionService.createCustomFunction(customFunctionRequestModel, authUser.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FUNCTION_CREATED, HttpStatus.OK.value()));
     }

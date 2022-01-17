@@ -9,12 +9,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PredefinedFunctionRequestModel {
+public class CustomFunctionRequestModel {
 
-    private String function;
     private String name;
     private Long eventId;
     private Long shelfId;
-    private Long functionParam;
     private String language;
 }
