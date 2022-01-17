@@ -24,6 +24,7 @@ public class FileController {
     private final FileService fileService;
 
     private final String FILE_UPLOADED = "File Uploaded";
+    private final String FILE_COPIED = "File Copied";
     private final String FILE_DOWNLOADED = "File Downloaded";
     private final String FILE_RENAMED = "File renamed";
     private final String IMAGE_UPLOADED = "Image Uploaded";
@@ -80,20 +81,21 @@ public class FileController {
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_UPLOADED, HttpStatus.OK.value()));
     }
 
+    @PostMapping("/copy/{fileId}/shelf/{shelfId}/user/{userId}")
+    public ResponseEntity<TextResponseMessage> copyFile(@PathVariable Long fileId,
+                                                        @PathVariable Long shelfId,
+                                                        @PathVariable Long userId) {
+
+        fileService.copyFile(fileId, shelfId, userId);
+        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_COPIED, HttpStatus.OK.value()));
+    }
+
     @PutMapping("/move-to-trash")
     public ResponseEntity<TextResponseMessage> softDeleteFile(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) {
 
         fileService.updateDeletedFiles(user, fileIds, true, true);
         return ResponseEntity.ok().body(new TextResponseMessage(FILES_MOVED_TO_TRASH, HttpStatus.OK.value()));
     }
-
-//    @PutMapping("/recover")
-//    public ResponseEntity<TextResponseMessage> recoverSoftDeletedFile(@AuthenticationUser AuthUser user,
-//                                                                      @RequestBody List<Long> fileIds) {
-//
-//        fileService.updateDeletedFiles(user, fileIds, false);
-//        return ResponseEntity.ok().body(new TextResponseMessage(FILES_RECOVERED_FROM_TRASH, HttpStatus.OK.value()));
-//    }
 
     @PutMapping("/rename")
     public ResponseEntity<TextResponseMessage> renameFile(@AuthenticationUser AuthUser user,

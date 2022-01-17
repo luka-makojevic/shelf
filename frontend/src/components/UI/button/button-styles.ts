@@ -59,7 +59,12 @@ export const StyledButton = styled('button')<ButtonStyleProps>`
         return null;
     }
   }}
+
+  @media(max-width: ${theme.breakpoints.sm}) {
+    width: 90%;
+  }
 `;
+
 export const SpinnerButton = styled(StyledButton)`
   padding: 0;
   min-height: 45px;
@@ -127,7 +132,18 @@ export const IconButton = styled(StyledButton)`
     width: 20px;
     margin-right: 5px;
   }
+
+  @media (max-width: ${theme.breakpoints.sm}) {
+    svg {
+      width: 100%;
+      font-size: ${theme.fontSizes.lg};
+    }
+    span {
+      display: none;
+    }
+  }
 `;
+
 export const IconButtonContainer = styled.div`
   display: flex;
   align-items: center;

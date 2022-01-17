@@ -64,7 +64,7 @@ export const Button = ({
       >
         <IconButtonContainer>
           {icon}
-          {children}
+          <span>{children}</span>
         </IconButtonContainer>
       </IconButton>
     );
