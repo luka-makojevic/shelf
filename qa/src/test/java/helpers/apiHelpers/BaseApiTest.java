@@ -28,31 +28,28 @@ public class BaseApiTest {
     public static User user;
     public static FileSys fileSys;
     public static Gson gson;
-    public static SendAuhtorizedRequests sendAuhtorizedRequests;
+    public static SendAuthorizedRequests sendAuthorizedRequests;
+    public static RestFileSysRequests restFileSysRequests;
     public static ResponseToJson responseToJson;
+    public static UploadFilesFromPTCDirectory uploadFilesFromPTCDirectory;
 
 
     @BeforeClass
     public static void initialize() throws IOException
     {
         excelReader = new ExcelReader("src/main/resources/ExcelRead.xlsx");
-        file = new File("src/main/upload-dir/trolcol.txt");
-
+        file = new File("src/main/upload-dir/PTC-files-ready-to-upload/dummy.png");
 
         files = new ArrayList<>();
-
-        files.add( new File("src/main/upload-dir/trolol.txt"));
-        files.add(new File("src/main/upload-dir/login.txt"));
-        files.add(new File("src/main/upload-dir/dummy.txt"));
-
-
-//        files.add(uploadFiles);
+        uploadFilesFromPTCDirectory = new UploadFilesFromPTCDirectory();
+        uploadFilesFromPTCDirectory.uploadFilesFromPTCdir();
 
         sheldDBServer = new SheldDBServer();
         user = new User();
         fileSys = new FileSys();
         gson = new Gson();
-        sendAuhtorizedRequests = new SendAuhtorizedRequests();
+        sendAuthorizedRequests = new SendAuthorizedRequests();
+        restFileSysRequests = new RestFileSysRequests();
         createValidUser = new CreateValidUser();
         cleanup = new Cleanup();
         responseToJson = new ResponseToJson();

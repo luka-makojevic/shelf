@@ -19,7 +19,7 @@ public class ApiUserTest extends BaseApiTest {
         String parsedJson = gson.toJson(user);
 
         // Sending Post request
-        Response response = sendAuhtorizedRequests.sendingPostReq("/register",parsedJson);
+        Response response = sendAuthorizedRequests.sendingPostReq("/register",parsedJson);
 
         //Assertions
         assertEquals("User registered", response.jsonPath().get("message").toString());
@@ -34,7 +34,7 @@ public class ApiUserTest extends BaseApiTest {
             String parsedJson = gson.toJson(user);
 
             // Sending Post request
-            Response response = sendAuhtorizedRequests.sendingPostReq("/register",parsedJson);
+            Response response = sendAuthorizedRequests.sendingPostReq("/register",parsedJson);
 
             //Assertions
             String[] expectedMess = {"Record already exists.", "Email is not valid.", "Password is not valid."};
@@ -51,7 +51,7 @@ public class ApiUserTest extends BaseApiTest {
 
         user.setValuesForValidUser(excelReader);
         String parsedJson = gson.toJson(user);
-        sendAuhtorizedRequests.sendingPostReq("/register", parsedJson);
+        sendAuthorizedRequests.sendingPostReq("/register", parsedJson);
         String sql = null;
 
         ResultSet rs = sheldDBServer.testDB(DbQueryHelpers.fetchEmailTokenVerify("srdjan.rados@htecgroup.com"));
@@ -61,7 +61,7 @@ public class ApiUserTest extends BaseApiTest {
 
         String token = responseToJson.setToken(sql);
         parsedJson = gson.toJson(token);
-        Response response = sendAuhtorizedRequests.sendingPostReqForEmailVerifyToken("/tokens/confirmation", parsedJson);
+        Response response = sendAuthorizedRequests.sendingPostReq("/tokens/confirmation", parsedJson);
 
         //Assertions
         assertEquals("Email confirmed", response.jsonPath().get("message").toString());
@@ -74,7 +74,7 @@ public class ApiUserTest extends BaseApiTest {
         String parsedJson = gson.toJson(user);
 
         // Sending Post request
-        Response response = sendAuhtorizedRequests.sendingPostReq("/login",parsedJson);
+        Response response = sendAuthorizedRequests.sendingPostReq("/login",parsedJson);
         Integer id = response.jsonPath().get("id");
         String jwtToken = response.jsonPath().get("jwtToken");
         String jwtRefreshToken = response.jsonPath().get("jwtRefreshToken");
@@ -92,7 +92,7 @@ public class ApiUserTest extends BaseApiTest {
             String parsedJson = gson.toJson(user);
 
             // Sending Post request
-            Response response = sendAuhtorizedRequests.sendingPostReq("/login",parsedJson);
+            Response response = sendAuthorizedRequests.sendingPostReq("/login",parsedJson);
 
             //Assertions
             assertEquals("User not found.", response.jsonPath().get("message").toString());
@@ -105,7 +105,7 @@ public class ApiUserTest extends BaseApiTest {
         String parsedJson = gson.toJson(user);
 
         // Sending Post request
-        Response response = sendAuhtorizedRequests.sendingPostReq("/login",parsedJson);
+        Response response = sendAuthorizedRequests.sendingPostReq("/login",parsedJson);
 
         //Assertions
         assertEquals("Authentication credentials not valid.", response.jsonPath().get("message").toString());
@@ -117,12 +117,12 @@ public class ApiUserTest extends BaseApiTest {
         user.setValuesForValidUserToLogin(excelReader);
         String parsedJson = gson.toJson(user);
 
-        Response response = sendAuhtorizedRequests.sendingPostReq("/login", parsedJson);
+        Response response = sendAuthorizedRequests.sendingPostReq("/login", parsedJson);
         String tokenGenerated = response.jsonPath().get("jwtToken");
         Integer id = response.jsonPath().get("id");
 
         // Sending Get request
-        response = sendAuhtorizedRequests.sendingGetReqWithGeneratedToken(tokenGenerated, id);
+        response = sendAuthorizedRequests.sendingGetReqWithGeneratedToken(tokenGenerated, id);
 
         //Assertions
         assertEquals(id.toString(), response.jsonPath().get("id").toString());
@@ -137,14 +137,14 @@ public class ApiUserTest extends BaseApiTest {
         user.setValuesForValidUserToLogin(excelReader);
         String parsedJson = gson.toJson(user);
 
-        Response response = sendAuhtorizedRequests.sendingPostReq("/login", parsedJson);
+        Response response = sendAuthorizedRequests.sendingPostReq("/login", parsedJson);
         String tokenGenerated = response.jsonPath().get("jwtToken");
         Integer id = response.jsonPath().get("id");
 
         // Sending Update request
         user.setValuesForUpdatingUser(excelReader);
         parsedJson = gson.toJson(user);
-        response = sendAuhtorizedRequests.sendingPutReqWithGeneratedToken(parsedJson, tokenGenerated, id);
+        response = sendAuthorizedRequests.sendingPutReqWithGeneratedToken(parsedJson, tokenGenerated, id);
 
         //Assertions
         assertEquals(id.toString(), response.jsonPath().get("id").toString());

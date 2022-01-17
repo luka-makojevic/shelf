@@ -23,14 +23,14 @@ public class ApiFileSysTest extends BaseApiTest
         user.setValuesForValidUserToLogin(excelReader);
         String parsedJson = gson.toJson(user);
 
-        Response response = sendAuhtorizedRequests.sendingPostReq("/login",parsedJson);
+        Response response = sendAuthorizedRequests.sendingPostReq("/login",parsedJson);
         tokenGenerated = response.jsonPath().get("jwtToken");
     }
 
     @Test
     public void apiCreateShelfPTC()
     {
-        Response response = sendAuhtorizedRequests.setShelf("Shelf123", tokenGenerated);
+        Response response = restFileSysRequests.setShelf("Shelf123", tokenGenerated);
 
         assertEquals("Shelf created", response.jsonPath().get("message").toString());
         assertEquals("200", response.jsonPath().get("status").toString());
@@ -39,11 +39,13 @@ public class ApiFileSysTest extends BaseApiTest
     @Test
     public void apiRenameShelf()
     {
-        sendAuhtorizedRequests.setShelf("Shelfara123",tokenGenerated);
-        sendAuhtorizedRequests.renameShelf(tokenGenerated, "Shelfara");
+        restFileSysRequests.setShelf("Shelfara123",tokenGenerated);
+        Integer shelfId = restFileSysRequests.getShelfId(tokenGenerated);
+
+        fileSys.setValuesForRenameShelf("NoviShelfName", shelfId);
         String parsedJson = gson.toJson(fileSys);
 
-        Response response = sendAuhtorizedRequests.sendingPutReqForRenameShelf(tokenGenerated, parsedJson);
+        Response response = sendAuthorizedRequests.sendingPutReqForRenameShelf(tokenGenerated, parsedJson);
 
         assertEquals("Shelf name updated.", response.jsonPath().get("message").toString());
         assertEquals("200", response.jsonPath().get("status").toString());
@@ -52,13 +54,10 @@ public class ApiFileSysTest extends BaseApiTest
     @Test
     public void apiDeleteShelf()
     {
-        sendAuhtorizedRequests.setShelf("Shelfara123",tokenGenerated);
+        restFileSysRequests.setShelf("Shelfara123",tokenGenerated);
+        Integer shelfId = restFileSysRequests.getShelfId(tokenGenerated);
 
-        Response response = sendAuhtorizedRequests.sendingGetShelfReq(tokenGenerated);
-        ArrayList<Integer> shelfIdArray = response.jsonPath().get("id");
-        Integer shelfId = shelfIdArray.get(0);
-
-        response = sendAuhtorizedRequests.sendingDeleteReqForDeleteShelf(tokenGenerated, shelfId);
+        Response response = sendAuthorizedRequests.sendingDeleteReqForDeleteShelf(tokenGenerated, shelfId);
 
         assertEquals("Successfully deleted shelves.", response.jsonPath().get("message").toString());
         assertEquals("200", response.jsonPath().get("status").toString());
@@ -67,12 +66,12 @@ public class ApiFileSysTest extends BaseApiTest
     @Test
     public void apiCreateFolderfPTC()
     {
-        sendAuhtorizedRequests.setShelf("Shelf123",tokenGenerated);
-        sendAuhtorizedRequests.setFolder(tokenGenerated,"FolderName123");
+        restFileSysRequests.setShelf("Shelf123",tokenGenerated);
+        restFileSysRequests.setFolder(tokenGenerated,"FolderName123");
 
         String parsedJson = gson.toJson(fileSys);
 
-        Response response = sendAuhtorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
+        Response response = sendAuthorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
 
         assertEquals("Folder created", response.jsonPath().get("message").toString());
         assertEquals("200", response.jsonPath().get("status").toString());
@@ -81,38 +80,38 @@ public class ApiFileSysTest extends BaseApiTest
     @Test
     public void apiCantCreateFolderWithTheSameName()
     {
-        sendAuhtorizedRequests.setShelf("ShelfName123",tokenGenerated);
-        sendAuhtorizedRequests.setFolder(tokenGenerated,"FolderName123");
+        restFileSysRequests.setShelf("ShelfName123",tokenGenerated);
+        restFileSysRequests.setFolder(tokenGenerated,"FolderName123");
 
         String parsedJson = gson.toJson(fileSys);
 
-        sendAuhtorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
+        sendAuthorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
 
-        sendAuhtorizedRequests.setFolder(tokenGenerated,"FolderName123");
+        restFileSysRequests.setFolder(tokenGenerated,"FolderName123");
 
         parsedJson = gson.toJson(fileSys);
 
-        Response response = sendAuhtorizedRequests.sendingPostReqForCreateFolder(tokenGenerated, parsedJson);
+        Response response = sendAuthorizedRequests.sendingPostReqForCreateFolder(tokenGenerated, parsedJson);
 
         assertEquals("Folder with the same name already exists.", response.jsonPath().get("message").toString());
         assertEquals("403", response.jsonPath().get("status").toString());
     }
 
     @Test
-    public void apiMovedFolderToTrash()
+    public void apiMoveFolderToTrash()
     {
-        sendAuhtorizedRequests.setShelf("ShelfName123",tokenGenerated);
-        sendAuhtorizedRequests.setFolder(tokenGenerated,"FolderName");
+        restFileSysRequests.setShelf("ShelfName123",tokenGenerated);
+        restFileSysRequests.setFolder(tokenGenerated,"FolderName");
         String parsedJson = gson.toJson(fileSys);
 
-        sendAuhtorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
+        sendAuthorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
 
-        sendAuhtorizedRequests.setFolder(tokenGenerated,"FolderName123");
+        restFileSysRequests.setFolder(tokenGenerated,"FolderName123");
         parsedJson = gson.toJson(fileSys);
 
-        sendAuhtorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
+        sendAuthorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
 
-        Response response = sendAuhtorizedRequests.setShelfFolderId(tokenGenerated);
+        Response response = sendAuthorizedRequests.sendingPutReqWithGeneratedTokenFLCShelf(tokenGenerated, fileSys.shelfId);
 
         List<Map<String,Object>> shelfItems = responseToJson.setShelfItems(response.jsonPath().get("shelfItems"));
         Integer folderId = (Integer) shelfItems.get(0).get("id");
@@ -120,7 +119,7 @@ public class ApiFileSysTest extends BaseApiTest
         List<Long> list = new ArrayList<>();
         list.add(Long.valueOf(folderId));
 
-        response = sendAuhtorizedRequests.sendingPutReqToMoveFolderToTrash(tokenGenerated, list);
+        response = sendAuthorizedRequests.sendingPutReqToMoveFolderToTrash(tokenGenerated, list);
 
         assertEquals("Folders moved to trash", response.jsonPath().get("message").toString());
     }
@@ -128,22 +127,8 @@ public class ApiFileSysTest extends BaseApiTest
     @Test
     public void apiDeleteFolderFromTrash()
     {
-        sendAuhtorizedRequests.setShelf("Shelfara123",tokenGenerated);
-        sendAuhtorizedRequests.setFolder(tokenGenerated,"Fascikla");
-        String parsedJson = gson.toJson(fileSys);
-
-        sendAuhtorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
-
-        Response response = sendAuhtorizedRequests.setShelfFolderId(tokenGenerated);
-
-        List<Map<String,Object>> shelfItems = responseToJson.setShelfItems(response.jsonPath().get("shelfItems"));
-        Integer folderId = (Integer) shelfItems.get(0).get("id");
-
-        List<Long> list = new ArrayList<>();
-        list.add(Long.valueOf(folderId));
-
-        sendAuhtorizedRequests.sendingPutReqToMoveFolderToTrash(tokenGenerated, list);
-        response = sendAuhtorizedRequests.sendingDeleteReqToDeleteFolderFromTrash(tokenGenerated, list);
+        List<Long> list = restFileSysRequests.createFolderAndMoveItToTrash(tokenGenerated);
+        Response response = sendAuthorizedRequests.sendingDeleteReqToDeleteFolderFromTrash(tokenGenerated, list);
 
         assertEquals("Folders deleted", response.jsonPath().get("message").toString());
         assertEquals("200", response.jsonPath().get("status").toString());
@@ -152,52 +137,61 @@ public class ApiFileSysTest extends BaseApiTest
     @Test
     public void apiRecoverFolderFromTrash()
     {
-        sendAuhtorizedRequests.setShelf("Shelfara123",tokenGenerated);
-        sendAuhtorizedRequests.setFolder(tokenGenerated,"Fascikla");
-        String parsedJson = gson.toJson(fileSys);
-
-        sendAuhtorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
-        Response response = sendAuhtorizedRequests.setShelfFolderId(tokenGenerated);
-
-        List<Map<String,Object>> shelfItems = responseToJson.setShelfItems(response.jsonPath().get("shelfItems"));
-        Integer folderId = (Integer) shelfItems.get(0).get("id");
-
-        List<Long> list = new ArrayList<>();
-        list.add(Long.valueOf(folderId));
-
-        sendAuhtorizedRequests.sendingPutReqToMoveFolderToTrash(tokenGenerated, list);
-        response = sendAuhtorizedRequests.sendingPutReqToRecoverFolderFromTrash(tokenGenerated, list);
+        List<Long> list = restFileSysRequests.createFolderAndMoveItToTrash(tokenGenerated);
+        Response response = sendAuthorizedRequests.sendingPutReqToRecoverFolderFromTrash(tokenGenerated, list);
 
         assertEquals("Folders recovered from trash", response.jsonPath().get("message").toString());
         assertEquals("200", response.jsonPath().get("status").toString());
     }
 
     @Test
-    public void apiUploadFilefPTC()
+    public void apiRenameFolder()
     {
-        sendAuhtorizedRequests.setShelf("ShelfName123",tokenGenerated);
-        sendAuhtorizedRequests.setFolder(tokenGenerated,"FolderName");
+        restFileSysRequests.setShelf("Shelfara123", tokenGenerated);
+        restFileSysRequests.setFolder(tokenGenerated, "Fascikla");
         String parsedJson = gson.toJson(fileSys);
 
-        sendAuhtorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
+        sendAuthorizedRequests.sendingPostReqForCreateFolder(tokenGenerated, parsedJson);
+        Response response = sendAuthorizedRequests.sendingPutReqWithGeneratedTokenFLCShelf(tokenGenerated, fileSys.shelfId);
 
-        Response response = sendAuhtorizedRequests.sendingPostReqForUploadFile(tokenGenerated,file, fileSys.shelfId, 0);
+
+        List<Map<String,Object>> shelfItems = responseToJson.setShelfItems(response.jsonPath().get("shelfItems"));
+        Integer folderId = (Integer) shelfItems.get(0).get("id");
+
+        fileSys.setValuesForRenameFolder("NewFolderName",folderId);
+        parsedJson = gson.toJson(fileSys);
+
+        response = sendAuthorizedRequests.sendingPutReqToRenameFolder(tokenGenerated, parsedJson);
+
+        assertEquals("File renamed", response.jsonPath().get("message").toString());
+        assertEquals("200", response.jsonPath().get("status").toString());
+    }
+
+    @Test
+    public void apiUploadFilefPTC()
+    {
+        restFileSysRequests.setShelf("ShelfName123",tokenGenerated);
+        restFileSysRequests.setFolder(tokenGenerated,"FolderName");
+        String parsedJson = gson.toJson(fileSys);
+
+        sendAuthorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
+
+        Response response = sendAuthorizedRequests.sendingPostReqForUploadFile(tokenGenerated,file, fileSys.shelfId, 0);
         assertEquals("File Uploaded", response.jsonPath().get("message").toString());
     }
 
     @Test
     public void apiUploadFilesfPTC()
     {
-        sendAuhtorizedRequests.setShelf("ShelfName123",tokenGenerated);
-        sendAuhtorizedRequests.setFolder(tokenGenerated,"FolderName");
+        restFileSysRequests.setShelf("ShelfName123",tokenGenerated);
+        restFileSysRequests.setFolder(tokenGenerated,"FolderName");
         String parsedJson = gson.toJson(fileSys);
 
-        sendAuhtorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
+        sendAuthorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
 
-        Response response = sendAuhtorizedRequests.sendingPostReqForUploadFiles(tokenGenerated, files, fileSys.shelfId, 0);
+        Response response = sendAuthorizedRequests.sendingPostReqForUploadFiles(tokenGenerated, files, fileSys.shelfId, 0);
         assertEquals("File Uploaded", response.jsonPath().get("message").toString());
     }
-
 
     @AfterClass
     public static void setUp() throws SQLException, ClassNotFoundException
