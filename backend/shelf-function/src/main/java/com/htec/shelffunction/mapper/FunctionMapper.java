@@ -2,6 +2,7 @@ package com.htec.shelffunction.mapper;
 
 import com.htec.shelffunction.dto.FunctionDTO;
 import com.htec.shelffunction.entity.FunctionEntity;
+import com.htec.shelffunction.model.request.CustomFunctionRequestModel;
 import com.htec.shelffunction.model.request.PredefinedFunctionRequestModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,6 +18,9 @@ public interface FunctionMapper {
     @Mapping(target = "custom", constant = "false")
     @Mapping(target="event", expression="java(FunctionEntity.createEvent(functionRequestModel.getEventId()))")
     FunctionEntity predefinedFunctionRequestModelToFunctionEntity(PredefinedFunctionRequestModel functionRequestModel);
+
+    @Mapping(target="event", expression="java(FunctionEntity.createEvent(customFunctionRequestModel.getEventId()))")
+    FunctionEntity customFunctionRequestModelToFunctionEntity(CustomFunctionRequestModel customFunctionRequestModel);
 
     @Mapping(target = "eventId", source = "functionEntity.event.id")
     FunctionDTO functionEntityToFunctionDto(FunctionEntity functionEntity);
