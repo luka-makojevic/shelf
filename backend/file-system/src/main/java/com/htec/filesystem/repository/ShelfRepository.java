@@ -30,4 +30,6 @@ public interface ShelfRepository extends JpaRepository<ShelfEntity, Long> {
     List<ShelfEntity> findAllByUserIdAndDeletedFalse(Long userId);
 
     List<ShelfEntity> findAllByUserId(Long userId);
+
+    Optional<ShelfEntity> findByIdAndUserId(Long shelfId, Long userId);
 }

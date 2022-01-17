@@ -39,6 +39,13 @@ public class ExceptionSupplier {
             ErrorMessages.FORBIDDEN.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> userNotAllowedToGetFunction = () -> new ShelfException(
+            ErrorMessages.USER_NOT_ALLOWED_TO_GET_THIS_FUNCTION.getErrorMessage(),
+            HttpStatus.FORBIDDEN.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.FORBIDDEN.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> functionNotFound = () -> new ShelfException(
             ErrorMessages.FUNCTION_NOT_FOUND.getErrorMessage(),
             HttpStatus.NOT_FOUND.value(),

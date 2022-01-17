@@ -19,6 +19,7 @@ import com.htec.filesystem.validator.FileSystemValidator;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.stereotype.Service;
 
+import javax.el.FunctionMapper;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
@@ -213,5 +214,13 @@ public class ShelfService {
             throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
 
         return shelfEntity;
+    }
+
+    public ShelfDTO getShelfById(Long userId, Long shelfId) {
+
+        ShelfEntity shelfEntity = shelfRepository.findByIdAndUserId(shelfId, userId)
+                .orElseThrow(ExceptionSupplier.shelfNotFound);
+
+        return ShelfItemMapper.INSTANCE.shelfEntityToShelfDto(shelfEntity);
     }
 }

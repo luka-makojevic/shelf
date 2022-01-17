@@ -1,12 +1,14 @@
 package com.htec.shelffunction.service;
 
 import com.htec.shelffunction.dto.FunctionDTO;
+import com.htec.shelffunction.dto.ShelfDTO;
 import com.htec.shelffunction.entity.FunctionEntity;
 import com.htec.shelffunction.exception.ExceptionSupplier;
 import com.htec.shelffunction.filter.JwtStorageFilter;
 import com.htec.shelffunction.mapper.FunctionMapper;
 import com.htec.shelffunction.model.request.CustomFunctionRequestModel;
 import com.htec.shelffunction.model.request.PredefinedFunctionRequestModel;
+import com.htec.shelffunction.model.response.FunctionResponseModel;
 import com.htec.shelffunction.repository.FunctionRepository;
 import com.htec.shelffunction.security.SecurityConstants;
 import org.springframework.http.HttpEntity;
@@ -26,7 +28,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Service
 public class FunctionService {
@@ -250,5 +251,46 @@ public class FunctionService {
         } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public FunctionResponseModel getFunction(Long functionId, Long userId) {
+
+        if (getAllFunctionsByUserId().isEmpty()) {
+            throw ExceptionSupplier.userNotAllowedToGetFunction.get();
+        }
+
+        FunctionEntity functionEntity = functionRepository.findById(functionId)
+                .orElseThrow(ExceptionSupplier.functionNotFound);
+
+        FunctionResponseModel functionResponseModel = FunctionMapper.INSTANCE.functionEntityToFunctionResponseModel(functionEntity);
+        functionResponseModel.setEventName(functionEntity.getEvent().getName());
+
+        ShelfDTO shelfDTO = shelfService.getShelf(functionEntity.getShelfId());
+        functionResponseModel.setShelfName(shelfDTO.getName());
+
+        String extension = "";
+
+        if (Objects.equals(functionEntity.getLanguage(), "java")) {
+            extension += JAVA_EXTENSION;
+        } else {
+            extension += CSHARP_EXTENSION;
+        }
+
+        String sourceFilePath = homePath +
+                userPath +
+                userId +
+                pathSeparator +
+                "functions" +
+                pathSeparator +
+                "Function" + functionEntity.getId() +
+                extension;
+
+        try {
+            functionResponseModel.setCode(Files.readString(Path.of(sourceFilePath)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return functionResponseModel;
     }
 }

@@ -5,12 +5,14 @@ import com.htec.shelffunction.annotation.AuthenticationUser;
 import com.htec.shelffunction.dto.FunctionDTO;
 import com.htec.shelffunction.model.request.CustomFunctionRequestModel;
 import com.htec.shelffunction.model.request.PredefinedFunctionRequestModel;
+import com.htec.shelffunction.model.response.FunctionResponseModel;
 import com.htec.shelffunction.model.response.TextResponseMessage;
 import com.htec.shelffunction.service.FunctionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -56,5 +58,11 @@ public class FunctionController {
         functionService.deleteFunction(functionId);
 
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FUNCTION_DELETED, HttpStatus.OK.value()));
+    }
+
+    @GetMapping("/{functionId}")
+    public ResponseEntity<FunctionResponseModel> getFunction(@AuthenticationUser AuthUser authUser, @PathVariable Long functionId) {
+
+        return ResponseEntity.ok(functionService.getFunction(functionId, authUser.getId()));
     }
 }

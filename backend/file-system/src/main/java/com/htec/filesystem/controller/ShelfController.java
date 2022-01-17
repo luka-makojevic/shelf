@@ -50,6 +50,12 @@ public class ShelfController {
         return ResponseEntity.ok(shelfService.getAllShelvesById(authUser.getId()));
     }
 
+    @GetMapping("/record/{shelfId}")
+    public ResponseEntity<ShelfDTO> getShelf(@AuthenticationUser AuthUser authUser,  @PathVariable Long shelfId) {
+
+        return ResponseEntity.ok(shelfService.getShelfById(authUser.getId(), shelfId));
+    }
+
     @DeleteMapping("/{shelfId}")
     public ResponseEntity<TextResponseMessage> deleteShelf(@AuthenticationUser AuthUser authUser,
                                                            @PathVariable Long shelfId) {
