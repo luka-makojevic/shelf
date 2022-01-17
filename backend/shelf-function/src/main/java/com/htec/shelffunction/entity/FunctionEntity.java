@@ -31,6 +31,9 @@ public class FunctionEntity {
     @Column(name = "custom")
     private Boolean custom;
 
+    @Column(name = "language")
+    private String language;
+
     @OneToOne
     private EventEntity event;
 

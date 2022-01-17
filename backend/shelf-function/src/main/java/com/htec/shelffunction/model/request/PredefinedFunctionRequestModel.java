@@ -15,4 +15,5 @@ public class PredefinedFunctionRequestModel {
     private Long eventId;
     private Long shelfId;
     private Long functionParam;
+    private String language;
 }

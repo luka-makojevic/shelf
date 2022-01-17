@@ -2,7 +2,7 @@ package com.htec.shelffunction.controller;
 
 import com.htec.shelffunction.annotation.AuthUser;
 import com.htec.shelffunction.annotation.AuthenticationUser;
-import com.htec.shelffunction.dto.FunctionDto;
+import com.htec.shelffunction.dto.FunctionDTO;
 import com.htec.shelffunction.model.request.PredefinedFunctionRequestModel;
 import com.htec.shelffunction.model.response.TextResponseMessage;
 import com.htec.shelffunction.service.FunctionService;
@@ -17,6 +17,7 @@ import java.util.List;
 public class FunctionController {
 
     public final String FUNCTION_CREATED = "Function created";
+    public final String FUNCTION_DELETED = "Function deleted";
 
     private final FunctionService functionService;
 
@@ -26,7 +27,7 @@ public class FunctionController {
 
     @PostMapping("/predefined")
     public ResponseEntity<TextResponseMessage> createPredefinedFunction(@RequestBody PredefinedFunctionRequestModel functionRequestModel,
-                                                           @AuthenticationUser AuthUser authUser) {
+                                                                        @AuthenticationUser AuthUser authUser) {
 
         functionService.createPredefinedFunction(functionRequestModel, authUser.getId());
 
@@ -34,8 +35,16 @@ public class FunctionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FunctionDto>> getAllFunctions(@AuthenticationUser AuthUser authUser) {
+    public ResponseEntity<List<FunctionDTO>> getAllFunctions(@AuthenticationUser AuthUser authUser) {
 
-        return ResponseEntity.ok(functionService.getAllFunctionsByUserId(authUser.getId()));
+        return ResponseEntity.ok(functionService.getAllFunctionsByUserId());
+    }
+
+    @DeleteMapping("/{functionId}")
+    public ResponseEntity<TextResponseMessage> deleteFunction(@AuthenticationUser AuthUser user, @PathVariable Long functionId) {
+
+        functionService.deleteFunction(functionId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FUNCTION_DELETED, HttpStatus.OK.value()));
     }
 }

@@ -1,6 +1,6 @@
 package com.htec.shelffunction.service;
 
-import com.htec.shelffunction.dto.FunctionDto;
+import com.htec.shelffunction.dto.FunctionDTO;
 import com.htec.shelffunction.entity.FunctionEntity;
 import com.htec.shelffunction.exception.ExceptionSupplier;
 import com.htec.shelffunction.filter.JwtStorageFilter;
@@ -17,15 +17,14 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -60,7 +59,13 @@ public class FunctionService {
         FunctionEntity functionEntity = FunctionMapper.INSTANCE
                 .predefinedFunctionRequestModelToFunctionEntity(functionRequestModel);
 
+        functionEntity.setLanguage("java");
+
         functionRepository.saveAndFlush(functionEntity);
+
+        functionEntity.setPath(userId + pathSeparator + "functions" + pathSeparator + "Function" + functionEntity.getId());
+
+        functionRepository.save(functionEntity);
 
         compilePredefinedFunction(functionEntity.getId(), functionRequestModel, userId);
     }
@@ -128,12 +133,46 @@ public class FunctionService {
         }
     }
 
-    public List<FunctionDto> getAllFunctionsByUserId(Long userId) {
+    public List<FunctionDTO> getAllFunctionsByUserId() {
 
         List<Long> shelfIds = shelfService.getUsersShelfIds();
 
         List<FunctionEntity> functionEntities = functionRepository.findAllByShelfIdIn(shelfIds);
 
         return FunctionMapper.INSTANCE.functionEntitiesToFunctionDtos(functionEntities);
+    }
+
+    public void deleteFunction(Long functionId) {
+
+        if (getAllFunctionsByUserId().isEmpty()) {
+            throw ExceptionSupplier.userNotAllowedToDeleteFunction.get();
+        }
+
+        FunctionEntity functionEntity = functionRepository.findById(functionId)
+                .orElseThrow(ExceptionSupplier.functionNotFound);
+
+        String sourcePath = homePath + userPath + functionEntity.getPath();
+        String binaryPath = homePath + userPath + functionEntity.getPath();
+
+        if (Objects.equals(functionEntity.getLanguage(), "java")) {
+
+            sourcePath += ".java";
+            binaryPath += ".class";
+
+
+        } else {
+            sourcePath += ".cs";
+            binaryPath += ".exe";
+        }
+
+        if (!(new File(sourcePath)).delete()) {
+            throw ExceptionSupplier.couldNotDeleteFile.get();
+        }
+
+        if (!(new File(binaryPath)).delete()) {
+            throw ExceptionSupplier.couldNotDeleteFile.get();
+        }
+
+        functionRepository.delete(functionEntity);
     }
 }
