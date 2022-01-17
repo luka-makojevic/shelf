@@ -41,6 +41,7 @@ export const DropDown = styled.div`
   min-width: 200px;
   height: 140px;
   border-radius: 20px;
+  z-index: 8;
 `;
 export const ProfilePicture = styled.div<ProfilePictureProps>`
   border: 2px solid #006fd1;
