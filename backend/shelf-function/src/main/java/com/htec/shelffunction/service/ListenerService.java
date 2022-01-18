@@ -55,9 +55,9 @@ public class ListenerService {
             String executeCmd = (CS.equals(lang) ? CS_EXECUTE_CMD : JAVA_EXECUTE_CMD);
             String folderPath = homePath + userPath + userId + pathSeparator + "functions";
 
-            String cmd = executeCmd + folderPath
-                    + (CS.equals(lang) ? pathSeparator : " ")
-                    + "Function" + functionId + (CS.equals(lang) ? ".exe" : "");
+            String cmd = executeCmd + folderPath +
+                    (CS.equals(lang) ? pathSeparator : " ") +
+                    "Function" + functionId + (CS.equals(lang) ? ".exe" : "");
 
             Process process = runTime.exec(cmd);
 
