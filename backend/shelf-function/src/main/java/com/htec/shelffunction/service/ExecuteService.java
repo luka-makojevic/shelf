@@ -29,12 +29,12 @@ public class ExecuteService {
 
     public ResponseEntity<Object> execute(String lang, Long functionId) {
 
-        String result = executeFunction(functionId, lang);
+        String result = executeFunction(functionId, lang, null, null);
 
         return ResponseEntity.ok().body(result);
     }
 
-    String executeFunction(Long functionId, String lang) {
+    String executeFunction(Long functionId, String lang, Long userId, Long fileId) {
         try {
             FunctionEntity functionEntity = functionRepository.findById(functionId)
                     .orElseThrow(ExceptionSupplier.functionNotFound);
@@ -51,6 +51,14 @@ public class ExecuteService {
                         functionEntity.getPath().replace(PATH_SEPARATOR + "Function" + functionId, "");
 
                 cmd += folderPath + " " + "Function" + functionId;
+
+                if (userId != null) {
+                    cmd += " " + userId;
+                }
+
+                if (fileId != null) {
+                    cmd += " " + fileId;
+                }
             }
 
             Process process = runTime.exec(cmd);

@@ -27,7 +27,10 @@ public class ListenerService {
         List<FunctionEntity> functionEntities = functionRepository.findAllByIdIn(message.getFunctionIds());
 
         for (FunctionEntity functionEntity : functionEntities) {
-            executeService.executeFunction(functionEntity.getId(), functionEntity.getLanguage());
+            executeService.executeFunction(functionEntity.getId(),
+                    functionEntity.getLanguage(),
+                    message.getUserId(),
+                    message.getFileId());
         }
     }
 }
