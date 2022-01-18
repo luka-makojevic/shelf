@@ -1,6 +1,7 @@
 package com.htec.shelffunction.service;
 
 import com.htec.shelffunction.entity.FunctionEntity;
+import com.htec.shelffunction.exception.ExceptionSupplier;
 import com.htec.shelffunction.model.request.KafkaRequestModel;
 import com.htec.shelffunction.repository.FunctionRepository;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -40,42 +41,26 @@ public class ListenerService {
 
             if (JAVA.equals(functionEntity.getLanguage())) {
 
-                executeJavaFunction(message.getUserId(), functionEntity.getId());
+                executeFunction(message.getUserId(), functionEntity.getId() , JAVA);
 
             } else if (CS.equals(functionEntity.getLanguage())) {
 
-                executeCsFunction(message.getUserId(), functionEntity.getId());
+                executeFunction(message.getUserId(), functionEntity.getId() , CS);
 
             }
         }
     }
 
-    private void executeCsFunction(Long userId, Long functionId) {
-
+    private void executeFunction(Long userId, Long functionId,  String lang) {
         try {
+            String executeCmd = (CS.equals(lang) ? CS_EXECUTE_CMD : JAVA_EXECUTE_CMD);
             String folderPath = homePath + userPath + userId + pathSeparator + "functions";
 
-            Process process = runTime.exec(CS_EXECUTE_CMD +
-                    folderPath + pathSeparator +
-                    "Function" + functionId + ".exe");
+            String cmd = executeCmd + folderPath
+                    + (CS.equals(lang) ? pathSeparator : " ")
+                    + "Function" + functionId + (CS.equals(lang) ? ".exe" : "");
 
-            process.waitFor(5, TimeUnit.SECONDS);
-
-            process.destroy();
-
-        } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void executeJavaFunction(Long userId, Long functionId) {
-
-        try {
-            String classPath = homePath + userPath + userId + pathSeparator + "functions";
-
-            Process process = runTime.exec(JAVA_EXECUTE_CMD +
-                    classPath + " " +
-                    "Function" + functionId);
+            Process process = runTime.exec(cmd);
 
             process.waitFor(5, TimeUnit.SECONDS);
 
