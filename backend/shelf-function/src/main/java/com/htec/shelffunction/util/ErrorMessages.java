@@ -14,7 +14,8 @@ public enum ErrorMessages {
     INTERNAL_SERVER_ERROR("Internal server error."),
     FORBIDDEN("Forbidden."),
     BAD_REQUEST("Bad request."),
-    DESERIALIZING_ERROR("Error when deserializing byte[] to KafkaRequestModel.");
+    DESERIALIZING_ERROR("Error when deserializing byte[] to KafkaRequestModel."),
+    FUNCTION_IS_NOT_SYNCHRONIZED("Function not synchronized.");
 
     private String errorMessage;
 

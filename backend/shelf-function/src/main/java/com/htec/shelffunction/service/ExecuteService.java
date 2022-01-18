@@ -36,40 +36,45 @@ public class ExecuteService {
             FunctionEntity functionEntity = functionRepository.findById(functionId)
                     .orElseThrow(ExceptionSupplier.functionNotFound);
 
-            String cmd = (CS.equals(lang) ? CS_EXECUTE_CMD : JAVA_EXECUTE_CMD);
+            if (functionEntity.getEvent().getId() == 7L) {
+                String cmd = (CS.equals(lang) ? CS_EXECUTE_CMD : JAVA_EXECUTE_CMD);
 
-            if (CS.equals(lang)) {
+                if (CS.equals(lang)) {
 
-                cmd += HOME_PATH + USER_PATH + functionEntity.getPath() + ".exe";
+                    cmd += HOME_PATH + USER_PATH + functionEntity.getPath() + ".exe";
 
-            } else if (JAVA.equals(lang)) {
+                } else if (JAVA.equals(lang)) {
 
-                String folderPath = HOME_PATH + USER_PATH +
-                        functionEntity.getPath().replace(PATH_SEPARATOR + "Function" + functionId, "");
+                    String folderPath = HOME_PATH + USER_PATH +
+                            functionEntity.getPath().replace(PATH_SEPARATOR + "Function" + functionId, "");
 
-                cmd += folderPath + " " + "Function" + functionId;
+                    cmd += folderPath + " " + "Function" + functionId;
 
-                if (fileId != null) {
-                    cmd += " " + fileId;
+                    if (fileId != null) {
+                        cmd += " " + fileId;
+                    }
+
+                    if (userId != null) {
+                        cmd += " " + userId;
+                    }
                 }
+                Process process = runTime.exec(cmd);
 
-                if (userId != null) {
-                    cmd += " " + userId;
-                }
+                process.waitFor(PROCESS_EXECUTE_TIME_OUT, TimeUnit.SECONDS);
+
+                InputStream inputStream = (process.exitValue() == 0 ? process.getInputStream() : process.getErrorStream());
+
+                Object result = new BufferedReader(new InputStreamReader(inputStream))
+                        .lines().collect(Collectors.joining("\n"));
+
+                process.destroy();
+
+                return result;
+            }else{
+                throw ExceptionSupplier.functionIsNotSynchronized.get();
             }
 
-            Process process = runTime.exec(cmd);
 
-            process.waitFor(PROCESS_EXECUTE_TIME_OUT, TimeUnit.SECONDS);
-
-            InputStream inputStream = (process.exitValue() == 0 ? process.getInputStream() : process.getErrorStream());
-
-            Object result = new BufferedReader(new InputStreamReader(inputStream))
-                    .lines().collect(Collectors.joining("\n"));
-
-            process.destroy();
-
-            return result;
 
         } catch (InterruptedException | IOException e) {
             e.printStackTrace();
