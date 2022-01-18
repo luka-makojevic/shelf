@@ -27,6 +27,9 @@ export interface ModalProps {
   title?: string;
   closeIcon?: boolean;
 }
+export interface ModalStyleProps {
+  background?: string;
+}
 
 export interface FolderModalProps {
   onCloseModal: Dispatch<SetStateAction<boolean>>;
@@ -37,4 +40,19 @@ export interface FolderModalProps {
   file?: TableDataTypes | null;
   onGetData: () => void;
   onEdit: (file: TableDataTypes, newName: string) => void;
+}
+
+export interface ShelvesOptionTypes {
+  text: string;
+  value: string;
+}
+
+export interface FunctionModalProps {
+  onGetData: () => void;
+  onCloseModal: Dispatch<SetStateAction<boolean>>;
+  data: ShelvesOptionTypes[];
+}
+
+export interface FunctionStyleProps {
+  htmlFor: string;
 }

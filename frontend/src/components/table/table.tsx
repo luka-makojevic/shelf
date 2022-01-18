@@ -112,7 +112,7 @@ export const Table = ({
           {data.map((item) => (
             <Row
               actions={actions}
-              key={item.name}
+              key={`${item.id}-${item.name}`}
               selectedRows={selectedRows}
               setSelectedRows={setSelectedRows}
               multiSelect={mulitSelect}

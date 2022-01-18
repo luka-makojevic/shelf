@@ -1,4 +1,4 @@
-import { FieldError, UseFormRegister } from 'react-hook-form';
+import { FieldValues, UseFormRegister } from 'react-hook-form';
 import { RiArrowDownSFill } from 'react-icons/ri';
 import { Error } from '../../text/text-styles';
 import { SelectContainer, StyledSelect } from './select-styles';
@@ -7,8 +7,11 @@ interface SelectProps {
   optionsData: { value: string; text: string }[];
   selectName: string;
   placeHolder: string;
-  register: UseFormRegister<any>;
-  error: FieldError;
+  register: UseFormRegister<FieldValues>;
+  error: { message: string };
+  validation?: {
+    validate: (value: string) => true | 'Cant select same shelfs';
+  };
 }
 
 export const Select = ({
@@ -17,23 +20,32 @@ export const Select = ({
   placeHolder,
   register,
   error,
-}: SelectProps) => (
-  <SelectContainer>
-    <RiArrowDownSFill color="black" />
-    <StyledSelect
-      {...register(selectName, {
-        required: 'Select one option',
-      })}
-    >
-      <option hidden value="">
-        {placeHolder}
-      </option>
-      {optionsData.map((option: { value: string; text: string }) => (
-        <option key={option.value} value={option.value}>
-          {option.text}
+  validation,
+}: SelectProps) => {
+  let currentValiadtion = {
+    required: 'Select one option',
+  };
+  if (validation) {
+    currentValiadtion = {
+      required: 'Select one option',
+      ...validation,
+    };
+  }
+
+  return (
+    <SelectContainer>
+      <RiArrowDownSFill color="black" />
+      <StyledSelect {...register(selectName, currentValiadtion)}>
+        <option hidden value="">
+          {placeHolder}
         </option>
-      ))}
-    </StyledSelect>
-    {error && <Error>{error.message}</Error>}
-  </SelectContainer>
-);
+        {optionsData.map((option: { value: string; text: string }) => (
+          <option key={option.value} value={option.value}>
+            {option.text}
+          </option>
+        ))}
+      </StyledSelect>
+      {error && <Error>{error.message}</Error>}
+    </SelectContainer>
+  );
+};

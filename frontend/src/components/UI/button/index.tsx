@@ -18,6 +18,7 @@ export const Button = ({
   size,
   variant = 'primary',
   fullwidth,
+  type,
   ...restProps
 }: ButtonProps) => {
   if (to) {
@@ -75,6 +76,7 @@ export const Button = ({
       onClick={onClick}
       fullwidth={fullwidth}
       variant={variant}
+      type={type}
       {...restProps}
     >
       {children}

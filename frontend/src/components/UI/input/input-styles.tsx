@@ -30,3 +30,12 @@ export const SeenIcon = styled.img`
   right: 12px;
   top: 18px;
 `;
+export const InputTitle = styled.h3`
+  margin: 0;
+  &:first-of-type{
+    margin-top:10px;
+  }
+`;
+export const InputSubTitle = styled.p`
+  margin: 0;
+`;
