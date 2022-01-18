@@ -1,7 +1,6 @@
 package com.htec.shelffunction.service;
 
 import com.htec.shelffunction.entity.FunctionEntity;
-import com.htec.shelffunction.exception.ExceptionSupplier;
 import com.htec.shelffunction.model.request.KafkaRequestModel;
 import com.htec.shelffunction.repository.FunctionRepository;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -41,17 +40,17 @@ public class ListenerService {
 
             if (JAVA.equals(functionEntity.getLanguage())) {
 
-                executeFunction(message.getUserId(), functionEntity.getId() , JAVA);
+                executeFunction(message.getUserId(), functionEntity.getId(), JAVA);
 
             } else if (CS.equals(functionEntity.getLanguage())) {
 
-                executeFunction(message.getUserId(), functionEntity.getId() , CS);
+                executeFunction(message.getUserId(), functionEntity.getId(), CS);
 
             }
         }
     }
 
-    private void executeFunction(Long userId, Long functionId,  String lang) {
+    private void executeFunction(Long userId, Long functionId, String lang) {
         try {
             String executeCmd = (CS.equals(lang) ? CS_EXECUTE_CMD : JAVA_EXECUTE_CMD);
             String folderPath = homePath + userPath + userId + pathSeparator + "functions";
