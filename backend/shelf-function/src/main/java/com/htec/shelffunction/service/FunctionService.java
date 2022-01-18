@@ -62,7 +62,9 @@ public class FunctionService {
 
         checkAccessRights(functionRequestModel.getShelfId());
 
-        checkFunctionNameExists(functionRequestModel.getName());
+        if (checkFunctionNameExists(functionRequestModel.getName(), functionRequestModel.getShelfId())) {
+            throw ExceptionSupplier.functionAlreadyExists.get();
+        }
 
         FunctionEntity functionEntity = FunctionMapper.INSTANCE
                 .predefinedFunctionRequestModelToFunctionEntity(functionRequestModel);
@@ -78,12 +80,9 @@ public class FunctionService {
         compilePredefinedFunction(functionEntity.getId(), functionRequestModel, userId);
     }
 
-    private void checkFunctionNameExists(String functionName) {
-        List<String> names = getAllFunctionsByUserId().stream().map(FunctionDTO::getName).collect(Collectors.toList());
-
-        if (names.contains(functionName)) {
-            throw ExceptionSupplier.functionAlreadyExists.get();
-        }
+    private boolean checkFunctionNameExists(String functionName, Long shelfId) {
+         return getAllFunctionsByUserId().stream().filter(functionDTO -> Objects.equals(functionDTO.getShelfId(), shelfId))
+                .anyMatch(functionDTO -> functionDTO.getName().equals(functionName));
     }
 
     private void compilePredefinedFunction(Long newFunctionId, PredefinedFunctionRequestModel functionRequestModel, Long userId) {
@@ -197,7 +196,9 @@ public class FunctionService {
 
         checkAccessRights(customFunctionRequestModel.getShelfId());
 
-        checkFunctionNameExists(customFunctionRequestModel.getName());
+        if (checkFunctionNameExists(customFunctionRequestModel.getName(), customFunctionRequestModel.getShelfId())) {
+            throw ExceptionSupplier.functionAlreadyExists.get();
+        }
 
         FunctionEntity functionEntity = FunctionMapper.INSTANCE
                 .customFunctionRequestModelToFunctionEntity(customFunctionRequestModel);
