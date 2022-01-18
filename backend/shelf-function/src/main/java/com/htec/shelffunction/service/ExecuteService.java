@@ -61,6 +61,7 @@ public class ExecuteService {
                     cmd += " " + userId;
                 }
             }
+
             Process process = runTime.exec(cmd);
 
             process.waitFor(PROCESS_EXECUTE_TIME_OUT, TimeUnit.SECONDS);
