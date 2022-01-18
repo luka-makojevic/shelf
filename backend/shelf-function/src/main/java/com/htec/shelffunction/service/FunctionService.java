@@ -20,7 +20,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -28,6 +29,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class FunctionService {
@@ -60,6 +62,8 @@ public class FunctionService {
 
         checkAccessRights(functionRequestModel.getShelfId());
 
+        checkFunctionNameExists(functionRequestModel.getName());
+
         FunctionEntity functionEntity = FunctionMapper.INSTANCE
                 .predefinedFunctionRequestModelToFunctionEntity(functionRequestModel);
 
@@ -72,6 +76,14 @@ public class FunctionService {
         functionRepository.save(functionEntity);
 
         compilePredefinedFunction(functionEntity.getId(), functionRequestModel, userId);
+    }
+
+    private void checkFunctionNameExists(String functionName) {
+        List<String> names = getAllFunctionsByUserId().stream().map(FunctionDTO::getName).collect(Collectors.toList());
+
+        if (names.contains(functionName)) {
+            throw ExceptionSupplier.functionAlreadyExists.get();
+        }
     }
 
     private void compilePredefinedFunction(Long newFunctionId, PredefinedFunctionRequestModel functionRequestModel, Long userId) {
@@ -182,6 +194,10 @@ public class FunctionService {
     }
 
     public void createCustomFunction(CustomFunctionRequestModel customFunctionRequestModel, Long userId) {
+
+        checkAccessRights(customFunctionRequestModel.getShelfId());
+
+        checkFunctionNameExists(customFunctionRequestModel.getName());
 
         FunctionEntity functionEntity = FunctionMapper.INSTANCE
                 .customFunctionRequestModelToFunctionEntity(customFunctionRequestModel);
