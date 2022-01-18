@@ -5,7 +5,9 @@ import com.htec.filesystem.annotation.AuthenticationUser;
 import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.model.response.FileResponseModel;
 import com.htec.filesystem.model.response.TextResponseMessage;
+import com.htec.filesystem.service.EventService;
 import com.htec.filesystem.service.FileService;
+import com.htec.filesystem.util.FunctionEvents;
 import org.springframework.data.util.Pair;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,7 @@ import java.util.Map;
 public class FileController {
 
     private final FileService fileService;
+    private final EventService eventService;
 
     private final String FILE_UPLOADED = "File Uploaded";
     private final String FILE_COPIED = "File Copied";
@@ -32,8 +35,10 @@ public class FileController {
     private final String FILES_RECOVERED_FROM_TRASH = "File/s recovered from trash.";
     private final String FILES_DELETED = "File/s deleted.";
 
-    public FileController(FileService fileService) {
+    public FileController(FileService fileService,
+                          EventService eventService) {
         this.fileService = fileService;
+        this.eventService = eventService;
     }
 
 
@@ -77,7 +82,10 @@ public class FileController {
                                                           @PathVariable Long folderId,
                                                           @AuthenticationUser AuthUser authUser) {
 
-        fileService.saveFile(shelfId, folderId, files, authUser.getId());
+        List<Long> newFileIds = fileService.saveFile(shelfId, folderId, files, authUser.getId());
+
+        eventService.reportEvent(FunctionEvents.UPLOAD, newFileIds, authUser.getId(), shelfId);
+
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_UPLOADED, HttpStatus.OK.value()));
     }
 
@@ -115,7 +123,7 @@ public class FileController {
     @PutMapping("/recover")
     public ResponseEntity<TextResponseMessage> recoverFile(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) {
 
-        fileService.updateDeletedFiles(user, fileIds , false, true);
+        fileService.updateDeletedFiles(user, fileIds, false, true);
         return ResponseEntity.ok().body(new TextResponseMessage(FILES_RECOVERED_FROM_TRASH, HttpStatus.OK.value()));
     }
 }

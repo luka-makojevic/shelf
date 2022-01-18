@@ -97,7 +97,9 @@ public class FileService {
         return new FileResponseModel(imageBytes, path);
     }
 
-    public void saveFile(Long shelfId, Long folderId, Map<String, Pair<String, String>> files, Long userId) {
+    public List<Long> saveFile(Long shelfId, Long folderId, Map<String, Pair<String, String>> files, Long userId) {
+
+        List<Long>  newFileIds = new ArrayList<>();
 
         if (files == null) {
             throw ExceptionSupplier.couldNotUploadFile.get();
@@ -119,7 +121,6 @@ public class FileService {
         if (!Objects.equals(shelf.getUserId(), userId)) {
             throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
         }
-
 
         for (Map.Entry<String, Pair<String, String>> filesPair : files.entrySet()) {
 
@@ -160,11 +161,14 @@ public class FileService {
 
             String uploadDir = homePath + localPath;
             FileUtil.saveFile(uploadDir, fileName, bytes);
-            saveFileIntoDB(dbPath, fileName, shelfId, folderId);
+
+            newFileIds.add(saveFileIntoDB(dbPath, fileName, shelfId, folderId));
         }
+
+        return newFileIds;
     }
 
-    public void saveFileIntoDB(String filePath, String fileName, long shelfId, long folderId) {
+    public Long saveFileIntoDB(String filePath, String fileName, long shelfId, long folderId) {
 
         FileEntity fileEntity = new FileEntity();
 
@@ -175,7 +179,9 @@ public class FileService {
         if (folderId != 0) fileEntity.setParentFolderId(folderId);
 
         fileEntity.setCreatedAt(LocalDateTime.now());
-        fileRepository.save(fileEntity);
+        fileRepository.saveAndFlush(fileEntity);
+
+        return fileEntity.getId();
     }
 
     public void copyFile(Long fileId, Long shelfId, Long userId) {
@@ -328,7 +334,6 @@ public class FileService {
             fileRepository.save(fileEntity);
         }
     }
-
 
     private void moveFilesToTrash(List<FileEntity> fileEntities, Boolean trashVisible) {
 

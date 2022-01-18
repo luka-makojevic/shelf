@@ -308,4 +308,9 @@ public class FunctionService {
 
         return functionResponseModel;
     }
+
+    public List<Long> getAllFunctionIdsByShelfIdAndEventId(Long shelfId, Long eventId) {
+        return functionRepository.findAllByShelfIdAndEventId(shelfId, eventId)
+                .stream().map(FunctionEntity::getId).collect(Collectors.toList());
+    }
 }

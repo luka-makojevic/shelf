@@ -52,6 +52,12 @@ public class FunctionController {
         return ResponseEntity.ok(functionService.getAllFunctionsByUserId());
     }
 
+    @GetMapping("/{shelfId}/{eventId}")
+    public ResponseEntity<List<Long>> getAllFunctionIdsByShelfIdAndEventId(@PathVariable Long shelfId, @PathVariable Long eventId) {
+
+        return ResponseEntity.ok(functionService.getAllFunctionIdsByShelfIdAndEventId(shelfId, eventId));
+    }
+
     @DeleteMapping("/{functionId}")
     public ResponseEntity<TextResponseMessage> deleteFunction(@AuthenticationUser AuthUser user, @PathVariable Long functionId) {
 

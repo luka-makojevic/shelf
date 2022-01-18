@@ -241,4 +241,11 @@ public class ExceptionSupplier {
             LocalDateTime.now().format(formatter),
             ErrorMessages.FORBIDDEN.getErrorMessage()
     );
+
+    public static final Supplier<ShelfException> serializationException = () -> new ShelfException(
+            ErrorMessages.SERIALIZING_ERROR.getErrorMessage(),
+            HttpStatus.FORBIDDEN.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.SERIALIZING_ERROR.getErrorMessage()
+    );
 }
