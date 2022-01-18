@@ -63,7 +63,7 @@ public class ExecuteService {
 
             Process process = runTime.exec(cmd);
 
-            process.waitFor(TIME_OUT, TimeUnit.SECONDS);
+            process.waitFor(PROCESS_EXECUTE_TIME_OUT, TimeUnit.SECONDS);
 
             InputStream inputStream = (process.exitValue() == 0 ? process.getInputStream() : process.getErrorStream());
 
