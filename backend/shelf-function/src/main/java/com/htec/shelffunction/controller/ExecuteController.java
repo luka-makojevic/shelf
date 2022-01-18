@@ -24,7 +24,7 @@ public class ExecuteController {
         this.executeService = executeService;
     }
 
-    @GetMapping("/{lang}/{functionId}")
+    @GetMapping("/language/{lang}/function/{functionId}")
     public ResponseEntity<Object> execute(@PathVariable("lang") String lang, @PathVariable("functionId") Long functionId) {
 
         return ResponseEntity.ok().body(executeService.execute(lang, functionId));
