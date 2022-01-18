@@ -5,6 +5,7 @@ import com.htec.shelffunction.annotation.AuthenticationUser;
 import com.htec.shelffunction.dto.FunctionDTO;
 import com.htec.shelffunction.model.request.CustomFunctionRequestModel;
 import com.htec.shelffunction.model.request.PredefinedFunctionRequestModel;
+import com.htec.shelffunction.model.request.RenameFunctionRequestModel;
 import com.htec.shelffunction.model.response.FunctionResponseModel;
 import com.htec.shelffunction.model.response.TextResponseMessage;
 import com.htec.shelffunction.service.FunctionService;
@@ -21,6 +22,7 @@ public class FunctionController {
 
     public final String FUNCTION_CREATED = "Function created";
     public final String FUNCTION_DELETED = "Function deleted";
+    public final String FUNCTION_NAME_UPDATED = "Function name updated";
 
     private final FunctionService functionService;
 
@@ -34,7 +36,7 @@ public class FunctionController {
 
         functionService.createPredefinedFunction(functionRequestModel, authUser.getId());
 
-        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FUNCTION_CREATED, HttpStatus.OK.value()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new TextResponseMessage(FUNCTION_CREATED, HttpStatus.CREATED.value()));
     }
 
     @PostMapping("/custom")
@@ -43,7 +45,7 @@ public class FunctionController {
 
         functionService.createCustomFunction(customFunctionRequestModel, authUser.getId());
 
-        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FUNCTION_CREATED, HttpStatus.OK.value()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new TextResponseMessage(FUNCTION_CREATED, HttpStatus.CREATED.value()));
     }
 
     @GetMapping
@@ -70,5 +72,14 @@ public class FunctionController {
     public ResponseEntity<FunctionResponseModel> getFunction(@AuthenticationUser AuthUser authUser, @PathVariable Long functionId) {
 
         return ResponseEntity.ok(functionService.getFunction(functionId, authUser.getId()));
+    }
+
+    @PutMapping("/rename")
+    public ResponseEntity<TextResponseMessage> renameFunction(@AuthenticationUser AuthUser authUser,
+                                                                @RequestBody RenameFunctionRequestModel renameFunctionRequestModel) {
+
+        functionService.updateFunctionName(renameFunctionRequestModel);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FUNCTION_NAME_UPDATED, HttpStatus.OK.value()));
     }
 }

@@ -8,6 +8,7 @@ import com.htec.shelffunction.filter.JwtStorageFilter;
 import com.htec.shelffunction.mapper.FunctionMapper;
 import com.htec.shelffunction.model.request.CustomFunctionRequestModel;
 import com.htec.shelffunction.model.request.PredefinedFunctionRequestModel;
+import com.htec.shelffunction.model.request.RenameFunctionRequestModel;
 import com.htec.shelffunction.model.response.FunctionResponseModel;
 import com.htec.shelffunction.repository.FunctionRepository;
 import com.htec.shelffunction.security.SecurityConstants;
@@ -312,5 +313,21 @@ public class FunctionService {
     public List<Long> getAllFunctionIdsByShelfIdAndEventId(Long shelfId, Long eventId) {
         return functionRepository.findAllByShelfIdAndEventId(shelfId, eventId)
                 .stream().map(FunctionEntity::getId).collect(Collectors.toList());
+    }
+
+    public void updateFunctionName(RenameFunctionRequestModel renameFunctionRequestModel) {
+
+        FunctionEntity functionEntity = functionRepository.findById(renameFunctionRequestModel.getFunctionId())
+                .orElseThrow(ExceptionSupplier.functionNotFound);
+
+        checkAccessRights(functionEntity.getShelfId());
+
+        if (checkFunctionNameExists(renameFunctionRequestModel.getNewName(), functionEntity.getShelfId())) {
+            throw ExceptionSupplier.functionAlreadyExists.get();
+        }
+
+        functionEntity.setName(renameFunctionRequestModel.getNewName());
+
+        functionRepository.save(functionEntity);
     }
 }
