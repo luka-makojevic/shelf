@@ -3,7 +3,6 @@ package com.htec.shelffunction.service;
 import com.htec.shelffunction.entity.FunctionEntity;
 import com.htec.shelffunction.exception.ExceptionSupplier;
 import com.htec.shelffunction.repository.FunctionRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
