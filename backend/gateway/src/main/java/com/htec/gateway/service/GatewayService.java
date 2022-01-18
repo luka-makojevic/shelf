@@ -32,7 +32,7 @@ public class GatewayService {
 
     private final RestTemplate restTemplate;
 
-    public GatewayService(@Value("#{${allowedRoutes}}") List<String> allowedRouteUrls,
+    public GatewayService(@Value("#{'${allowedRoutes}'.split(',')}") List<String> allowedRouteUrls,
                           @Value("#{${apiServers}}") Map<String, String> apiServerUrls,
                           RestTemplate restTemplate) {
         this.allowedRouteUrls = allowedRouteUrls;
