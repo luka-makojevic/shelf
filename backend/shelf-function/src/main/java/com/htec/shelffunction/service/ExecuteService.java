@@ -27,14 +27,12 @@ public class ExecuteService {
         this.functionRepository = functionRepository;
     }
 
-    public ResponseEntity<Object> execute(String lang, Long functionId) {
+    public Object execute(String lang, Long functionId) {
 
-        String result = executeFunction(functionId, lang, null, null);
-
-        return ResponseEntity.ok().body(result);
+        return executeFunction(functionId, lang, null, null);
     }
 
-    String executeFunction(Long functionId, String lang, Long userId, Long fileId) {
+    Object executeFunction(Long functionId, String lang, Long userId, Long fileId) {
         try {
             FunctionEntity functionEntity = functionRepository.findById(functionId)
                     .orElseThrow(ExceptionSupplier.functionNotFound);
@@ -67,7 +65,7 @@ public class ExecuteService {
 
             InputStream inputStream = (process.exitValue() == 0 ? process.getInputStream() : process.getErrorStream());
 
-            String result = new BufferedReader(new InputStreamReader(inputStream))
+            Object result = new BufferedReader(new InputStreamReader(inputStream))
                     .lines().collect(Collectors.joining("\n"));
 
             process.destroy();
