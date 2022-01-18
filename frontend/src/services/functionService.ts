@@ -14,9 +14,13 @@ const deleteFunction = (functionId: number) =>
 const createCustomfunction = (data: FunctionFormData) =>
   instance.post(`${API_URL_FUNCTIONS}/functions/custom`, data);
 
+const renameFunction = (data: { functionId: number; newName: string }) =>
+  instance.put(`${API_URL_FUNCTIONS}/functions/rename`, data);
+
 export default {
   createPredefinedFunction,
   getFunctions,
   deleteFunction,
   createCustomfunction,
+  renameFunction,
 };

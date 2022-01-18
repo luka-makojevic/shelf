@@ -6,6 +6,7 @@ import { InputField } from '../UI/input/InputField';
 import { ModalButtonDivider } from '../layout/layout.styles';
 import { Button } from '../UI/button';
 import { FunctionEditModalProps } from './modal.interfaces';
+import functionService from '../../services/functionService';
 
 const FunctionEditModal = ({
   onCloseModal,
@@ -25,8 +26,21 @@ const FunctionEditModal = ({
 
   const onSubmit = (data: ShelfFormData) => {
     const functionName = data.name;
-    if (functionData) onEdit(functionData, functionName);
-    // will be connnected to backend
+    if (functionData) {
+      const payload = {
+        functionId: functionData.id,
+        newName: functionName,
+      };
+      functionService
+        .renameFunction(payload)
+        .then((res) => {
+          toast.success(res.data.message);
+          onEdit(functionData, functionName);
+        })
+        .catch((err) => {
+          toast.error(err.response?.data.message);
+        });
+    }
 
     onCloseModal(false);
   };

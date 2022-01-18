@@ -189,7 +189,7 @@ const FunctionModal = ({
                     selectName="language"
                     error={errors.language}
                     register={register}
-                    placeHolder="select language"
+                    placeHolder="Select language"
                   />
                   <InputTitle>Select event trigger</InputTitle>
                   <InputSubTitle>
@@ -200,7 +200,7 @@ const FunctionModal = ({
                     register={register}
                     selectName="eventId"
                     error={errors.trigger}
-                    placeHolder="select function trigger"
+                    placeHolder="Select function trigger"
                   />
                   <InputTitle>Bind function to shelf</InputTitle>
                   <InputSubTitle>
@@ -211,7 +211,7 @@ const FunctionModal = ({
                     register={register}
                     selectName="shelfId"
                     error={errors.shelfId}
-                    placeHolder="select shelf"
+                    placeHolder="Select shelf"
                   />
                 </>
               ) : (
@@ -225,7 +225,7 @@ const FunctionModal = ({
                     register={register}
                     selectName="function"
                     error={errors.function}
-                    placeHolder="select function"
+                    placeHolder="Select function"
                   />
                   {predefinedFunction && (
                     <>
@@ -247,7 +247,7 @@ const FunctionModal = ({
                         register={register}
                         selectName="shelfId"
                         error={errors.shelfId}
-                        placeHolder="select shelf"
+                        placeHolder="Select shelf"
                       />
                     </>
                   )}
@@ -263,7 +263,7 @@ const FunctionModal = ({
                         validation={validateBackupShelf}
                         selectName="functionParam"
                         error={errors.functionParam}
-                        placeHolder="select backup shelf"
+                        placeHolder="Select backup shelf"
                       />
                     </>
                   )}
@@ -278,7 +278,7 @@ const FunctionModal = ({
                         register={register}
                         selectName="trigger"
                         error={errors.trigger}
-                        placeHolder="select function trigger"
+                        placeHolder="Select function trigger"
                       />
                     </>
                   )}
