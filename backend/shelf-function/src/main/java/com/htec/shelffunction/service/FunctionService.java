@@ -28,6 +28,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class FunctionService {
@@ -290,5 +291,10 @@ public class FunctionService {
         }
 
         return functionResponseModel;
+    }
+
+    public List<Long> getAllFunctionIdsByShelfIdAndEventId(Long shelfId, Long eventId) {
+        return functionRepository.findAllByShelfIdAndEventId(shelfId, eventId)
+                .stream().map(FunctionEntity::getId).collect(Collectors.toList());
     }
 }
