@@ -18,5 +18,5 @@ public class LanguageConstants {
 
     public final static String JARS_PATH = HOME_PATH + USER_PATH + "predefined_functions/jars/*";
 
-    public final static Long PROCESS_EXECUTE_TIME_OUT = 50L;
+    public final static Long PROCESS_EXECUTE_TIME_OUT = 5L;
 }
