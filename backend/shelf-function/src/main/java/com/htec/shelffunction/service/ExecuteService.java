@@ -49,12 +49,12 @@ public class ExecuteService {
 
                 cmd += folderPath + " " + "Function" + functionId;
 
-                if (userId != null) {
-                    cmd += " " + userId;
-                }
-
                 if (fileId != null) {
                     cmd += " " + fileId;
+                }
+
+                if (userId != null) {
+                    cmd += " " + userId;
                 }
             }
 
