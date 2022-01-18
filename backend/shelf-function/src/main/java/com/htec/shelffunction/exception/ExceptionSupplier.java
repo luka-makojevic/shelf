@@ -67,4 +67,11 @@ public class ExceptionSupplier {
             LocalDateTime.now().format(formatter),
             ErrorMessages.DESERIALIZING_ERROR.getErrorMessage()
     );
+
+    public static final Supplier<ShelfException> functionAlreadyExists = () -> new ShelfException(
+            ErrorMessages.FUNCTION_ALREADY_EXISTS.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
 }

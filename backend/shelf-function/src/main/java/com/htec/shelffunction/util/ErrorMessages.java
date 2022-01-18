@@ -8,10 +8,12 @@ public enum ErrorMessages {
     USER_NOT_ALLOWED_TO_DELETE_THIS_FUNCTION("You are not allowed to delete this function."),
     USER_NOT_ALLOWED_TO_GET_THIS_FUNCTION("You are not allowed to get this function."),
     FUNCTION_NOT_FOUND("Function not found."),
+    FUNCTION_ALREADY_EXISTS("Function already exists."),
     COULD_NOT_DELETE_FILE("Could not delete file."),
     NOT_FOUND("Not found."),
     INTERNAL_SERVER_ERROR("Internal server error."),
     FORBIDDEN("Forbidden."),
+    BAD_REQUEST("Bad request."),
     DESERIALIZING_ERROR("Error when deserializing byte[] to KafkaRequestModel.");
 
     private String errorMessage;
