@@ -20,13 +20,14 @@ import java.util.stream.Collectors;
 public class ShelfService {
 
     private final String GET_SHELVES_BY_USER_ID_URL = "http://localhost:8082/shelf/";
+    private final String GET_SHELVES_BY_ID = "http://localhost:8082/shelf/record/";
     private final RestTemplate restTemplate;
 
     public ShelfService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
-    List<Long> getUsersShelfIds() {
+    public List<Long> getUsersShelfIds() {
 
         URI apiUrl = URI.create(GET_SHELVES_BY_USER_ID_URL);
 
@@ -40,7 +41,8 @@ public class ShelfService {
                 apiUrl,
                 HttpMethod.GET,
                 request,
-                new ParameterizedTypeReference<List<ShelfDTO>>() {                }
+                new ParameterizedTypeReference<List<ShelfDTO>>() {
+                }
         ).getBody();
 
         if (responseBody == null) {
@@ -48,5 +50,22 @@ public class ShelfService {
         }
 
         return responseBody.stream().map(ShelfDTO::getId).collect(Collectors.toList());
+    }
+
+    public ShelfDTO getShelf(Long shelfId) {
+        URI apiUrl = URI.create(GET_SHELVES_BY_ID + shelfId);
+
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add(SecurityConstants.AUTHORIZATION_HEADER_STRING,
+                JwtStorageFilter.jwtThreadLocal.get());
+
+        HttpEntity<Object> request = new HttpEntity<>(headers);
+
+        return restTemplate.exchange(
+                apiUrl,
+                HttpMethod.GET,
+                request,
+                ShelfDTO.class
+        ).getBody();
     }
 }
