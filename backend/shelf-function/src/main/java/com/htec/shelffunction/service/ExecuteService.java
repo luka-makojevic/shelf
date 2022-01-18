@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static com.htec.shelffunction.util.LanguangeConstatns.*;
+import static com.htec.shelffunction.util.LanguageConstants.*;
 import static com.htec.shelffunction.util.PathConstants.*;
 
 @Service
@@ -27,11 +27,9 @@ public class ExecuteService {
         this.functionRepository = functionRepository;
     }
 
-
     public ResponseEntity<Object> execute(String lang, Long functionId) {
-        String result = "";
 
-        result = executeFunction(functionId, lang);
+        String result = executeFunction(functionId, lang);
 
         return ResponseEntity.ok().body(result);
     }

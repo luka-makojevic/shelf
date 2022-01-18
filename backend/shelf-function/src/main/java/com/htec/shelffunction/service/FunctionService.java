@@ -24,7 +24,6 @@ import org.springframework.web.client.RestTemplate;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -32,20 +31,17 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+
+import static com.htec.shelffunction.util.LanguageConstants.*;
+import static com.htec.shelffunction.util.PathConstants.*;
+
 @Service
 public class FunctionService {
 
     private final String CHECK_SHELF_ACCESS_URL = "http://localhost:8082/shelf/check/";
-    private final String JAVA_COMPILE_CMD = "javac -cp ";
-    private final String CSHARP_COMPILE_CMD = "mcs ";
-    private final String homePath = System.getProperty("user.home");
-    private final String pathSeparator = FileSystems.getDefault().getSeparator();
-    private final String userPath = pathSeparator + "shelf-files" + pathSeparator + "user-data" + pathSeparator;
-    private final String JARS_PATH = homePath + userPath + "predefined_functions/jars/*";
+
 
     private final String PREDEFINED_FUNCTION_FOLDER = "predefined_functions";
-    private final String JAVA_EXTENSION = ".java";
-    private final String CSHARP_EXTENSION = ".cs";
 
     private final FunctionRepository functionRepository;
     private final RestTemplate restTemplate;
@@ -74,7 +70,7 @@ public class FunctionService {
 
         functionRepository.saveAndFlush(functionEntity);
 
-        functionEntity.setPath(userId + pathSeparator + "functions" + pathSeparator + "Function" + functionEntity.getId());
+        functionEntity.setPath(userId + PATH_SEPARATOR + "functions" + PATH_SEPARATOR + "Function" + functionEntity.getId());
 
         functionRepository.save(functionEntity);
 
@@ -89,10 +85,10 @@ public class FunctionService {
     private void compilePredefinedFunction(Long newFunctionId, PredefinedFunctionRequestModel functionRequestModel, Long userId) {
 
         try {
-            String sourceFilePath = homePath +
-                    userPath +
+            String sourceFilePath = HOME_PATH +
+                    USER_PATH +
                     PREDEFINED_FUNCTION_FOLDER +
-                    pathSeparator +
+                    PATH_SEPARATOR +
                     functionRequestModel.getFunction() +
                     JAVA_EXTENSION;
 
@@ -103,14 +99,14 @@ public class FunctionService {
             sourceFileContent = sourceFileContent.replace("${functionParameter}", functionRequestModel.getFunctionParam().toString());
             sourceFileContent = sourceFileContent.replace("${className}", "Function" + newFunctionId);
 
-            String tempFolderPath = homePath +
-                    userPath +
+            String tempFolderPath = HOME_PATH +
+                    USER_PATH +
                     userId +
-                    pathSeparator +
+                    PATH_SEPARATOR +
                     "functions";
 
             String tempSourceFilePath = tempFolderPath +
-                    pathSeparator +
+                    PATH_SEPARATOR +
                     "Function" + newFunctionId +
                     JAVA_EXTENSION;
 
@@ -168,8 +164,8 @@ public class FunctionService {
         FunctionEntity functionEntity = functionRepository.findById(functionId)
                 .orElseThrow(ExceptionSupplier.functionNotFound);
 
-        String sourcePath = homePath + userPath + functionEntity.getPath();
-        String binaryPath = homePath + userPath + functionEntity.getPath();
+        String sourcePath = HOME_PATH + USER_PATH + functionEntity.getPath();
+        String binaryPath = HOME_PATH + USER_PATH + functionEntity.getPath();
 
         if (Objects.equals(functionEntity.getLanguage(), "java")) {
 
@@ -209,7 +205,7 @@ public class FunctionService {
 
         functionRepository.saveAndFlush(functionEntity);
 
-        functionEntity.setPath(userId + pathSeparator + "functions" + pathSeparator + "Function" + functionEntity.getId());
+        functionEntity.setPath(userId + PATH_SEPARATOR + "functions" + PATH_SEPARATOR + "Function" + functionEntity.getId());
 
         functionRepository.save(functionEntity);
 
@@ -228,24 +224,24 @@ public class FunctionService {
                 extension += CSHARP_EXTENSION;
             }
 
-            String sourceFilePath = homePath +
-                    userPath +
+            String sourceFilePath = HOME_PATH +
+                    USER_PATH +
                     PREDEFINED_FUNCTION_FOLDER +
-                    pathSeparator +
+                    PATH_SEPARATOR +
                     "hello" +
                     extension;
 
             String sourceFileContent = Files.readString(Path.of(sourceFilePath))
                     .replace("${className}", "Function" + functionEntityId);
 
-            String tempFolderPath = homePath +
-                    userPath +
+            String tempFolderPath = HOME_PATH +
+                    USER_PATH +
                     userId +
-                    pathSeparator +
+                    PATH_SEPARATOR +
                     "functions";
 
             String tempSourceFilePath = tempFolderPath +
-                    pathSeparator +
+                    PATH_SEPARATOR +
                     "Function" + functionEntityId +
                     extension;
 
@@ -292,12 +288,12 @@ public class FunctionService {
             extension += CSHARP_EXTENSION;
         }
 
-        String sourceFilePath = homePath +
-                userPath +
+        String sourceFilePath = HOME_PATH +
+                USER_PATH +
                 userId +
-                pathSeparator +
+                PATH_SEPARATOR +
                 "functions" +
-                pathSeparator +
+                PATH_SEPARATOR +
                 "Function" + functionEntity.getId() +
                 extension;
 
