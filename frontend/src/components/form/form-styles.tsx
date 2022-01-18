@@ -76,6 +76,8 @@ export const FunctionForm = styled.form`
   display: flex;
   flex-direction: column;
   width: 100%;
+  justify-content: space-between;
+  min-height: 350px;
 
   margin-bottom: ${theme.space.md};
 

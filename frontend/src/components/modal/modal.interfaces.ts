@@ -15,6 +15,8 @@ export interface DeleteModalProps {
   shelf?: TableDataTypes | null;
   message?: string;
   selectedData?: TableDataTypes[];
+  functionData?: TableDataTypes | null;
+  onDeleteFunction?: (functionData: TableDataTypes) => void;
 }
 
 export interface PathType {
@@ -55,4 +57,11 @@ export interface FunctionModalProps {
 
 export interface FunctionStyleProps {
   htmlFor: string;
+}
+
+export interface FunctionEditModalProps {
+  onCloseModal: Dispatch<SetStateAction<boolean>>;
+  functionData?: TableDataTypes | null;
+  onEdit: (functionData: TableDataTypes, newName: string) => void;
+  onGetData: () => void;
 }

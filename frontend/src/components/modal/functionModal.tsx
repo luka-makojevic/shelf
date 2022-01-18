@@ -33,6 +33,7 @@ import {
   languageOptions,
   logTrigger,
 } from '../../utils/fixtures/functionOptions';
+import { useAppSelector } from '../../store/hooks';
 
 const FunctionModal = ({
   onCloseModal,
@@ -52,19 +53,31 @@ const FunctionModal = ({
   const handleCloseModal = () => {
     onCloseModal(false);
   };
+  const isLoading = useAppSelector((state) => state.loading.loading);
 
   const onSubmit = (formData: FunctionFormData) => {
     if (formData.function === 'backup') {
       formData.eventId = 1;
+      functionService
+        .createPredefinedFunction(formData)
+        .then(() => {
+          toast.success('Function created');
+          onCloseModal(false);
+          onGetData();
+        })
+        .catch((err) => toast.error(err.response?.data.message));
+    } else {
+      functionService
+        .createCustomfunction(formData)
+        .then(() => {
+          toast.success('Function created');
+          onCloseModal(false);
+          onGetData();
+        })
+        .catch((err) => {
+          toast.error(err.response?.data.message);
+        });
     }
-    functionService
-      .createPredefinedFunction(formData)
-      .then(() => {
-        toast.success('Function created');
-        onCloseModal(false);
-        onGetData();
-      })
-      .catch((err) => toast.error(err.response?.data.message));
   };
 
   const validations = {
@@ -133,7 +146,7 @@ const FunctionModal = ({
                 <div>
                   <RadioTitle>Use a blueprint</RadioTitle>
                   <RadioSubTitle>
-                    Build Shelf Function with sample code and configuration
+                    Build Shelf Function with prewritten code and configuration
                     preset for common use cases.
                   </RadioSubTitle>
                 </div>
@@ -185,7 +198,7 @@ const FunctionModal = ({
                   <Select
                     optionsData={eventTriggerOptions}
                     register={register}
-                    selectName="trigger"
+                    selectName="eventId"
                     error={errors.trigger}
                     placeHolder="select function trigger"
                   />
@@ -280,7 +293,9 @@ const FunctionModal = ({
               >
                 Cancel
               </Button>
-              <Button size="large">Submit</Button>
+              <Button spinner isLoading={isLoading} size="large">
+                Submit
+              </Button>
             </ModalButtonDivider>
           </FunctionForm>
         </FunctionContainer>
