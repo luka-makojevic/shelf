@@ -178,6 +178,8 @@ public class FunctionService {
             binaryPath += ".exe";
         }
 
+        functionRepository.delete(functionEntity);
+
         if (!(new File(sourcePath)).delete()) {
             throw ExceptionSupplier.couldNotDeleteFile.get();
         }
@@ -185,8 +187,6 @@ public class FunctionService {
         if (!(new File(binaryPath)).delete()) {
             throw ExceptionSupplier.couldNotDeleteFile.get();
         }
-
-        functionRepository.delete(functionEntity);
     }
 
     public void createCustomFunction(CustomFunctionRequestModel customFunctionRequestModel, Long userId) {

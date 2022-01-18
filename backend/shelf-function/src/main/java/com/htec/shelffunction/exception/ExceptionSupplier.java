@@ -74,4 +74,11 @@ public class ExceptionSupplier {
             LocalDateTime.now().format(formatter),
             ErrorMessages.BAD_REQUEST.getErrorMessage()
     );
+
+    public static final Supplier<ShelfException> functionIsNotSynchronized = () -> new ShelfException(
+            ErrorMessages.FUNCTION_IS_NOT_SYNCHRONIZED.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
 }
