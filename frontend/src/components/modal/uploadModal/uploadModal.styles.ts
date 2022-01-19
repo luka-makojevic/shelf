@@ -97,10 +97,10 @@ export const DropZoneWrapperImage = styled.div<DropZoneWrapperProps>`
   justify-content: center;
   align-items: center;
   width: 100%;
-  /* min-height: 300px; */
   background: ${({ isDragOver }) =>
-    isDragOver ? `${theme.colors.primary}55` : 'transparent'};
+    isDragOver ? `${theme.colors.secondary}55` : 'transparent'};
   transition: all 500ms;
+  margin-top: ${theme.space.md};
   min-height: 250px;
 `;
 
