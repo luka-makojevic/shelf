@@ -99,7 +99,7 @@ public class FileService {
 
     public List<Long> saveFile(Long shelfId, Long folderId, Map<String, Pair<String, String>> files, Long userId) {
 
-        List<Long>  newFileIds = new ArrayList<>();
+        List<Long> newFileIds = new ArrayList<>();
 
         if (files == null) {
             throw ExceptionSupplier.couldNotUploadFile.get();
@@ -194,7 +194,7 @@ public class FileService {
         shelfRepository.findById(shelfId)
                 .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
 
-        if(!shelfEntities.stream().map(ShelfEntity::getId).collect((Collectors.toList())).contains(fileEntity.getShelfId())) {
+        if (!shelfEntities.stream().map(ShelfEntity::getId).collect((Collectors.toList())).contains(fileEntity.getShelfId())) {
             throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
         }
 
@@ -214,7 +214,7 @@ public class FileService {
         fileRepository.save(backupFile);
 
         try {
-            Files.copy(Paths.get(src),Paths.get(dst), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(Paths.get(src), Paths.get(dst), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw ExceptionSupplier.couldNotCopyFile.get();
         }
@@ -440,7 +440,7 @@ public class FileService {
         return new ArrayList<>(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
     }
 
-    public void deleteFile(Long userId, List<Long> fileIds) {
+    public Long deleteFile(Long userId, List<Long> fileIds) {
 
         List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndDeletedAndIdIn(userId, true, fileIds);
 
@@ -452,6 +452,8 @@ public class FileService {
             throw ExceptionSupplier.userNotAllowedToDeleteFile.get();
         }
 
+        Long shelfId = fileEntities.isEmpty() ? null : fileEntities.get(0).getShelfId();
+
         for (FileEntity fileEntity : fileEntities) {
             String fullPath = homePath + userPath + fileEntity.getPath();
             if (!(new File(fullPath)).delete()) {
@@ -460,6 +462,7 @@ public class FileService {
         }
 
         fileRepository.deleteAll(fileEntities);
+        return shelfId;
     }
 
     public void downloadFilesToZip(AuthUser user, List<Long> fileIds) {

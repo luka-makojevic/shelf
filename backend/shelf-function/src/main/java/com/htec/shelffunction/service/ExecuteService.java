@@ -3,6 +3,7 @@ package com.htec.shelffunction.service;
 import com.htec.shelffunction.entity.FunctionEntity;
 import com.htec.shelffunction.exception.ExceptionSupplier;
 import com.htec.shelffunction.repository.FunctionRepository;
+import com.htec.shelffunction.util.FunctionEvents;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -28,15 +29,15 @@ public class ExecuteService {
 
     public Object execute(String lang, Long functionId) {
 
-        return executeFunction(functionId, lang, null, null);
+        return executeFunction(functionId, lang, true, null, null);
     }
 
-    Object executeFunction(Long functionId, String lang, Long userId, Long fileId) {
+    Object executeFunction(Long functionId, String lang, boolean sync, Long userId, Long fileId) {
         try {
             FunctionEntity functionEntity = functionRepository.findById(functionId)
                     .orElseThrow(ExceptionSupplier.functionNotFound);
 
-            if (functionEntity.getEvent().getId() != 7L && fileId == null) {
+            if (!FunctionEvents.SYNCHRONIZED.getValue().equals(functionEntity.getEvent().getId()) && sync) {
                 throw ExceptionSupplier.functionIsNotSynchronized.get();
             }
 
@@ -44,7 +45,7 @@ public class ExecuteService {
 
             if (CS.equals(lang)) {
 
-                cmd += HOME_PATH + USER_PATH + functionEntity.getPath() + ".exe";
+                cmd += HOME_PATH + USER_PATH + functionEntity.getPath() + BINARY_CSHARP_EXTENSION;
 
             } else if (JAVA.equals(lang)) {
 

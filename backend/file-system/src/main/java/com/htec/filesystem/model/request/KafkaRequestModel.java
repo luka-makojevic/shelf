@@ -1,5 +1,6 @@
 package com.htec.filesystem.model.request;
 
+import com.htec.filesystem.util.FunctionEvents;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,5 +16,5 @@ public class KafkaRequestModel {
     private List<Long> functionIds;
     private Long userId;
     private Long fileId;
-    private String eventType;
+    private FunctionEvents event;
 }
