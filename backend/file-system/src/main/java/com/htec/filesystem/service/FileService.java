@@ -496,4 +496,8 @@ public class FileService {
             throw ExceptionSupplier.couldNotDownloadFiles.get();
         }
     }
+
+    public Long getShelfIdByFileId(Long fileId) {
+        return fileRepository.findById(fileId).orElseThrow(ExceptionSupplier.fileNotFound).getShelfId();
+    }
 }

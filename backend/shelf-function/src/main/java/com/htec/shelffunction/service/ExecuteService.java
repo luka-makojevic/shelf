@@ -3,6 +3,7 @@ package com.htec.shelffunction.service;
 import com.htec.shelffunction.entity.FunctionEntity;
 import com.htec.shelffunction.exception.ExceptionSupplier;
 import com.htec.shelffunction.repository.FunctionRepository;
+import com.htec.shelffunction.util.FunctionEvents;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -36,7 +37,7 @@ public class ExecuteService {
             FunctionEntity functionEntity = functionRepository.findById(functionId)
                     .orElseThrow(ExceptionSupplier.functionNotFound);
 
-            if (functionEntity.getEvent().getId() != 7L && fileId == null) {
+            if (!FunctionEvents.SYNCHRONIZED.getValue().equals(functionEntity.getEvent().getId()) && fileId == null) {
                 throw ExceptionSupplier.functionIsNotSynchronized.get();
             }
 
