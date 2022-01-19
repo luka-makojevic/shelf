@@ -27,13 +27,11 @@ public class EventService {
         for (Long fileId : fileIds) {
             KafkaRequestModel kafkaRequestModel = new KafkaRequestModel();
 
-            Long eventId = event.getValue();
-
-            kafkaRequestModel.setEventType(String.valueOf(eventId));
+            kafkaRequestModel.setEvent(event);
             kafkaRequestModel.setFileId(fileId);
             kafkaRequestModel.setUserId(userId);
 
-            List<Long> functionToBeExecutedIds = functionService.getUserFunctionsByShelfId(shelfId, eventId);
+            List<Long> functionToBeExecutedIds = functionService.getUserFunctionsByShelfId(shelfId, event.getValue());
 
             kafkaRequestModel.setFunctionIds(functionToBeExecutedIds);
 
