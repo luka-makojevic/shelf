@@ -60,6 +60,10 @@ public class ExecuteService {
                 if (userId != null) {
                     cmd += " " + userId;
                 }
+
+                if (functionEntity.getEvent().getId() != null) {
+                    cmd += " " + functionEntity.getEvent().getId();
+                }
             }
 
             Process process = runTime.exec(cmd);
