@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -56,6 +57,9 @@ public class FileController {
                                           @RequestParam(value = "file") boolean file) {
 
         FileResponseModel fileResponseModel = fileService.getFile(user.getId(), id, file);
+
+        eventService.reportEvent(FunctionEvents.DOWNLOAD, Collections.singletonList(id), user.getId(), null);
+
         return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).body(fileResponseModel.getImageContent());
     }
 
@@ -63,6 +67,9 @@ public class FileController {
     public ResponseEntity zipDownload(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) {
 
         fileService.downloadFilesToZip(user, fileIds);
+
+        eventService.reportEvent(FunctionEvents.DOWNLOAD, fileIds, user.getId(), null);
+
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("application/zip"))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename\"" + "asde" + "\"").build();
