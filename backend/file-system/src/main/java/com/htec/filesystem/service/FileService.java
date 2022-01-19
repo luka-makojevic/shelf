@@ -13,6 +13,7 @@ import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FolderRepository;
 import com.htec.filesystem.repository.ShelfRepository;
 import com.htec.filesystem.util.FileUtil;
+import com.htec.filesystem.util.FunctionEvents;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -189,10 +190,10 @@ public class FileService {
         List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserId(userId);
 
         FileEntity fileEntity = fileRepository.findById(fileId)
-                .orElseThrow(ExceptionSupplier.noFileWithGivenId);
+                .orElseThrow(ExceptionSupplier.fileNotFound);
 
         shelfRepository.findById(shelfId)
-                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+                .orElseThrow(ExceptionSupplier.shelfNotFound);
 
         if (!shelfEntities.stream().map(ShelfEntity::getId).collect((Collectors.toList())).contains(fileEntity.getShelfId())) {
             throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
@@ -497,6 +498,33 @@ public class FileService {
             zipOut.finish();
         } catch (IOException e) {
             throw ExceptionSupplier.couldNotDownloadFiles.get();
+        }
+    }
+
+    public void logFile(Integer eventId, Long fileId, Long userId, Long backupFileId) {
+
+        List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserId(userId);
+
+        FileEntity logFile = fileRepository.findById(backupFileId)
+                .orElseThrow(ExceptionSupplier.fileNotFound);
+
+        FileEntity fileToLog = fileRepository.findById(fileId)
+                .orElseThrow(ExceptionSupplier.fileNotFound);
+
+        if (!shelfEntities.stream().map(ShelfEntity::getId).collect((Collectors.toList())).contains(fileToLog.getShelfId())) {
+            throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
+        }
+
+        FunctionEvents event = FunctionEvents.values()[eventId - 1];
+
+        String logMessage = " " + event.getEvent() + "\t" + fileToLog.getName() + "\t" + LocalDateTime.now() + "\r\n";
+
+        String sourceFilePath = homePath + userPath + logFile.getPath();
+
+        try {
+            Files.writeString(Path.of(sourceFilePath), logMessage, StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

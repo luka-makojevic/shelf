@@ -29,6 +29,7 @@ public class FileController {
 
     private final String FILE_UPLOADED = "File Uploaded";
     private final String FILE_COPIED = "File Copied";
+    private final String FILE_LOGGED = "File logged";
     private final String FILE_DOWNLOADED = "File Downloaded";
     private final String FILE_RENAMED = "File renamed";
     private final String IMAGE_UPLOADED = "Image Uploaded";
@@ -103,6 +104,16 @@ public class FileController {
 
         fileService.copyFile(fileId, shelfId, userId);
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_COPIED, HttpStatus.OK.value()));
+    }
+
+        @PutMapping("/log/event/{eventId}/file/{fileId}/user/{userId}/backupFileId/{backupFileId}")
+    public ResponseEntity<TextResponseMessage> logFile(@PathVariable Integer eventId,
+                                                       @PathVariable Long fileId,
+                                                       @PathVariable Long userId,
+                                                       @PathVariable Long backupFileId) {
+
+        fileService.logFile(eventId, fileId, userId, backupFileId);
+        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_LOGGED, HttpStatus.OK.value()));
     }
 
     @PutMapping("/move-to-trash")
