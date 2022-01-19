@@ -2,13 +2,13 @@ package com.htec.filesystem.util;
 
 public enum FunctionEvents {
 
-    UPLOAD("upload", 1L),
-    DOWNLOAD("download", 2L),
-    DELETE("delete", 3L),
-    DAILY("daily", 4L),
-    WEEKLY("weekly", 5L),
-    MONTHLY("monthly", 6L),
-    SYNCHRONIZED("synchronized", 7L);
+    UPLOAD("UPLOAD", 1L),
+    DOWNLOAD("DOWNLOAD", 2L),
+    DELETE("DELETE", 3L),
+    DAILY("DAILY", 4L),
+    WEEKLY("WEEKLY", 5L),
+    MONTHLY("MONTHLY", 6L),
+    SYNCHRONIZED("SYNCHRONIZED", 7L);
 
     private final String event;
     private final Long value;
