@@ -67,7 +67,7 @@ public class FunctionService {
         FunctionEntity functionEntity = FunctionMapper.INSTANCE
                 .predefinedFunctionRequestModelToFunctionEntity(functionRequestModel);
 
-        functionEntity.setLanguage("java");
+        functionEntity.setLanguage(JAVA);
 
         functionRepository.saveAndFlush(functionEntity);
 
@@ -168,15 +168,15 @@ public class FunctionService {
         String sourcePath = HOME_PATH + USER_PATH + functionEntity.getPath();
         String binaryPath = HOME_PATH + USER_PATH + functionEntity.getPath();
 
-        if (Objects.equals(functionEntity.getLanguage(), "java")) {
+        if (Objects.equals(functionEntity.getLanguage(), JAVA)) {
 
-            sourcePath += ".java";
-            binaryPath += ".class";
+            sourcePath += JAVA_EXTENSION;
+            binaryPath += BINARY_JAVA_EXTENSION;
 
 
         } else {
-            sourcePath += ".cs";
-            binaryPath += ".exe";
+            sourcePath += CSHARP_EXTENSION;
+            binaryPath += BINARY_CSHARP_EXTENSION;
         }
 
         functionRepository.delete(functionEntity);
@@ -218,7 +218,7 @@ public class FunctionService {
         try {
             String extension = "";
 
-            if (Objects.equals(customFunctionRequestModel.getLanguage(), "java")) {
+            if (Objects.equals(customFunctionRequestModel.getLanguage(), JAVA)) {
                 extension += JAVA_EXTENSION;
             } else {
                 extension += CSHARP_EXTENSION;
@@ -258,7 +258,7 @@ public class FunctionService {
         Files.writeString(Path.of(tempSourceFilePath), sourceFileContent);
         Runtime runTime = Runtime.getRuntime();
 
-        if (Objects.equals(language, "java")) {
+        if (Objects.equals(language, JAVA)) {
             compileCommand += JAVA_COMPILE_CMD + tempFolderPath + ":" + JARS_PATH + " " + tempSourceFilePath;
         } else {
             compileCommand += CSHARP_COMPILE_CMD + tempSourceFilePath;
@@ -266,7 +266,7 @@ public class FunctionService {
 
         Process compileProcess = runTime.exec(compileCommand);
 
-        compileProcess.waitFor(5, TimeUnit.SECONDS);
+        compileProcess.waitFor(PROCESS_EXECUTE_TIME_OUT, TimeUnit.SECONDS);
 
         int exitValue = compileProcess.exitValue();
 
@@ -294,7 +294,7 @@ public class FunctionService {
 
         String extension = "";
 
-        if (Objects.equals(functionEntity.getLanguage(), "java")) {
+        if (Objects.equals(functionEntity.getLanguage(), JAVA)) {
             extension += JAVA_EXTENSION;
         } else {
             extension += CSHARP_EXTENSION;
@@ -347,7 +347,7 @@ public class FunctionService {
         checkAccessRights(functionEntity.getShelfId());
 
         String extension = "";
-        if (Objects.equals(functionEntity.getLanguage(), "java")) {
+        if (Objects.equals(functionEntity.getLanguage(), JAVA)) {
             extension += JAVA_EXTENSION;
         } else {
             extension += CSHARP_EXTENSION;
