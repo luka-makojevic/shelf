@@ -29,15 +29,15 @@ public class ExecuteService {
 
     public Object execute(String lang, Long functionId) {
 
-        return executeFunction(functionId, lang, null, null);
+        return executeFunction(functionId, lang, true, null, null);
     }
 
-    Object executeFunction(Long functionId, String lang, Long userId, Long fileId) {
+    Object executeFunction(Long functionId, String lang, boolean sync, Long userId, Long fileId) {
         try {
             FunctionEntity functionEntity = functionRepository.findById(functionId)
                     .orElseThrow(ExceptionSupplier.functionNotFound);
 
-            if (!FunctionEvents.SYNCHRONIZED.getValue().equals(functionEntity.getEvent().getId()) && fileId == null) {
+            if (!FunctionEvents.SYNCHRONIZED.getValue().equals(functionEntity.getEvent().getId()) && sync) {
                 throw ExceptionSupplier.functionIsNotSynchronized.get();
             }
 
