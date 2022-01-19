@@ -25,6 +25,7 @@ const ChangeUserRoleModal = ({
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm();
 
@@ -52,7 +53,9 @@ const ChangeUserRoleModal = ({
           selectName="role"
           error={errors.role}
           register={register}
+          setValue={setValue}
           placeHolder="Choose new role"
+          variant="secondary"
         />
         <ModalButtonDivider>
           <Button variant="lightBordered" onClick={handleCloseModal}>

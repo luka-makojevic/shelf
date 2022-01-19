@@ -1,32 +1,65 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { theme } from '../../../theme';
 
-export const StyledSelect = styled.select`
-  width: 100%;
-  border: none;
-  border-radius: 10px;
-  min-height: 45px;
-  border: 1px solid ${theme.colors.secondary};
-  border-radius: 30px;
-  text-indent: 10px;
-  margin: ${theme.space.xs} 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+interface SelectStyleProps {
+  variant?: string;
+}
 
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 6px 0 ${theme.colors.secondary};
-  }
-  padding-left: 10px;
-`;
-export const SelectContainer = styled.div`
-  position: relative;
+export const DropDownContainer = styled.div`
   width: 100%;
-  min-height: 75px;
-  svg {
-    position: absolute;
-    right: 15px;
-    top: 17px;
+  margin: 0;
+  color: black;
+  margin: ${theme.space.sm} 0 ${theme.space.lg};
+  input {
+    display: none;
+  }
+  height: 50px;
+  font-size: ${theme.fontSizes.sm};
+`;
+
+export const DropDownHeader = styled.div<SelectStyleProps>`
+  background: ${theme.colors.white};
+  color: ${theme.colors.black};
+
+  padding: ${theme.space.sm};
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: ${theme.space.lg};
+  margin-bottom: 10px;
+  text-indent: 10px;
+  cursor: pointer;
+
+  ${({ variant }) => {
+    switch (variant) {
+      case 'secondary':
+        return css`
+          border: 1px solid ${theme.colors.secondary};
+        `;
+      default:
+        return null;
+    }
+  }}
+`;
+
+export const DropDownList = styled.div<SelectStyleProps>`
+  margin: 0;
+  background: ${theme.colors.white};
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0px 0px 6px 2px rgba(0, 0, 0, 0.1);
+  max-height: 180px;
+  overflow: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+export const ListItem = styled.div`
+  padding: 10px;
+  &:hover {
+    background: ${theme.colors.lightBlue};
   }
 `;

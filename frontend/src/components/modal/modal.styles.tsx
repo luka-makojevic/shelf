@@ -127,6 +127,7 @@ export const FunctionModalContainer = styled.div`
   background: ${theme.colors.secondary};
 
   height: 700px;
+  width: 700px;
   color: white;
   display: flex;
   flex-direction: column;

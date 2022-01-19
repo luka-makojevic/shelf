@@ -43,6 +43,7 @@ const FunctionModal = ({
     register,
     handleSubmit,
     reset,
+    setValue,
     watch,
     formState: { errors },
   } = useForm();
@@ -188,6 +189,7 @@ const FunctionModal = ({
                     selectName="trigger"
                     error={errors.trigger}
                     placeHolder="select function trigger"
+                    setValue={setValue}
                   />
                   <InputTitle>Bind function to shelf</InputTitle>
                   <InputSubTitle>
@@ -199,6 +201,7 @@ const FunctionModal = ({
                     selectName="shelfId"
                     error={errors.shelfId}
                     placeHolder="select shelf"
+                    setValue={setValue}
                   />
                 </>
               ) : (
@@ -213,6 +216,7 @@ const FunctionModal = ({
                     selectName="function"
                     error={errors.function}
                     placeHolder="select function"
+                    setValue={setValue}
                   />
                   {predefinedFunction && (
                     <>
@@ -235,6 +239,7 @@ const FunctionModal = ({
                         selectName="shelfId"
                         error={errors.shelfId}
                         placeHolder="select shelf"
+                        setValue={setValue}
                       />
                     </>
                   )}
