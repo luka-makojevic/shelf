@@ -116,7 +116,7 @@ public class FileController {
     @DeleteMapping
     public ResponseEntity<TextResponseMessage> deleteFile(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) throws IOException {
 
-        Long shelfId = fileService.getShelfIdByFileId(fileIds.get(0));
+        Long shelfId = fileIds.isEmpty() ? null : fileService.getShelfIdByFileId(fileIds.get(0));
 
         fileService.deleteFile(user.getId(), fileIds);
 
