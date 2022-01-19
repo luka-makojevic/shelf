@@ -45,7 +45,7 @@ public class ExecuteService {
 
             if (CS.equals(lang)) {
 
-                cmd += HOME_PATH + USER_PATH + functionEntity.getPath() + ".exe";
+                cmd += HOME_PATH + USER_PATH + functionEntity.getPath() + BINARY_CSHARP_EXTENSION;
 
             } else if (JAVA.equals(lang)) {
 
