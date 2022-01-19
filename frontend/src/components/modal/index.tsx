@@ -12,14 +12,21 @@ import {
 } from './modal.styles';
 import { ModalProps } from './modal.interfaces';
 
-const Modal = ({ onCloseModal, children, title, closeIcon }: ModalProps) => {
+const Modal = ({
+  onCloseModal,
+  children,
+  title,
+  closeIcon,
+  background,
+  color,
+}: ModalProps) => {
   const handleCloseModal = () => {
     onCloseModal(false);
   };
 
   const modal = (
     <Backdrop>
-      <ModalContainer>
+      <ModalContainer background={background} color={color}>
         {title && (
           <Header>
             <HeaderItem>
@@ -30,7 +37,7 @@ const Modal = ({ onCloseModal, children, title, closeIcon }: ModalProps) => {
               <HeaderItem>
                 <Close onClick={handleCloseModal}>
                   <FaRegTimesCircle
-                    color={theme.colors.primary}
+                    color={color || theme.colors.primary}
                     size={theme.space.lg}
                   />
                 </Close>

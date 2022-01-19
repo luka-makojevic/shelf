@@ -18,12 +18,13 @@ export const Backdrop = styled.div`
   z-index: 9999;
 `;
 
-export const ModalContainer = styled.div`
+export const ModalContainer = styled.div<ModalStyleProps>`
   min-width: 300px;
   max-width: 500px;
   position: absolute;
 
-  background-color: ${theme.colors.white};
+  background-color: ${({ background }) => background || theme.colors.white};
+  color: ${({ color }) => color || theme.colors.primary};
   border-radius: 10px;
 
   display: flex;
@@ -39,9 +40,7 @@ export const Header = styled.div`
 
   max-height: 70px;
   padding: ${theme.space.none} ${theme.space.sm};
-
   width: 100%;
-  color: ${theme.colors.primary};
 `;
 
 export const HeaderItem = styled.div`
@@ -59,8 +58,6 @@ export const Body = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
-  color: ${theme.colors.primary};
 `;
 
 export const Footer = styled.div`
@@ -72,7 +69,7 @@ export const Footer = styled.div`
   bottom: 0;
   height: 90px;
   width: 100%;
-  border-top: 1px solid ${theme.colors.primary};
+  border-top: 1px solid ${({ color }) => color || theme.colors.primary};
 `;
 
 export const Close = styled.button<ButtonProps>`

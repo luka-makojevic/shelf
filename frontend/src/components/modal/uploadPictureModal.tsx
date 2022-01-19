@@ -117,7 +117,7 @@ const UploadPictureModal = ({
         {image ? (
           <ImageWrapper>
             <RemoveImageIconButton onClick={handleRemoveImage}>
-              <RiCloseCircleFill color={theme.colors.secondary} size="23px" />
+              <RiCloseCircleFill color={theme.colors.white} size="23px" />
             </RemoveImageIconButton>
             <ModalImage src={previewImage} alt="profileImage.jpg" />
           </ImageWrapper>
@@ -134,10 +134,10 @@ const UploadPictureModal = ({
       </DropZoneWrapperImage>
 
       <ButtonWrapper>
-        <Button onClick={handleCloseModal} type="button" variant="secondary">
+        <Button onClick={handleCloseModal} type="button" variant="light">
           Cancel
         </Button>
-        <Button onClick={handleUpload} type="button">
+        <Button onClick={handleUpload} type="button" variant="primaryBordered">
           Upload
         </Button>
       </ButtonWrapper>

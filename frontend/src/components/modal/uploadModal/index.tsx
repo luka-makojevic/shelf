@@ -1,5 +1,10 @@
 import { ChangeEvent, DragEvent, useEffect, useState } from 'react';
-import { FaFolderOpen, FaTimes } from 'react-icons/fa';
+import { FaTimes } from 'react-icons/fa';
+import { RiFileZipLine } from 'react-icons/ri';
+import { AiFillFile, AiOutlineFileImage } from 'react-icons/ai';
+import { BsCloudUpload } from 'react-icons/bs';
+import { BiText } from 'react-icons/bi';
+import { MdVideoLibrary } from 'react-icons/md';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import fileServices from '../../../services/fileServices';
@@ -7,12 +12,12 @@ import { theme } from '../../../theme';
 import { ModalButtonDivider } from '../../layout/layout.styles';
 import ProgressBar from '../../progressBar';
 import { Button } from '../../UI/button';
-import { Footer } from '../modal.styles';
 import { UploadModalProps } from './uploadModal.interfaces';
 import {
   AddedFilesIconButton,
   AddedFilesList,
   AddedFilesListItem,
+  AddedFilesListItemText,
   AddFilesInput,
   AddFilesLabel,
   AddFilesText,
@@ -116,6 +121,23 @@ const UploadModal = ({ onCloseModal, onGetData }: UploadModalProps) => {
     []
   );
 
+  const itemType = (item: File) => {
+    const ext = item.name.substring(item.name.lastIndexOf('.'));
+    if (ext === '.jpg' || ext === '.jpeg' || ext === '.png') {
+      return <AiOutlineFileImage size={theme.size.sm} />;
+    }
+    if (ext === '.txt' || ext === '.pdf' || ext === '.doc') {
+      return <BiText size={theme.size.sm} />;
+    }
+    if (ext === '.mp3' || ext === '.mp4') {
+      return <MdVideoLibrary size={theme.size.sm} />;
+    }
+    if (ext === '.zip' || ext === '.7z' || ext === '.rar') {
+      return <RiFileZipLine size={theme.size.sm} />;
+    }
+    return <AiFillFile size={theme.size.sm} />;
+  };
+
   const areFilesForUploadEmpty = filesForUpload.length === 0;
 
   const ItemWithHandler = ({ file }: { file: File }) => {
@@ -126,7 +148,10 @@ const UploadModal = ({ onCloseModal, onGetData }: UploadModalProps) => {
 
     return (
       <AddedFilesListItem>
-        {file.name}
+        <AddedFilesListItemText>
+          {itemType(file)}
+          <p>{file.name}</p>
+        </AddedFilesListItemText>
         <AddedFilesIconButton onClick={handleClick}>
           <FaTimes />
         </AddedFilesIconButton>
@@ -144,39 +169,38 @@ const UploadModal = ({ onCloseModal, onGetData }: UploadModalProps) => {
       >
         {areFilesForUploadEmpty ? (
           <>
-            <FaFolderOpen size={theme.size.lg} />
+            <BsCloudUpload size={theme.space.xl} />
             <AddFilesText>Drag and Drop</AddFilesText>
             <AddFilesText>OR</AddFilesText>
           </>
         ) : (
-          <>
-            <AddFilesText>Added files</AddFilesText>
-            <AddedFilesList>
-              {filesForUpload.map((file: File) => (
-                <ItemWithHandler key={file.name} file={file} />
-              ))}
-            </AddedFilesList>
-          </>
+          <AddedFilesList>
+            {filesForUpload.map((file: File) => (
+              <ItemWithHandler key={file.name} file={file} />
+            ))}
+          </AddedFilesList>
         )}
+
         <AddFilesLabel>
-          {areFilesForUploadEmpty ? 'Add Files' : 'Add More Files'}
+          Browse
           <AddFilesInput type="file" multiple onChange={handleAddFiles} />
         </AddFilesLabel>
       </DropZoneWrapper>
+
       {progress > 0 && <ProgressBar progress={progress} />}
-      <Footer>
-        <ModalButtonDivider>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Cancel
-          </Button>
-          <Button
-            onClick={handleUpload}
-            disabled={!filesForUpload.length || progress > 0}
-          >
-            Upload
-          </Button>
-        </ModalButtonDivider>
-      </Footer>
+
+      <ModalButtonDivider>
+        <Button variant="primaryBordered" onClick={handleCloseModal}>
+          Cancel
+        </Button>
+        <Button
+          onClick={handleUpload}
+          disabled={!filesForUpload.length || progress > 0}
+          variant="light"
+        >
+          Upload
+        </Button>
+      </ModalButtonDivider>
     </>
   );
 };

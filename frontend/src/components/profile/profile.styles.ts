@@ -56,7 +56,7 @@ export const ProfileImage = styled.img`
 
 export const EditImageContainer = styled.div`
   position: absolute;
-  right: -5px;
+  right: -20px;
   bottom: -5px;
 `;
 

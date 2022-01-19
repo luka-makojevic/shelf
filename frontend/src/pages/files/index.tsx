@@ -25,6 +25,7 @@ import fileServices from '../../services/fileServices';
 import folderService from '../../services/folderService';
 import TableWrapper from '../../components/table/TableWrapper';
 import { ActionType, Edit } from '../../components/table/table.interfaces';
+import { theme } from '../../theme';
 
 const headers = [
   { header: 'Name', key: 'name' },
@@ -205,6 +206,8 @@ const Files = () => {
           title="Upload files"
           onCloseModal={handleCloseUploadModal}
           closeIcon
+          background={theme.colors.primary}
+          color={theme.colors.white}
         >
           <UploadModal
             onCloseModal={handleCloseUploadModal}
