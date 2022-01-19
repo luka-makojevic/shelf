@@ -9,6 +9,7 @@ import com.htec.shelffunction.mapper.FunctionMapper;
 import com.htec.shelffunction.model.request.CustomFunctionRequestModel;
 import com.htec.shelffunction.model.request.PredefinedFunctionRequestModel;
 import com.htec.shelffunction.model.request.RenameFunctionRequestModel;
+import com.htec.shelffunction.model.request.UpdateCodeFunctionRequestModel;
 import com.htec.shelffunction.model.response.FunctionResponseModel;
 import com.htec.shelffunction.repository.FunctionRepository;
 import com.htec.shelffunction.security.SecurityConstants;
@@ -21,11 +22,11 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -216,7 +217,6 @@ public class FunctionService {
 
         try {
             String extension = "";
-            String compileCommand = "";
 
             if (Objects.equals(customFunctionRequestModel.getLanguage(), "java")) {
                 extension += JAVA_EXTENSION;
@@ -234,34 +234,46 @@ public class FunctionService {
             String sourceFileContent = Files.readString(Path.of(sourceFilePath))
                     .replace("${className}", "Function" + functionEntityId);
 
-            String tempFolderPath = HOME_PATH +
-                    USER_PATH +
-                    userId +
-                    PATH_SEPARATOR +
-                    "functions";
-
-            String tempSourceFilePath = tempFolderPath +
-                    PATH_SEPARATOR +
-                    "Function" + functionEntityId +
-                    extension;
-
-            Files.writeString(Path.of(tempSourceFilePath), sourceFileContent);
-            Runtime runTime = Runtime.getRuntime();
-
-            if (Objects.equals(customFunctionRequestModel.getLanguage(), "java")) {
-                compileCommand += JAVA_COMPILE_CMD + tempFolderPath + ":" + JARS_PATH + " " + tempSourceFilePath;
-            } else {
-                compileCommand += CSHARP_COMPILE_CMD + tempSourceFilePath;
-            }
-
-            Process compileProcess = runTime.exec(compileCommand);
-
-            compileProcess.waitFor(5, TimeUnit.SECONDS);
-
-            compileProcess.destroy();
+            createCompileProcess(functionEntityId, customFunctionRequestModel.getLanguage(), userId, extension, sourceFileContent);
 
         } catch (InterruptedException | IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void createCompileProcess(Long functionEntityId, String language, Long userId, String extension, String sourceFileContent) throws IOException, InterruptedException {
+        String compileCommand = "";
+
+        String tempFolderPath = HOME_PATH +
+                USER_PATH +
+                userId +
+                PATH_SEPARATOR +
+                "functions";
+
+        String tempSourceFilePath = tempFolderPath +
+                PATH_SEPARATOR +
+                "Function" + functionEntityId +
+                extension;
+
+        Files.writeString(Path.of(tempSourceFilePath), sourceFileContent);
+        Runtime runTime = Runtime.getRuntime();
+
+        if (Objects.equals(language, "java")) {
+            compileCommand += JAVA_COMPILE_CMD + tempFolderPath + ":" + JARS_PATH + " " + tempSourceFilePath;
+        } else {
+            compileCommand += CSHARP_COMPILE_CMD + tempSourceFilePath;
+        }
+
+        Process compileProcess = runTime.exec(compileCommand);
+
+        compileProcess.waitFor(5, TimeUnit.SECONDS);
+
+        int exitValue = compileProcess.exitValue();
+
+        compileProcess.destroy();
+
+        if (exitValue != 0) {
+            throw ExceptionSupplier.errorInFunctionCode.get();
         }
     }
 
@@ -325,5 +337,40 @@ public class FunctionService {
         functionEntity.setName(renameFunctionRequestModel.getNewName());
 
         functionRepository.save(functionEntity);
+    }
+
+    public void updateFunctionCode(UpdateCodeFunctionRequestModel updateCodeFunctionRequestModel, Long userId) {
+
+        FunctionEntity functionEntity = functionRepository.findById(updateCodeFunctionRequestModel.getFunctionId())
+                .orElseThrow(ExceptionSupplier.functionNotFound);
+
+        checkAccessRights(functionEntity.getShelfId());
+
+        String extension = "";
+        if (Objects.equals(functionEntity.getLanguage(), "java")) {
+            extension += JAVA_EXTENSION;
+        } else {
+            extension += CSHARP_EXTENSION;
+        }
+
+        String sourceFilePath = HOME_PATH +
+                USER_PATH +
+                functionEntity.getPath() +
+                extension;
+
+        try {
+            Files.writeString(Path.of(sourceFilePath), updateCodeFunctionRequestModel.getCode(), StandardOpenOption.WRITE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            createCompileProcess(functionEntity.getId(), functionEntity.getLanguage(), userId, extension, updateCodeFunctionRequestModel.getCode());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 }

@@ -9,6 +9,7 @@ public enum ErrorMessages {
     USER_NOT_ALLOWED_TO_GET_THIS_FUNCTION("You are not allowed to get this function."),
     FUNCTION_NOT_FOUND("Function not found."),
     FUNCTION_ALREADY_EXISTS("Function already exists."),
+    FUNCTION_ERROR("There is an error in your function."),
     COULD_NOT_DELETE_FILE("Could not delete file."),
     NOT_FOUND("Not found."),
     INTERNAL_SERVER_ERROR("Internal server error."),

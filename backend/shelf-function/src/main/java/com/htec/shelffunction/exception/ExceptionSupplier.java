@@ -1,7 +1,6 @@
 package com.htec.shelffunction.exception;
 
 import com.htec.shelffunction.util.ErrorMessages;
-import com.zaxxer.hikari.util.FastList;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
@@ -77,6 +76,13 @@ public class ExceptionSupplier {
 
     public static final Supplier<ShelfException> functionIsNotSynchronized = () -> new ShelfException(
             ErrorMessages.FUNCTION_IS_NOT_SYNCHRONIZED.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> errorInFunctionCode = () -> new ShelfException(
+            ErrorMessages.FUNCTION_ERROR.getErrorMessage(),
             HttpStatus.BAD_REQUEST.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.BAD_REQUEST.getErrorMessage()
