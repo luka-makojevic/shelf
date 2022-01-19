@@ -372,25 +372,24 @@ public class FunctionService {
 
         try {
             oldCode = Files.readString(Path.of(sourceFilePath));
+
             Files.writeString(Path.of(sourceFilePath), updateCodeFunctionRequestModel.getCode(), StandardOpenOption.WRITE);
+
+
+            int compileProcessReturnValue = createCompileProcess(functionEntity.getId(),
+                    functionEntity.getLanguage(),
+                    userId,
+                    extension,
+                    updateCodeFunctionRequestModel.getCode());
+
+            if (compileProcessReturnValue != 0) {
+
+                Files.writeString(Path.of(sourceFilePath), oldCode);
+                throw ExceptionSupplier.errorInFunctionCode.get();
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
-        int compileProcessReturnValue = createCompileProcess(functionEntity.getId(),
-                functionEntity.getLanguage(),
-                userId,
-                extension,
-                updateCodeFunctionRequestModel.getCode());
-
-        if (compileProcessReturnValue != 0) {
-
-            try {
-                Files.writeString(Path.of(sourceFilePath), oldCode);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            throw ExceptionSupplier.errorInFunctionCode.get();
         }
     }
 }
