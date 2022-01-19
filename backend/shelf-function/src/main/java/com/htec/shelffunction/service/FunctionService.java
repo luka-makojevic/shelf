@@ -22,7 +22,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,7 +32,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
 
 import static com.htec.shelffunction.util.LanguageConstants.*;
 import static com.htec.shelffunction.util.PathConstants.*;
@@ -79,7 +79,7 @@ public class FunctionService {
     }
 
     private boolean checkFunctionNameExists(String functionName, Long shelfId) {
-         return getAllFunctionsByUserId().stream().filter(functionDTO -> Objects.equals(functionDTO.getShelfId(), shelfId))
+        return getAllFunctionsByUserId().stream().filter(functionDTO -> Objects.equals(functionDTO.getShelfId(), shelfId))
                 .anyMatch(functionDTO -> functionDTO.getName().equals(functionName));
     }
 
@@ -236,12 +236,16 @@ public class FunctionService {
 
             createCompileProcess(functionEntityId, customFunctionRequestModel.getLanguage(), userId, extension, sourceFileContent);
 
-        } catch (InterruptedException | IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void createCompileProcess(Long functionEntityId, String language, Long userId, String extension, String sourceFileContent) throws IOException, InterruptedException {
+    private int createCompileProcess(Long functionEntityId,
+                                     String language,
+                                     Long userId,
+                                     String extension,
+                                     String sourceFileContent) {
         String compileCommand = "";
 
         String tempFolderPath = HOME_PATH +
@@ -255,26 +259,32 @@ public class FunctionService {
                 "Function" + functionEntityId +
                 extension;
 
-        Files.writeString(Path.of(tempSourceFilePath), sourceFileContent);
-        Runtime runTime = Runtime.getRuntime();
+        int exitValue;
 
-        if (Objects.equals(language, JAVA)) {
-            compileCommand += JAVA_COMPILE_CMD + tempFolderPath + ":" + JARS_PATH + " " + tempSourceFilePath;
-        } else {
-            compileCommand += CSHARP_COMPILE_CMD + tempSourceFilePath;
+        try {
+            Files.writeString(Path.of(tempSourceFilePath), sourceFileContent);
+            Runtime runTime = Runtime.getRuntime();
+
+            if (Objects.equals(language, JAVA)) {
+                compileCommand += JAVA_COMPILE_CMD + tempFolderPath + ":" + JARS_PATH + " " + tempSourceFilePath;
+            } else {
+                compileCommand += CSHARP_COMPILE_CMD + tempSourceFilePath;
+            }
+
+            Process compileProcess = runTime.exec(compileCommand);
+
+            compileProcess.waitFor(PROCESS_EXECUTE_TIME_OUT, TimeUnit.SECONDS);
+
+            exitValue = compileProcess.exitValue();
+
+            compileProcess.destroy();
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            exitValue = 1;
         }
 
-        Process compileProcess = runTime.exec(compileCommand);
-
-        compileProcess.waitFor(PROCESS_EXECUTE_TIME_OUT, TimeUnit.SECONDS);
-
-        int exitValue = compileProcess.exitValue();
-
-        compileProcess.destroy();
-
-        if (exitValue != 0) {
-            throw ExceptionSupplier.errorInFunctionCode.get();
-        }
+        return exitValue;
     }
 
     public FunctionResponseModel getFunction(Long functionId, Long userId) {
@@ -358,19 +368,28 @@ public class FunctionService {
                 functionEntity.getPath() +
                 extension;
 
+        String oldCode = "";
+
         try {
+            oldCode = Files.readString(Path.of(sourceFilePath));
+
             Files.writeString(Path.of(sourceFilePath), updateCodeFunctionRequestModel.getCode(), StandardOpenOption.WRITE);
+
+
+            int compileProcessReturnValue = createCompileProcess(functionEntity.getId(),
+                    functionEntity.getLanguage(),
+                    userId,
+                    extension,
+                    updateCodeFunctionRequestModel.getCode());
+
+            if (compileProcessReturnValue != 0) {
+
+                Files.writeString(Path.of(sourceFilePath), oldCode);
+                throw ExceptionSupplier.errorInFunctionCode.get();
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        try {
-            createCompileProcess(functionEntity.getId(), functionEntity.getLanguage(), userId, extension, updateCodeFunctionRequestModel.getCode());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
     }
 }
