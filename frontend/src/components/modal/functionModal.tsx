@@ -97,7 +97,7 @@ const FunctionModal = ({
 
   const validateBackupShelf = {
     validate: (value: string) =>
-      value !== watch('shelfId') || 'Cant select same shelfs',
+      value !== watch('shelfId') || "Can't select same shelfs",
   };
 
   const modal = (

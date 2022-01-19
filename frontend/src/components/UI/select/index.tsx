@@ -10,7 +10,7 @@ interface SelectProps {
   register: UseFormRegister<FieldValues>;
   error: { message: string };
   validation?: {
-    validate: (value: string) => true | 'Cant select same shelfs';
+    validate: (value: string) => true | "Can't select same shelfs";
   };
 }
 
