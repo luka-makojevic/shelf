@@ -30,7 +30,8 @@ public class EventService {
     public void reportEvent(FunctionEvents event, List<Long> fileIds, Long userId, Long shelfId) {
 
         if(shelfId == null && !fileIds.isEmpty()){
-            shelfId = fileRepository.findById(fileIds.get(0)).orElseThrow(ExceptionSupplier.fileNotFound).getShelfId();
+            shelfId = fileRepository.findById(fileIds.get(0))
+                    .orElseThrow(ExceptionSupplier.fileNotFound).getShelfId();
         }
 
         List<Long> functionToBeExecutedIds = functionService.getUserFunctionsByShelfId(shelfId, event.getValue());
