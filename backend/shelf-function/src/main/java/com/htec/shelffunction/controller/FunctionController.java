@@ -6,6 +6,7 @@ import com.htec.shelffunction.dto.FunctionDTO;
 import com.htec.shelffunction.model.request.CustomFunctionRequestModel;
 import com.htec.shelffunction.model.request.PredefinedFunctionRequestModel;
 import com.htec.shelffunction.model.request.RenameFunctionRequestModel;
+import com.htec.shelffunction.model.request.UpdateCodeFunctionRequestModel;
 import com.htec.shelffunction.model.response.FunctionResponseModel;
 import com.htec.shelffunction.model.response.TextResponseMessage;
 import com.htec.shelffunction.service.FunctionService;
@@ -22,6 +23,7 @@ public class FunctionController {
     public final String FUNCTION_CREATED = "Function created";
     public final String FUNCTION_DELETED = "Function deleted";
     public final String FUNCTION_NAME_UPDATED = "Function name updated";
+    public final String FUNCTION_CODE_UPDATED = "Function code updated";
 
     private final FunctionService functionService;
 
@@ -75,10 +77,19 @@ public class FunctionController {
 
     @PutMapping("/rename")
     public ResponseEntity<TextResponseMessage> renameFunction(@AuthenticationUser AuthUser authUser,
-                                                                @RequestBody RenameFunctionRequestModel renameFunctionRequestModel) {
+                                                              @RequestBody RenameFunctionRequestModel renameFunctionRequestModel) {
 
         functionService.updateFunctionName(renameFunctionRequestModel);
 
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FUNCTION_NAME_UPDATED, HttpStatus.OK.value()));
+    }
+
+    @PutMapping("/code")
+    public ResponseEntity<TextResponseMessage> updateCode(@AuthenticationUser AuthUser user,
+                                                          @RequestBody UpdateCodeFunctionRequestModel updateCodeFunctionRequestModel) {
+
+        functionService.updateFunctionCode(updateCodeFunctionRequestModel, user.getId());
+
+        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FUNCTION_CODE_UPDATED, HttpStatus.OK.value()));
     }
 }
