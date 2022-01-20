@@ -5,7 +5,6 @@ import { FaRegTimesCircle } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { FunctionForm, FunctionFormInner } from '../form/form-styles';
 import { InputField } from '../UI/input/InputField';
-import { ModalButtonDivider } from '../layout/layout.styles';
 import { Button } from '../UI/button';
 import functionService from '../../services/functionService';
 import { Error, H2 } from '../text/text-styles';
@@ -21,6 +20,7 @@ import {
   RadioInner,
   RadioSubTitle,
   RadioTitle,
+  FunctionModalFooter,
 } from './modal.styles';
 import { theme } from '../../theme';
 import { InputSubTitle, InputTitle } from '../UI/input/input-styles';
@@ -33,6 +33,7 @@ import {
   languageOptions,
   logTrigger,
 } from '../../utils/fixtures/functionOptions';
+import { config } from '../../utils/validation/config/functionModalValidations';
 
 const FunctionModal = ({
   onCloseModal,
@@ -43,6 +44,7 @@ const FunctionModal = ({
     register,
     handleSubmit,
     reset,
+    setValue,
     watch,
     formState: { errors },
   } = useForm();
@@ -54,11 +56,13 @@ const FunctionModal = ({
   };
 
   const onSubmit = (formData: FunctionFormData) => {
+    const newFormData: FunctionFormData = formData;
+
     if (formData.function === 'backup') {
-      formData.eventId = 1;
+      newFormData.eventId = 1;
     }
     functionService
-      .createPredefinedFunction(formData)
+      .createPredefinedFunction(newFormData)
       .then(() => {
         toast.success('Function created');
         onCloseModal(false);
@@ -67,24 +71,12 @@ const FunctionModal = ({
       .catch((err) => toast.error(err.response?.data.message));
   };
 
-  const validations = {
-    required: 'This field is required',
-    maxLength: {
-      value: 50,
-      message: 'Function name can not be longer than 50 characters',
-    },
-  };
+  const predefinedFunction = watch('function');
+  const validations = config(watch);
 
   const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
     setOptionValue(target.value);
     reset();
-  };
-
-  const predefinedFunction = watch('function');
-
-  const validateBackupShelf = {
-    validate: (value: string) =>
-      value !== watch('shelfId') || 'Cant select same shelfs',
   };
 
   const modal = (
@@ -137,23 +129,22 @@ const FunctionModal = ({
                     preset for common use cases.
                   </RadioSubTitle>
                 </div>
-
-                <input
-                  type="radio"
-                  id="blueprint"
-                  name="code"
-                  value="blueprint"
-                  checked={optionValue === 'blueprint'}
-                  onChange={handleChange}
-                />
               </RadioInner>
+              <input
+                type="radio"
+                id="blueprint"
+                name="code"
+                value="blueprint"
+                checked={optionValue === 'blueprint'}
+                onChange={handleChange}
+              />
               <img
                 src={`${process.env.PUBLIC_URL}/assets/images/coding.png`}
                 alt="code symbol"
               />
             </RadioLabel>
           </RadioContainer>
-          <FunctionForm onSubmit={handleSubmit(onSubmit)}>
+          <FunctionForm onSubmit={handleSubmit(onSubmit)} id="function-form">
             <FunctionFormInner>
               {optionValue === 'scratch' ? (
                 <>
@@ -164,7 +155,7 @@ const FunctionModal = ({
                   <InputField
                     placeholder="Function name"
                     error={errors.name}
-                    {...register('name', validations)}
+                    {...register('name', validations.functionValidation)}
                   />
                   <Error>{errors?.functionName?.message}</Error>
                   <InputTitle>Runtime</InputTitle>
@@ -173,10 +164,12 @@ const FunctionModal = ({
                   </InputSubTitle>
                   <Select
                     optionsData={languageOptions}
+                    register={register}
                     selectName="language"
                     error={errors.language}
-                    register={register}
                     placeHolder="select language"
+                    setValue={setValue}
+                    validation={validations.basicValidation}
                   />
                   <InputTitle>Select event trigger</InputTitle>
                   <InputSubTitle>
@@ -188,6 +181,8 @@ const FunctionModal = ({
                     selectName="trigger"
                     error={errors.trigger}
                     placeHolder="select function trigger"
+                    setValue={setValue}
+                    validation={validations.basicValidation}
                   />
                   <InputTitle>Bind function to shelf</InputTitle>
                   <InputSubTitle>
@@ -199,6 +194,8 @@ const FunctionModal = ({
                     selectName="shelfId"
                     error={errors.shelfId}
                     placeHolder="select shelf"
+                    setValue={setValue}
+                    validation={validations.basicValidation}
                   />
                 </>
               ) : (
@@ -213,6 +210,8 @@ const FunctionModal = ({
                     selectName="function"
                     error={errors.function}
                     placeHolder="select function"
+                    setValue={setValue}
+                    validation={validations.basicValidation}
                   />
                   {predefinedFunction && (
                     <>
@@ -223,7 +222,7 @@ const FunctionModal = ({
                       <InputField
                         placeholder="Function name"
                         error={errors.name}
-                        {...register('name', validations)}
+                        {...register('name', validations.functionValidation)}
                       />
                       <InputTitle>Bind function to shelf</InputTitle>
                       <InputSubTitle>
@@ -235,6 +234,8 @@ const FunctionModal = ({
                         selectName="shelfId"
                         error={errors.shelfId}
                         placeHolder="select shelf"
+                        setValue={setValue}
+                        validation={validations.functionValidation}
                       />
                     </>
                   )}
@@ -247,10 +248,11 @@ const FunctionModal = ({
                       <Select
                         optionsData={data}
                         register={register}
-                        validation={validateBackupShelf}
-                        selectName="functionParam"
-                        error={errors.functionParam}
+                        selectName="backupShelf"
+                        error={errors.backupShelf}
                         placeHolder="select backup shelf"
+                        setValue={setValue}
+                        validation={validations.backupShelf}
                       />
                     </>
                   )}
@@ -265,25 +267,29 @@ const FunctionModal = ({
                         register={register}
                         selectName="trigger"
                         error={errors.trigger}
+                        setValue={setValue}
                         placeHolder="select function trigger"
+                        validation={validations.basicValidation}
                       />
                     </>
                   )}
                 </>
               )}
             </FunctionFormInner>
-            <ModalButtonDivider>
-              <Button
-                variant="lightBordered"
-                onClick={handleCloseModal}
-                size="large"
-              >
-                Cancel
-              </Button>
-              <Button size="large">Submit</Button>
-            </ModalButtonDivider>
           </FunctionForm>
         </FunctionContainer>
+        <FunctionModalFooter>
+          <Button
+            variant="lightBordered"
+            onClick={handleCloseModal}
+            size="large"
+          >
+            Cancel
+          </Button>
+          <Button size="large" type="submit" form="function-form">
+            Submit
+          </Button>
+        </FunctionModalFooter>
       </FunctionModalContainer>
     </Backdrop>
   );

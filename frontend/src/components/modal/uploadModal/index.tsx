@@ -190,13 +190,13 @@ const UploadModal = ({ onCloseModal, onGetData }: UploadModalProps) => {
       {progress > 0 && <ProgressBar progress={progress} />}
 
       <ModalButtonDivider>
-        <Button variant="primaryBordered" onClick={handleCloseModal}>
+        <Button variant="light" onClick={handleCloseModal}>
           Cancel
         </Button>
         <Button
           onClick={handleUpload}
           disabled={!filesForUpload.length || progress > 0}
-          variant="light"
+          variant="primaryBordered"
         >
           Upload
         </Button>

@@ -12,10 +12,17 @@ export interface ButtonProps {
   isLoading?: boolean;
   spinner?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  variant?: string;
+  variant?:
+    | 'primary'
+    | 'secondary'
+    | 'light'
+    | 'lightBordered'
+    | 'primaryBordered'
+    | undefined;
   size?: string;
   fullwidth?: boolean;
   disabled?: boolean;
   visible?: boolean;
   type?: 'button' | 'reset' | 'submit' | undefined;
+  form?: string;
 }

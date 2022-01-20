@@ -20,20 +20,18 @@ export const InputField = React.forwardRef(
           type={!passwordShown || disabled ? type : 'text'}
           ref={ref}
           disabled={disabled}
-          // autoComplete="off"
           {...restProps}
         />
-        {type === 'password' &&
-          !disabled && ( // TODO - maybe solve diferently
-            <SeenIcon
-              src={
-                passwordShown
-                  ? `${process.env.PUBLIC_URL}/assets/icons/eyeopen.png`
-                  : `${process.env.PUBLIC_URL}/assets/icons/eyeclosed.png`
-              }
-              onClick={handlePasswordVisibilityClick}
-            />
-          )}
+        {type === 'password' && !disabled && (
+          <SeenIcon
+            src={
+              passwordShown
+                ? `${process.env.PUBLIC_URL}/assets/icons/eyeopen.png`
+                : `${process.env.PUBLIC_URL}/assets/icons/eyeclosed.png`
+            }
+            onClick={handlePasswordVisibilityClick}
+          />
+        )}
         {error && <Error>{error.message}</Error>}
       </InputContainer>
     );
