@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { theme } from '../../../theme';
 
-interface SelectStyleProps {
-  variant?: string;
+export interface SelectStyleProps {
+  variant?: 'secondary' | undefined;
 }
 
 export const DropDownContainer = styled.div`

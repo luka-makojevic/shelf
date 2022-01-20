@@ -24,7 +24,7 @@ interface SelectProps {
   error: { message: string };
   validation?: RegisterOptions;
   setValue?: UseFormSetValue<FieldValues>;
-  variant?: string;
+  variant?: 'secondary' | undefined;
 }
 
 export const Select = ({
