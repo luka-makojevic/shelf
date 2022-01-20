@@ -85,8 +85,10 @@ export const DeleteModalBody = styled.div`
 
 export const RadioContainer = styled.div`
   display: flex;
+  text-align: justify;
+  line-height: 20px;
 
-  @media (max-width: ${theme.breakpoints.md}) {
+  @media (max-width: ${theme.breakpoints.sm}) {
     flex-direction: column;
   }
 `;
@@ -99,6 +101,7 @@ export const RadioLabel = styled.label<FunctionStyleProps>`
   border: 1px;
   width: 100%;
   height: 200px;
+  position: relative;
   margin-right: ${theme.space.lg};
   &:last-of-type {
     margin-right: 0;
@@ -110,10 +113,14 @@ export const RadioLabel = styled.label<FunctionStyleProps>`
   }
   input {
     cursor: pointer;
+    position: absolute;
+    top: 15px;
+    right: 15px;
   }
 
   @media (max-width: ${theme.breakpoints.md}) {
     margin-bottom: ${theme.space.sm};
+    padding: 0 20px;
   }
 `;
 
@@ -122,12 +129,15 @@ export const RadioInner = styled.div`
   display: flex;
   justify-content: space-between;
   min-height: 120px;
+
+  @media (max-width: ${theme.breakpoints.md}) {
+    text-align: left;
+  }
 `;
 export const FunctionModalContainer = styled.div`
   background: ${theme.colors.secondary};
-
   height: 700px;
-  width: 700px;
+  max-width: 700px;
   color: white;
   display: flex;
   flex-direction: column;
@@ -135,13 +145,21 @@ export const FunctionModalContainer = styled.div`
   border-radius: 10px;
   margin: ${theme.space.md};
 `;
+
 export const FunctionContainer = styled.div`
   overflow-y: auto;
   padding: 0px ${theme.space.lg} ${theme.space.sm};
   border-radius: 55px;
   height: 100%;
 `;
-export const RadioTitle = styled.p``;
+export const RadioTitle = styled.p`
+  margin: 0;
+  margin-bottom: ${theme.space.sm};
+
+  @media (max-width: ${theme.breakpoints.md}) {
+    margin: ${theme.space.sm} 0;
+  }
+`;
 export const RadioSubTitle = styled.p`
   margin: 0;
   font-size: ${theme.fontSizes.sm};
@@ -151,9 +169,19 @@ export const FunctionHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   height: 70px;
   padding: ${theme.space.none} ${theme.space.sm};
-
   width: 100%;
+`;
+
+export const FunctionModalFooter = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: ${theme.space.md} ${theme.space.lg};
+  width: 100%;
+
+  @media (max-width: ${theme.breakpoints.sm}) {
+    flex-direction: column;
+  }
 `;

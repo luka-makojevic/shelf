@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { theme } from '../../../theme';
 
 interface SelectStyleProps {
@@ -34,13 +34,17 @@ export const DropDownHeader = styled.div<SelectStyleProps>`
   ${({ variant }) => {
     switch (variant) {
       case 'secondary':
-        return css`
+        return `
           border: 1px solid ${theme.colors.secondary};
         `;
       default:
         return null;
     }
   }}
+`;
+
+export const DropdownListContainer = styled.div`
+  position: relative;
 `;
 
 export const DropDownList = styled.div<SelectStyleProps>`
@@ -57,7 +61,7 @@ export const DropDownList = styled.div<SelectStyleProps>`
   }
 `;
 
-export const ListItem = styled.div`
+export const DropdownItem = styled.div`
   padding: 10px;
   &:hover {
     background: ${theme.colors.lightBlue};

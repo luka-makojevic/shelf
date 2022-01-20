@@ -18,4 +18,5 @@ export interface ButtonProps {
   disabled?: boolean;
   visible?: boolean;
   type?: 'button' | 'reset' | 'submit' | undefined;
+  form?: string;
 }

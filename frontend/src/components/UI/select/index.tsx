@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { FieldValues, UseFormRegister, UseFormSetValue } from 'react-hook-form';
+import {
+  FieldValues,
+  RegisterOptions,
+  UseFormRegister,
+  UseFormSetValue,
+} from 'react-hook-form';
 import { RiArrowDownSFill, RiArrowUpSFill } from 'react-icons/ri';
 import { ShelvesOptionTypes } from '../../modal/modal.interfaces';
 import { Error } from '../../text/text-styles';
@@ -7,7 +12,8 @@ import {
   DropDownContainer,
   DropDownHeader,
   DropDownList,
-  ListItem,
+  DropdownItem,
+  DropdownListContainer,
 } from './select-styles';
 
 interface SelectProps {
@@ -16,9 +22,7 @@ interface SelectProps {
   placeHolder: string;
   register: UseFormRegister<FieldValues>;
   error: { message: string };
-  validation?: {
-    validate: (value: string) => true | 'Cant select same shelfs';
-  };
+  validation?: RegisterOptions;
   setValue?: UseFormSetValue<FieldValues>;
   variant?: string;
 }
@@ -39,7 +43,13 @@ export const Select = ({
 
   const validationRule = { required: 'You must select a role' };
 
-  const ListItemW = ({ option }: { option: ShelvesOptionTypes }) => {
+  const ListItem = ({
+    option,
+    index,
+  }: {
+    option: ShelvesOptionTypes;
+    index: number;
+  }) => {
     const handleChooseOption = () => {
       if (setValue)
         setValue(selectName, option.value, { shouldValidate: true });
@@ -47,9 +57,9 @@ export const Select = ({
       setIsOpen(false);
     };
     return (
-      <ListItem key={option.value} onClick={handleChooseOption}>
+      <DropdownItem key={index} onClick={handleChooseOption}>
         {option.text}
-      </ListItem>
+      </DropdownItem>
     );
   };
 
@@ -89,13 +99,15 @@ export const Select = ({
 
       {error && !isOpen && <Error>{error.message}</Error>}
       {isOpen && (
-        <div style={{ position: 'relative' }}>
+        <DropdownListContainer>
           <DropDownList ref={dropDownRef} variant={variant}>
-            {optionsData.map((option: { value: string; text: string }) => (
-              <ListItemW option={option} />
-            ))}
+            {optionsData.map(
+              (option: { value: string; text: string }, index: number) => (
+                <ListItem option={option} index={index} />
+              )
+            )}
           </DropDownList>
-        </div>
+        </DropdownListContainer>
       )}
     </DropDownContainer>
   );

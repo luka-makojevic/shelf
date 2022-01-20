@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from 'react';
 import { RegisterOptions } from 'react-hook-form';
 import { Role } from '../utils/enums/roles';
 import { SortingDirection } from '../utils/enums/table';
@@ -268,6 +267,3 @@ export type FunctionFormData =
   | FunctionFromScratchData
   | BackupFunctionData
   | LogFunctionData;
-
-
-

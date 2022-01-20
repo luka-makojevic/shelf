@@ -79,7 +79,7 @@ export const AddedFilesListItem = styled.li`
   }
 `;
 
-export const AddedFilesListItemText = styled.li`
+export const AddedFilesListItemText = styled.div`
   display: flex;
 `;
 
