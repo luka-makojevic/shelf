@@ -527,4 +527,27 @@ public class FileService {
             e.printStackTrace();
         }
     }
+
+    public Long createLogFile(Long shelfId, Long folderId, String logFileName, Long userId) {
+
+        Map<String, Pair<String, String>> files = new HashMap<>();
+
+        Pair<String, String> file = Pair.of(logFileName, "");
+        files.put(logFileName, file);
+
+        List<Long> logFileIds = saveFile(shelfId, folderId, files, userId);
+
+        return logFileIds.get(0);
+    }
+
+    public Long getLogFileId(Long shelfId, String logFileName, Long userId) {
+
+        if (fileRepository.findByNameAndShelfIdAndParentFolderIdIsNull(logFileName, shelfId).isPresent()) {
+
+            return fileRepository.findByNameAndShelfIdAndParentFolderIdIsNull(logFileName, shelfId)
+                    .get().getId();
+        }
+
+        return createLogFile(shelfId, 0L, logFileName, userId);
+    }
 }
