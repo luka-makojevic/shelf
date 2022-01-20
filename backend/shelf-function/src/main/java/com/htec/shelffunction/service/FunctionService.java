@@ -83,7 +83,6 @@ public class FunctionService {
 
             Long logFileId = fileService.getLogFileId(requestModel.getShelfId(), requestModel.getLogFileName());
             requestModel.setFunctionParam(logFileId);
-
         }
 
         compilePredefinedFunction(functionEntity.getId(), requestModel, userId);
