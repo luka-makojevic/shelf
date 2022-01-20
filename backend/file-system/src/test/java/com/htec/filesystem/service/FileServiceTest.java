@@ -268,7 +268,7 @@ class FileServiceTest {
 
         fileService.saveFileIntoDB(filePath, fileName, shelfId, folderId);
 
-        verify(fileRepository, times(1)).save(any());
+        verify(fileRepository, times(1)).saveAndFlush(any());
     }
 
     @Test

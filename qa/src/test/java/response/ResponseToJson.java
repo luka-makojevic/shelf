@@ -4,6 +4,9 @@ import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+import java.util.Map;
+
 @Generated("jsonschema2pojo")
 public class ResponseToJson {
     @SerializedName("message")
@@ -54,6 +57,20 @@ public class ResponseToJson {
         this.shelfName = shelfName;
         return shelfName;
     }
+
+    @SerializedName("shelfItems")
+    @Expose
+    private List<Map<String, Object>> shelfItems = null;
+
+    public List<Map<String, Object>> getShelfItems() {
+        return shelfItems;
+    }
+
+    public List<Map<String, Object>> setShelfItems(List<Map<String, Object>> shelfItems) {
+        this.shelfItems = shelfItems;
+        return shelfItems;
+    }
+
 }
 
 

@@ -26,9 +26,12 @@ export interface ModalProps {
   children: JSX.Element;
   title?: string;
   closeIcon?: boolean;
+  background?: string;
+  color?: string;
 }
 export interface ModalStyleProps {
   background?: string;
+  color?: string;
 }
 
 export interface FolderModalProps {

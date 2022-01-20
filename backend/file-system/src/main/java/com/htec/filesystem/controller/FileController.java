@@ -5,7 +5,9 @@ import com.htec.filesystem.annotation.AuthenticationUser;
 import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.model.response.FileResponseModel;
 import com.htec.filesystem.model.response.TextResponseMessage;
+import com.htec.filesystem.service.EventService;
 import com.htec.filesystem.service.FileService;
+import com.htec.filesystem.util.FunctionEvents;
 import org.springframework.data.util.Pair;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -22,9 +25,11 @@ import java.util.Map;
 public class FileController {
 
     private final FileService fileService;
+    private final EventService eventService;
 
     private final String FILE_UPLOADED = "File Uploaded";
     private final String FILE_COPIED = "File Copied";
+    private final String FILE_LOGGED = "File logged";
     private final String FILE_DOWNLOADED = "File Downloaded";
     private final String FILE_RENAMED = "File renamed";
     private final String IMAGE_UPLOADED = "Image Uploaded";
@@ -32,8 +37,10 @@ public class FileController {
     private final String FILES_RECOVERED_FROM_TRASH = "File/s recovered from trash.";
     private final String FILES_DELETED = "File/s deleted.";
 
-    public FileController(FileService fileService) {
+    public FileController(FileService fileService,
+                          EventService eventService) {
         this.fileService = fileService;
+        this.eventService = eventService;
     }
 
 
@@ -51,6 +58,9 @@ public class FileController {
                                           @RequestParam(value = "file") boolean file) {
 
         FileResponseModel fileResponseModel = fileService.getFile(user.getId(), id, file);
+
+        eventService.reportEvent(FunctionEvents.DOWNLOAD, Collections.singletonList(id), user.getId(), null);
+
         return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).body(fileResponseModel.getImageContent());
     }
 
@@ -58,6 +68,9 @@ public class FileController {
     public ResponseEntity zipDownload(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) {
 
         fileService.downloadFilesToZip(user, fileIds);
+
+        eventService.reportEvent(FunctionEvents.DOWNLOAD, fileIds, user.getId(), null);
+
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("application/zip"))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename\"" + "asde" + "\"").build();
@@ -77,7 +90,10 @@ public class FileController {
                                                           @PathVariable Long folderId,
                                                           @AuthenticationUser AuthUser authUser) {
 
-        fileService.saveFile(shelfId, folderId, files, authUser.getId());
+        List<Long> newFileIds = fileService.saveFile(shelfId, folderId, files, authUser.getId());
+
+        eventService.reportEvent(FunctionEvents.UPLOAD, newFileIds, authUser.getId(), shelfId);
+
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_UPLOADED, HttpStatus.OK.value()));
     }
 
@@ -88,6 +104,16 @@ public class FileController {
 
         fileService.copyFile(fileId, shelfId, userId);
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_COPIED, HttpStatus.OK.value()));
+    }
+
+        @PutMapping("/log/event/{eventId}/file/{fileId}/user/{userId}/backupFileId/{backupFileId}")
+    public ResponseEntity<TextResponseMessage> logFile(@PathVariable Integer eventId,
+                                                       @PathVariable Long fileId,
+                                                       @PathVariable Long userId,
+                                                       @PathVariable Long backupFileId) {
+
+        fileService.logFile(eventId, fileId, userId, backupFileId);
+        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_LOGGED, HttpStatus.OK.value()));
     }
 
     @PutMapping("/move-to-trash")
@@ -108,14 +134,17 @@ public class FileController {
     @DeleteMapping
     public ResponseEntity<TextResponseMessage> deleteFile(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) throws IOException {
 
-        fileService.deleteFile(user.getId(), fileIds);
+        Long deletedFilesShelfId = fileService.deleteFile(user.getId(), fileIds);
+
+        eventService.reportEvent(FunctionEvents.DELETE, fileIds, user.getId(), deletedFilesShelfId);
+
         return ResponseEntity.ok().body(new TextResponseMessage(FILES_DELETED, HttpStatus.OK.value()));
     }
 
     @PutMapping("/recover")
     public ResponseEntity<TextResponseMessage> recoverFile(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) {
 
-        fileService.updateDeletedFiles(user, fileIds , false, true);
+        fileService.updateDeletedFiles(user, fileIds, false, true);
         return ResponseEntity.ok().body(new TextResponseMessage(FILES_RECOVERED_FROM_TRASH, HttpStatus.OK.value()));
     }
 }

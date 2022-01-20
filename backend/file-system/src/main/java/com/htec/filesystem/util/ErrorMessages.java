@@ -39,7 +39,8 @@ public enum ErrorMessages {
     BAD_REQUEST("Bad request."),
     UNAUTHORIZED("Unauthorized."),
     NOT_FOUND("Not found."),
-    FORBIDDEN("Forbidden.");
+    FORBIDDEN("Forbidden."),
+    SERIALIZING_ERROR("Error when serializing KafkaRequestModel to byte[]");
 
     private String errorMessage;
 

@@ -13,6 +13,7 @@ import com.htec.filesystem.repository.FileRepository;
 import com.htec.filesystem.repository.FolderRepository;
 import com.htec.filesystem.repository.ShelfRepository;
 import com.htec.filesystem.util.FileUtil;
+import com.htec.filesystem.util.FunctionEvents;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,7 +98,9 @@ public class FileService {
         return new FileResponseModel(imageBytes, path);
     }
 
-    public void saveFile(Long shelfId, Long folderId, Map<String, Pair<String, String>> files, Long userId) {
+    public List<Long> saveFile(Long shelfId, Long folderId, Map<String, Pair<String, String>> files, Long userId) {
+
+        List<Long> newFileIds = new ArrayList<>();
 
         if (files == null) {
             throw ExceptionSupplier.couldNotUploadFile.get();
@@ -119,7 +122,6 @@ public class FileService {
         if (!Objects.equals(shelf.getUserId(), userId)) {
             throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
         }
-
 
         for (Map.Entry<String, Pair<String, String>> filesPair : files.entrySet()) {
 
@@ -160,11 +162,14 @@ public class FileService {
 
             String uploadDir = homePath + localPath;
             FileUtil.saveFile(uploadDir, fileName, bytes);
-            saveFileIntoDB(dbPath, fileName, shelfId, folderId);
+
+            newFileIds.add(saveFileIntoDB(dbPath, fileName, shelfId, folderId));
         }
+
+        return newFileIds;
     }
 
-    public void saveFileIntoDB(String filePath, String fileName, long shelfId, long folderId) {
+    public Long saveFileIntoDB(String filePath, String fileName, long shelfId, long folderId) {
 
         FileEntity fileEntity = new FileEntity();
 
@@ -175,7 +180,9 @@ public class FileService {
         if (folderId != 0) fileEntity.setParentFolderId(folderId);
 
         fileEntity.setCreatedAt(LocalDateTime.now());
-        fileRepository.save(fileEntity);
+        fileRepository.saveAndFlush(fileEntity);
+
+        return fileEntity.getId();
     }
 
     public void copyFile(Long fileId, Long shelfId, Long userId) {
@@ -183,12 +190,12 @@ public class FileService {
         List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserId(userId);
 
         FileEntity fileEntity = fileRepository.findById(fileId)
-                .orElseThrow(ExceptionSupplier.noFileWithGivenId);
+                .orElseThrow(ExceptionSupplier.fileNotFound);
 
         shelfRepository.findById(shelfId)
-                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+                .orElseThrow(ExceptionSupplier.shelfNotFound);
 
-        if(!shelfEntities.stream().map(ShelfEntity::getId).collect((Collectors.toList())).contains(fileEntity.getShelfId())) {
+        if (!shelfEntities.stream().map(ShelfEntity::getId).collect((Collectors.toList())).contains(fileEntity.getShelfId())) {
             throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
         }
 
@@ -208,7 +215,7 @@ public class FileService {
         fileRepository.save(backupFile);
 
         try {
-            Files.copy(Paths.get(src),Paths.get(dst), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(Paths.get(src), Paths.get(dst), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw ExceptionSupplier.couldNotCopyFile.get();
         }
@@ -329,7 +336,6 @@ public class FileService {
         }
     }
 
-
     private void moveFilesToTrash(List<FileEntity> fileEntities, Boolean trashVisible) {
 
         for (FileEntity fileEntity : fileEntities) {
@@ -435,7 +441,7 @@ public class FileService {
         return new ArrayList<>(ShelfItemMapper.INSTANCE.fileEntitiesToShelfItemDTOs(fileEntities));
     }
 
-    public void deleteFile(Long userId, List<Long> fileIds) {
+    public Long deleteFile(Long userId, List<Long> fileIds) {
 
         List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndDeletedAndIdIn(userId, true, fileIds);
 
@@ -447,6 +453,8 @@ public class FileService {
             throw ExceptionSupplier.userNotAllowedToDeleteFile.get();
         }
 
+        Long shelfId = fileEntities.isEmpty() ? null : fileEntities.get(0).getShelfId();
+
         for (FileEntity fileEntity : fileEntities) {
             String fullPath = homePath + userPath + fileEntity.getPath();
             if (!(new File(fullPath)).delete()) {
@@ -455,6 +463,7 @@ public class FileService {
         }
 
         fileRepository.deleteAll(fileEntities);
+        return shelfId;
     }
 
     public void downloadFilesToZip(AuthUser user, List<Long> fileIds) {
@@ -489,6 +498,33 @@ public class FileService {
             zipOut.finish();
         } catch (IOException e) {
             throw ExceptionSupplier.couldNotDownloadFiles.get();
+        }
+    }
+
+    public void logFile(Integer eventId, Long fileId, Long userId, Long backupFileId) {
+
+        List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserId(userId);
+
+        FileEntity logFile = fileRepository.findById(backupFileId)
+                .orElseThrow(ExceptionSupplier.fileNotFound);
+
+        FileEntity fileToLog = fileRepository.findById(fileId)
+                .orElseThrow(ExceptionSupplier.fileNotFound);
+
+        if (!shelfEntities.stream().map(ShelfEntity::getId).collect((Collectors.toList())).contains(fileToLog.getShelfId())) {
+            throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
+        }
+
+        FunctionEvents event = FunctionEvents.values()[eventId - 1];
+
+        String logMessage = " " + event.getEvent() + "\t" + fileToLog.getName() + "\t" + LocalDateTime.now() + "\r\n";
+
+        String sourceFilePath = homePath + userPath + logFile.getPath();
+
+        try {
+            Files.writeString(Path.of(sourceFilePath), logMessage, StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

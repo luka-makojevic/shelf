@@ -23,7 +23,7 @@ public class Cleanup
             if (email.equals(table)) {
                 sheldDBServer = new SheldDBServer();
                 String sql = DbQueryHelpers.deleteUserFromDb(email);
-                sheldDBServer.deleteQuery(sql);
+                sheldDBServer.executeQuery(sql);
                 status = true;
                 break;
             }
