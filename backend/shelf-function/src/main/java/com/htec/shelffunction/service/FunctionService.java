@@ -47,13 +47,16 @@ public class FunctionService {
     private final FunctionRepository functionRepository;
     private final RestTemplate restTemplate;
     private final ShelfService shelfService;
+    private final FileService fileService;
 
     public FunctionService(FunctionRepository functionRepository,
                            RestTemplate restTemplate,
-                           ShelfService shelfService) {
+                           ShelfService shelfService,
+                           FileService fileService) {
         this.functionRepository = functionRepository;
         this.restTemplate = restTemplate;
         this.shelfService = shelfService;
+        this.fileService = fileService;
     }
 
     public void createPredefinedFunction(PredefinedFunctionRequestModel functionRequestModel, Long userId) {
@@ -74,6 +77,12 @@ public class FunctionService {
         functionEntity.setPath(userId + PATH_SEPARATOR + "functions" + PATH_SEPARATOR + "Function" + functionEntity.getId());
 
         functionRepository.save(functionEntity);
+
+
+        if (functionRequestModel.getFunctionParam() == null && "log".equals(functionRequestModel.getFunction())) {
+            Long logFileId = fileService.getLogFileId(functionRequestModel.getShelfId(), functionRequestModel.getLogFileName());
+            functionRequestModel.setFunctionParam(logFileId);
+        }
 
         compilePredefinedFunction(functionEntity.getId(), functionRequestModel, userId);
     }

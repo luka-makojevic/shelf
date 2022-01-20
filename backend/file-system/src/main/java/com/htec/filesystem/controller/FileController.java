@@ -97,6 +97,16 @@ public class FileController {
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_UPLOADED, HttpStatus.OK.value()));
     }
 
+    @PostMapping("/log/{shelfId}")
+    public ResponseEntity<Long> getLogFileId(@RequestBody String logFileName,
+                                             @PathVariable Long shelfId,
+                                             @AuthenticationUser AuthUser authUser) {
+
+        Long logFileId = fileService.getLogFileId(shelfId, logFileName, authUser.getId());
+
+        return ResponseEntity.status(HttpStatus.OK).body(logFileId);
+    }
+
     @PostMapping("/copy/{fileId}/shelf/{shelfId}/user/{userId}")
     public ResponseEntity<TextResponseMessage> copyFile(@PathVariable Long fileId,
                                                         @PathVariable Long shelfId,
@@ -106,7 +116,7 @@ public class FileController {
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_COPIED, HttpStatus.OK.value()));
     }
 
-        @PutMapping("/log/event/{eventId}/file/{fileId}/user/{userId}/backupFileId/{backupFileId}")
+    @PutMapping("/log/event/{eventId}/file/{fileId}/user/{userId}/backupFileId/{backupFileId}")
     public ResponseEntity<TextResponseMessage> logFile(@PathVariable Integer eventId,
                                                        @PathVariable Long fileId,
                                                        @PathVariable Long userId,
