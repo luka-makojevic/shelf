@@ -544,7 +544,8 @@ public class FileService {
 
         if (fileRepository.findByNameAndShelfIdAndParentFolderIdIsNull(logFileName, shelfId).isPresent()) {
 
-            return fileRepository.findByNameAndShelfIdAndParentFolderIdIsNull(logFileName, shelfId).get().getId();
+            return fileRepository.findByNameAndShelfIdAndParentFolderIdIsNull(logFileName, shelfId)
+                    .get().getId();
         }
 
         return createLogFile(shelfId, 0L, logFileName, userId);
