@@ -59,16 +59,16 @@ public class FunctionService {
         this.fileService = fileService;
     }
 
-    public void createPredefinedFunction(PredefinedFunctionRequestModel functionRequestModel, Long userId) {
+    public void createPredefinedFunction(PredefinedFunctionRequestModel requestModel, Long userId) {
 
-        checkAccessRights(functionRequestModel.getShelfId());
+        checkAccessRights(requestModel.getShelfId());
 
-        if (checkFunctionNameExists(functionRequestModel.getName(), functionRequestModel.getShelfId())) {
+        if (checkFunctionNameExists(requestModel.getName(), requestModel.getShelfId())) {
             throw ExceptionSupplier.functionAlreadyExists.get();
         }
 
         FunctionEntity functionEntity = FunctionMapper.INSTANCE
-                .predefinedFunctionRequestModelToFunctionEntity(functionRequestModel);
+                .predefinedFunctionRequestModelToFunctionEntity(requestModel);
 
         functionEntity.setLanguage(JAVA);
 
@@ -79,12 +79,15 @@ public class FunctionService {
         functionRepository.save(functionEntity);
 
 
-        if (functionRequestModel.getFunctionParam() == null && "log".equals(functionRequestModel.getFunction())) {
-            Long logFileId = fileService.getLogFileId(functionRequestModel.getShelfId(), functionRequestModel.getLogFileName());
-            functionRequestModel.setFunctionParam(logFileId);
+        if (requestModel.getFunctionParam() == null &&
+                "log".equals(requestModel.getFunction())) {
+
+            Long logFileId = fileService.getLogFileId(requestModel.getShelfId(), requestModel.getLogFileName());
+            requestModel.setFunctionParam(logFileId);
+
         }
 
-        compilePredefinedFunction(functionEntity.getId(), functionRequestModel, userId);
+        compilePredefinedFunction(functionEntity.getId(), requestModel, userId);
     }
 
     private boolean checkFunctionNameExists(String functionName, Long shelfId) {
