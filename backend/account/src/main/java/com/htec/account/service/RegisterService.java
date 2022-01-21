@@ -24,6 +24,7 @@ public class RegisterService {
 
     private final UserRepository userRepository;
     private final TokenRepository confirmationTokenRepository;
+    private final FolderService folderService;
 
     private final TokenGenerator tokenGenerator;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -37,6 +38,7 @@ public class RegisterService {
 
     public RegisterService(UserRepository userRepository,
                            TokenRepository confirmationTokenRepository,
+                           FolderService folderService,
                            TokenGenerator tokenGenerator,
                            BCryptPasswordEncoder bCryptPasswordEncoder,
                            EmailService emailService,
@@ -47,6 +49,7 @@ public class RegisterService {
 
         this.userRepository = userRepository;
         this.confirmationTokenRepository = confirmationTokenRepository;
+        this.folderService = folderService;
         this.tokenGenerator = tokenGenerator;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.emailService = emailService;
@@ -101,7 +104,9 @@ public class RegisterService {
         userEntity.setFreeSpace(FREE_SPACE_SIZE);
         userEntity.setPictureName(DEFAULT_AVATAR_PATH);
 
-        userRepository.save(userEntity);
+        userRepository.saveAndFlush(userEntity);
+
+        folderService.initializeFolder(userEntity.getId());
     }
 
     void createAndSendToken(UserEntity userEntity) {
