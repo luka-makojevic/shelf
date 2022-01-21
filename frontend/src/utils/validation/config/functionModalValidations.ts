@@ -1,4 +1,5 @@
 import { FieldValues, UseFormWatch } from 'react-hook-form';
+import { whiteSpaceRegex } from '../regex';
 
 export const config = (watch: UseFormWatch<FieldValues>) => {
   const functionValidation = {
@@ -6,6 +7,10 @@ export const config = (watch: UseFormWatch<FieldValues>) => {
     maxLength: {
       value: 50,
       message: 'Function name can not be longer than 50 characters',
+    },
+    pattern: {
+      value: whiteSpaceRegex,
+      message: 'Invalid name format',
     },
   };
   const basicValidation = {
