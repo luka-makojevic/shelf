@@ -545,11 +545,13 @@ public class FileService {
     public Map<Long, String> getFileNamesFromIds(List<Long> fileIds) {
 
         Map<Long, String> filesToDelete = new HashMap<>();
-        for(Long fileId : fileIds) {
-            FileEntity fileEntity = fileRepository.findById(fileId)
-                    .orElseThrow(ExceptionSupplier.noFileWithGivenId);
-            filesToDelete.put(fileId, fileEntity.getRealName());
+
+        List<FileEntity> fileEntities = fileRepository.findAllByIdIn(fileIds);
+
+        for (FileEntity fileEntity : fileEntities) {
+            filesToDelete.put(fileEntity.getId(), fileEntity.getRealName());
         }
+
         return filesToDelete;
     }
 }
