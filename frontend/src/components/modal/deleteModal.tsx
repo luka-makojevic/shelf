@@ -7,20 +7,34 @@ import shelfServices from '../../services/shelfServices';
 import { DeleteModalBody } from './modal.styles';
 import fileServices from '../../services/fileServices';
 import folderService from '../../services/folderService';
+import functionServices from '../../services/functionService';
 
 const DeleteModal = ({
   onCloseModal,
   onDeleteShelf,
   onDeleteFiles,
+  onDeleteFunction,
   shelf,
   message,
   selectedData,
+  functionData,
 }: DeleteModalProps) => {
   const handleCloseModal = () => {
     onCloseModal();
   };
 
   const handleDelete = () => {
+    if (functionData && onDeleteFunction) {
+      functionServices
+        .deleteFunction(functionData.id)
+        .then(() => {
+          toast.success('Function successfully deleted');
+          onDeleteFunction(functionData);
+        })
+        .catch((err) => {
+          toast.error(err.response?.data?.message);
+        });
+    }
     if (shelf && onDeleteShelf) {
       shelfServices
         .hardDeleteShelf(shelf.id)
@@ -70,6 +84,8 @@ const DeleteModal = ({
       <Description>
         {shelf &&
           `Are you sure you want to delete '${shelf?.name}' shelf? This action will permanently delete all data inside this shelf!`}
+        {functionData &&
+          `Are you sure you want to delete '${functionData?.name}'? This action will permanently delete this function!`}
         {message}
       </Description>
       <ModalButtonDivider>

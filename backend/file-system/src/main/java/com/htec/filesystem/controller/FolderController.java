@@ -20,7 +20,7 @@ public class FolderController {
     private final FolderService folderService;
 
     private final String FOLDERS_CREATED = "Folders created";
-    private final String FOLDER_RENAMED = "File renamed";
+    private final String FOLDER_RENAMED = "Folder renamed";
     private final String FOLDER_CREATED = "Folder created";
     private final String FOLDERS_MOVED_TO_TRASH = "Folders moved to trash";
     private final String FOLDERS_RECOVERED_FROM_TRASH = "Folders recovered from trash";

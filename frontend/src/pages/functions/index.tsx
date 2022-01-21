@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
+import { FaPlusCircle } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import Modal from '../../components/modal';
+import DeleteModal from '../../components/modal/deleteModal';
+import FunctionEditModal from '../../components/modal/editFunctionModal';
 import FunctionModal from '../../components/modal/functionModal';
 import { ShelvesOptionTypes } from '../../components/modal/modal.interfaces';
 import { Table } from '../../components/table/table';
@@ -25,17 +29,20 @@ const Functions = () => {
     []
   );
   const [openModal, setOpenModal] = useState(false);
-  const [deletedModalOpen, setDeleteModalOpen] = useState<boolean>();
-  const [selectedFunction, setSelectedFunction] = useState<TableDataTypes>();
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>();
+  const [selectedFunction, setSelectedFunction] =
+    useState<TableDataTypes | null>(null);
   const [shelvesOptions, setShelvesOptions] = useState<ShelvesOptionTypes[]>(
     []
   );
   const [openEditModal, setOpenEditModal] = useState(false);
-  const [functionForTable, setFunctionsForTable] = useState<TableDataTypes[]>(
+  const [functionsForTable, setFunctionsForTable] = useState<TableDataTypes[]>(
     []
   );
+  const [isLoading, setIsLoading] = useState(false);
 
   const getData = () => {
+    setIsLoading(true);
     shelfServices
       .getShelves()
       .then((response) => {
@@ -61,7 +68,15 @@ const Functions = () => {
           .catch((err) => toast.error(err));
       })
       .catch((err) => toast.error(err))
-      .finally(() => {});
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const handleDelete = (functionData: TableDataTypes) => {
+    const newData = filteredFunction.filter(
+      (item) => item.id !== functionData.id
+    );
+    setFilteredFunctions(newData);
   };
 
   useEffect(() => {
@@ -69,7 +84,7 @@ const Functions = () => {
   }, []);
 
   const message =
-    functionForTable.length === 0
+    functionsForTable.length === 0
       ? 'No functions have been created yet'
       : 'Sorry, no matching results found';
 
@@ -79,13 +94,32 @@ const Functions = () => {
   const handleModalClose = () => {
     setOpenModal(false);
   };
+
+  const handleDeleteModalClose = () => {
+    setOpenDeleteModal(false);
+  };
+
+  const handleEditModalClose = () => {
+    setOpenEditModal(false);
+  };
+
   const handleOpenDeleteModal = (data: TableDataTypes) => {
-    setDeleteModalOpen(true);
+    setOpenDeleteModal(true);
     setSelectedFunction(data);
   };
   const handleOpenEditModal = (data: TableDataTypes) => {
     setSelectedFunction(data);
     setOpenEditModal(true);
+  };
+
+  const handleEdit = (functionData: TableDataTypes, newName: string) => {
+    const newData = filteredFunction.map((item) => {
+      if (item.id === functionData.id) {
+        return { ...item, name: newName };
+      }
+      return item;
+    });
+    setFilteredFunctions(newData);
   };
 
   const actions: ActionType[] = [
@@ -100,7 +134,7 @@ const Functions = () => {
       key: 'shelfName',
     },
   ];
-
+  if (isLoading) return null;
   return (
     <>
       {openModal && (
@@ -110,6 +144,25 @@ const Functions = () => {
           onGetData={getData}
         />
       )}
+      {openDeleteModal && (
+        <Modal title="Delete function" onCloseModal={handleDeleteModalClose}>
+          <DeleteModal
+            onDeleteFunction={handleDelete}
+            onCloseModal={handleDeleteModalClose}
+            functionData={selectedFunction}
+          />
+        </Modal>
+      )}
+      {openEditModal && (
+        <Modal title="Rename function" onCloseModal={handleEditModalClose}>
+          <FunctionEditModal
+            onCloseModal={handleEditModalClose}
+            functionData={selectedFunction}
+            onGetData={getData}
+            onEdit={handleEdit}
+          />
+        </Modal>
+      )}
       <TableWrapper
         title="Functions"
         description="Create or use predifined function on your shleves"
@@ -117,15 +170,17 @@ const Functions = () => {
         <ActionsBox>
           <SearchBar
             placeholder="Search..."
-            data={functionForTable}
+            data={functionsForTable}
             setData={setFilteredFunctions}
             searchKey="name"
           />
           <ButtonActionsBox>
-            <Button onClick={handleOpenModal}>Create function</Button>
+            <Button onClick={handleOpenModal} icon={<FaPlusCircle />}>
+              Create function
+            </Button>
           </ButtonActionsBox>
         </ActionsBox>
-        {functionForTable.length === 0 || filteredFunction.length === 0 ? (
+        {functionsForTable.length === 0 || filteredFunction.length === 0 ? (
           <Description>{message}</Description>
         ) : (
           <Table

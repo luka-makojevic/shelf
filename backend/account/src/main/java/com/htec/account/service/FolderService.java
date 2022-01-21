@@ -1,8 +1,7 @@
-package com.htec.filesystem.service;
+package com.htec.account.service;
 
-import com.htec.filesystem.filters.JwtStorageFilter;
-import com.htec.filesystem.security.SecurityConstants;
-import org.springframework.core.ParameterizedTypeReference;
+import com.htec.account.filter.JwtStorageFilter;
+import com.htec.account.security.SecurityConstants;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
@@ -14,14 +13,14 @@ import java.net.URI;
 import java.util.List;
 
 @Service
-public class FunctionService {
+public class FolderService {
 
-    private static final String GET_USER_FUNCTIONS_BY_SHELF_ID_AND_EVENT_ID_URL = "http://localhost:8083/functions/";
+    private static final String INITIALIZE_FOLDERS_URL = "http://localhost:8082/folder";
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public List<Long> getUserFunctionsByShelfId(Long shelfId, Long eventId) {
+    void initializeFolder(Long userId) {
 
-        URI apiUrl = URI.create(GET_USER_FUNCTIONS_BY_SHELF_ID_AND_EVENT_ID_URL + shelfId + "/" + eventId);
+        URI apiUrl = URI.create(INITIALIZE_FOLDERS_URL + "/initialize/" + userId);
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add(SecurityConstants.AUTHORIZATION_HEADER_STRING,
@@ -29,12 +28,11 @@ public class FunctionService {
 
         HttpEntity<Object> request = new HttpEntity<>(headers);
 
-        return restTemplate.exchange(
+        restTemplate.exchange(
                 apiUrl,
-                HttpMethod.GET,
+                HttpMethod.POST,
                 request,
-                new ParameterizedTypeReference<List<Long>>() {
-                }
-        ).getBody();
+                Void.class
+        );
     }
 }

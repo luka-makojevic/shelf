@@ -17,7 +17,9 @@ public enum ErrorMessages {
     FORBIDDEN("Forbidden."),
     BAD_REQUEST("Bad request."),
     DESERIALIZING_ERROR("Error when deserializing byte[] to KafkaRequestModel."),
-    FUNCTION_IS_NOT_SYNCHRONIZED("Function not synchronized.");
+    FUNCTION_IS_NOT_SYNCHRONIZED("Function not synchronized."),
+    PREDEFINED_FUNCTION_DOES_NOT_EXIST("Predefined function does not exist."),
+    EVENT_NOT_ALLOWED("Event not allowed.");
 
     private String errorMessage;
 

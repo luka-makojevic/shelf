@@ -22,28 +22,32 @@ export const languageOptions = [
 
 export const eventTriggerOptions = [
   {
-    value: 'upload',
+    value: '1',
     text: 'upload',
   },
   {
-    value: 'download',
+    value: '2',
     text: 'download',
   },
   {
-    value: 'delete',
+    value: '3',
     text: 'delete',
   },
   {
-    value: 'daily',
+    value: '4',
     text: 'daily',
   },
   {
-    value: 'weekly',
+    value: '5',
     text: 'weekly',
   },
   {
-    value: 'monthly',
+    value: '6',
     text: 'monthly',
+  },
+  {
+    value: '7',
+    text: 'sync',
   },
 ];
 

@@ -52,7 +52,7 @@ const FunctionModal = ({
   const [optionValue, setOptionValue] = useState<string>('scratch');
 
   const handleCloseModal = () => {
-    onCloseModal(false);
+    onCloseModal();
   };
 
   const onSubmit = (formData: FunctionFormData) => {
@@ -60,16 +60,27 @@ const FunctionModal = ({
     newFormData.name = newFormData.name.trim();
 
     if (formData.function === 'backup') {
-      newFormData.eventId = 1;
+      formData.eventId = 1;
+      functionService
+        .createPredefinedFunction(formData)
+        .then(() => {
+          toast.success('Function created');
+          onCloseModal();
+          onGetData();
+        })
+        .catch((err) => toast.error(err.response?.data.message));
+    } else {
+      functionService
+        .createCustomfunction(formData)
+        .then(() => {
+          toast.success('Function created');
+          onCloseModal();
+          onGetData();
+        })
+        .catch((err) => {
+          toast.error(err.response?.data.message);
+        });
     }
-    functionService
-      .createPredefinedFunction(newFormData)
-      .then(() => {
-        toast.success('Function created');
-        onCloseModal(false);
-        onGetData();
-      })
-      .catch((err) => toast.error(err.response?.data.message));
   };
 
   const predefinedFunction = watch('function');
@@ -126,7 +137,7 @@ const FunctionModal = ({
                 <div>
                   <RadioTitle>Use a blueprint</RadioTitle>
                   <RadioSubTitle>
-                    Build Shelf Function with sample code and configuration
+                    Build Shelf Function with prewritten code and configuration
                     preset for common use cases.
                   </RadioSubTitle>
                 </div>
@@ -168,7 +179,7 @@ const FunctionModal = ({
                     register={register}
                     selectName="language"
                     error={errors.language}
-                    placeHolder="select language"
+                    placeHolder="Select language"
                     setValue={setValue}
                     validation={validations.basicValidation}
                   />
@@ -179,9 +190,9 @@ const FunctionModal = ({
                   <Select
                     optionsData={eventTriggerOptions}
                     register={register}
-                    selectName="trigger"
-                    error={errors.trigger}
-                    placeHolder="select function trigger"
+                    selectName="eventId"
+                    error={errors.eventId}
+                    placeHolder="Select function trigger"
                     setValue={setValue}
                     validation={validations.basicValidation}
                   />
@@ -194,7 +205,7 @@ const FunctionModal = ({
                     register={register}
                     selectName="shelfId"
                     error={errors.shelfId}
-                    placeHolder="select shelf"
+                    placeHolder="Select shelf"
                     setValue={setValue}
                     validation={validations.basicValidation}
                   />
@@ -210,7 +221,7 @@ const FunctionModal = ({
                     register={register}
                     selectName="function"
                     error={errors.function}
-                    placeHolder="select function"
+                    placeHolder="Select function"
                     setValue={setValue}
                     validation={validations.basicValidation}
                   />
@@ -234,7 +245,7 @@ const FunctionModal = ({
                         register={register}
                         selectName="shelfId"
                         error={errors.shelfId}
-                        placeHolder="select shelf"
+                        placeHolder="Select shelf"
                         setValue={setValue}
                         validation={validations.basicValidation}
                       />
@@ -249,9 +260,9 @@ const FunctionModal = ({
                       <Select
                         optionsData={data}
                         register={register}
-                        selectName="backupShelf"
-                        error={errors.backupShelf}
-                        placeHolder="select backup shelf"
+                        selectName="functionParam"
+                        error={errors.functionParam}
+                        placeHolder="Select backup shelf"
                         setValue={setValue}
                         validation={validations.backupShelf}
                       />
@@ -266,10 +277,10 @@ const FunctionModal = ({
                       <Select
                         optionsData={logTrigger}
                         register={register}
-                        selectName="trigger"
-                        error={errors.trigger}
+                        selectName="eventId"
+                        error={errors.eventId}
                         setValue={setValue}
-                        placeHolder="select function trigger"
+                        placeHolder="Select function trigger"
                         validation={validations.basicValidation}
                       />
                     </>

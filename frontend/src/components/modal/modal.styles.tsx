@@ -76,6 +76,7 @@ export const Close = styled.button<ButtonProps>`
   background-color: transparent;
   border: none;
   padding: ${theme.space.none};
+  cursor: pointer;
 `;
 
 export const DeleteModalBody = styled.div`

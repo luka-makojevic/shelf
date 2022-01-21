@@ -35,16 +35,19 @@ public class LoginService implements UserDetailsService {
 
     private final Long FREE_SPACE_SIZE;
     public final String DEFAULT_AVATAR_PATH = "default-avatar.jpg";
+    private final FolderService folderService;
 
     @Autowired
     LoginService(UserRepository userRepository,
                  AuthenticationManager authenticationManager,
                  MicrosoftApiService microsoftApiService,
-                 @Value("${userFreeSpace}") Long free_space_size) {
+                 @Value("${userFreeSpace}") Long free_space_size,
+                 FolderService folderService) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
         this.microsoftApiService = microsoftApiService;
         this.FREE_SPACE_SIZE = free_space_size;
+        this.folderService = folderService;
     }
 
     @Override
@@ -99,7 +102,9 @@ public class LoginService implements UserDetailsService {
             userEntity.setFreeSpace(FREE_SPACE_SIZE);
             userEntity.setPictureName(DEFAULT_AVATAR_PATH);
 
-            userRepository.save(userEntity);
+            userRepository.saveAndFlush(userEntity);
+
+            folderService.initializeFolder(userEntity.getId());
 
         } else {
             userEntity = userEntityOptional.get();

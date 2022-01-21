@@ -8,6 +8,14 @@ const createPredefinedFunction = (data: FunctionFormData) =>
 
 const getFunctions = () => instance.get(`${API_URL_FUNCTIONS}/functions`);
 
+const deleteFunction = (functionId: number) =>
+  instance.delete(`${API_URL_FUNCTIONS}/functions/${functionId}`);
+
+const createCustomfunction = (data: FunctionFormData) =>
+  instance.post(`${API_URL_FUNCTIONS}/functions/custom`, data);
+
+const renameFunction = (data: { functionId: number; newName: string }) =>
+  instance.put(`${API_URL_FUNCTIONS}/functions/rename`, data);
 const getFunction = (functionId: number) =>
   instance.get(`${API_URL_FUNCTIONS}/functions/${functionId}`);
 
@@ -25,6 +33,9 @@ const executeFunction = (language: string, functionId: number) =>
 export default {
   createPredefinedFunction,
   getFunctions,
+  deleteFunction,
+  createCustomfunction,
+  renameFunction,
   getFunction,
   saveFunction,
   executeFunction,
