@@ -144,19 +144,18 @@ public class FileService {
                 localPath = userPath + folderEntity.getPath() + pathSeparator;
 
                 int fileCounter = 0;
-                if(fileRepository.findByNameAndParentFolderId(fileName, folderId).isPresent()) {
+                if (fileRepository.findByNameAndParentFolderId(fileName, folderId).isPresent()) {
                     String newFileName = fileName;
 
                     while (fileRepository.findByNameAndParentFolderId(newFileName, folderId).isPresent()) {
                         fileCounter++;
                         int extensionIndex = fileName.lastIndexOf('.');
-                        if(extensionIndex != -1) {
+                        if (extensionIndex != -1) {
 
                             String nameWithoutExtension = fileName.substring(0, extensionIndex);
                             String extension = fileName.substring(extensionIndex);
                             newFileName = nameWithoutExtension + "(" + fileCounter + ")" + extension;
-                        }
-                        else {
+                        } else {
                             newFileName = fileName + "(" + fileCounter + ")";
                         }
                     }
@@ -169,18 +168,17 @@ public class FileService {
                 if (fileRepository.findByNameAndShelfIdAndParentFolderIdIsNull(fileName, shelfId).isPresent()) {
                     String newFileName = fileName;
 
-                    while(fileRepository.findByNameAndShelfIdAndParentFolderIdIsNull(newFileName, shelfId).isPresent()) {
+                    while (fileRepository.findByNameAndShelfIdAndParentFolderIdIsNull(newFileName, shelfId).isPresent()) {
 
                         newFileName = fileName;
                         fileCounter++;
                         int extensionIndex = fileName.lastIndexOf('.');
-                        if(extensionIndex != -1) {
+                        if (extensionIndex != -1) {
 
                             String nameWithoutExtension = fileName.substring(0, extensionIndex);
                             String extension = fileName.substring(extensionIndex);
                             newFileName = nameWithoutExtension + "(" + fileCounter + ")" + extension;
-                        }
-                        else {
+                        } else {
                             newFileName = fileName + "(" + fileCounter + ")";
                         }
                     }
@@ -439,7 +437,7 @@ public class FileService {
 
         int dotIndex = fileEntity.getName().lastIndexOf(".");
 
-        if(dotIndex != -1){
+        if (dotIndex != -1) {
 
             String fileExtension = fileEntity.getName().substring(dotIndex);
             fileName += fileExtension;
