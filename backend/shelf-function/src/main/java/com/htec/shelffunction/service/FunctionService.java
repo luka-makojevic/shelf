@@ -35,8 +35,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.htec.shelffunction.util.FunctionEvents.*;
-import static com.htec.shelffunction.util.FunctionsConstants.BACKUP;
-import static com.htec.shelffunction.util.FunctionsConstants.LOG;
+import static com.htec.shelffunction.util.FunctionsConstants.*;
 import static com.htec.shelffunction.util.LanguageConstants.*;
 import static com.htec.shelffunction.util.PathConstants.*;
 
