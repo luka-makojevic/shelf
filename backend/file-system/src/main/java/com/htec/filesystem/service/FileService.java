@@ -7,6 +7,7 @@ import com.htec.filesystem.entity.FolderEntity;
 import com.htec.filesystem.entity.ShelfEntity;
 import com.htec.filesystem.exception.ExceptionSupplier;
 import com.htec.filesystem.mapper.ShelfItemMapper;
+import com.htec.filesystem.model.request.LogRequestModel;
 import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.model.response.FileResponseModel;
 import com.htec.filesystem.repository.FileRepository;
@@ -387,10 +388,6 @@ public class FileService {
         }
     }
 
-    private void recoverFilesInDb() {
-
-    }
-
     public void fileRename(Long userId, RenameFileRequestModel renameFileRequestModel) {
 
         String fileName = renameFileRequestModel.getFileName();
@@ -501,23 +498,17 @@ public class FileService {
         }
     }
 
-    public void logFile(Integer eventId, Long fileId, Long userId, Long backupFileId) {
+    public void logFile(Long backupFileId, LogRequestModel logRequestModel) {
 
-        List<ShelfEntity> shelfEntities = shelfRepository.findAllByUserId(userId);
+        Integer eventId = logRequestModel.getEventId();
+        String fileName = logRequestModel.getFileName();
 
         FileEntity logFile = fileRepository.findById(backupFileId)
                 .orElseThrow(ExceptionSupplier.fileNotFound);
 
-        FileEntity fileToLog = fileRepository.findById(fileId)
-                .orElseThrow(ExceptionSupplier.fileNotFound);
-
-        if (!shelfEntities.stream().map(ShelfEntity::getId).collect((Collectors.toList())).contains(fileToLog.getShelfId())) {
-            throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
-        }
-
         FunctionEvents event = FunctionEvents.values()[eventId - 1];
 
-        String logMessage = " " + event.getEvent() + "\t" + fileToLog.getName() + "\t" + LocalDateTime.now() + "\r\n";
+        String logMessage = event.getEvent() + "\t" + fileName + "\t" + LocalDateTime.now() + "\n";
 
         String sourceFilePath = homePath + userPath + logFile.getPath();
 
@@ -542,12 +533,25 @@ public class FileService {
 
     public Long getLogFileId(Long shelfId, String logFileName, Long userId) {
 
-        if (fileRepository.findByNameAndShelfIdAndParentFolderIdIsNull(logFileName, shelfId).isPresent()) {
+        Optional<FileEntity> fileEntityOptional = fileRepository.findByNameAndShelfIdAndParentFolderIdIsNull(logFileName, shelfId);
+        if (fileEntityOptional.isPresent()) {
 
-            return fileRepository.findByNameAndShelfIdAndParentFolderIdIsNull(logFileName, shelfId)
-                    .get().getId();
+            return fileEntityOptional.get().getId();
         }
 
         return createLogFile(shelfId, 0L, logFileName, userId);
+    }
+
+    public Map<Long, String> getFileNamesFromIds(List<Long> fileIds) {
+
+        Map<Long, String> filesToDelete = new HashMap<>();
+
+        List<FileEntity> fileEntities = fileRepository.findAllByIdIn(fileIds);
+
+        for (FileEntity fileEntity : fileEntities) {
+            filesToDelete.put(fileEntity.getId(), fileEntity.getRealName());
+        }
+
+        return filesToDelete;
     }
 }
