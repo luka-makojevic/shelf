@@ -40,6 +40,8 @@ class RegisterServiceTest {
     private EmailService emailService;
     @Mock
     private MicrosoftApiService microsoftApiService;
+    @Mock
+    private FolderService folderService;
 
     @InjectMocks
     private RegisterService registerService;
@@ -115,7 +117,7 @@ class RegisterServiceTest {
 
         verify(microsoftApiService, times(1)).getUserInfo("validTestToken");
         verify(userRepository, times(1)).findByEmail(anyString());
-        verify(userRepository, times(1)).save(any());
+        verify(userRepository, times(1)).saveAndFlush(any());
     }
 
     @Test
