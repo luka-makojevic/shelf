@@ -207,6 +207,8 @@ public class FileService {
 
     public Long saveFileIntoDB(String filePath, String fileName, long shelfId, long folderId) {
 
+        fileSystemValidator.isFileNameValid(fileName);
+
         FileEntity fileEntity = new FileEntity();
 
         fileEntity.setName(fileName);
