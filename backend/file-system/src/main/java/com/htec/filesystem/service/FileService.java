@@ -409,9 +409,12 @@ public class FileService {
             throw ExceptionSupplier.fileAlreadyExists.get();
 
         int dotIndex = fileEntity.getName().lastIndexOf(".");
-        String fileExtension = fileEntity.getName().substring(dotIndex);
 
-        fileName += fileExtension;
+        if(dotIndex != -1){
+
+            String fileExtension = fileEntity.getName().substring(dotIndex);
+            fileName += fileExtension;
+        }
 
         String oldFilePath = homePath + userPath + fileEntity.getPath();
         File oldFile = new File(oldFilePath);
