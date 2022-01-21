@@ -143,22 +143,51 @@ public class FileService {
                 dbPath = folderEntity.getPath() + pathSeparator + fileName;
                 localPath = userPath + folderEntity.getPath() + pathSeparator;
 
-                if (fileRepository.findByNameAndParentFolderId(fileName, folderId).isPresent()) {
-                    throw ExceptionSupplier.fileAlreadyExists.get();
+                int fileCounter = 0;
+                if(fileRepository.findByNameAndParentFolderId(fileName, folderId).isPresent()) {
+                    String newFileName = fileName;
+
+                    while (fileRepository.findByNameAndParentFolderId(newFileName, folderId).isPresent()) {
+                        fileCounter++;
+                        int extensionIndex = fileName.lastIndexOf('.');
+                        if(extensionIndex != -1) {
+
+                            String nameWithoutExtension = fileName.substring(0, extensionIndex);
+                            String extension = fileName.substring(extensionIndex);
+                            newFileName = nameWithoutExtension + "(" + fileCounter + ")" + extension;
+                        }
+                        else {
+                            newFileName = fileName + "(" + fileCounter + ")";
+                        }
+                    }
+                    fileName = newFileName;
                 }
 
             } else {
 
+                int fileCounter = 0;
+                if (fileRepository.findByNameAndShelfIdAndParentFolderIdIsNull(fileName, shelfId).isPresent()) {
+                    String newFileName = fileName;
+
+                    while(fileRepository.findByNameAndShelfIdAndParentFolderIdIsNull(newFileName, shelfId).isPresent()) {
+
+                        newFileName = fileName;
+                        fileCounter++;
+                        int extensionIndex = fileName.lastIndexOf('.');
+                        if(extensionIndex != -1) {
+
+                            String nameWithoutExtension = fileName.substring(0, extensionIndex);
+                            String extension = fileName.substring(extensionIndex);
+                            newFileName = nameWithoutExtension + "(" + fileCounter + ")" + extension;
+                        }
+                        else {
+                            newFileName = fileName + "(" + fileCounter + ")";
+                        }
+                    }
+                    fileName = newFileName;
+                }
                 localPath = userPath + shelfEntity.getUserId() + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator;
                 dbPath = shelfEntity.getUserId() + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator + fileName;
-
-                if (fileRepository.findByNameAndShelfIdAndParentFolderIdIsNull(fileName, shelfId).isPresent()) {
-                    throw ExceptionSupplier.fileAlreadyExists.get();
-                }
-            }
-
-            if (fileRepository.findByPath(dbPath).isPresent()) {
-                throw ExceptionSupplier.fileAlreadyExists.get();
             }
 
             String uploadDir = homePath + localPath;
