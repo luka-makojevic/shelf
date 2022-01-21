@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Table } from '../../components/table/table';
-import { ShelfDataType, TableDataTypes } from '../../interfaces/dataTypes';
-import ShelfModal from '../../components/modal/shelfModal';
-import Modal from '../../components/modal';
+import {
+  ShelfDataType,
+  ShelfFormData,
+  TableDataTypes,
+} from '../../interfaces/dataTypes';
+
 import { Button } from '../../components/UI/button';
 import { Description } from '../../components/text/text-styles';
-import DeleteModal from '../../components/modal/deleteModal';
 import SearchBar from '../../components/UI/searchBar/searchBar';
 import shelfServices from '../../services/shelfServices';
 import {
@@ -19,6 +21,8 @@ import {
   Delete,
   Edit,
 } from '../../components/table/table.interfaces';
+import { ModifyModal } from '../../components/modal/modifyModal';
+import DeleteModal from '../../components/modal/deleteModal';
 
 const headers = [
   { header: 'Name', key: 'name' },
@@ -75,14 +79,25 @@ const Shelves = () => {
     setSelectedShelf(shelf);
   };
 
-  const handleDelete = (shelf: TableDataTypes) => {
-    const newShelves = shelves.filter((item) => item.id !== shelf.id);
-    setShelves(newShelves);
+  const handleDelete = () => {
+    shelfServices
+      .hardDeleteShelf(selectedShelf?.id)
+      .then(() => {
+        const newShelves = shelves.filter(
+          (item) => item.id !== selectedShelf?.id
+        );
+        setShelves(newShelves);
+        handleModalClose();
+        toast.success('Shelf successfully deleted');
+      })
+      .catch((err) => {
+        toast.error(err.response?.data?.message);
+      });
   };
 
-  const handleEdit = (shelf: TableDataTypes, newName: string) => {
+  const handleEdit = (newName: string) => {
     const newShelves = shelves.map((item) => {
-      if (item.id === shelf.id) {
+      if (item.id === selectedShelf?.id) {
         return { ...item, name: newName };
       }
       return item;
@@ -109,32 +124,53 @@ const Shelves = () => {
       ? 'No shelves have been created yet'
       : 'Sorry, no matching results found';
 
+  const onSubmit = (data: ShelfFormData) => {
+    const shelfName = data.name.trim();
+    if (!selectedShelf) {
+      shelfServices
+        .createShelf(shelfName)
+        .then((res) => {
+          getData();
+          toast.success(res.data.message);
+        })
+        .catch((err) => {
+          toast.error(err.response?.data?.message);
+        });
+    } else {
+      shelfServices
+        .editShelf({ shelfId: selectedShelf.id, shelfName: data.name })
+        .then(() => {
+          handleEdit(shelfName);
+          toast.success('Shelf name updated');
+        })
+        .catch((err) => {
+          toast.error(err.response?.data?.message);
+        });
+    }
+    handleModalClose();
+  };
+
   if (isLoading) return null;
+
   return (
     <>
       {openModal && (
-        <Modal
+        <ModifyModal
           title={selectedShelf ? 'Rename shelf' : 'Create shelf'}
           onCloseModal={handleModalClose}
-          closeIcon
-        >
-          <ShelfModal
-            onGetData={getData}
-            onCloseModal={handleModalClose}
-            shelf={selectedShelf}
-            onEdit={handleEdit}
-          />
-        </Modal>
+          onSubmit={onSubmit}
+          buttonMessage={selectedShelf ? 'Rename ' : 'Create '}
+          placeHolder={selectedShelf ? 'Rename Shelf' : 'Untilted Shelf'}
+          defaultValue={selectedShelf?.name}
+        />
       )}
-
       {deleteModalOpen && (
-        <Modal title="Delete shelf" onCloseModal={handleModalClose}>
-          <DeleteModal
-            onDeleteShelf={handleDelete}
-            onCloseModal={handleModalClose}
-            shelf={selectedShelf}
-          />
-        </Modal>
+        <DeleteModal
+          title="Delete shelf"
+          onCloseModal={handleModalClose}
+          onDelete={handleDelete}
+          message={`Are you sure you want to delete '${selectedShelf?.name}' shelf? This action will permanently delete all data inside this shelf!`}
+        />
       )}
 
       <TableWrapper

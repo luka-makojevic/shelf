@@ -195,8 +195,11 @@ export interface FileTableDataTypes {
 export interface FunctionTableDataTypes {
   [key: string]: string | number;
   name: string;
-
+  custom: number;
   id: number;
+  shelfName: string;
+  language: string;
+  trigger: string;
 }
 
 export interface UserTableDataType {

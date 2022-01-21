@@ -20,12 +20,12 @@ import { Description } from '../../components/text/text-styles';
 import Breadcrumbs from '../../components/breadcrumbs';
 import { ButtonContainer } from '../../components/table/tableWrapper.styles';
 import SearchBar from '../../components/UI/searchBar/searchBar';
-import FolderModal from '../../components/modal/folderModal';
 import fileServices from '../../services/fileServices';
 import folderService from '../../services/folderService';
 import TableWrapper from '../../components/table/TableWrapper';
 import { ActionType, Edit } from '../../components/table/table.interfaces';
 import { theme } from '../../theme';
+import { ModifyModal } from '../../components/modal/modifyModal';
 
 const headers = [
   { header: 'Name', key: 'name' },
@@ -35,7 +35,7 @@ const headers = [
 const Files = () => {
   const [files, setFiles] = useState<FileDataType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [openEditModal, setOpenEditModal] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [openUploadModal, setOpenUploadModal] = useState(false);
   const [filesforTable, setFilesForTable] = useState<TableDataTypes[]>([]);
   const [filteredFiles, setFilteredFiles] = useState<TableDataTypes[]>([]);
@@ -105,7 +105,7 @@ const Files = () => {
       fileServices
         .softDeleteFile(fileIds)
         .then(() => {
-          toast.success('Files moved to trash');
+          toast.info('Files moved to trash');
           getData();
         })
         .catch((err) => {
@@ -116,7 +116,7 @@ const Files = () => {
       folderService
         .softDeleteFolder(folderIds)
         .then(() => {
-          toast.success('Folders moved to trash');
+          toast.info('Folders moved to trash');
           getData();
         })
         .catch((err) => {
@@ -124,12 +124,11 @@ const Files = () => {
         });
   };
 
-  const handleEdit = (file: TableDataTypes, newName: string) => {
+  const handleEdit = (newName: string) => {
     const newFiles = files.map((item) => {
-      if (item.id === file.id) {
-        if (!file.folder) {
-          const extension = item.name.substring(item.name.lastIndexOf('.'));
-          return { ...item, name: newName + extension };
+      if (item.id === selectedFile?.id) {
+        if (!selectedFile.folder) {
+          return { ...item, name: newName };
         }
         return { ...item, name: newName };
       }
@@ -139,18 +138,26 @@ const Files = () => {
   };
 
   const handleCreateFolder = () => {
-    setOpenEditModal(true);
+    setOpenModal(true);
   };
 
   const handleDownload = () => {
     if (selectedRows.length === 0) return;
+    const fileIds: number[] = [];
+    selectedRows.forEach((item) => {
+      if (item.folder) fileIds.push(item.id);
+      else {
+        fileIds.push(item.id);
+      }
+    });
+
     fileServices
-      .downloadFile(selectedRows[0].id)
+      .downloadFiles(fileIds.join())
       .then((res) => {
         const url = window.URL.createObjectURL(new Blob([res.data]));
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', selectedRows[0].name);
+        link.setAttribute('download', 'shelf.zip');
         document.body.appendChild(link);
         link.click();
         link.remove();
@@ -166,13 +173,13 @@ const Files = () => {
   const handleCloseUploadModal = () => {
     setOpenUploadModal(false);
   };
-  const handleEditModalClose = () => {
+  const handleModalClose = () => {
     setSelectedFile(null);
-    setOpenEditModal(false);
+    setOpenModal(false);
   };
   const handleOpenEditModal = (file: TableDataTypes) => {
     setSelectedFile(file);
-    setOpenEditModal(true);
+    setOpenModal(true);
   };
 
   if (isLoading) return null;
@@ -181,25 +188,67 @@ const Files = () => {
     { comp: Edit, handler: handleOpenEditModal, key: 1 },
   ];
 
+  const convertedShelfId = Number(shelfId);
+  const convertedFolderId = Number(folderId);
+
+  const onSubmit = (data: { name: string }) => {
+    const newName = data.name;
+    if (selectedFile) {
+      if (!selectedFile?.folder) {
+        const extension = selectedFile.name.substring(
+          selectedFile.name.lastIndexOf('.')
+        );
+        fileServices
+          .editFile({ fileId: selectedFile.id, fileName: newName + extension })
+          .then(() => {
+            handleEdit(newName);
+            toast.success('File name updated');
+          })
+          .catch((err) => {
+            toast.error(err.response?.data?.message);
+          });
+      } else if (selectedFile?.folder) {
+        folderService
+          .editFolder({ folderId: selectedFile.id, folderName: newName })
+          .then(() => {
+            handleEdit(newName);
+            toast.success('Folder name updated');
+          })
+          .catch((err) => {
+            toast.error(err.response?.data?.message);
+          });
+      }
+    } else if (folderId) {
+      folderService
+        .createFolder(newName, convertedShelfId, convertedFolderId)
+        .then(() => {
+          getData();
+        })
+        .catch((err) => {
+          toast.error(err.response?.data?.message);
+        });
+    } else if (!folderId) {
+      folderService
+        .createFolder(newName, convertedShelfId)
+        .then(() => getData())
+        .catch((err) => {
+          toast.error(err.response?.data?.message);
+        });
+    }
+    handleModalClose();
+  };
+
   return (
     <>
-      {openEditModal && (
-        <Modal
+      {openModal && (
+        <ModifyModal
           title={selectedFile ? 'Edit name' : 'Create folder'}
-          onCloseModal={handleEditModalClose}
-          closeIcon
-        >
-          <FolderModal
-            onEdit={handleEdit}
-            onCloseModal={handleEditModalClose}
-            shelfId={shelfId}
-            folderId={folderId}
-            onGetData={getData}
-            placeholder={selectedFile ? '' : 'Folder Name'}
-            buttonText={selectedFile ? 'Rename' : 'Create'}
-            file={selectedFile}
-          />
-        </Modal>
+          onCloseModal={handleModalClose}
+          onSubmit={onSubmit}
+          buttonMessage={selectedFile ? 'Rename ' : 'Create '}
+          placeHolder={selectedFile ? 'Edit name' : 'Untilted folder'}
+          defaultValue={selectedFile?.name}
+        />
       )}
       {openUploadModal && (
         <Modal

@@ -25,7 +25,6 @@ instance.interceptors.request.use(
   (config) => {
     loadingCounter++;
     if (loadingCounter === 1) store.dispatch(setIsLoading(true));
-
     return config;
   },
   (err) => err
@@ -44,7 +43,7 @@ instance.interceptors.response.use(
       store.dispatch(setIsLoading(false));
     }
     if (err?.response?.status === 401) {
-      delete instance.defaults.headers.common.Authorization;
+      instance.defaults.headers.common.Authorization = '';
       return instance
         .post(
           `/account/auth/refresh/token`,
@@ -58,17 +57,23 @@ instance.interceptors.response.use(
         )
         .then((res) => {
           localStorage.setItem('token', JSON.stringify(res?.data?.token));
-          instance.defaults.headers.common.Authorization = `Bearer ${res?.data?.token}`;
+          Object.assign(instance.defaults, {
+            headers: {
+              ...instance.defaults.headers,
+              common: {
+                ...instance.defaults.headers.common,
+                Authorization: `Bearer ${res?.data?.token}`,
+              },
+            },
+          });
           if (originalConfig.headers) {
             originalConfig.headers.Authorization = `Bearer ${res?.data?.token}`;
           }
-          return instance(originalConfig).then((response) =>
-            Promise.resolve(response)
-          );
+          return instance(originalConfig);
         })
         .catch((error) => {
           localStorage.clear();
-          delete instance.defaults.headers.common.Authorization;
+          instance.defaults.headers.common.Authorization = '';
           store.dispatch(removeUser());
           Promise.reject(error);
         });

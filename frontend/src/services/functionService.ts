@@ -22,10 +22,22 @@ const executeFunction = (language: string, functionId: number) =>
     `shelffunctions/execute/language/${language}/function/${functionId}`
   );
 
+const deleteFunction = (functionId: number) =>
+  instance.delete(`${API_URL_FUNCTIONS}/functions/${functionId}`);
+
+const createCustomfunction = (data: FunctionFormData) =>
+  instance.post(`${API_URL_FUNCTIONS}/functions/custom`, data);
+
+const renameFunction = (data: { functionId: number; newName: string }) =>
+  instance.put(`${API_URL_FUNCTIONS}/functions/rename`, data);
+
 export default {
   createPredefinedFunction,
   getFunctions,
   getFunction,
   saveFunction,
   executeFunction,
+  deleteFunction,
+  createCustomfunction,
+  renameFunction,
 };

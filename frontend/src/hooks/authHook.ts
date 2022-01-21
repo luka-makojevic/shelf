@@ -97,13 +97,13 @@ export const useAuth = () => {
     authServices
       .logout(data)
       .then(() => {
-        delete instance.defaults.headers.common.Authorization;
+        instance.defaults.headers.common.Authorization = '';
         localStorage.clear();
         dispatch(removeUser());
         onSuccess();
       })
       .catch((err) => {
-        delete instance.defaults.headers.common.Authorization;
+        instance.defaults.headers.common.Authorization = '';
         localStorage.clear();
         dispatch(removeUser());
         onError(err.response?.data.message);

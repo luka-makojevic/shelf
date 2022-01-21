@@ -7,14 +7,21 @@ export interface ShelfModalProps {
   onCloseModal: Dispatch<SetStateAction<boolean>>;
   shelf: TableDataTypes | null;
 }
+export interface ModifyModalProps {
+  onCloseModal: () => void;
+  onSubmit: (data: { name: string }) => void;
+  selectedData?: TableDataTypes;
+  title: string;
+  buttonMessage: string;
+  placeHolder: string;
+  defaultValue: string | undefined;
+}
 
 export interface DeleteModalProps {
   onCloseModal: () => void;
-  onDeleteShelf?: (shelf: TableDataTypes) => void;
-  onDeleteFiles?: (files: TableDataTypes[]) => void;
-  shelf?: TableDataTypes | null;
+  onDelete: () => void;
   message?: string;
-  selectedData?: TableDataTypes[];
+  title: string;
 }
 
 export interface PathType {
@@ -22,7 +29,7 @@ export interface PathType {
 }
 
 export interface ModalProps {
-  onCloseModal: Dispatch<SetStateAction<boolean>>;
+  onCloseModal: () => void;
   children: JSX.Element;
   title?: string;
   closeIcon?: boolean;
@@ -52,7 +59,7 @@ export interface ShelvesOptionTypes {
 
 export interface FunctionModalProps {
   onGetData: () => void;
-  onCloseModal: Dispatch<SetStateAction<boolean>>;
+  onCloseModal: () => void;
   data: ShelvesOptionTypes[];
 }
 

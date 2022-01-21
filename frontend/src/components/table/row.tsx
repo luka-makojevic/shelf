@@ -74,9 +74,11 @@ export const Row = ({
 
       {Object.values(data).map((rowText) => {
         if (rowText === data.id || rowText === data.folder) return null;
+
         if (
           rowText === data.id ||
           rowText === data.folder ||
+          rowText === data.custom ||
           typeof rowText === 'boolean'
         )
           return null;

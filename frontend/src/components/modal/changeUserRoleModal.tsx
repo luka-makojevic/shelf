@@ -8,7 +8,6 @@ import { Button } from '../UI/button';
 import { Select } from '../UI/select';
 
 const options = [
-  { value: '1', text: 'Super Admin' },
   { value: '2', text: 'Moderator' },
   { value: '3', text: 'User' },
 ];
