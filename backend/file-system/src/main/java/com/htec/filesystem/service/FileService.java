@@ -15,6 +15,7 @@ import com.htec.filesystem.repository.FolderRepository;
 import com.htec.filesystem.repository.ShelfRepository;
 import com.htec.filesystem.util.FileUtil;
 import com.htec.filesystem.util.FunctionEvents;
+import com.htec.filesystem.validator.FileSystemValidator;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,13 +45,19 @@ public class FileService {
     private final FileRepository fileRepository;
     private final FolderRepository folderRepository;
     private final ShelfRepository shelfRepository;
+    private final FileSystemValidator fileSystemValidator;
 
-    public FileService(UserAPICallService userAPICallService, FileRepository fileRepository, FolderRepository folderRepository, ShelfRepository shelfRepository) {
+    public FileService(UserAPICallService userAPICallService,
+                       FileRepository fileRepository,
+                       FolderRepository folderRepository,
+                       ShelfRepository shelfRepository,
+                       FileSystemValidator fileSystemValidator) {
 
         this.userAPICallService = userAPICallService;
         this.fileRepository = fileRepository;
         this.folderRepository = folderRepository;
         this.shelfRepository = shelfRepository;
+        this.fileSystemValidator = fileSystemValidator;
     }
 
     public void saveUserProfilePicture(Long id, Map<String, Pair<String, String>> files) {
@@ -426,6 +433,8 @@ public class FileService {
 
         ShelfEntity shelfEntity = shelfRepository.findById(fileEntity.getShelfId())
                 .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+
+        fileSystemValidator.isFileNameValid(renameFileRequestModel.getFileName());
 
         if (!Objects.equals(shelfEntity.getUserId(), userId))
             throw ExceptionSupplier.userNotAllowedToAccessFile.get();
