@@ -144,9 +144,19 @@ public class FolderService {
         String fileSystemPath = homePath + userPath;
         String dbPath;
 
+        ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
+                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+        if (!Objects.equals(shelfEntity.getUserId(), userId)) {
+            throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
+        }
+
         if (parentFolderId != 0) {
 
-            FolderEntity folderEntity = folderRepository.findById(parentFolderId).orElseThrow(ExceptionSupplier.noFolderWithGivenId);
+            FolderEntity folderEntity = folderRepository.findById(parentFolderId)
+                    .orElseThrow(ExceptionSupplier.noFolderWithGivenId);
+            if (!Objects.equals(folderEntity.getShelfId(), shelfId)) {
+                throw ExceptionSupplier.folderIsNotInGivenShelf.get();
+            }
             fileSystemPath += folderEntity.getPath() + pathSeparator;
             dbPath = folderEntity.getPath() + pathSeparator;
         } else {
