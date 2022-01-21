@@ -33,8 +33,7 @@ public class FolderService {
                 apiUrl,
                 HttpMethod.POST,
                 request,
-                new ParameterizedTypeReference<List<Long>>() {
-                }
+                Void.class
         );
     }
 }
