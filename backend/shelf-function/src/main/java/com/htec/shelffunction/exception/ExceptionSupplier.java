@@ -1,7 +1,6 @@
 package com.htec.shelffunction.exception;
 
 import com.htec.shelffunction.util.ErrorMessages;
-import com.zaxxer.hikari.util.FastList;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
@@ -98,6 +97,13 @@ public class ExceptionSupplier {
 
     public static final Supplier<ShelfException> eventNotAllowed = () -> new ShelfException(
             ErrorMessages.EVENT_NOT_ALLOWED.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> functionNameNotValid = () -> new ShelfException(
+            ErrorMessages.FUNCTION_NAME_NOT_VALID.getErrorMessage(),
             HttpStatus.BAD_REQUEST.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.BAD_REQUEST.getErrorMessage()
