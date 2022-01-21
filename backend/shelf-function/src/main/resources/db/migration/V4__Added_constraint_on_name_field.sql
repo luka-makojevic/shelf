@@ -1,2 +1,2 @@
 ALTER TABLE `shelf_function`.`function`
-CHANGE COLUMN `name` `name` VARCHAR(50) NULL DEFAULT NULL ;
+CHANGE COLUMN `name` `name` VARCHAR(255) NULL DEFAULT NULL ;
