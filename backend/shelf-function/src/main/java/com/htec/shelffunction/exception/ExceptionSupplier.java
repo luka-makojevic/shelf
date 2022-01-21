@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
 import java.util.function.Supplier;
 
 public class ExceptionSupplier {
@@ -84,6 +83,20 @@ public class ExceptionSupplier {
 
     public static final Supplier<ShelfException> errorInFunctionCode = () -> new ShelfException(
             ErrorMessages.FUNCTION_ERROR.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> predefinedFunctionDoesNotExist = () -> new ShelfException(
+            ErrorMessages.PREDEFINED_FUNCTION_DOES_NOT_EXIST.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> eventNotAllowed = () -> new ShelfException(
+            ErrorMessages.EVENT_NOT_ALLOWED.getErrorMessage(),
             HttpStatus.BAD_REQUEST.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.BAD_REQUEST.getErrorMessage()

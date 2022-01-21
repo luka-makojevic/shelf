@@ -34,6 +34,8 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static com.htec.shelffunction.util.FunctionEvents.*;
+import static com.htec.shelffunction.util.FunctionsConstants.*;
 import static com.htec.shelffunction.util.LanguageConstants.*;
 import static com.htec.shelffunction.util.PathConstants.*;
 
@@ -41,7 +43,6 @@ import static com.htec.shelffunction.util.PathConstants.*;
 public class FunctionService {
 
     private final String CHECK_SHELF_ACCESS_URL = "http://localhost:8082/shelf/check/";
-
 
     private final String PREDEFINED_FUNCTION_FOLDER = "predefined_functions";
 
@@ -66,6 +67,10 @@ public class FunctionService {
     public void createPredefinedFunction(PredefinedFunctionRequestModel requestModel, Long userId) {
 
         checkAccessRights(requestModel.getShelfId());
+
+        checkActivationFunctionName(requestModel.getFunction());
+
+        checkActivationEvent(requestModel.getFunction(), requestModel.getEventId());
 
         functionValidator.isFunctionNameValid(requestModel.getName());
 
@@ -138,6 +143,22 @@ public class FunctionService {
 
         } catch (InterruptedException | IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void checkActivationFunctionName(String functionName) {
+        if (!LOG.equals(functionName) && !BACKUP.equals(functionName)) {
+            throw ExceptionSupplier.predefinedFunctionDoesNotExist.get();
+        }
+    }
+
+    private void checkActivationEvent(String functionName, Long eventId) {
+        if ((LOG.equals(functionName) && !UPLOAD.getValue().equals(eventId)
+                && !DOWNLOAD.getValue().equals(eventId)
+                && !DELETE.getValue().equals(eventId)) ||
+                (BACKUP.equals(functionName) && !UPLOAD.getValue().equals(eventId))) {
+
+            throw ExceptionSupplier.eventNotAllowed.get();
         }
     }
 
