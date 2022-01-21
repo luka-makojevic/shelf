@@ -44,7 +44,6 @@ instance.interceptors.response.use(
       store.dispatch(setIsLoading(false));
     }
     if (err?.response?.status === 401) {
-      delete instance.defaults.headers.common.Authorization;
       return instance
         .post(
           `/account/auth/refresh/token`,
@@ -68,7 +67,7 @@ instance.interceptors.response.use(
         })
         .catch((error) => {
           localStorage.clear();
-          delete instance.defaults.headers.common.Authorization;
+          instance.defaults.headers.common.Authorization = '';
           store.dispatch(removeUser());
           Promise.reject(error);
         });
