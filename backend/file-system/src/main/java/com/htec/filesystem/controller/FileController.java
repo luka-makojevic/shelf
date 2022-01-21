@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -64,16 +65,12 @@ public class FileController {
         return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).body(fileResponseModel.getImageContent());
     }
 
-    @PostMapping(value = "/zip-download", produces = "application/zip")
-    public ResponseEntity zipDownload(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) {
-
-        fileService.downloadFilesToZip(user, fileIds);
-
-        eventService.reportEvent(FunctionEvents.DOWNLOAD, fileIds, user.getId(), null, null);
+    @GetMapping(value = "/zip-download")
+    public ResponseEntity<StreamingResponseBody> zipDownload(@RequestParam List<Long> fileIds) {
 
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType("application/zip"))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename\"" + "asde" + "\"").build();
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=export.zip")
+                .body(outputStream -> fileService.downloadFilesToZip(fileIds, outputStream));
     }
 
     @GetMapping("/preview/{id}")
