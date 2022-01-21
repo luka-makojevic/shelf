@@ -2,6 +2,7 @@ package com.htec.filesystem.controller;
 
 import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.annotation.AuthenticationUser;
+import com.htec.filesystem.model.request.LogRequestModel;
 import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.model.response.FileResponseModel;
 import com.htec.filesystem.model.response.TextResponseMessage;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -45,8 +47,7 @@ public class FileController {
 
 
     @PostMapping("/upload/profile/{id}")
-    public ResponseEntity<TextResponseMessage> uploadProfilePicture(@RequestBody Map<String, Pair<String, String>> files,
-                                                                    @PathVariable Long id) {
+    public ResponseEntity<TextResponseMessage> uploadProfilePicture(@RequestBody Map<String, Pair<String, String>> files, @PathVariable Long id) {
 
         fileService.saveUserProfilePicture(id, files);
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(IMAGE_UPLOADED, HttpStatus.OK.value()));
@@ -59,21 +60,17 @@ public class FileController {
 
         FileResponseModel fileResponseModel = fileService.getFile(user.getId(), id, file);
 
-        eventService.reportEvent(FunctionEvents.DOWNLOAD, Collections.singletonList(id), user.getId(), null);
+        eventService.reportEvent(FunctionEvents.DOWNLOAD, Collections.singletonList(id), user.getId(), null, null);
 
         return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).body(fileResponseModel.getImageContent());
     }
 
-    @PostMapping(value = "/zip-download", produces = "application/zip")
-    public ResponseEntity zipDownload(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) {
-
-        fileService.downloadFilesToZip(user, fileIds);
-
-        eventService.reportEvent(FunctionEvents.DOWNLOAD, fileIds, user.getId(), null);
+    @GetMapping(value = "/zip-download")
+    public ResponseEntity<StreamingResponseBody> zipDownload(@RequestParam List<Long> fileIds) {
 
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType("application/zip"))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename\"" + "asde" + "\"").build();
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=export.zip")
+                .body(outputStream -> fileService.downloadFilesToZip(fileIds, outputStream));
     }
 
     @GetMapping("/preview/{id}")
@@ -92,7 +89,7 @@ public class FileController {
 
         List<Long> newFileIds = fileService.saveFile(shelfId, folderId, files, authUser.getId());
 
-        eventService.reportEvent(FunctionEvents.UPLOAD, newFileIds, authUser.getId(), shelfId);
+        eventService.reportEvent(FunctionEvents.UPLOAD, newFileIds, authUser.getId(), shelfId, null);
 
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_UPLOADED, HttpStatus.OK.value()));
     }
@@ -116,13 +113,11 @@ public class FileController {
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_COPIED, HttpStatus.OK.value()));
     }
 
-    @PutMapping("/log/event/{eventId}/file/{fileId}/user/{userId}/backupFileId/{backupFileId}")
-    public ResponseEntity<TextResponseMessage> logFile(@PathVariable Integer eventId,
-                                                       @PathVariable Long fileId,
-                                                       @PathVariable Long userId,
-                                                       @PathVariable Long backupFileId) {
+    @PutMapping("/log/event/backupFileId/{backupFileId}")
+    public ResponseEntity<TextResponseMessage> logFile(@PathVariable Long backupFileId,
+                                                       @RequestBody LogRequestModel logRequestModel) {
 
-        fileService.logFile(eventId, fileId, userId, backupFileId);
+        fileService.logFile(backupFileId, logRequestModel);
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_LOGGED, HttpStatus.OK.value()));
     }
 
@@ -142,11 +137,12 @@ public class FileController {
     }
 
     @DeleteMapping
-    public ResponseEntity<TextResponseMessage> deleteFile(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) throws IOException {
+    public ResponseEntity<TextResponseMessage> deleteFile(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) {
 
+        Map<Long, String> filesToDelete = fileService.getFileNamesFromIds(fileIds);
         Long deletedFilesShelfId = fileService.deleteFile(user.getId(), fileIds);
 
-        eventService.reportEvent(FunctionEvents.DELETE, fileIds, user.getId(), deletedFilesShelfId);
+        eventService.reportEvent(FunctionEvents.DELETE, fileIds, user.getId(), deletedFilesShelfId, filesToDelete);
 
         return ResponseEntity.ok().body(new TextResponseMessage(FILES_DELETED, HttpStatus.OK.value()));
     }

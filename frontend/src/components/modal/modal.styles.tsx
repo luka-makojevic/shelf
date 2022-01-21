@@ -76,6 +76,7 @@ export const Close = styled.button<ButtonProps>`
   background-color: transparent;
   border: none;
   padding: ${theme.space.none};
+  cursor: pointer;
 `;
 
 export const DeleteModalBody = styled.div`
@@ -85,7 +86,6 @@ export const DeleteModalBody = styled.div`
 
 export const RadioContainer = styled.div`
   display: flex;
-  text-align: justify;
   line-height: 20px;
 
   @media (max-width: ${theme.breakpoints.sm}) {
@@ -152,6 +152,7 @@ export const FunctionContainer = styled.div`
   border-radius: 55px;
   height: 100%;
 `;
+
 export const RadioTitle = styled.p`
   margin: 0;
   margin-bottom: ${theme.space.sm};

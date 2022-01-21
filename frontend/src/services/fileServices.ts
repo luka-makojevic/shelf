@@ -1,6 +1,5 @@
 import { AxiosRequestConfig } from 'axios';
 import instance from '../api/axiosInstance';
-import { TableDataTypes } from '../interfaces/dataTypes';
 
 const API_URL_FILES = '/filesystem';
 
@@ -19,13 +18,14 @@ const recoverFileFromTrash = (data: number[]) =>
 const editFile = (data: { fileId: number; fileName: string }) =>
   instance.put(`${API_URL_FILES}/file/rename`, data);
 
-const downloadSingleFile = (fileId: any) =>
+const downloadSingleFile = (fileId: number) =>
   instance({
-    url: `${API_URL_FILES}/file/download/${fileId}`,
+    url: `${API_URL_FILES}/file/download/${fileId}?file=true`,
     method: 'GET',
     responseType: 'blob',
   });
-const downloadFiles = (fileIds: any) =>
+
+const downloadFiles = (fileIds: string) =>
   instance({
     url: `${API_URL_FILES}/file/zip-download?fileIds=${fileIds}`,
 

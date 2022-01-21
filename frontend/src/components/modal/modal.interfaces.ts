@@ -66,3 +66,10 @@ export interface FunctionModalProps {
 export interface FunctionStyleProps {
   htmlFor: string;
 }
+
+export interface FunctionEditModalProps {
+  onCloseModal: Dispatch<SetStateAction<boolean>>;
+  functionData?: TableDataTypes | null;
+  onEdit: (functionData: TableDataTypes, newName: string) => void;
+  onGetData: () => void;
+}

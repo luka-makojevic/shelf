@@ -29,10 +29,10 @@ public class ExecuteService {
 
     public Object execute(String lang, Long functionId) {
 
-        return executeFunction(functionId, lang, true, null, null);
+        return executeFunction(functionId, lang, true, null, null, null);
     }
 
-    Object executeFunction(Long functionId, String lang, boolean sync, Long userId, Long fileId) {
+    Object executeFunction(Long functionId, String lang, boolean sync, Long userId, Long fileId, String fileName) {
         try {
             FunctionEntity functionEntity = functionRepository.findById(functionId)
                     .orElseThrow(ExceptionSupplier.functionNotFound);
@@ -64,6 +64,10 @@ public class ExecuteService {
 
                 if (functionEntity.getEvent().getId() != null) {
                     cmd += " " + functionEntity.getEvent().getId();
+                }
+
+                if(fileName != null) {
+                    cmd += "  '" + fileName + "'";
                 }
             }
 

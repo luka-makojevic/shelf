@@ -12,6 +12,7 @@ import com.htec.filesystem.model.request.CreateFolderRequestModel;
 import com.htec.filesystem.model.request.RenameFolderRequestModel;
 import com.htec.filesystem.model.response.ShelfContentResponseModel;
 import com.htec.filesystem.repository.*;
+import com.htec.filesystem.validator.FileSystemValidator;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,7 @@ public class FolderService {
     private final FolderTreeRepository folderTreeRepository;
     private final FileTreeRepository fileTreeRepository;
     private final ShelfRepository shelfRepository;
+    private final FileSystemValidator fileSystemValidator;
 
     private final FileService fileService;
 
@@ -47,13 +49,15 @@ public class FolderService {
                          FolderTreeRepository folderTreeRepository,
                          FileTreeRepository fileTreeRepository,
                          FileService fileService,
-                         ShelfRepository shelfRepository) {
+                         ShelfRepository shelfRepository,
+                         FileSystemValidator fileSystemValidator1) {
         this.folderRepository = folderRepository;
         this.fileRepository = fileRepository;
         this.folderTreeRepository = folderTreeRepository;
         this.fileTreeRepository = fileTreeRepository;
         this.fileService = fileService;
         this.shelfRepository = shelfRepository;
+        this.fileSystemValidator = fileSystemValidator1;
     }
 
     public boolean initializeFolders(Long userId) {
@@ -132,15 +136,27 @@ public class FolderService {
 
     public boolean createFolder(CreateFolderRequestModel createFolderRequestModel, Long userId) {
 
+        fileSystemValidator.isFolderNameValid(createFolderRequestModel.getFolderName());
+
         Long parentFolderId = createFolderRequestModel.getParentFolderId();
         Long shelfId = createFolderRequestModel.getShelfId();
         String folderName = createFolderRequestModel.getFolderName();
         String fileSystemPath = homePath + userPath;
         String dbPath;
 
+        ShelfEntity shelfEntity = shelfRepository.findById(shelfId)
+                .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
+        if (!Objects.equals(shelfEntity.getUserId(), userId)) {
+            throw ExceptionSupplier.userNotAllowedToAccessShelf.get();
+        }
+
         if (parentFolderId != 0) {
 
-            FolderEntity folderEntity = folderRepository.findById(parentFolderId).orElseThrow(ExceptionSupplier.noFolderWithGivenId);
+            FolderEntity folderEntity = folderRepository.findById(parentFolderId)
+                    .orElseThrow(ExceptionSupplier.noFolderWithGivenId);
+            if (!Objects.equals(folderEntity.getShelfId(), shelfId)) {
+                throw ExceptionSupplier.folderIsNotInGivenShelf.get();
+            }
             fileSystemPath += folderEntity.getPath() + pathSeparator;
             dbPath = folderEntity.getPath() + pathSeparator;
         } else {
@@ -514,6 +530,8 @@ public class FolderService {
     }
 
     public void folderRename(Long userId, RenameFolderRequestModel renameFolderRequestModel) {
+
+        fileSystemValidator.isFolderNameValid(renameFolderRequestModel.getFolderName());
 
         Long folderId = renameFolderRequestModel.getFolderId();
         String folderName = renameFolderRequestModel.getFolderName();

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class AppConfiguration {
 
     @Bean
-    public FileSystemValidator userValidator() {
+    public FileSystemValidator fileSystemValidator() {
         return new FileSystemValidator();
     }
 

@@ -10,6 +10,7 @@ public enum ErrorMessages {
     FUNCTION_NOT_FOUND("Function not found."),
     FUNCTION_ALREADY_EXISTS("Function already exists."),
     FUNCTION_ERROR("There is an error in your function."),
+    FUNCTION_NAME_NOT_VALID("Function name is not in a valid format."),
     COULD_NOT_DELETE_FILE("Could not delete file."),
     NOT_FOUND("Not found."),
     INTERNAL_SERVER_ERROR("Internal server error."),

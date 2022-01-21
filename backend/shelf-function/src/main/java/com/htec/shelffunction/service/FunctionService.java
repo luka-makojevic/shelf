@@ -13,6 +13,7 @@ import com.htec.shelffunction.model.request.UpdateCodeFunctionRequestModel;
 import com.htec.shelffunction.model.response.FunctionResponseModel;
 import com.htec.shelffunction.repository.FunctionRepository;
 import com.htec.shelffunction.security.SecurityConstants;
+import com.htec.validator.FunctionValidator;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -48,20 +49,25 @@ public class FunctionService {
     private final RestTemplate restTemplate;
     private final ShelfService shelfService;
     private final FileService fileService;
+    private final FunctionValidator functionValidator;
 
     public FunctionService(FunctionRepository functionRepository,
                            RestTemplate restTemplate,
                            ShelfService shelfService,
-                           FileService fileService) {
+                           FileService fileService,
+                           FunctionValidator functionValidator) {
         this.functionRepository = functionRepository;
         this.restTemplate = restTemplate;
         this.shelfService = shelfService;
         this.fileService = fileService;
+        this.functionValidator = functionValidator;
     }
 
     public void createPredefinedFunction(PredefinedFunctionRequestModel requestModel, Long userId) {
 
         checkAccessRights(requestModel.getShelfId());
+
+        functionValidator.isFunctionNameValid(requestModel.getName());
 
         if (checkFunctionNameExists(requestModel.getName(), requestModel.getShelfId())) {
             throw ExceptionSupplier.functionAlreadyExists.get();
@@ -77,7 +83,6 @@ public class FunctionService {
         functionEntity.setPath(userId + PATH_SEPARATOR + "functions" + PATH_SEPARATOR + "Function" + functionEntity.getId());
 
         functionRepository.save(functionEntity);
-
 
         if (requestModel.getFunctionParam() == null && "log".equals(requestModel.getFunction())) {
 
@@ -203,6 +208,8 @@ public class FunctionService {
     public void createCustomFunction(CustomFunctionRequestModel customFunctionRequestModel, Long userId) {
 
         checkAccessRights(customFunctionRequestModel.getShelfId());
+
+        functionValidator.isFunctionNameValid(customFunctionRequestModel.getName());
 
         if (checkFunctionNameExists(customFunctionRequestModel.getName(), customFunctionRequestModel.getShelfId())) {
             throw ExceptionSupplier.functionAlreadyExists.get();
@@ -349,6 +356,8 @@ public class FunctionService {
                 .orElseThrow(ExceptionSupplier.functionNotFound);
 
         checkAccessRights(functionEntity.getShelfId());
+
+        functionValidator.isFunctionNameValid(renameFunctionRequestModel.getNewName());
 
         if (checkFunctionNameExists(renameFunctionRequestModel.getNewName(), functionEntity.getShelfId())) {
             throw ExceptionSupplier.functionAlreadyExists.get();

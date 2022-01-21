@@ -145,26 +145,39 @@ const Files = () => {
     if (selectedRows.length === 0) return;
     const fileIds: number[] = [];
     selectedRows.forEach((item) => {
-      if (item.folder) fileIds.push(item.id);
-      else {
-        fileIds.push(item.id);
-      }
+      if (!item.folder) fileIds.push(item.id);
     });
-
-    fileServices
-      .downloadFiles(fileIds.join())
-      .then((res) => {
-        const url = window.URL.createObjectURL(new Blob([res.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'shelf.zip');
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-      })
-      .catch(() => {
-        toast.error('Failed to download');
-      });
+    if (selectedRows.length > 1) {
+      fileServices
+        .downloadFiles(fileIds.join())
+        .then((res) => {
+          const url = window.URL.createObjectURL(new Blob([res.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', 'shelf.zip');
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+        })
+        .catch(() => {
+          toast.error('Failed to download');
+        });
+    } else {
+      fileServices
+        .downloadSingleFile(fileIds[0])
+        .then((res) => {
+          const url = window.URL.createObjectURL(new Blob([res.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', selectedRows[0].name);
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+        })
+        .catch(() => {
+          toast.error('Failed to download');
+        });
+    }
   };
 
   const handleOpenUploadModal = () => {

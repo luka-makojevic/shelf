@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { FaPlusCircle } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import DeleteModal from '../../components/modal/deleteModal';
 import FunctionModal from '../../components/modal/functionModal';
@@ -44,16 +45,16 @@ const Functions = () => {
     []
   );
   const [openModal, setOpenModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>();
   const [selectedFunction, setSelectedFunction] =
-    useState<TableDataTypes | null>();
+    useState<TableDataTypes | null>(null);
   const [shelvesOptions, setShelvesOptions] = useState<ShelvesOptionTypes[]>(
     []
   );
   const [openEditModal, setOpenEditModal] = useState(false);
-  const [functionForTable, setFunctionsForTable] = useState<TableDataTypes[]>(
+  const [functionsForTable, setFunctionsForTable] = useState<TableDataTypes[]>(
     []
   );
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const getData = () => {
@@ -98,7 +99,7 @@ const Functions = () => {
   }, []);
 
   const message =
-    functionForTable.length === 0
+    functionsForTable.length === 0
       ? 'No functions have been created yet'
       : 'Sorry, no matching results found';
 
@@ -210,15 +211,17 @@ const Functions = () => {
         <ActionsBox>
           <SearchBar
             placeholder="Search..."
-            data={functionForTable}
+            data={functionsForTable}
             setData={setFilteredFunctions}
             searchKey="name"
           />
           <ButtonActionsBox>
-            <Button onClick={handleOpenModal}>Create function</Button>
+            <Button onClick={handleOpenModal} icon={<FaPlusCircle />}>
+              Create function
+            </Button>
           </ButtonActionsBox>
         </ActionsBox>
-        {functionForTable.length === 0 || filteredFunction.length === 0 ? (
+        {functionsForTable.length === 0 || filteredFunction.length === 0 ? (
           <Description>{message}</Description>
         ) : (
           <Table

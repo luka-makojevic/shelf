@@ -146,7 +146,7 @@ const FunctionModal = ({
                 <div>
                   <RadioTitle>Use a blueprint</RadioTitle>
                   <RadioSubTitle>
-                    Build Shelf Function with sample code and configuration
+                    Build Shelf Function with prewritten code and configuration
                     preset for common use cases.
                   </RadioSubTitle>
                 </div>
@@ -188,7 +188,7 @@ const FunctionModal = ({
                     register={register}
                     selectName="language"
                     error={errors.language}
-                    placeHolder="select language"
+                    placeHolder="Select language"
                     setValue={setValue}
                     validation={validations.basicValidation}
                   />
@@ -201,7 +201,7 @@ const FunctionModal = ({
                     register={register}
                     selectName="eventId"
                     error={errors.eventId}
-                    placeHolder="select function trigger"
+                    placeHolder="Select function trigger"
                     setValue={setValue}
                     validation={validations.basicValidation}
                   />
@@ -214,7 +214,7 @@ const FunctionModal = ({
                     register={register}
                     selectName="shelfId"
                     error={errors.shelfId}
-                    placeHolder="select shelf"
+                    placeHolder="Select shelf"
                     setValue={setValue}
                     validation={validations.basicValidation}
                   />
@@ -230,7 +230,7 @@ const FunctionModal = ({
                     register={register}
                     selectName="function"
                     error={errors.function}
-                    placeHolder="select function"
+                    placeHolder="Select function"
                     setValue={setValue}
                     validation={validations.basicValidation}
                   />
@@ -254,7 +254,7 @@ const FunctionModal = ({
                         register={register}
                         selectName="shelfId"
                         error={errors.shelfId}
-                        placeHolder="select shelf"
+                        placeHolder="Select shelf"
                         setValue={setValue}
                         validation={validations.basicValidation}
                       />
@@ -272,7 +272,7 @@ const FunctionModal = ({
                         register={register}
                         selectName="functionParam"
                         error={errors.functionParam}
-                        placeHolder="select backup shelf"
+                        placeHolder="Select backup shelf"
                         setValue={setValue}
                         validation={validations.backupShelf}
                       />
@@ -302,7 +302,7 @@ const FunctionModal = ({
                         selectName="eventId"
                         error={errors.eventId}
                         setValue={setValue}
-                        placeHolder="select function trigger"
+                        placeHolder="Select function trigger"
                         validation={validations.basicValidation}
                       />
                     </>

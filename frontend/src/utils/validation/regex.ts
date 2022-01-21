@@ -5,4 +5,4 @@ export const passwordRegex =
   /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&.()–[{}\]:;',?/*~$^+=<>])([^\s]){8,}$/g;
 
 export const whiteSpaceRegex =
-  /^[A-Za-z _]*[A-Za-z0-9][A-Za-z _!@#$%^&-_+]{1,50}$/g;
+  /^[A-Za-z0-9_!@#$%^&\-_+][A-Za-z0-9 _!@#$%^&\-_+]*$/g;
