@@ -57,10 +57,6 @@ export const StyledTable = styled.table`
     display: block;
     white-space: nowrap;
   }
-  @media (max-width: ${theme.breakpoints.md}) {
-    display: block;
-    white-space: nowrap;
-  }
 `;
 
 export const StyledCell = styled.td`

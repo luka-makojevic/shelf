@@ -183,7 +183,11 @@ const Profile = () => {
   return (
     <>
       {isOpen && user && (
-        <Modal onCloseModal={handleCloseModal}>
+        <Modal
+          onCloseModal={handleCloseModal}
+          background={theme.colors.primary}
+          color={theme.colors.white}
+        >
           <UploadPictureModal
             onCloseModal={handleCloseModal}
             id={user.id}
@@ -196,12 +200,12 @@ const Profile = () => {
         <Container>
           <ProfileWrapper>
             <ProfileLeft>
-              <ProfileImageContainer>
+              <ProfileImageContainer onClick={handleOpenModal}>
                 {imgUrl && (
                   <ProfilePicture imgUrl={imgUrl} size={theme.space.xxl} />
                 )}
                 <EditImageContainer>
-                  <AiFillEdit size={theme.space.lg} onClick={handleOpenModal} />
+                  <AiFillEdit size={theme.space.lg} />
                 </EditImageContainer>
               </ProfileImageContainer>
             </ProfileLeft>
@@ -238,7 +242,7 @@ const Profile = () => {
                   {!isDisabled && (
                     <Button
                       type="button"
-                      variant={isDisabled ? 'secondary' : 'secondary'}
+                      variant="secondary"
                       onClick={handleCancelEditProfile}
                     >
                       Cancel

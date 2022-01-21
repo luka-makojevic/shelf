@@ -11,6 +11,7 @@ import com.htec.filesystem.repository.FolderRepository;
 import com.htec.filesystem.repository.ShelfRepository;
 import com.htec.filesystem.util.ErrorMessages;
 import com.htec.filesystem.util.FileUtil;
+import com.htec.filesystem.validator.FileSystemValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,9 @@ class FileServiceTest {
 
     @Mock
     FileRepository fileRepository;
+
+    @Mock
+    FileSystemValidator fileSystemValidator;
 
     @Mock
     FolderRepository folderRepository;
@@ -268,7 +272,7 @@ class FileServiceTest {
 
         fileService.saveFileIntoDB(filePath, fileName, shelfId, folderId);
 
-        verify(fileRepository, times(1)).save(any());
+        verify(fileRepository, times(1)).saveAndFlush(any());
     }
 
     @Test

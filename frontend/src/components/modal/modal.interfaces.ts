@@ -28,9 +28,12 @@ export interface ModalProps {
   children: JSX.Element;
   title?: string;
   closeIcon?: boolean;
+  background?: string;
+  color?: string;
 }
 export interface ModalStyleProps {
   background?: string;
+  color?: string;
 }
 
 export interface FolderModalProps {
@@ -51,7 +54,7 @@ export interface ShelvesOptionTypes {
 
 export interface FunctionModalProps {
   onGetData: () => void;
-  onCloseModal: Dispatch<SetStateAction<boolean>>;
+  onCloseModal: () => void;
   data: ShelvesOptionTypes[];
 }
 

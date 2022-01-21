@@ -15,4 +15,5 @@ export enum Routes {
   USERS = 'users',
   SHELVES = 'shelves/:shelfId',
   FOLDERS = 'folders/:folderId',
+  CODE = 'code/:functionId',
 }

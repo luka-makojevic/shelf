@@ -8,9 +8,12 @@ import com.htec.shelffunction.filter.JwtStorageFilter;
 import com.htec.shelffunction.mapper.FunctionMapper;
 import com.htec.shelffunction.model.request.CustomFunctionRequestModel;
 import com.htec.shelffunction.model.request.PredefinedFunctionRequestModel;
+import com.htec.shelffunction.model.request.RenameFunctionRequestModel;
+import com.htec.shelffunction.model.request.UpdateCodeFunctionRequestModel;
 import com.htec.shelffunction.model.response.FunctionResponseModel;
 import com.htec.shelffunction.repository.FunctionRepository;
 import com.htec.shelffunction.security.SecurityConstants;
+import com.htec.validator.FunctionValidator;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -20,67 +23,88 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import static com.htec.shelffunction.util.LanguageConstants.*;
+import static com.htec.shelffunction.util.PathConstants.*;
 
 @Service
 public class FunctionService {
 
     private final String CHECK_SHELF_ACCESS_URL = "http://localhost:8082/shelf/check/";
-    private final String JAVA_COMPILE_CMD = "javac -cp ";
-    private final String CSHARP_COMPILE_CMD = "mcs ";
-    private final String homePath = System.getProperty("user.home");
-    private final String pathSeparator = FileSystems.getDefault().getSeparator();
-    private final String userPath = pathSeparator + "shelf-files" + pathSeparator + "user-data" + pathSeparator;
-    private final String JARS_PATH = homePath + userPath + "predefined_functions/jars/*";
+
 
     private final String PREDEFINED_FUNCTION_FOLDER = "predefined_functions";
-    private final String JAVA_EXTENSION = ".java";
-    private final String CSHARP_EXTENSION = ".cs";
 
     private final FunctionRepository functionRepository;
     private final RestTemplate restTemplate;
     private final ShelfService shelfService;
+    private final FileService fileService;
+    private final FunctionValidator functionValidator;
 
     public FunctionService(FunctionRepository functionRepository,
                            RestTemplate restTemplate,
-                           ShelfService shelfService) {
+                           ShelfService shelfService,
+                           FileService fileService,
+                           FunctionValidator functionValidator) {
         this.functionRepository = functionRepository;
         this.restTemplate = restTemplate;
         this.shelfService = shelfService;
+        this.fileService = fileService;
+        this.functionValidator = functionValidator;
     }
 
-    public void createPredefinedFunction(PredefinedFunctionRequestModel functionRequestModel, Long userId) {
+    public void createPredefinedFunction(PredefinedFunctionRequestModel requestModel, Long userId) {
 
-        checkAccessRights(functionRequestModel.getShelfId());
+        checkAccessRights(requestModel.getShelfId());
+
+        functionValidator.isFunctionNameValid(requestModel.getName());
+
+        if (checkFunctionNameExists(requestModel.getName(), requestModel.getShelfId())) {
+            throw ExceptionSupplier.functionAlreadyExists.get();
+        }
 
         FunctionEntity functionEntity = FunctionMapper.INSTANCE
-                .predefinedFunctionRequestModelToFunctionEntity(functionRequestModel);
+                .predefinedFunctionRequestModelToFunctionEntity(requestModel);
 
-        functionEntity.setLanguage("java");
+        functionEntity.setLanguage(JAVA);
 
         functionRepository.saveAndFlush(functionEntity);
 
-        functionEntity.setPath(userId + pathSeparator + "functions" + pathSeparator + "Function" + functionEntity.getId());
+        functionEntity.setPath(userId + PATH_SEPARATOR + "functions" + PATH_SEPARATOR + "Function" + functionEntity.getId());
 
         functionRepository.save(functionEntity);
 
-        compilePredefinedFunction(functionEntity.getId(), functionRequestModel, userId);
+        if (requestModel.getFunctionParam() == null && "log".equals(requestModel.getFunction())) {
+
+            Long logFileId = fileService.getLogFileId(requestModel.getShelfId(), requestModel.getLogFileName());
+            requestModel.setFunctionParam(logFileId);
+        }
+
+        compilePredefinedFunction(functionEntity.getId(), requestModel, userId);
+    }
+
+    private boolean checkFunctionNameExists(String functionName, Long shelfId) {
+        return getAllFunctionsByUserId().stream().filter(functionDTO -> Objects.equals(functionDTO.getShelfId(), shelfId))
+                .anyMatch(functionDTO -> functionDTO.getName().equals(functionName));
     }
 
     private void compilePredefinedFunction(Long newFunctionId, PredefinedFunctionRequestModel functionRequestModel, Long userId) {
 
         try {
-            String sourceFilePath = homePath +
-                    userPath +
+            String sourceFilePath = HOME_PATH +
+                    USER_PATH +
                     PREDEFINED_FUNCTION_FOLDER +
-                    pathSeparator +
+                    PATH_SEPARATOR +
                     functionRequestModel.getFunction() +
                     JAVA_EXTENSION;
 
@@ -91,14 +115,14 @@ public class FunctionService {
             sourceFileContent = sourceFileContent.replace("${functionParameter}", functionRequestModel.getFunctionParam().toString());
             sourceFileContent = sourceFileContent.replace("${className}", "Function" + newFunctionId);
 
-            String tempFolderPath = homePath +
-                    userPath +
+            String tempFolderPath = HOME_PATH +
+                    USER_PATH +
                     userId +
-                    pathSeparator +
+                    PATH_SEPARATOR +
                     "functions";
 
             String tempSourceFilePath = tempFolderPath +
-                    pathSeparator +
+                    PATH_SEPARATOR +
                     "Function" + newFunctionId +
                     JAVA_EXTENSION;
 
@@ -156,19 +180,21 @@ public class FunctionService {
         FunctionEntity functionEntity = functionRepository.findById(functionId)
                 .orElseThrow(ExceptionSupplier.functionNotFound);
 
-        String sourcePath = homePath + userPath + functionEntity.getPath();
-        String binaryPath = homePath + userPath + functionEntity.getPath();
+        String sourcePath = HOME_PATH + USER_PATH + functionEntity.getPath();
+        String binaryPath = HOME_PATH + USER_PATH + functionEntity.getPath();
 
-        if (Objects.equals(functionEntity.getLanguage(), "java")) {
+        if (Objects.equals(functionEntity.getLanguage(), JAVA)) {
 
-            sourcePath += ".java";
-            binaryPath += ".class";
+            sourcePath += JAVA_EXTENSION;
+            binaryPath += BINARY_JAVA_EXTENSION;
 
 
         } else {
-            sourcePath += ".cs";
-            binaryPath += ".exe";
+            sourcePath += CSHARP_EXTENSION;
+            binaryPath += BINARY_CSHARP_EXTENSION;
         }
+
+        functionRepository.delete(functionEntity);
 
         if (!(new File(sourcePath)).delete()) {
             throw ExceptionSupplier.couldNotDeleteFile.get();
@@ -177,11 +203,17 @@ public class FunctionService {
         if (!(new File(binaryPath)).delete()) {
             throw ExceptionSupplier.couldNotDeleteFile.get();
         }
-
-        functionRepository.delete(functionEntity);
     }
 
     public void createCustomFunction(CustomFunctionRequestModel customFunctionRequestModel, Long userId) {
+
+        checkAccessRights(customFunctionRequestModel.getShelfId());
+
+        functionValidator.isFunctionNameValid(customFunctionRequestModel.getName());
+
+        if (checkFunctionNameExists(customFunctionRequestModel.getName(), customFunctionRequestModel.getShelfId())) {
+            throw ExceptionSupplier.functionAlreadyExists.get();
+        }
 
         FunctionEntity functionEntity = FunctionMapper.INSTANCE
                 .customFunctionRequestModelToFunctionEntity(customFunctionRequestModel);
@@ -191,7 +223,7 @@ public class FunctionService {
 
         functionRepository.saveAndFlush(functionEntity);
 
-        functionEntity.setPath(userId + pathSeparator + "functions" + pathSeparator + "Function" + functionEntity.getId());
+        functionEntity.setPath(userId + PATH_SEPARATOR + "functions" + PATH_SEPARATOR + "Function" + functionEntity.getId());
 
         functionRepository.save(functionEntity);
 
@@ -202,39 +234,55 @@ public class FunctionService {
 
         try {
             String extension = "";
-            String compileCommand = "";
 
-            if (Objects.equals(customFunctionRequestModel.getLanguage(), "java")) {
+            if (Objects.equals(customFunctionRequestModel.getLanguage(), JAVA)) {
                 extension += JAVA_EXTENSION;
             } else {
                 extension += CSHARP_EXTENSION;
             }
 
-            String sourceFilePath = homePath +
-                    userPath +
+            String sourceFilePath = HOME_PATH +
+                    USER_PATH +
                     PREDEFINED_FUNCTION_FOLDER +
-                    pathSeparator +
+                    PATH_SEPARATOR +
                     "hello" +
                     extension;
 
             String sourceFileContent = Files.readString(Path.of(sourceFilePath))
                     .replace("${className}", "Function" + functionEntityId);
 
-            String tempFolderPath = homePath +
-                    userPath +
-                    userId +
-                    pathSeparator +
-                    "functions";
+            createCompileProcess(functionEntityId, customFunctionRequestModel.getLanguage(), userId, extension, sourceFileContent);
 
-            String tempSourceFilePath = tempFolderPath +
-                    pathSeparator +
-                    "Function" + functionEntityId +
-                    extension;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    private int createCompileProcess(Long functionEntityId,
+                                     String language,
+                                     Long userId,
+                                     String extension,
+                                     String sourceFileContent) {
+        String compileCommand = "";
+
+        String tempFolderPath = HOME_PATH +
+                USER_PATH +
+                userId +
+                PATH_SEPARATOR +
+                "functions";
+
+        String tempSourceFilePath = tempFolderPath +
+                PATH_SEPARATOR +
+                "Function" + functionEntityId +
+                extension;
+
+        int exitValue;
+
+        try {
             Files.writeString(Path.of(tempSourceFilePath), sourceFileContent);
             Runtime runTime = Runtime.getRuntime();
 
-            if (Objects.equals(customFunctionRequestModel.getLanguage(), "java")) {
+            if (Objects.equals(language, JAVA)) {
                 compileCommand += JAVA_COMPILE_CMD + tempFolderPath + ":" + JARS_PATH + " " + tempSourceFilePath;
             } else {
                 compileCommand += CSHARP_COMPILE_CMD + tempSourceFilePath;
@@ -242,13 +290,18 @@ public class FunctionService {
 
             Process compileProcess = runTime.exec(compileCommand);
 
-            compileProcess.waitFor(5, TimeUnit.SECONDS);
+            compileProcess.waitFor(PROCESS_EXECUTE_TIME_OUT, TimeUnit.SECONDS);
+
+            exitValue = compileProcess.exitValue();
 
             compileProcess.destroy();
 
-        } catch (InterruptedException | IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
+            exitValue = 1;
         }
+
+        return exitValue;
     }
 
     public FunctionResponseModel getFunction(Long functionId, Long userId) {
@@ -268,18 +321,18 @@ public class FunctionService {
 
         String extension = "";
 
-        if (Objects.equals(functionEntity.getLanguage(), "java")) {
+        if (Objects.equals(functionEntity.getLanguage(), JAVA)) {
             extension += JAVA_EXTENSION;
         } else {
             extension += CSHARP_EXTENSION;
         }
 
-        String sourceFilePath = homePath +
-                userPath +
+        String sourceFilePath = HOME_PATH +
+                USER_PATH +
                 userId +
-                pathSeparator +
+                PATH_SEPARATOR +
                 "functions" +
-                pathSeparator +
+                PATH_SEPARATOR +
                 "Function" + functionEntity.getId() +
                 extension;
 
@@ -290,5 +343,72 @@ public class FunctionService {
         }
 
         return functionResponseModel;
+    }
+
+    public List<Long> getAllFunctionIdsByShelfIdAndEventId(Long shelfId, Long eventId) {
+        return functionRepository.findAllByShelfIdAndEventId(shelfId, eventId)
+                .stream().map(FunctionEntity::getId).collect(Collectors.toList());
+    }
+
+    public void updateFunctionName(RenameFunctionRequestModel renameFunctionRequestModel) {
+
+        FunctionEntity functionEntity = functionRepository.findById(renameFunctionRequestModel.getFunctionId())
+                .orElseThrow(ExceptionSupplier.functionNotFound);
+
+        checkAccessRights(functionEntity.getShelfId());
+
+        functionValidator.isFunctionNameValid(renameFunctionRequestModel.getNewName());
+
+        if (checkFunctionNameExists(renameFunctionRequestModel.getNewName(), functionEntity.getShelfId())) {
+            throw ExceptionSupplier.functionAlreadyExists.get();
+        }
+
+        functionEntity.setName(renameFunctionRequestModel.getNewName());
+
+        functionRepository.save(functionEntity);
+    }
+
+    public void updateFunctionCode(UpdateCodeFunctionRequestModel updateCodeFunctionRequestModel, Long userId) {
+
+        FunctionEntity functionEntity = functionRepository.findById(updateCodeFunctionRequestModel.getFunctionId())
+                .orElseThrow(ExceptionSupplier.functionNotFound);
+
+        checkAccessRights(functionEntity.getShelfId());
+
+        String extension = "";
+        if (Objects.equals(functionEntity.getLanguage(), JAVA)) {
+            extension += JAVA_EXTENSION;
+        } else {
+            extension += CSHARP_EXTENSION;
+        }
+
+        String sourceFilePath = HOME_PATH +
+                USER_PATH +
+                functionEntity.getPath() +
+                extension;
+
+        String oldCode = "";
+
+        try {
+            oldCode = Files.readString(Path.of(sourceFilePath));
+
+            Files.writeString(Path.of(sourceFilePath), updateCodeFunctionRequestModel.getCode(), StandardOpenOption.WRITE);
+
+
+            int compileProcessReturnValue = createCompileProcess(functionEntity.getId(),
+                    functionEntity.getLanguage(),
+                    userId,
+                    extension,
+                    updateCodeFunctionRequestModel.getCode());
+
+            if (compileProcessReturnValue != 0) {
+
+                Files.writeString(Path.of(sourceFilePath), oldCode);
+                throw ExceptionSupplier.errorInFunctionCode.get();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

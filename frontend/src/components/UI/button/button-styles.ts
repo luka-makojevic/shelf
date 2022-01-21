@@ -55,6 +55,21 @@ export const StyledButton = styled('button')<ButtonStyleProps>`
           color: ${theme.colors.primary};
           background: white;
         `;
+      case 'lightBordered':
+        return css`
+          color: ${theme.colors.primary};
+          background: white;
+          border: 1px solid ${theme.colors.primary};
+        `;
+      case 'primaryBordered':
+        return css`
+          color: ${theme.colors.white};
+          background: ${theme.colors.primary};
+          border: 1px solid ${theme.colors.white};
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+          }
+        `;
       default:
         return null;
     }

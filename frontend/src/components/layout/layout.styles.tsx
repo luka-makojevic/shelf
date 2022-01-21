@@ -99,3 +99,31 @@ export const DashboardContentWrapper = styled.div`
   width: 100%;
   padding: ${theme.space.lg};
 `;
+
+export const FunctionWrapper = styled.div`
+  display: flex;
+  margin-top: ${theme.space.md};
+`;
+
+export const FunctionEditorWrapper = styled.div`
+  flex: 3;
+  border: 1px solid lightgray;
+`;
+
+export const FunctionResultWrapper = styled.div`
+  flex: 2;
+  margin-left: ${theme.space.md};
+  padding-left: ${theme.space.sm};
+  border: 1px solid lightgray;
+`;
+
+export const FunctionInfo = styled.div`
+  flex: 1;
+  margin-left: ${theme.space.md};
+  padding-left: ${theme.space.sm};
+`;
+
+export const FunctionButtonWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;

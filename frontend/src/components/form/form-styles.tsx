@@ -86,7 +86,7 @@ export const FunctionForm = styled.form`
   }
 `;
 export const FunctionFormInner = styled.div`
-  width: 70%;
+  width: 100%;
   @media (max-width: ${theme.breakpoints.md}) {
     width: 100%;
   }

@@ -3,7 +3,7 @@ import {
   RegisterFieldConfig,
   RegisterFormData,
 } from '../../../interfaces/dataTypes';
-import { emailRegex, passwordRegex } from '../regex';
+import { emailRegex, passwordRegex, whiteSpaceRegex } from '../regex';
 
 export const config = (
   watch: UseFormWatch<RegisterFormData>
@@ -64,6 +64,10 @@ export const config = (
         value: 50,
         message: 'First name can not be longer than 50 characters',
       },
+      pattern: {
+        value: whiteSpaceRegex,
+        message: 'Invalid first name format',
+      },
     },
   },
   {
@@ -75,6 +79,10 @@ export const config = (
       maxLength: {
         value: 50,
         message: 'Last name can not be longer than 50 characters',
+      },
+      pattern: {
+        value: whiteSpaceRegex,
+        message: 'Invalid last name format',
       },
     },
   },

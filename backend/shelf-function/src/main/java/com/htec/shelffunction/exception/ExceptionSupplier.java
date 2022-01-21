@@ -1,11 +1,11 @@
 package com.htec.shelffunction.exception;
 
 import com.htec.shelffunction.util.ErrorMessages;
-import com.zaxxer.hikari.util.FastList;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class ExceptionSupplier {
@@ -66,5 +66,33 @@ public class ExceptionSupplier {
             HttpStatus.INTERNAL_SERVER_ERROR.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.DESERIALIZING_ERROR.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> functionAlreadyExists = () -> new ShelfException(
+            ErrorMessages.FUNCTION_ALREADY_EXISTS.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> functionIsNotSynchronized = () -> new ShelfException(
+            ErrorMessages.FUNCTION_IS_NOT_SYNCHRONIZED.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> errorInFunctionCode = () -> new ShelfException(
+            ErrorMessages.FUNCTION_ERROR.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> functionNameNotValid = () -> new ShelfException(
+            ErrorMessages.FUNCTION_NAME_NOT_VALID.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
     );
 }

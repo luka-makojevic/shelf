@@ -81,4 +81,6 @@ public interface FileRepository extends JpaRepository<FileEntity, Long> {
     List<FileEntity> findAllByShelfIdInAndTrashVisible(List<Long> shelfId, Boolean trashVisible);
 
     List<FileEntity> findAllByParentFolderIdIn(List<Long> folderIds);
+
+    List<FileEntity> findAllByIdIn(List<Long> fileIds);
 }

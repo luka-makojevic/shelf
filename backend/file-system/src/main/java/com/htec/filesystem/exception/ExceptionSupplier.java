@@ -39,6 +39,20 @@ public class ExceptionSupplier {
             ErrorMessages.BAD_REQUEST.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> fileNameNotValid = () -> new ShelfException(
+            ErrorMessages.FILE_NAME_NOT_VALID.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> folderNameNotValid = () -> new ShelfException(
+            ErrorMessages.FOLDER_NAME_NOT_VALID.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> couldNotUploadFile = () -> new ShelfException(
             ErrorMessages.COULD_NOT_UPLOAD_FILE.getErrorMessage(),
             HttpStatus.BAD_REQUEST.value(),
@@ -240,5 +254,12 @@ public class ExceptionSupplier {
             HttpStatus.FORBIDDEN.value(),
             LocalDateTime.now().format(formatter),
             ErrorMessages.FORBIDDEN.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> serializationException = () -> new ShelfException(
+            ErrorMessages.SERIALIZING_ERROR.getErrorMessage(),
+            HttpStatus.FORBIDDEN.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.SERIALIZING_ERROR.getErrorMessage()
     );
 }

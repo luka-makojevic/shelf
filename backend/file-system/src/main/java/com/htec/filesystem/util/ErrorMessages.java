@@ -6,6 +6,8 @@ public enum ErrorMessages {
     COULD_NOT_COPY_FILE("Could not copy file."),
     INTERNAL_SERVER_ERROR("Internal Server Error"),
     SHELF_NAME_NOT_VALID("Shelf name is not in a valid format."),
+    FILE_NAME_NOT_VALID("File name is not in a valid format."),
+    FOLDER_NAME_NOT_VALID("Folder name is not in a valid format."),
     COULD_NOT_UPLOAD_FILE("Could not upload file."),
     COULD_NOT_DELETE_SHELF("Could not delete shelf."),
     COULD_NOT_DELETE_FILE("Could not delete file."),
@@ -39,7 +41,8 @@ public enum ErrorMessages {
     BAD_REQUEST("Bad request."),
     UNAUTHORIZED("Unauthorized."),
     NOT_FOUND("Not found."),
-    FORBIDDEN("Forbidden.");
+    FORBIDDEN("Forbidden."),
+    SERIALIZING_ERROR("Error when serializing KafkaRequestModel to byte[]");
 
     private String errorMessage;
 

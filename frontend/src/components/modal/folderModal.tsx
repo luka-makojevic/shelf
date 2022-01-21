@@ -8,6 +8,7 @@ import { Button } from '../UI/button';
 import { FolderModalProps } from './modal.interfaces';
 import fileServices from '../../services/fileServices';
 import folderService from '../../services/folderService';
+import { whiteSpaceRegex } from '../../utils/validation/regex';
 
 export const ROOT_FOLDER = { name: 'Root', id: null, path: [] };
 
@@ -43,7 +44,7 @@ const FolderModal = ({
   const convertedFolderId = Number(folderId);
 
   const onSubmit = (data: { name: string }) => {
-    const newName = data.name;
+    const newName = data.name.trim();
 
     if (file) {
       if (!file?.folder) {
@@ -90,6 +91,10 @@ const FolderModal = ({
     maxLength: {
       value: 50,
       message: 'File name can not be longer than 50 characters',
+    },
+    pattern: {
+      value: whiteSpaceRegex,
+      message: 'Invalid name format',
     },
   };
 
