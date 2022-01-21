@@ -267,3 +267,14 @@ export type FunctionFormData =
   | FunctionFromScratchData
   | BackupFunctionData
   | LogFunctionData;
+
+export interface FunctionData {
+  code: string;
+  eventId: number;
+  eventName: string;
+  functionId: number;
+  functionName: string;
+  language: string;
+  shelfId: number;
+  shelfName: string;
+}

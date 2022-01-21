@@ -18,7 +18,7 @@ import Functions from '../../pages/functions';
 import Files from '../../pages/files';
 import Profile from '../../pages/profileManagement';
 import Users from '../../pages/users';
-
+import Code from '../../pages/code';
 
 const Router = () => {
   const routes: RouteProps[] = [
@@ -101,6 +101,10 @@ const Router = () => {
         {
           path: Routes.USERS,
           element: <Users />,
+        },
+        {
+          path: Routes.CODE,
+          element: <Code />,
         },
       ],
     },
