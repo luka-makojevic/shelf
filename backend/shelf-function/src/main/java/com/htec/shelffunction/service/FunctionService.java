@@ -13,7 +13,7 @@ import com.htec.shelffunction.model.request.UpdateCodeFunctionRequestModel;
 import com.htec.shelffunction.model.response.FunctionResponseModel;
 import com.htec.shelffunction.repository.FunctionRepository;
 import com.htec.shelffunction.security.SecurityConstants;
-import com.htec.validator.FunctionValidator;
+import com.htec.shelffunction.validator.FunctionValidator;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
