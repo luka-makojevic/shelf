@@ -31,7 +31,8 @@ public class ListenerService {
                     functionEntity.getLanguage(),
                     false,
                     message.getUserId(),
-                    message.getFileId());
+                    message.getFileId(),
+                    message.getFileName());
         }
     }
 }

@@ -17,4 +17,5 @@ public class KafkaRequestModel {
     private Long userId;
     private Long fileId;
     private FunctionEvents event;
+    private String fileName;
 }

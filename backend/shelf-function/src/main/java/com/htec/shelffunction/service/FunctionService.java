@@ -78,7 +78,6 @@ public class FunctionService {
 
         functionRepository.save(functionEntity);
 
-
         if (requestModel.getFunctionParam() == null && "log".equals(requestModel.getFunction())) {
 
             Long logFileId = fileService.getLogFileId(requestModel.getShelfId(), requestModel.getLogFileName());

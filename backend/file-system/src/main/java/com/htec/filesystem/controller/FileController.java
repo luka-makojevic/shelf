@@ -2,6 +2,7 @@ package com.htec.filesystem.controller;
 
 import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.annotation.AuthenticationUser;
+import com.htec.filesystem.model.request.LogRequestModel;
 import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.model.response.FileResponseModel;
 import com.htec.filesystem.model.response.TextResponseMessage;
@@ -45,8 +46,7 @@ public class FileController {
 
 
     @PostMapping("/upload/profile/{id}")
-    public ResponseEntity<TextResponseMessage> uploadProfilePicture(@RequestBody Map<String, Pair<String, String>> files,
-                                                                    @PathVariable Long id) {
+    public ResponseEntity<TextResponseMessage> uploadProfilePicture(@RequestBody Map<String, Pair<String, String>> files, @PathVariable Long id) {
 
         fileService.saveUserProfilePicture(id, files);
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(IMAGE_UPLOADED, HttpStatus.OK.value()));
@@ -59,7 +59,7 @@ public class FileController {
 
         FileResponseModel fileResponseModel = fileService.getFile(user.getId(), id, file);
 
-        eventService.reportEvent(FunctionEvents.DOWNLOAD, Collections.singletonList(id), user.getId(), null);
+        eventService.reportEvent(FunctionEvents.DOWNLOAD, Collections.singletonList(id), user.getId(), null, null);
 
         return ResponseEntity.ok().contentType(MediaType.MULTIPART_FORM_DATA).body(fileResponseModel.getImageContent());
     }
@@ -69,7 +69,7 @@ public class FileController {
 
         fileService.downloadFilesToZip(user, fileIds);
 
-        eventService.reportEvent(FunctionEvents.DOWNLOAD, fileIds, user.getId(), null);
+        eventService.reportEvent(FunctionEvents.DOWNLOAD, fileIds, user.getId(), null, null);
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("application/zip"))
@@ -92,7 +92,7 @@ public class FileController {
 
         List<Long> newFileIds = fileService.saveFile(shelfId, folderId, files, authUser.getId());
 
-        eventService.reportEvent(FunctionEvents.UPLOAD, newFileIds, authUser.getId(), shelfId);
+        eventService.reportEvent(FunctionEvents.UPLOAD, newFileIds, authUser.getId(), shelfId, null);
 
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_UPLOADED, HttpStatus.OK.value()));
     }
@@ -116,13 +116,11 @@ public class FileController {
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_COPIED, HttpStatus.OK.value()));
     }
 
-    @PutMapping("/log/event/{eventId}/file/{fileId}/user/{userId}/backupFileId/{backupFileId}")
-    public ResponseEntity<TextResponseMessage> logFile(@PathVariable Integer eventId,
-                                                       @PathVariable Long fileId,
-                                                       @PathVariable Long userId,
-                                                       @PathVariable Long backupFileId) {
+    @PutMapping("/log/event/backupFileId/{backupFileId}")
+    public ResponseEntity<TextResponseMessage> logFile(@PathVariable Long backupFileId,
+                                                       @RequestBody LogRequestModel logRequestModel) {
 
-        fileService.logFile(eventId, fileId, userId, backupFileId);
+        fileService.logFile(backupFileId, logRequestModel);
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FILE_LOGGED, HttpStatus.OK.value()));
     }
 
@@ -142,11 +140,12 @@ public class FileController {
     }
 
     @DeleteMapping
-    public ResponseEntity<TextResponseMessage> deleteFile(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) throws IOException {
+    public ResponseEntity<TextResponseMessage> deleteFile(@AuthenticationUser AuthUser user, @RequestBody List<Long> fileIds) {
 
+        Map<Long, String> filesToDelete = fileService.getFileNamesFromIds(fileIds);
         Long deletedFilesShelfId = fileService.deleteFile(user.getId(), fileIds);
 
-        eventService.reportEvent(FunctionEvents.DELETE, fileIds, user.getId(), deletedFilesShelfId);
+        eventService.reportEvent(FunctionEvents.DELETE, fileIds, user.getId(), deletedFilesShelfId, filesToDelete);
 
         return ResponseEntity.ok().body(new TextResponseMessage(FILES_DELETED, HttpStatus.OK.value()));
     }
