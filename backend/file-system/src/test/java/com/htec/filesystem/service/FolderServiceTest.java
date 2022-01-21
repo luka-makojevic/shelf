@@ -9,6 +9,7 @@ import com.htec.filesystem.exception.ShelfException;
 import com.htec.filesystem.model.response.ShelfContentResponseModel;
 import com.htec.filesystem.repository.*;
 import com.htec.filesystem.util.ErrorMessages;
+import com.htec.filesystem.validator.FileSystemValidator;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 import com.htec.filesystem.model.request.RenameFolderRequestModel;
@@ -46,6 +47,8 @@ class FolderServiceTest {
     private FolderRepository folderRepository;
     @Mock
     private FileRepository fileRepository;
+    @Mock
+    FileSystemValidator fileSystemValidator;
     @Mock
     private FolderTreeRepository folderTreeRepository;
     @Mock

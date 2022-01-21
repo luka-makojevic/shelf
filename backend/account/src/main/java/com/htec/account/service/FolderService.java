@@ -2,7 +2,6 @@ package com.htec.account.service;
 
 import com.htec.account.filter.JwtStorageFilter;
 import com.htec.account.security.SecurityConstants;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
