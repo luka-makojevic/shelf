@@ -57,6 +57,7 @@ const FunctionModal = ({
 
   const onSubmit = (formData: FunctionFormData) => {
     const newFormData: FunctionFormData = formData;
+    newFormData.name = newFormData.name.trim();
 
     if (formData.function === 'backup') {
       newFormData.eventId = 1;
@@ -235,7 +236,7 @@ const FunctionModal = ({
                         error={errors.shelfId}
                         placeHolder="select shelf"
                         setValue={setValue}
-                        validation={validations.functionValidation}
+                        validation={validations.basicValidation}
                       />
                     </>
                   )}

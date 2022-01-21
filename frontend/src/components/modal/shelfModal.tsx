@@ -7,6 +7,7 @@ import { ModalButtonDivider } from '../layout/layout.styles';
 import { Button } from '../UI/button';
 import shelfServices from '../../services/shelfServices';
 import { ShelfModalProps } from './modal.interfaces';
+import { whiteSpaceRegex } from '../../utils/validation/regex';
 
 const ShelfModal = ({
   onCloseModal,
@@ -25,7 +26,7 @@ const ShelfModal = ({
   };
 
   const onSubmit = (data: ShelfFormData) => {
-    const shelfName = data.name;
+    const shelfName = data.name.trim();
 
     if (!shelf) {
       shelfServices
@@ -55,6 +56,10 @@ const ShelfModal = ({
     maxLength: {
       value: 50,
       message: 'Shelf name can not be longer than 50 characters',
+    },
+    pattern: {
+      value: whiteSpaceRegex,
+      message: 'Invalid name format',
     },
   };
 
