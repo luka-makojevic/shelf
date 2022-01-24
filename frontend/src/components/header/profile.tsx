@@ -69,7 +69,9 @@ const Profile = () => {
               {user?.firstName} {user?.lastName}
             </PlainText>
             <PlainText>{user?.email}</PlainText>
-            <Link to={`/profile/${user?.id}`}>manage account</Link>
+            {user?.role.id !== 1 && (
+              <Link to={`/profile/${user?.id}`}>manage account</Link>
+            )}
             <div>
               <Button onClick={handleLogout} size="small">
                 log out

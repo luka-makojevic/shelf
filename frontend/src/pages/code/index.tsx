@@ -95,9 +95,7 @@ const Code = () => {
             <PlainText>
               <strong>Execution result:</strong>
             </PlainText>
-            <PlainText>
-              {executionResult && JSON.stringify(executionResult)}
-            </PlainText>
+            <PlainText>{executionResult}</PlainText>
           </FunctionResultWrapper>
         )}
         <FunctionInfo>

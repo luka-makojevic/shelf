@@ -51,8 +51,9 @@ export const Select = ({
     index: number;
   }) => {
     const handleChooseOption = () => {
-      if (setValue)
+      if (setValue) {
         setValue(selectName, option.value, { shouldValidate: true });
+      }
       setPlaceholder(option.text);
       setIsOpen(false);
     };

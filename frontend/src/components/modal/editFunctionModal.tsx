@@ -12,7 +12,6 @@ const FunctionEditModal = ({
   onCloseModal,
   functionData,
   onEdit,
-  onGetData,
 }: FunctionEditModalProps) => {
   const {
     register,

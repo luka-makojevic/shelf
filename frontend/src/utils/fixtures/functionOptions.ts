@@ -16,7 +16,7 @@ export const languageOptions = [
   },
   {
     value: 'csharp',
-    text: 'csharp',
+    text: 'C#',
   },
 ];
 
@@ -53,15 +53,15 @@ export const eventTriggerOptions = [
 
 export const logTrigger = [
   {
-    value: 'upload',
+    value: '1',
     text: 'upload',
   },
   {
-    value: 'download',
+    value: '2',
     text: 'download',
   },
   {
-    value: 'delete',
+    value: '3',
     text: 'delete',
   },
 ];

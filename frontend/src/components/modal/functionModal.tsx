@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { SyntheticEvent, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { useForm } from 'react-hook-form';
 import { FaRegTimesCircle } from 'react-icons/fa';
@@ -51,16 +51,21 @@ const FunctionModal = ({
 
   const [optionValue, setOptionValue] = useState<string>('scratch');
 
-  const handleCloseModal = () => {
-    onCloseModal();
-  };
-
   const onSubmit = (formData: FunctionFormData) => {
     const newFormData: FunctionFormData = formData;
     newFormData.name = newFormData.name.trim();
-
     if (formData.function === 'backup') {
-      formData.eventId = 1;
+      const newData = { ...formData };
+      newData.eventId = 1;
+      functionService
+        .createPredefinedFunction(newData)
+        .then(() => {
+          toast.success('Function created');
+          onCloseModal();
+          onGetData();
+        })
+        .catch((err) => toast.error(err.response?.data.message));
+    } else if (formData.function === 'log') {
       functionService
         .createPredefinedFunction(formData)
         .then(() => {
@@ -91,16 +96,20 @@ const FunctionModal = ({
     reset();
   };
 
+  const handleEventPropagation = (event: SyntheticEvent) => {
+    event.stopPropagation();
+  };
+
   const modal = (
-    <Backdrop>
-      <FunctionModalContainer>
+    <Backdrop onClick={onCloseModal}>
+      <FunctionModalContainer onClick={handleEventPropagation}>
         <FunctionHeader>
           <HeaderItem>
             <H2>Create Function</H2>
           </HeaderItem>
 
           <HeaderItem>
-            <Close onClick={handleCloseModal}>
+            <Close onClick={onCloseModal}>
               <FaRegTimesCircle
                 color={theme.colors.white}
                 size={theme.space.lg}
@@ -238,7 +247,7 @@ const FunctionModal = ({
                       />
                       <InputTitle>Bind function to shelf</InputTitle>
                       <InputSubTitle>
-                        Select on what shelf you want function to be executed
+                        Select on what shelf you want function to be executed on
                       </InputSubTitle>
                       <Select
                         optionsData={data}
@@ -255,7 +264,8 @@ const FunctionModal = ({
                     <>
                       <InputTitle>Select backup shelf</InputTitle>
                       <InputSubTitle>
-                        Where you want your data to be stored
+                        Data will be backed up upon uploading files in bound
+                        shelf
                       </InputSubTitle>
                       <Select
                         optionsData={data}
@@ -270,6 +280,18 @@ const FunctionModal = ({
                   )}
                   {predefinedFunction === 'log' && (
                     <>
+                      <InputTitle>Log file name</InputTitle>
+                      <InputSubTitle>
+                        File will be created on first level of selected shelf
+                      </InputSubTitle>
+                      <InputField
+                        placeholder="Log file name"
+                        error={errors.name}
+                        {...register(
+                          'logFileName',
+                          validations.functionValidation
+                        )}
+                      />
                       <InputTitle>Select event trigger</InputTitle>
                       <InputSubTitle>
                         When should function be executed
@@ -293,8 +315,9 @@ const FunctionModal = ({
         <FunctionModalFooter>
           <Button
             variant="lightBordered"
-            onClick={handleCloseModal}
+            onClick={onCloseModal}
             size="large"
+            type="button"
           >
             Cancel
           </Button>

@@ -15,9 +15,8 @@ import {
   TableDataTypes,
 } from '../../interfaces/dataTypes';
 import { Description } from '../../components/text/text-styles';
-import Breadcrumbs from '../../components/breadcrumbs';
-import Modal from '../../components/modal';
 import DeleteModal from '../../components/modal/deleteModal';
+import Breadcrumbs from '../../components/breadcrumbs';
 import fileServices from '../../services/fileServices';
 import trashService from '../../services/trashService';
 import folderService from '../../services/folderService';
@@ -102,10 +101,6 @@ const Trash = () => {
     setOpenModal(true);
   };
 
-  const handleHardDelete = () => {
-    getData();
-  };
-
   const handleRecoverFromTrash = (row: TableDataTypes) => {
     if (row.folder) {
       folderService
@@ -131,6 +126,41 @@ const Trash = () => {
     setSelectedRows([]);
   };
 
+  const handleHardDelete = () => {
+    const fileIds: number[] = [];
+    const folderIds: number[] = [];
+
+    selectedRows.forEach((item) => {
+      if (item.folder) folderIds.push(item.id);
+      else fileIds.push(item.id);
+    });
+
+    if (fileIds.length > 0) {
+      fileServices
+        .hardDeleteFile(fileIds)
+        .then(() => {
+          getData();
+          toast.success('Files successfully removed');
+        })
+        .catch((err) => {
+          toast.error(err.response?.data?.message);
+        });
+    }
+
+    if (folderIds.length > 0) {
+      folderService
+        .hardDeleteFolder(folderIds)
+        .then(() => {
+          getData();
+          toast.success('Folders successfully removed');
+        })
+        .catch((err) => {
+          toast.error(err.response?.data?.message);
+        });
+    }
+    handleModalClose();
+  };
+
   if (isLoading) return null;
 
   const actions: ActionType[] = [
@@ -140,14 +170,12 @@ const Trash = () => {
   return (
     <>
       {openModal && (
-        <Modal title="Delete from trash" onCloseModal={handleModalClose}>
-          <DeleteModal
-            onDeleteFiles={handleHardDelete}
-            onCloseModal={handleModalClose}
-            message="This action will permanently delete selected items"
-            selectedData={selectedRows}
-          />
-        </Modal>
+        <DeleteModal
+          title="Delete from trash"
+          onDelete={handleHardDelete}
+          onCloseModal={handleModalClose}
+          message="This action will permanently delete selected items!"
+        />
       )}
 
       <TableWrapper title="Trash">

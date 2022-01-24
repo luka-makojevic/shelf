@@ -4,4 +4,5 @@ export const emailRegex =
 export const passwordRegex =
   /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&.()–[{}\]:;',?/*~$^+=<>])([^\s]){8,}$/g;
 
-export const whiteSpaceRegex = /^.*[^ ].*$/g;
+export const whiteSpaceRegex =
+  /^[A-Za-z0-9_!@#$%^&\-_+][A-Za-z0-9 _!@#$%^&\-_+]*$/g;

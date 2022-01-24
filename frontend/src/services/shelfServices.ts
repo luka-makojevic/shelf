@@ -10,7 +10,7 @@ const createShelf = (shelfName: string) =>
 const softDeleteShelf = (shelfIds: number[]) =>
   instance.put(`${API_URL_FILESYSTEM}/shelf/move-to-trash`, shelfIds);
 
-const hardDeleteShelf = (shelfId: number) =>
+const hardDeleteShelf = (shelfId: number | undefined) =>
   instance.delete(`${API_URL_FILESYSTEM}/shelf/${shelfId}`);
 
 const editShelf = (data: { shelfId: number; shelfName: string }) =>

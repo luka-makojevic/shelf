@@ -1,3 +1,4 @@
+import { SyntheticEvent } from 'react';
 import ReactDOM from 'react-dom';
 import { FaRegTimesCircle } from 'react-icons/fa';
 import { theme } from '../../theme';
@@ -20,13 +21,17 @@ const Modal = ({
   background,
   color,
 }: ModalProps) => {
-  const handleCloseModal = () => {
-    onCloseModal(false);
+  const handleEventPropagation = (event: SyntheticEvent) => {
+    event.stopPropagation();
   };
 
   const modal = (
-    <Backdrop>
-      <ModalContainer background={background} color={color}>
+    <Backdrop onClick={onCloseModal}>
+      <ModalContainer
+        onClick={handleEventPropagation}
+        background={background}
+        color={color}
+      >
         {title && (
           <Header>
             <HeaderItem>
@@ -35,7 +40,7 @@ const Modal = ({
 
             {closeIcon && (
               <HeaderItem>
-                <Close onClick={handleCloseModal}>
+                <Close onClick={onCloseModal}>
                   <FaRegTimesCircle
                     color={color || theme.colors.primary}
                     size={theme.space.lg}
