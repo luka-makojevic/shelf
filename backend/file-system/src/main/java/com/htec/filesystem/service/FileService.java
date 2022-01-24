@@ -10,7 +10,10 @@ import com.htec.filesystem.mapper.ShelfItemMapper;
 import com.htec.filesystem.model.request.LogRequestModel;
 import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.model.response.FileResponseModel;
-import com.htec.filesystem.repository.*;
+import com.htec.filesystem.repository.FileRepository;
+import com.htec.filesystem.repository.FileTreeRepository;
+import com.htec.filesystem.repository.FolderRepository;
+import com.htec.filesystem.repository.ShelfRepository;
 import com.htec.filesystem.util.FileUtil;
 import com.htec.filesystem.util.FunctionEvents;
 import com.htec.filesystem.validator.FileSystemValidator;
@@ -207,8 +210,6 @@ public class FileService {
     }
 
     public Long saveFileIntoDB(String filePath, String fileName, long shelfId, long folderId) {
-
-        //fileSystemValidator.isFileNameValid(fileName);
 
         FileEntity fileEntity = new FileEntity();
 
