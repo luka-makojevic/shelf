@@ -4,6 +4,7 @@ import com.htec.shelffunction.dto.FunctionDTO;
 import com.htec.shelffunction.dto.ShelfDTO;
 import com.htec.shelffunction.entity.FunctionEntity;
 import com.htec.shelffunction.exception.ExceptionSupplier;
+import com.htec.shelffunction.exception.ShelfException;
 import com.htec.shelffunction.filter.JwtStorageFilter;
 import com.htec.shelffunction.mapper.FunctionMapper;
 import com.htec.shelffunction.model.request.CustomFunctionRequestModel;
@@ -23,8 +24,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,7 +35,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.htec.shelffunction.util.FunctionEvents.*;
-import static com.htec.shelffunction.util.FunctionsConstants.*;
+import static com.htec.shelffunction.util.FunctionsConstants.BACKUP;
+import static com.htec.shelffunction.util.FunctionsConstants.LOG;
 import static com.htec.shelffunction.util.LanguageConstants.*;
 import static com.htec.shelffunction.util.PathConstants.*;
 
@@ -315,6 +316,19 @@ public class FunctionService {
 
             exitValue = compileProcess.exitValue();
 
+            InputStream inputStream = (compileProcess.exitValue() == 0 ? compileProcess.getInputStream() : compileProcess.getErrorStream());
+
+            String result = new BufferedReader(new InputStreamReader(inputStream))
+                    .lines().collect(Collectors.joining("\n"));
+
+            if (exitValue != 0) {
+                String replace = HOME_PATH + USER_PATH + userId + PATH_SEPARATOR + "functions" + PATH_SEPARATOR;
+                String errorMessage = result.replace(replace, "");
+                ShelfException shelfException = ExceptionSupplier.errorInFunctionCode.get();
+                shelfException.setMessage(errorMessage);
+                throw shelfException;
+            }
+
             compileProcess.destroy();
 
         } catch (IOException | InterruptedException e) {
@@ -408,25 +422,12 @@ public class FunctionService {
                 functionEntity.getPath() +
                 extension;
 
-        String oldCode = "";
 
         try {
-            oldCode = Files.readString(Path.of(sourceFilePath));
 
             Files.writeString(Path.of(sourceFilePath), updateCodeFunctionRequestModel.getCode(), StandardOpenOption.WRITE);
 
-
-            int compileProcessReturnValue = createCompileProcess(functionEntity.getId(),
-                    functionEntity.getLanguage(),
-                    userId,
-                    extension,
-                    updateCodeFunctionRequestModel.getCode());
-
-            if (compileProcessReturnValue != 0) {
-
-                Files.writeString(Path.of(sourceFilePath), oldCode);
-                throw ExceptionSupplier.errorInFunctionCode.get();
-            }
+            createCompileProcess(functionEntity.getId(), functionEntity.getLanguage(), userId, extension, updateCodeFunctionRequestModel.getCode());
 
         } catch (IOException e) {
             e.printStackTrace();
