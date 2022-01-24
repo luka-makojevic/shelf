@@ -321,12 +321,20 @@ public class FileService {
             String newPath = "";
 
             int extensionIndex = fileEntity.getName().lastIndexOf('.');
-            String nameWithoutExtension = fileEntity.getName().substring(0, extensionIndex);
+            String nameWithoutExtension = fileEntity.getName();
+            String extension = "";
+            if (extensionIndex != -1) {
 
-            String extension = fileEntity.getName().substring(extensionIndex);
+                nameWithoutExtension = fileEntity.getName().substring(0, extensionIndex);
 
-            int uuidIndex = extension.lastIndexOf('_');
-            extension = extension.substring(0, uuidIndex);
+                extension = fileEntity.getName().substring(extensionIndex);
+
+                int uuidIndex = extension.lastIndexOf('_');
+                if(uuidIndex != -1) {
+                    extension = extension.substring(0, uuidIndex);
+                }
+
+            }
 
             Integer fileNameCounter = filesCount.getOrDefault(fileEntity.getName(), 0);
 
@@ -355,16 +363,21 @@ public class FileService {
                 if (Boolean.FALSE.equals(folderEntity.getDeleted())) {
                     newPath = folderEntity.getPath() + pathSeparator + fileEntity.getName();
                 } else {
-                    newPath = fileEntity.getPath().replace(trash, "shelves");
+                    newPath = fileEntity.getPath().replace(trash, "shelves" + pathSeparator + fileEntity.getShelfId());
                     newPath = newPath.replace(fileNameWithUUID, fileEntity.getName());
+
+                    int shelvesIndex = newPath.lastIndexOf("shelves");
+                newPath = newPath.substring(0, shelvesIndex + 7 + 2) + pathSeparator + fileEntity.getName();
+                /*
                     int shelfIdIndex = newPath.lastIndexOf(pathSeparator);
-                    newPath = newPath.substring(0, shelfIdIndex) + pathSeparator + fileEntity.getShelfId() + newPath.substring(shelfIdIndex);
+                    newPath = newPath.substring(0, shelfIdIndex) + pathSeparator + fileEntity.getShelfId() + newPath.substring(shelfIdIndex);*/
                 }
             } else {
-                newPath = fileEntity.getPath().replace(trash, "shelves");
+                newPath = fileEntity.getPath().replace(trash, "shelves" + pathSeparator + fileEntity.getShelfId());
                 newPath = newPath.replace(fileNameWithUUID, fileEntity.getName());
-                int shelfIdIndex = newPath.lastIndexOf(pathSeparator);
-                newPath = newPath.substring(0, shelfIdIndex) + pathSeparator + fileEntity.getShelfId() + newPath.substring(shelfIdIndex);
+
+                int shelvesIndex = newPath.lastIndexOf("shelves");
+                newPath = newPath.substring(0, shelvesIndex + 7 + 2) + pathSeparator + fileEntity.getName();
             }
 
             fileEntity.setPath(newPath);
