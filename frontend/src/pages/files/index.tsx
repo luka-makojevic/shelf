@@ -151,7 +151,7 @@ const Files = () => {
         fileIds.push(item.id);
       }
     });
-    if (fileIds.length === 1 && folderId?.length === 0) {
+    if (fileIds.length === 1 && folderIds?.length === 0) {
       fileServices
         .downloadSingleFile(fileIds[0])
         .then((res) => {
