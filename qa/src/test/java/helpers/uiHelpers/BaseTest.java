@@ -30,7 +30,7 @@ public class BaseTest
     public void initialize() throws IOException
     {
         webDriverManager = new WebDriverManager();
-        driver = webDriverManager.initializeDriver(true);
+        driver = webDriverManager.initializeDriver("chrome",false);
         wdWaitHelpers = new WdWaitHelpers(driver);
         navigateBrowser = new NavigateBrowserHelper(driver, prop, wdWaitHelpers);
         driver.manage().window().maximize();

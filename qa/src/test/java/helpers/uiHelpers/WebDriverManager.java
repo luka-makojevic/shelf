@@ -20,31 +20,36 @@ public class WebDriverManager
     public Properties prop;
 
 
-    public WebDriver initializeDriver(Boolean enableHeadless) throws IOException {
+    public WebDriver initializeDriver(String browserName, Boolean enableHeadless) throws IOException {
 
         // Create global property file
         prop = new Properties();
         FileInputStream fis = new FileInputStream (".\\datafiles\\data.properties");
         prop.load(fis);
-        String browserName = prop.getProperty("browser");
+        prop.setProperty("browser", browserName);
         System.out.println(browserName);
+        switch (browserName)
+        {
+            case: "chrome":
+                io.github.bonigarcia.wdm.WebDriverManager.chromedriver().setup();
+                ChromeOptions chromeOptions = new ChromeOptions();
+                chromeOptions.setHeadless(enableHeadless);
+                driver = new ChromeDriver(chromeOptions);
+            break;
 
-        if (browserName.equals("chrome")) {
-            io.github.bonigarcia.wdm.WebDriverManager.chromedriver().setup();
-            ChromeOptions chromeOptions = new ChromeOptions();
-            chromeOptions.setHeadless(enableHeadless);
-            driver = new ChromeDriver(chromeOptions);
-        } else if (browserName.equals("firefox")) {
-            io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver().setup();
-            FirefoxOptions firefoxOptions = new FirefoxOptions();
-            firefoxOptions.setHeadless(enableHeadless);
-            driver = new FirefoxDriver(firefoxOptions);
-        }
-         else if (browserName.equals("edge")) {
-        io.github.bonigarcia.wdm.WebDriverManager.edgedriver().setup();
-        EdgeOptions edgeOptions = new EdgeOptions();
-        edgeOptions.setHeadless(enableHeadless);
-        driver = new EdgeDriver(edgeOptions);
+            case: "firefox":
+                io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver().setup();
+                FirefoxOptions firefoxOptions = new FirefoxOptions();
+                firefoxOptions.setHeadless(enableHeadless);
+                driver = new FirefoxDriver(firefoxOptions);
+            break;
+
+            case: "edge":
+                io.github.bonigarcia.wdm.WebDriverManager.edgedriver().setup();
+                EdgeOptions edgeOptions = new EdgeOptions();
+                edgeOptions.setHeadless(enableHeadless);
+                driver = new EdgeDriver(edgeOptions);
+            break;
         }
         return driver;
     }
