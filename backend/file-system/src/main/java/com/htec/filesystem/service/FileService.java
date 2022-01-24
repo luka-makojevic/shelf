@@ -40,6 +40,7 @@ public class FileService {
     private final String pathSeparator = FileSystems.getDefault().getSeparator();
     private final String userPath = pathSeparator + "shelf-files" + pathSeparator + "user-data" + pathSeparator;
     private final String trash = "trash";
+    private final String shelves = "shelves";
 
     private final FileRepository fileRepository;
     private final FolderRepository folderRepository;
@@ -196,8 +197,8 @@ public class FileService {
                     }
                     fileName = newFileName;
                 }
-                localPath = userPath + shelfEntity.getUserId() + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator;
-                dbPath = shelfEntity.getUserId() + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator + fileName;
+                localPath = userPath + shelfEntity.getUserId() + pathSeparator + shelves + pathSeparator + shelfId + pathSeparator;
+                dbPath = shelfEntity.getUserId() + pathSeparator + shelves + pathSeparator + shelfId + pathSeparator + fileName;
             }
 
             String uploadDir = homePath + localPath;
@@ -240,7 +241,7 @@ public class FileService {
         }
 
         String src = homePath + userPath + fileEntity.getPath();
-        String dst = homePath + userPath + userId + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator + fileEntity.getName();
+        String dst = homePath + userPath + userId + pathSeparator + shelves + pathSeparator + shelfId + pathSeparator + fileEntity.getName();
 
         if (fileRepository.findByNameAndShelfId(fileEntity.getName(), shelfId).isPresent()) {
             throw ExceptionSupplier.fileAlreadyExists.get();
@@ -251,7 +252,7 @@ public class FileService {
         backupFile.setCreatedAt(LocalDateTime.now());
         backupFile.setShelfId(shelfId);
         backupFile.setDeleted(false);
-        backupFile.setPath(userId + pathSeparator + "shelves" + pathSeparator + shelfId + pathSeparator + fileEntity.getName());
+        backupFile.setPath(userId + pathSeparator + shelves + pathSeparator + shelfId + pathSeparator + fileEntity.getName());
         fileRepository.save(backupFile);
 
         try {
@@ -319,14 +320,26 @@ public class FileService {
         for (FileEntity fileEntity : fileEntities) {
 
             String newPath = "";
-
             int extensionIndex = fileEntity.getName().lastIndexOf('.');
-            String nameWithoutExtension = fileEntity.getName().substring(0, extensionIndex);
+            String nameWithoutExtension = fileEntity.getName();
+            String extension = "";
+            if (extensionIndex != -1) {
 
-            String extension = fileEntity.getName().substring(extensionIndex);
+                nameWithoutExtension = fileEntity.getName().substring(0, extensionIndex);
 
-            int uuidIndex = extension.lastIndexOf('_');
-            extension = extension.substring(0, uuidIndex);
+                extension = fileEntity.getName().substring(extensionIndex);
+
+                int uuidIndex = extension.lastIndexOf('_');
+                if (uuidIndex != -1) {
+                    extension = extension.substring(0, uuidIndex);
+                }
+            }
+            else {
+                int uuidIndex = fileEntity.getName().lastIndexOf('_');
+                if (uuidIndex != -1) {
+                    nameWithoutExtension = fileEntity.getName().substring(0, uuidIndex);
+                }
+            }
 
             Integer fileNameCounter = filesCount.getOrDefault(fileEntity.getName(), 0);
 
@@ -355,16 +368,20 @@ public class FileService {
                 if (Boolean.FALSE.equals(folderEntity.getDeleted())) {
                     newPath = folderEntity.getPath() + pathSeparator + fileEntity.getName();
                 } else {
-                    newPath = fileEntity.getPath().replace(trash, "shelves");
+                    newPath = fileEntity.getPath().replace(trash, shelves + pathSeparator + fileEntity.getShelfId());
                     newPath = newPath.replace(fileNameWithUUID, fileEntity.getName());
-                    int shelfIdIndex = newPath.lastIndexOf(pathSeparator);
-                    newPath = newPath.substring(0, shelfIdIndex) + pathSeparator + fileEntity.getShelfId() + newPath.substring(shelfIdIndex);
+
+                    int shelvesIndex = newPath.lastIndexOf(shelves);
+                    newPath = newPath.substring(0, shelvesIndex + shelves.length() + fileEntity.getShelfId().toString().length() + 1)
+                            + pathSeparator + fileEntity.getName();
                 }
             } else {
-                newPath = fileEntity.getPath().replace(trash, "shelves");
+                newPath = fileEntity.getPath().replace(trash, shelves + pathSeparator + fileEntity.getShelfId());
                 newPath = newPath.replace(fileNameWithUUID, fileEntity.getName());
-                int shelfIdIndex = newPath.lastIndexOf(pathSeparator);
-                newPath = newPath.substring(0, shelfIdIndex) + pathSeparator + fileEntity.getShelfId() + newPath.substring(shelfIdIndex);
+
+                int shelvesIndex = newPath.lastIndexOf(shelves);
+                newPath = newPath.substring(0, shelvesIndex + shelves.length() + fileEntity.getShelfId().toString().length() + 1)
+                        + pathSeparator + fileEntity.getName();
             }
 
             fileEntity.setPath(newPath);
@@ -400,7 +417,7 @@ public class FileService {
             String userId = oldPath.substring(0, index);
 
             String newPath = homePath + userPath + userId + pathSeparator + trash + pathSeparator + newFileName;
-            newPath = newPath.replace("shelves" + pathSeparator + shelfId, trash);
+            newPath = newPath.replace(shelves + pathSeparator + shelfId, trash);
 
             Path uploadPath = Paths.get(newPath.replace(newFileName, ""));
             if (!Files.exists(uploadPath)) {
