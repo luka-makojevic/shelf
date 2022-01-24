@@ -10,10 +10,7 @@ import com.htec.filesystem.mapper.ShelfItemMapper;
 import com.htec.filesystem.model.request.LogRequestModel;
 import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.model.response.FileResponseModel;
-import com.htec.filesystem.repository.FileRepository;
-import com.htec.filesystem.repository.FileTreeRepository;
-import com.htec.filesystem.repository.FolderRepository;
-import com.htec.filesystem.repository.ShelfRepository;
+import com.htec.filesystem.repository.*;
 import com.htec.filesystem.util.FileUtil;
 import com.htec.filesystem.util.FunctionEvents;
 import com.htec.filesystem.validator.FileSystemValidator;
@@ -518,7 +515,8 @@ public class FileService {
 
         validation(fileIds, fileEntities, folderIds, folderEntities);
 
-        List<Long> downStreamFoldersIds = folderTreeRepository.getFolderDownStreamTrees(folderIds, false).stream().map(FolderEntity::getId).collect(Collectors.toList());
+        List<Long> downStreamFoldersIds = folderTreeRepository.getFolderDownStreamTrees(folderIds, false)
+                .stream().map(FolderEntity::getId).collect(Collectors.toList());
 
         List<FileEntity> downStreamFiles = fileRepository.findAllByParentFolderIdIn(downStreamFoldersIds);
 
