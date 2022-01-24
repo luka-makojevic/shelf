@@ -17,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -66,11 +65,13 @@ public class FileController {
     }
 
     @GetMapping(value = "/zip-download")
-    public ResponseEntity<StreamingResponseBody> zipDownload(@RequestParam List<Long> fileIds) {
+    public ResponseEntity<StreamingResponseBody> zipDownload(@AuthenticationUser AuthUser user,
+                                                             @RequestParam(required = false) List<Long> fileIds,
+                                                             @RequestParam(required = false) List<Long> folderIds) {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=export.zip")
-                .body(outputStream -> fileService.downloadFilesToZip(fileIds, outputStream));
+                .body(outputStream -> fileService.downloadFilesToZip(user.getId(), fileIds, folderIds, outputStream));
     }
 
     @GetMapping("/preview/{id}")

@@ -10,9 +10,7 @@ import com.htec.filesystem.mapper.ShelfItemMapper;
 import com.htec.filesystem.model.request.LogRequestModel;
 import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.model.response.FileResponseModel;
-import com.htec.filesystem.repository.FileRepository;
-import com.htec.filesystem.repository.FolderRepository;
-import com.htec.filesystem.repository.ShelfRepository;
+import com.htec.filesystem.repository.*;
 import com.htec.filesystem.util.FileUtil;
 import com.htec.filesystem.util.FunctionEvents;
 import com.htec.filesystem.validator.FileSystemValidator;
@@ -47,18 +45,21 @@ public class FileService {
     private final FolderRepository folderRepository;
     private final ShelfRepository shelfRepository;
     private final FileSystemValidator fileSystemValidator;
+    private final FileTreeRepository fileTreeRepository;
 
     public FileService(UserAPICallService userAPICallService,
                        FileRepository fileRepository,
                        FolderRepository folderRepository,
                        ShelfRepository shelfRepository,
-                       FileSystemValidator fileSystemValidator) {
+                       FileSystemValidator fileSystemValidator,
+                       FileTreeRepository fileTreeRepository) {
 
         this.userAPICallService = userAPICallService;
         this.fileRepository = fileRepository;
         this.folderRepository = folderRepository;
         this.shelfRepository = shelfRepository;
         this.fileSystemValidator = fileSystemValidator;
+        this.fileTreeRepository = fileTreeRepository;
     }
 
     public void saveUserProfilePicture(Long id, Map<String, Pair<String, String>> files) {
@@ -207,7 +208,7 @@ public class FileService {
 
     public Long saveFileIntoDB(String filePath, String fileName, long shelfId, long folderId) {
 
-        fileSystemValidator.isFileNameValid(fileName);
+        //fileSystemValidator.isFileNameValid(fileName);
 
         FileEntity fileEntity = new FileEntity();
 
@@ -505,17 +506,33 @@ public class FileService {
         return shelfId;
     }
 
-    public ZipOutputStream downloadFilesToZip(List<Long> fileIds, OutputStream outputStream) {
+    public ZipOutputStream downloadFilesToZip(Long userId, List<Long> fileIds, List<Long> folderIds, OutputStream outputStream) {
 
-        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndDeletedAndIdIn(8L, false, fileIds);
+        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndDeletedAndIdIn(userId, false, fileIds);
 
-        validation(fileIds, fileEntities);
+        List<FolderEntity> folderEntities = folderRepository.findByUserIdAndFolderIdsAndDeleted(userId, folderIds, false);
+
+        validation(fileIds, fileEntities, folderIds, folderEntities);
+
+        List<FileEntity> downStreamFiles = fileTreeRepository.getFileDownStreamTrees(folderIds, false);
 
         try (ZipOutputStream zippedOut = new ZipOutputStream(outputStream)) {
 
             for (FileEntity fileEntity : fileEntities) {
 
                 String fullPath = homePath + userPath + fileEntity.getPath();
+                FileSystemResource resource = new FileSystemResource(fullPath);
+                ZipEntry entry = new ZipEntry(Objects.requireNonNull(resource.getFilename()));
+                entry.setSize(resource.contentLength());
+                entry.setTime(System.currentTimeMillis());
+                zippedOut.putNextEntry(entry);
+                StreamUtils.copy(resource.getInputStream(), zippedOut);
+                zippedOut.closeEntry();
+            }
+
+            for (FileEntity downStreamFile : downStreamFiles) {
+
+                String fullPath = homePath + userPath + downStreamFile.getPath();
                 FileSystemResource resource = new FileSystemResource(fullPath);
                 ZipEntry entry = new ZipEntry(Objects.requireNonNull(resource.getFilename()));
                 entry.setSize(resource.contentLength());
@@ -532,14 +549,27 @@ public class FileService {
         }
     }
 
-    private void validation(List<Long> fileIds, List<FileEntity> fileEntities) {
+    private void validation(List<Long> fileIds, List<FileEntity> fileEntities, List<Long> folderIds, List<FolderEntity> folderEntities) {
+        if (fileIds != null && fileEntities != null) {
 
-        if (fileEntities.size() != fileIds.size()) {
-            throw ExceptionSupplier.filesNotFound.get();
+            if (fileEntities.size() != fileIds.size()) {
+                throw ExceptionSupplier.filesNotFound.get();
+            }
+
+            if (!fileEntities.stream().map(FileEntity::getId).collect(Collectors.toList()).containsAll(fileIds)) {
+                throw ExceptionSupplier.userNotAllowedToDownloadFile.get();
+            }
         }
 
-        if (!fileEntities.stream().map(FileEntity::getId).collect(Collectors.toList()).containsAll(fileIds)) {
-            throw ExceptionSupplier.userNotAllowedToDownloadFile.get();
+        if (folderIds != null && folderEntities != null) {
+
+            if (folderEntities.size() != folderIds.size()) {
+                throw ExceptionSupplier.folderNotFound.get();
+            }
+
+            if (!folderEntities.stream().map(FolderEntity::getId).collect(Collectors.toList()).containsAll(folderIds)) {
+                throw ExceptionSupplier.userNotAllowedToDownloadFile.get();
+            }
         }
     }
 
