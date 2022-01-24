@@ -5,10 +5,7 @@ import helpers.excelHelpers.ExcelReader;
 import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.WebDriver;
-import pages.DashboardPage;
-import pages.LoginPage;
-import pages.LoginViaMicrosoft;
-import pages.RegistrationPage;
+import pages.*;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -33,7 +30,7 @@ public class BaseTest
     public void initialize() throws IOException
     {
         webDriverManager = new WebDriverManager();
-        driver = webDriverManager.initializeDriver();
+        driver = webDriverManager.initializeDriver(true);
         wdWaitHelpers = new WdWaitHelpers(driver);
         navigateBrowser = new NavigateBrowserHelper(driver, prop, wdWaitHelpers);
         driver.manage().window().maximize();
@@ -47,7 +44,7 @@ public class BaseTest
 
     @After
     public void testTearDown() {
-        driver.close();
+//        driver.close();
         driver.quit();
     }
 }
