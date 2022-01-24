@@ -10,10 +10,7 @@ import com.htec.filesystem.mapper.ShelfItemMapper;
 import com.htec.filesystem.model.request.LogRequestModel;
 import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.model.response.FileResponseModel;
-import com.htec.filesystem.repository.FileRepository;
-import com.htec.filesystem.repository.FileTreeRepository;
-import com.htec.filesystem.repository.FolderRepository;
-import com.htec.filesystem.repository.ShelfRepository;
+import com.htec.filesystem.repository.*;
 import com.htec.filesystem.util.FileUtil;
 import com.htec.filesystem.util.FunctionEvents;
 import com.htec.filesystem.validator.FileSystemValidator;
@@ -49,13 +46,15 @@ public class FileService {
     private final ShelfRepository shelfRepository;
     private final FileSystemValidator fileSystemValidator;
     private final FileTreeRepository fileTreeRepository;
+    private final FolderTreeRepository folderTreeRepository;
 
     public FileService(UserAPICallService userAPICallService,
                        FileRepository fileRepository,
                        FolderRepository folderRepository,
                        ShelfRepository shelfRepository,
                        FileSystemValidator fileSystemValidator,
-                       FileTreeRepository fileTreeRepository) {
+                       FileTreeRepository fileTreeRepository,
+                       FolderTreeRepository folderTreeRepository) {
 
         this.userAPICallService = userAPICallService;
         this.fileRepository = fileRepository;
@@ -63,6 +62,7 @@ public class FileService {
         this.shelfRepository = shelfRepository;
         this.fileSystemValidator = fileSystemValidator;
         this.fileTreeRepository = fileTreeRepository;
+        this.folderTreeRepository = folderTreeRepository;
     }
 
     public void saveUserProfilePicture(Long id, Map<String, Pair<String, String>> files) {
@@ -515,7 +515,9 @@ public class FileService {
 
         validation(fileIds, fileEntities, folderIds, folderEntities);
 
-        List<FileEntity> downStreamFiles = fileTreeRepository.getFileDownStreamTrees(folderIds, false);
+        List<Long> downStreamFoldersIds = folderTreeRepository.getFolderDownStreamTrees(folderIds, false).stream().map(FolderEntity::getId).collect(Collectors.toList());
+
+        List<FileEntity> downStreamFiles = fileRepository.findAllByParentFolderIdIn(downStreamFoldersIds);
 
         try (ZipOutputStream zippedOut = new ZipOutputStream(outputStream)) {
 
