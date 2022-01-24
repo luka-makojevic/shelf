@@ -144,17 +144,21 @@ const Files = () => {
   const handleDownload = () => {
     if (selectedRows.length === 0) return;
     const fileIds: number[] = [];
+    const folderIds: number[] = [];
     selectedRows.forEach((item) => {
-      if (!item.folder) fileIds.push(item.id);
+      if (item.folder) folderIds.push(item.id);
+      else {
+        fileIds.push(item.id);
+      }
     });
-    if (selectedRows.length > 1) {
+    if (fileIds.length === 1 && folderId?.length === 0) {
       fileServices
-        .downloadFiles(fileIds.join())
+        .downloadSingleFile(fileIds[0])
         .then((res) => {
           const url = window.URL.createObjectURL(new Blob([res.data]));
           const link = document.createElement('a');
           link.href = url;
-          link.setAttribute('download', 'shelf.zip');
+          link.setAttribute('download', selectedRows[0].name);
           document.body.appendChild(link);
           link.click();
           link.remove();
@@ -164,12 +168,12 @@ const Files = () => {
         });
     } else {
       fileServices
-        .downloadSingleFile(fileIds[0])
+        .downloadFiles(fileIds.join(), folderIds.join())
         .then((res) => {
           const url = window.URL.createObjectURL(new Blob([res.data]));
           const link = document.createElement('a');
           link.href = url;
-          link.setAttribute('download', selectedRows[0].name);
+          link.setAttribute('download', 'shelf.zip');
           document.body.appendChild(link);
           link.click();
           link.remove();
@@ -208,13 +212,15 @@ const Files = () => {
     const newName = data.name;
     if (selectedFile) {
       if (!selectedFile?.folder) {
-        const extension = selectedFile.name.substring(
-          selectedFile.name.lastIndexOf('.')
-        );
+        let extension = '';
+        if (selectedFile.name.includes('.'))
+          extension = selectedFile.name.substring(
+            selectedFile.name.lastIndexOf('.')
+          );
         fileServices
-          .editFile({ fileId: selectedFile.id, fileName: newName + extension })
+          .editFile({ fileId: selectedFile.id, fileName: newName })
           .then(() => {
-            handleEdit(newName);
+            handleEdit(newName + extension);
             toast.success('File name updated');
           })
           .catch((err) => {
