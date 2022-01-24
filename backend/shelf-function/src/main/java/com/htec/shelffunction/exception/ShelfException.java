@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
 @ResponseStatus(code = HttpStatus.BAD_REQUEST)
 public class ShelfException extends RuntimeException {
     private String message;
