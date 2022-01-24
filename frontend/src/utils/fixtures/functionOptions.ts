@@ -16,7 +16,7 @@ export const languageOptions = [
   },
   {
     value: 'csharp',
-    text: 'C#',
+    text: 'csharp',
   },
 ];
 

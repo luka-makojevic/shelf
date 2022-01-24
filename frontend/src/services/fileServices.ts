@@ -25,9 +25,9 @@ const downloadSingleFile = (fileId: number) =>
     responseType: 'blob',
   });
 
-const downloadFiles = (fileIds: string) =>
+const downloadFiles = (fileIds: string, folderIds: string) =>
   instance({
-    url: `${API_URL_FILES}/file/zip-download?fileIds=${fileIds}`,
+    url: `${API_URL_FILES}/file/zip-download?fileIds=${fileIds}&folderIds=${folderIds}`,
 
     method: 'GET',
     responseType: 'blob',
