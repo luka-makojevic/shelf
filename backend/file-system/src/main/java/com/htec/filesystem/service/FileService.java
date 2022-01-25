@@ -452,6 +452,20 @@ public class FileService {
         FileEntity fileEntity = fileRepository.findById(fileId)
                 .orElseThrow(ExceptionSupplier.noFileWithGivenId);
 
+        if (fileEntity.getParentFolderId() != null) {
+
+            if (fileRepository.findByNameAndParentFolderId(fileName, fileEntity.getParentFolderId()).isPresent()) {
+                throw ExceptionSupplier.fileNameAlreadyExists.get();
+            }
+
+        } else {
+
+            if (fileRepository.findByNameAndShelfId(fileName, fileEntity.getShelfId()).isPresent()) {
+                throw ExceptionSupplier.fileNameAlreadyExists.get();
+            }
+
+        }
+
         ShelfEntity shelfEntity = shelfRepository.findById(fileEntity.getShelfId())
                 .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
 

@@ -7,6 +7,8 @@ public enum ErrorMessages {
     INTERNAL_SERVER_ERROR("Internal Server Error"),
     SHELF_NAME_NOT_VALID("Shelf name is not in a valid format."),
     FILE_NAME_NOT_VALID("File name is not in a valid format."),
+    FILE_NAME_ALREADY_EXISTS("File with the same name already exists"),
+    FOLDER_NAME_ALREADY_EXISTS("Folder with the same name already exists"),
     FOLDER_NAME_NOT_VALID("Folder name is not in a valid format."),
     COULD_NOT_UPLOAD_FILE("Could not upload file."),
     COULD_NOT_DELETE_SHELF("Could not delete shelf."),
