@@ -452,20 +452,6 @@ public class FileService {
         FileEntity fileEntity = fileRepository.findById(fileId)
                 .orElseThrow(ExceptionSupplier.noFileWithGivenId);
 
-        if (fileEntity.getParentFolderId() != null) {
-
-            if (fileRepository.findByNameAndParentFolderId(fileName, fileEntity.getParentFolderId()).isPresent()) {
-                throw ExceptionSupplier.fileNameAlreadyExists.get();
-            }
-
-        } else {
-
-            if (fileRepository.findByNameAndShelfId(fileName, fileEntity.getShelfId()).isPresent()) {
-                throw ExceptionSupplier.fileNameAlreadyExists.get();
-            }
-
-        }
-
         ShelfEntity shelfEntity = shelfRepository.findById(fileEntity.getShelfId())
                 .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
 
@@ -485,6 +471,18 @@ public class FileService {
 
             String fileExtension = fileEntity.getName().substring(dotIndex);
             fileName += fileExtension;
+        }
+
+        if (fileEntity.getParentFolderId() != null) {
+
+            if (fileRepository.findByNameAndParentFolderId(fileName, fileEntity.getParentFolderId()).isPresent()) {
+                throw ExceptionSupplier.fileNameAlreadyExists.get();
+            }
+        } else {
+
+            if (fileRepository.findByNameAndShelfId(fileName, fileEntity.getShelfId()).isPresent()) {
+                throw ExceptionSupplier.fileNameAlreadyExists.get();
+            }
         }
 
         String oldFilePath = homePath + userPath + fileEntity.getPath();

@@ -539,20 +539,6 @@ public class FolderService {
         FolderEntity folderEntity = folderRepository.findById(folderId)
                 .orElseThrow(ExceptionSupplier.noFolderWithGivenId);
 
-        if (folderEntity.getParentFolderId() != null) {
-
-            if (folderRepository.findByNameAndParentFolderId(folderName, folderEntity.getParentFolderId()).isPresent()) {
-                throw ExceptionSupplier.folderNameAlreadyExists.get();
-            }
-
-        } else {
-
-            if (folderRepository.findByNameAndShelfId(folderName, folderEntity.getShelfId()).isPresent()) {
-                throw ExceptionSupplier.folderNameAlreadyExists.get();
-            }
-
-        }
-
         ShelfEntity shelfEntity = shelfRepository.findById(folderEntity.getShelfId())
                 .orElseThrow(ExceptionSupplier.noShelfWithGivenId);
 
@@ -568,6 +554,18 @@ public class FolderService {
             if (folderRepository.findByNameAndShelfIdAndIdNot(folderName, folderEntity.getShelfId(), folderId)
                     .isPresent()) {
                 throw ExceptionSupplier.folderAlreadyExists.get();
+            }
+        }
+
+        if (folderEntity.getParentFolderId() != null) {
+
+            if (folderRepository.findByNameAndParentFolderId(folderName, folderEntity.getParentFolderId()).isPresent()) {
+                throw ExceptionSupplier.folderNameAlreadyExists.get();
+            }
+        } else {
+
+            if (folderRepository.findByNameAndShelfId(folderName, folderEntity.getShelfId()).isPresent()) {
+                throw ExceptionSupplier.folderNameAlreadyExists.get();
             }
         }
 
