@@ -333,8 +333,7 @@ public class FileService {
                 if (uuidIndex != -1) {
                     extension = extension.substring(0, uuidIndex);
                 }
-            }
-            else {
+            } else {
                 int uuidIndex = fileEntity.getName().lastIndexOf('_');
                 if (uuidIndex != -1) {
                     nameWithoutExtension = fileEntity.getName().substring(0, uuidIndex);
@@ -550,6 +549,7 @@ public class FileService {
     }
 
     public List<FileEntity> getFileEntities(Long userId, List<Long> fileIds, List<Long> folderIds) {
+
         List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndDeletedAndIdIn(userId, false, fileIds);
 
         List<FolderEntity> folderEntities = folderRepository.findByUserIdAndFolderIdsAndDeleted(userId, folderIds, false);
