@@ -10,10 +10,14 @@ import com.htec.filesystem.mapper.ShelfItemMapper;
 import com.htec.filesystem.model.request.LogRequestModel;
 import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.model.response.FileResponseModel;
-import com.htec.filesystem.repository.*;
+import com.htec.filesystem.repository.FileRepository;
+import com.htec.filesystem.repository.FolderRepository;
+import com.htec.filesystem.repository.FolderTreeRepository;
+import com.htec.filesystem.repository.ShelfRepository;
 import com.htec.filesystem.util.FileUtil;
 import com.htec.filesystem.util.FunctionEvents;
 import com.htec.filesystem.validator.FileSystemValidator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -41,12 +45,12 @@ public class FileService {
     private final String userPath = pathSeparator + "shelf-files" + pathSeparator + "user-data" + pathSeparator;
     private final String trash = "trash";
     private final String shelves = "shelves";
+    private final int MAX_FILE_SIZE = 5000000;
 
     private final FileRepository fileRepository;
     private final FolderRepository folderRepository;
     private final ShelfRepository shelfRepository;
     private final FileSystemValidator fileSystemValidator;
-    private final FileTreeRepository fileTreeRepository;
     private final FolderTreeRepository folderTreeRepository;
 
     public FileService(UserAPICallService userAPICallService,
@@ -54,7 +58,6 @@ public class FileService {
                        FolderRepository folderRepository,
                        ShelfRepository shelfRepository,
                        FileSystemValidator fileSystemValidator,
-                       FileTreeRepository fileTreeRepository,
                        FolderTreeRepository folderTreeRepository) {
 
         this.userAPICallService = userAPICallService;
@@ -62,7 +65,6 @@ public class FileService {
         this.folderRepository = folderRepository;
         this.shelfRepository = shelfRepository;
         this.fileSystemValidator = fileSystemValidator;
-        this.fileTreeRepository = fileTreeRepository;
         this.folderTreeRepository = folderTreeRepository;
     }
 
@@ -141,6 +143,12 @@ public class FileService {
 
             byte[] bytes = Base64.getDecoder().decode(filesPair.getValue().getSecond());
 
+            int fileSize = bytes.length;
+
+            if (fileSize > MAX_FILE_SIZE) {
+                throw ExceptionSupplier.fileSizeIsTooLarge.get();
+            }
+
             String fileName = filesPair.getValue().getFirst();
             String localPath;
             String dbPath;
@@ -167,9 +175,9 @@ public class FileService {
 
                             String nameWithoutExtension = fileName.substring(0, extensionIndex);
                             String extension = fileName.substring(extensionIndex);
-                            newFileName = nameWithoutExtension + "(" + fileCounter + ")" + extension;
+                            newFileName = nameWithoutExtension + " (" + fileCounter + ")" + extension;
                         } else {
-                            newFileName = fileName + "(" + fileCounter + ")";
+                            newFileName = fileName + " (" + fileCounter + ")";
                         }
                     }
                     fileName = newFileName;
@@ -190,9 +198,9 @@ public class FileService {
 
                             String nameWithoutExtension = fileName.substring(0, extensionIndex);
                             String extension = fileName.substring(extensionIndex);
-                            newFileName = nameWithoutExtension + "(" + fileCounter + ")" + extension;
+                            newFileName = nameWithoutExtension + " (" + fileCounter + ")" + extension;
                         } else {
-                            newFileName = fileName + "(" + fileCounter + ")";
+                            newFileName = fileName + " (" + fileCounter + ")";
                         }
                     }
                     fileName = newFileName;

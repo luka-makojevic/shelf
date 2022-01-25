@@ -46,6 +46,13 @@ public class ExceptionSupplier {
             ErrorMessages.BAD_REQUEST.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> fileSizeIsTooLarge = () -> new ShelfException(
+            ErrorMessages.FILE_SIZE_IS_TOO_LARGE.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> fileNameAlreadyExists = () -> new ShelfException(
             ErrorMessages.FILE_NAME_ALREADY_EXISTS.getErrorMessage(),
             HttpStatus.BAD_REQUEST.value(),
