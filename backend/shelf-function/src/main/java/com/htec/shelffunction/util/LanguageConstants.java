@@ -8,7 +8,7 @@ public class LanguageConstants {
     public final static String CS = "csharp";
 
     public final static String JAVA_EXECUTE_CMD = "java -cp ";
-    public final static String CS_EXECUTE_CMD = "mcs ";
+    public final static String CS_EXECUTE_CMD = "mono ";
 
     public final static String JAVA_COMPILE_CMD = "javac -cp ";
     public final static String CSHARP_COMPILE_CMD = "mcs ";
