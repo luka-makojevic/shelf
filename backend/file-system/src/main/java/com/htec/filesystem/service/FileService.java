@@ -333,8 +333,7 @@ public class FileService {
                 if (uuidIndex != -1) {
                     extension = extension.substring(0, uuidIndex);
                 }
-            }
-            else {
+            } else {
                 int uuidIndex = fileEntity.getName().lastIndexOf('_');
                 if (uuidIndex != -1) {
                     nameWithoutExtension = fileEntity.getName().substring(0, uuidIndex);
@@ -526,16 +525,7 @@ public class FileService {
 
     public ZipOutputStream downloadFilesToZip(Long userId, List<Long> fileIds, List<Long> folderIds, OutputStream outputStream) {
 
-        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndDeletedAndIdIn(userId, false, fileIds);
-
-        List<FolderEntity> folderEntities = folderRepository.findByUserIdAndFolderIdsAndDeleted(userId, folderIds, false);
-
-        validation(fileIds, fileEntities, folderIds, folderEntities);
-
-        List<Long> downStreamFoldersIds = folderTreeRepository.getFolderDownStreamTrees(folderIds, false)
-                .stream().map(FolderEntity::getId).collect(Collectors.toList());
-
-        List<FileEntity> downStreamFiles = fileRepository.findAllByParentFolderIdIn(downStreamFoldersIds);
+        List<FileEntity> fileEntities = getFileEntities(userId, fileIds, folderIds);
 
         try (ZipOutputStream zippedOut = new ZipOutputStream(outputStream)) {
 
@@ -551,23 +541,27 @@ public class FileService {
                 zippedOut.closeEntry();
             }
 
-            for (FileEntity downStreamFile : downStreamFiles) {
-
-                String fullPath = homePath + userPath + downStreamFile.getPath();
-                FileSystemResource resource = new FileSystemResource(fullPath);
-                ZipEntry entry = new ZipEntry(Objects.requireNonNull(resource.getFilename()));
-                entry.setSize(resource.contentLength());
-                entry.setTime(System.currentTimeMillis());
-                zippedOut.putNextEntry(entry);
-                StreamUtils.copy(resource.getInputStream(), zippedOut);
-                zippedOut.closeEntry();
-            }
-
             zippedOut.finish();
             return zippedOut;
         } catch (IOException e) {
             throw ExceptionSupplier.couldNotDownloadFiles.get();
         }
+    }
+
+    public List<FileEntity> getFileEntities(Long userId, List<Long> fileIds, List<Long> folderIds) {
+
+        List<FileEntity> fileEntities = fileRepository.findAllByUserIdAndDeletedAndIdIn(userId, false, fileIds);
+
+        List<FolderEntity> folderEntities = folderRepository.findByUserIdAndFolderIdsAndDeleted(userId, folderIds, false);
+
+        validation(fileIds, fileEntities, folderIds, folderEntities);
+
+        List<Long> downStreamFoldersIds = folderTreeRepository.getFolderDownStreamTrees(folderIds, false)
+                .stream().map(FolderEntity::getId).collect(Collectors.toList());
+
+        fileEntities.addAll(fileRepository.findAllByParentFolderIdIn(downStreamFoldersIds));
+
+        return fileEntities;
     }
 
     private void validation(List<Long> fileIds, List<FileEntity> fileEntities, List<Long> folderIds, List<FolderEntity> folderEntities) {
