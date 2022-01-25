@@ -6,12 +6,11 @@ import 'ace-builds/webpack-resolver';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { FaCog } from 'react-icons/fa';
+import { FaCog, FaSave } from 'react-icons/fa';
 import TableWrapper from '../../components/table/TableWrapper';
 import { Button } from '../../components/UI/button';
-import { PlainText } from '../../components/text/text-styles';
+import { Error, PlainText } from '../../components/text/text-styles';
 import {
-  FunctionButtonWrapper,
   FunctionEditorWrapper,
   FunctionInfo,
   FunctionResultWrapper,
@@ -24,7 +23,9 @@ import { FunctionData } from '../../interfaces/dataTypes';
 const Code = () => {
   const [code, setCode] = useState('');
   const [functionData, setFunctionData] = useState<FunctionData | null>(null);
-  const [isSaveDisabled, setIsSaveDisabled] = useState(true);
+  const [isSaveDisabled, setIsSaveDisabled] = useState(false);
+  const [isExecuteDisabled, setIsExecuteDisabled] = useState(true);
+  const [error, setError] = useState('');
   const [executionResult, setExecutionResult] = useState('');
 
   const { functionId } = useParams();
@@ -47,33 +48,54 @@ const Code = () => {
 
   const handleEditorValueChange = (newValue: string) => {
     if (isSaveDisabled) setIsSaveDisabled(false);
+    if (!isExecuteDisabled) setIsExecuteDisabled(true);
     setCode(newValue);
   };
 
   const handleSave = () => {
     setIsSaveDisabled(true);
+    if (isExecuteDisabled) setIsExecuteDisabled(false);
 
     functionService
       .saveFunction(Number(functionId), code)
-      .then((res) => toast.success(res.data?.message))
-      .catch((err) => toast.error(err.response?.data?.message));
+      .then((res) => {
+        toast.success(res.data?.message);
+        setError('');
+        setExecutionResult('');
+      })
+      .catch((err) => {
+        setError(err.response?.data?.message);
+        setExecutionResult('');
+        setIsSaveDisabled(false);
+        setIsExecuteDisabled(true);
+      });
   };
 
   const handleExecute = () => {
     functionService
       .executeFunction(functionData!.language, Number(functionId))
-      .then((res) => setExecutionResult(res.data))
+      .then((res) => {
+        setExecutionResult(res.data);
+        setError('');
+      })
       .catch((err) => toast.error(err?.data?.message));
   };
 
   return (
     <TableWrapper title="Function" description="Write your code">
       <ButtonContainer>
+        <Button
+          icon={<FaSave />}
+          onClick={handleSave}
+          disabled={isSaveDisabled}
+        >
+          Save
+        </Button>
         {isFunctionExecutableSynchronously && (
           <Button
             icon={<FaCog />}
             onClick={handleExecute}
-            disabled={!isSaveDisabled}
+            disabled={isExecuteDisabled}
           >
             Execute
           </Button>
@@ -95,21 +117,36 @@ const Code = () => {
             <PlainText>
               <strong>Execution result:</strong>
             </PlainText>
-            <PlainText>{executionResult}</PlainText>
+            {error ? (
+              <Error>{error}</Error>
+            ) : (
+              <PlainText>{executionResult}</PlainText>
+            )}
           </FunctionResultWrapper>
         )}
         <FunctionInfo>
-          <PlainText>Name: {functionData?.functionName}</PlainText>
-          <PlainText>Language: {functionData?.language}</PlainText>
-          <PlainText>Shelf: {functionData?.shelfName}</PlainText>
-          <PlainText>Trigger: {functionData?.eventName}</PlainText>
+          <div>
+            <PlainText>
+              <strong>Name:</strong>
+            </PlainText>
+            <PlainText>
+              <strong>Language:</strong>
+            </PlainText>
+            <PlainText>
+              <strong>Shelf:</strong>
+            </PlainText>
+            <PlainText>
+              <strong>Trigger:</strong>
+            </PlainText>
+          </div>
+          <div>
+            <PlainText>{functionData?.functionName}</PlainText>
+            <PlainText>{functionData?.language}</PlainText>
+            <PlainText>{functionData?.shelfName}</PlainText>
+            <PlainText>{functionData?.eventName}</PlainText>
+          </div>
         </FunctionInfo>
       </FunctionWrapper>
-      <FunctionButtonWrapper>
-        <Button onClick={handleSave} disabled={isSaveDisabled}>
-          Save
-        </Button>
-      </FunctionButtonWrapper>
     </TableWrapper>
   );
 };
