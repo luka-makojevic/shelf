@@ -2,6 +2,7 @@ package com.htec.filesystem.controller;
 
 import com.htec.filesystem.annotation.AuthUser;
 import com.htec.filesystem.annotation.AuthenticationUser;
+import com.htec.filesystem.entity.FileEntity;
 import com.htec.filesystem.model.request.LogRequestModel;
 import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.model.response.FileResponseModel;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/file")
@@ -68,6 +70,11 @@ public class FileController {
     public ResponseEntity<StreamingResponseBody> zipDownload(@AuthenticationUser AuthUser user,
                                                              @RequestParam(required = false) List<Long> fileIds,
                                                              @RequestParam(required = false) List<Long> folderIds) {
+
+        List<Long> fileIdsToReport = fileService.getFileEntities(user.getId(), fileIds, folderIds)
+                .stream().map(FileEntity::getId).collect(Collectors.toList());
+
+        eventService.reportEvent(FunctionEvents.DOWNLOAD, fileIdsToReport, user.getId(), null, null);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=export.zip")
