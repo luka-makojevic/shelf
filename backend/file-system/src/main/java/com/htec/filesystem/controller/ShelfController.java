@@ -61,7 +61,7 @@ public class ShelfController {
                                                            @PathVariable Long shelfId) {
 
         shelfService.hardDeleteShelf(shelfId, authUser.getId());
-        return ResponseEntity.ok().body(new TextResponseMessage("Successfully deleted shelves.", HttpStatus.OK.value()));
+        return ResponseEntity.ok().body(new TextResponseMessage("Successfully deleted shelf.", HttpStatus.OK.value()));
     }
 
     @GetMapping("/{shelfId}")

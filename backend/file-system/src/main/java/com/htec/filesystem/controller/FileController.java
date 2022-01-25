@@ -30,10 +30,9 @@ public class FileController {
     private final FileService fileService;
     private final EventService eventService;
 
-    private final String FILE_UPLOADED = "File Uploaded";
+    private final String FILE_UPLOADED = "File/s Uploaded";
     private final String FILE_COPIED = "File Copied";
     private final String FILE_LOGGED = "File logged";
-    private final String FILE_DOWNLOADED = "File Downloaded";
     private final String FILE_RENAMED = "File renamed";
     private final String IMAGE_UPLOADED = "Image Uploaded";
     private final String FILES_MOVED_TO_TRASH = "File/s moved to trash.";
