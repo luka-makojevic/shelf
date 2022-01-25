@@ -104,8 +104,8 @@ const Files = () => {
     if (fileIds.length !== 0)
       fileServices
         .softDeleteFile(fileIds)
-        .then(() => {
-          toast.info('Files moved to trash');
+        .then((res) => {
+          toast.info(res.data.message);
           getData();
         })
         .catch((err) => {
@@ -115,8 +115,8 @@ const Files = () => {
     if (folderIds.length !== 0)
       folderService
         .softDeleteFolder(folderIds)
-        .then(() => {
-          toast.info('Folders moved to trash');
+        .then((res) => {
+          toast.info(res.data.message);
           getData();
         })
         .catch((err) => {

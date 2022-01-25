@@ -45,9 +45,7 @@ const RegisterForm = () => {
     httpRegister(
       { password, email, firstName, lastName },
       () => {
-        toast.success(
-          'A verification link has been sent to your email address.'
-        );
+        toast.info('A verification link has been sent to your email address.');
 
         reset();
       },
