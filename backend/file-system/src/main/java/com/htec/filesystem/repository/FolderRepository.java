@@ -82,4 +82,6 @@ public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
     List<FolderEntity> findAllByShelfIdInAndTrashVisible(List<Long> shelfId, Boolean trashVisible);
 
     Optional<FolderEntity> findByNameAndShelfIdAndIdNot(String name, Long shelfId, Long folderId);
+
+    Optional<FolderEntity> findByNameAndShelfId(String folderName, Long shelfId);
 }

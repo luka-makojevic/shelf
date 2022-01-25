@@ -46,6 +46,20 @@ public class ExceptionSupplier {
             ErrorMessages.BAD_REQUEST.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> fileNameAlreadyExists = () -> new ShelfException(
+            ErrorMessages.FILE_NAME_ALREADY_EXISTS.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
+    public static final Supplier<ShelfException> folderNameAlreadyExists = () -> new ShelfException(
+            ErrorMessages.FOLDER_NAME_ALREADY_EXISTS.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> folderNameNotValid = () -> new ShelfException(
             ErrorMessages.FOLDER_NAME_NOT_VALID.getErrorMessage(),
             HttpStatus.BAD_REQUEST.value(),
