@@ -111,13 +111,11 @@ class FileServiceTest {
         String homePath = "/home/stefan/";
         String localPath = "/shelf-files/user-data/2/shelves" + shelfId + "/";
 
-
         ShelfEntity shelfEntity = new ShelfEntity();
         shelfEntity.setUserId(2L);
         shelfEntity.setId(1L);
 
         FileEntity fileEntity = new FileEntity();
-
         fileEntity.setShelfId(1L);
         fileEntity.setId(1L);
 

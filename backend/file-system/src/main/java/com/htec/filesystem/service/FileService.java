@@ -10,7 +10,10 @@ import com.htec.filesystem.mapper.ShelfItemMapper;
 import com.htec.filesystem.model.request.LogRequestModel;
 import com.htec.filesystem.model.request.RenameFileRequestModel;
 import com.htec.filesystem.model.response.FileResponseModel;
-import com.htec.filesystem.repository.*;
+import com.htec.filesystem.repository.FileRepository;
+import com.htec.filesystem.repository.FolderRepository;
+import com.htec.filesystem.repository.FolderTreeRepository;
+import com.htec.filesystem.repository.ShelfRepository;
 import com.htec.filesystem.util.FileUtil;
 import com.htec.filesystem.util.FunctionEvents;
 import com.htec.filesystem.validator.FileSystemValidator;
@@ -42,15 +45,13 @@ public class FileService {
     private final String userPath = pathSeparator + "shelf-files" + pathSeparator + "user-data" + pathSeparator;
     private final String trash = "trash";
     private final String shelves = "shelves";
+    private final int MAX_FILE_SIZE = 5000000;
 
     private final FileRepository fileRepository;
     private final FolderRepository folderRepository;
     private final ShelfRepository shelfRepository;
     private final FileSystemValidator fileSystemValidator;
     private final FolderTreeRepository folderTreeRepository;
-
-    @Value("${maxFileSize}")
-    private int maxFileSize;
 
     public FileService(UserAPICallService userAPICallService,
                        FileRepository fileRepository,
@@ -144,7 +145,7 @@ public class FileService {
 
             int fileSize = bytes.length;
 
-            if(fileSize > maxFileSize) {
+            if (fileSize > MAX_FILE_SIZE) {
                 throw ExceptionSupplier.fileSizeIsTooLarge.get();
             }
 
