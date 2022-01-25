@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 public class FileSystemValidator {
 
-    private static final String REGEX_PATTERN = "^[A-Za-z0-9_!@#$%^&\\-_+][A-Za-z0-9 _!@#$%^&\\-_+]*$";
+    private static final String REGEX_PATTERN = "^[A-Za-z0-9_!@#$%^&\\-_+][A-Za-z0-9 _()!@#$%^&\\-_+]*$";
 
     private static final Pattern pattern = Pattern.compile(REGEX_PATTERN);
 
