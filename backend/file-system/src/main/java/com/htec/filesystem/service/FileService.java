@@ -487,6 +487,18 @@ public class FileService {
             fileName += fileExtension;
         }
 
+        if (fileEntity.getParentFolderId() != null) {
+
+            if (fileRepository.findByNameAndParentFolderId(fileName, fileEntity.getParentFolderId()).isPresent()) {
+                throw ExceptionSupplier.fileNameAlreadyExists.get();
+            }
+        } else {
+
+            if (fileRepository.findByNameAndShelfId(fileName, fileEntity.getShelfId()).isPresent()) {
+                throw ExceptionSupplier.fileNameAlreadyExists.get();
+            }
+        }
+
         String oldFilePath = homePath + userPath + fileEntity.getPath();
         File oldFile = new File(oldFilePath);
 

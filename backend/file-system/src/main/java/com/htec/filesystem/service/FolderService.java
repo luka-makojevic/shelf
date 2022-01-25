@@ -571,6 +571,18 @@ public class FolderService {
             }
         }
 
+        if (folderEntity.getParentFolderId() != null) {
+
+            if (folderRepository.findByNameAndParentFolderId(folderName, folderEntity.getParentFolderId()).isPresent()) {
+                throw ExceptionSupplier.folderNameAlreadyExists.get();
+            }
+        } else {
+
+            if (folderRepository.findByNameAndShelfId(folderName, folderEntity.getShelfId()).isPresent()) {
+                throw ExceptionSupplier.folderNameAlreadyExists.get();
+            }
+        }
+
         folderEntity.setName(folderName);
         folderEntity.setUpdatedAt(LocalDateTime.now());
         folderRepository.save(folderEntity);
