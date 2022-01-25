@@ -45,7 +45,7 @@ public class FileService {
     private final String userPath = pathSeparator + "shelf-files" + pathSeparator + "user-data" + pathSeparator;
     private final String trash = "trash";
     private final String shelves = "shelves";
-    private final int MAX_FILE_SIZE = 5000000;
+    private final int MAX_FILE_SIZE = 5242880;
 
     private final FileRepository fileRepository;
     private final FolderRepository folderRepository;
