@@ -14,6 +14,7 @@ import com.htec.filesystem.repository.*;
 import com.htec.filesystem.util.FileUtil;
 import com.htec.filesystem.util.FunctionEvents;
 import com.htec.filesystem.validator.FileSystemValidator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -46,15 +47,16 @@ public class FileService {
     private final FolderRepository folderRepository;
     private final ShelfRepository shelfRepository;
     private final FileSystemValidator fileSystemValidator;
-    private final FileTreeRepository fileTreeRepository;
     private final FolderTreeRepository folderTreeRepository;
+
+    @Value("${maxFileSize}")
+    private int maxFileSize;
 
     public FileService(UserAPICallService userAPICallService,
                        FileRepository fileRepository,
                        FolderRepository folderRepository,
                        ShelfRepository shelfRepository,
                        FileSystemValidator fileSystemValidator,
-                       FileTreeRepository fileTreeRepository,
                        FolderTreeRepository folderTreeRepository) {
 
         this.userAPICallService = userAPICallService;
@@ -62,7 +64,6 @@ public class FileService {
         this.folderRepository = folderRepository;
         this.shelfRepository = shelfRepository;
         this.fileSystemValidator = fileSystemValidator;
-        this.fileTreeRepository = fileTreeRepository;
         this.folderTreeRepository = folderTreeRepository;
     }
 
@@ -141,6 +142,12 @@ public class FileService {
 
             byte[] bytes = Base64.getDecoder().decode(filesPair.getValue().getSecond());
 
+            int fileSize = bytes.length;
+
+            if(fileSize > maxFileSize) {
+                throw ExceptionSupplier.fileSizeIsTooLarge.get();
+            }
+
             String fileName = filesPair.getValue().getFirst();
             String localPath;
             String dbPath;
@@ -167,9 +174,9 @@ public class FileService {
 
                             String nameWithoutExtension = fileName.substring(0, extensionIndex);
                             String extension = fileName.substring(extensionIndex);
-                            newFileName = nameWithoutExtension + "(" + fileCounter + ")" + extension;
+                            newFileName = nameWithoutExtension + " (" + fileCounter + ")" + extension;
                         } else {
-                            newFileName = fileName + "(" + fileCounter + ")";
+                            newFileName = fileName + " (" + fileCounter + ")";
                         }
                     }
                     fileName = newFileName;
@@ -190,9 +197,9 @@ public class FileService {
 
                             String nameWithoutExtension = fileName.substring(0, extensionIndex);
                             String extension = fileName.substring(extensionIndex);
-                            newFileName = nameWithoutExtension + "(" + fileCounter + ")" + extension;
+                            newFileName = nameWithoutExtension + " (" + fileCounter + ")" + extension;
                         } else {
-                            newFileName = fileName + "(" + fileCounter + ")";
+                            newFileName = fileName + " (" + fileCounter + ")";
                         }
                     }
                     fileName = newFileName;
