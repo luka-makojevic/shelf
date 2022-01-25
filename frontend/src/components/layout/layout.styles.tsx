@@ -106,18 +106,20 @@ export const FunctionWrapper = styled.div`
 `;
 
 export const FunctionEditorWrapper = styled.div`
-  flex: 3;
+  flex: 4;
   border: 1px solid lightgray;
 `;
 
 export const FunctionResultWrapper = styled.div`
-  flex: 2;
+  flex: 3;
   margin-left: ${theme.space.md};
   padding-left: ${theme.space.sm};
   border: 1px solid lightgray;
 `;
 
 export const FunctionInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
   flex: 1;
   margin-left: ${theme.space.md};
   padding-left: ${theme.space.sm};
