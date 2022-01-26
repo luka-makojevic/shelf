@@ -17,7 +17,6 @@ import com.htec.filesystem.repository.ShelfRepository;
 import com.htec.filesystem.util.FileUtil;
 import com.htec.filesystem.util.FunctionEvents;
 import com.htec.filesystem.validator.FileSystemValidator;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -303,7 +302,7 @@ public class FileService {
                 Optional<FolderEntity> folderEntity = folderRepository.findById(fileEntity.getParentFolderId());
                 if (!folderEntity.isPresent())
                     fileEntity.setParentFolderId(null);
-                if (folderEntity.get().getDeleted())
+                else if (Boolean.TRUE.equals(folderEntity.get().getDeleted()))
                     fileEntity.setParentFolderId(null);
             }
         }
@@ -593,7 +592,14 @@ public class FileService {
         List<Long> downStreamFoldersIds = folderTreeRepository.getFolderDownStreamTrees(folderIds, false)
                 .stream().map(FolderEntity::getId).collect(Collectors.toList());
 
-        fileEntities.addAll(fileRepository.findAllByParentFolderIdIn(downStreamFoldersIds));
+        List<FileEntity> filesToDownload = fileRepository.findAllByParentFolderIdIn(downStreamFoldersIds)
+                .stream().filter(fileEntity -> fileEntity.getDeleted() == null || !fileEntity.getDeleted()).collect(Collectors.toList());
+
+        fileEntities.addAll(filesToDownload);
+
+        if (fileEntities.isEmpty()) {
+            throw ExceptionSupplier.noFilesToBeDownloaded.get();
+        }
 
         return fileEntities;
     }

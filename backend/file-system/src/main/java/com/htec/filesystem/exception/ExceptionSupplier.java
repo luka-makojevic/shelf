@@ -46,6 +46,13 @@ public class ExceptionSupplier {
             ErrorMessages.BAD_REQUEST.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> noFilesToBeDownloaded = () -> new ShelfException(
+            ErrorMessages.NO_FILES_TO_DOWNLOAD.getErrorMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.BAD_REQUEST.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> fileSizeIsTooLarge = () -> new ShelfException(
             ErrorMessages.FILE_SIZE_IS_TOO_LARGE.getErrorMessage(),
             HttpStatus.BAD_REQUEST.value(),
