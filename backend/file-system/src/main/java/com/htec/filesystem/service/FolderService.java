@@ -240,7 +240,8 @@ public class FolderService {
             Map<Long, FolderEntity> parentFoldersMap = parentFolders.stream()
                     .collect(Collectors.toMap(FolderEntity::getId, Function.identity()));
 
-            downStreamFiles = downStreamFiles.stream().filter(file -> file.getTrashVisible() != null && !file.getTrashVisible()).collect(Collectors.toList());
+            downStreamFiles = downStreamFiles.stream()
+                    .filter(file -> file.getTrashVisible() == null || !file.getTrashVisible()).collect(Collectors.toList());
 
             replaceFoldersTrashPath(downStreamFolders, parentFoldersMap);
             replaceFilesTrashPath(downStreamFiles, parentFoldersMap);
