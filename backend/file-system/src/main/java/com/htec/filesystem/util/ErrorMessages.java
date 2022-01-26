@@ -7,6 +7,7 @@ public enum ErrorMessages {
     INTERNAL_SERVER_ERROR("Internal Server Error"),
     SHELF_NAME_NOT_VALID("Shelf name is not in a valid format."),
     FILE_NAME_NOT_VALID("File name is not in a valid format."),
+    NO_FILES_TO_DOWNLOAD("There is no files to download."),
     FILE_SIZE_IS_TOO_LARGE("File size is over 5MB."),
     FILE_NAME_ALREADY_EXISTS("File with the same name already exists"),
     FOLDER_NAME_ALREADY_EXISTS("Folder with the same name already exists"),
