@@ -36,7 +36,7 @@ public class FileController {
     private final String FILE_RENAMED = "File renamed";
     private final String IMAGE_UPLOADED = "Image Uploaded";
     private final String FILES_MOVED_TO_TRASH = "File/s moved to trash.";
-    private final String FILES_RECOVERED_FROM_TRASH = "File/s recovered from trash.";
+    private final String FILES_RECOVERED_FROM_TRASH = "File recovered from trash.";
     private final String FILES_DELETED = "File/s deleted.";
 
     public FileController(FileService fileService,
