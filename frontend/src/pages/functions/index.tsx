@@ -206,7 +206,7 @@ const Functions = () => {
       )}
       <TableWrapper
         title="Functions"
-        description="Create or use predefined function on your shelves"
+        description="Create or use predefined function on your shelves."
       >
         <ActionsBox>
           <SearchBar

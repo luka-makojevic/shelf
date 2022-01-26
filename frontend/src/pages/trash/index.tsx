@@ -105,17 +105,17 @@ const Trash = () => {
     if (row.folder) {
       folderService
         .recoverFolderFromTrash([row.id])
-        .then(() => {
+        .then((res) => {
           getData();
-          toast.success('Folder recoverd from trash');
+          toast.success(res.data.message);
         })
         .catch((err) => toast.error(err));
     } else {
       fileServices
         .recoverFileFromTrash([row.id])
-        .then(() => {
+        .then((res) => {
           getData();
-          toast.success('File recoverd from trash');
+          toast.success(res.data.message);
         })
         .catch((err) => toast.error(err));
     }

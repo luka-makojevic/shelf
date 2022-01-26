@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { FaPlusCircle } from 'react-icons/fa';
 import { Table } from '../../components/table/table';
 import {
   ShelfDataType,
   ShelfFormData,
   TableDataTypes,
 } from '../../interfaces/dataTypes';
-
 import { Button } from '../../components/UI/button';
 import { Description } from '../../components/text/text-styles';
 import SearchBar from '../../components/UI/searchBar/searchBar';
@@ -82,13 +82,13 @@ const Shelves = () => {
   const handleDelete = () => {
     shelfServices
       .hardDeleteShelf(selectedShelf?.id)
-      .then(() => {
+      .then((res) => {
         const newShelves = shelves.filter(
           (item) => item.id !== selectedShelf?.id
         );
         setShelves(newShelves);
         handleModalClose();
-        toast.success('Shelf successfully deleted');
+        toast.success(res.data.message);
       })
       .catch((err) => {
         toast.error(err.response?.data?.message);
@@ -139,9 +139,9 @@ const Shelves = () => {
     } else {
       shelfServices
         .editShelf({ shelfId: selectedShelf.id, shelfName: data.name })
-        .then(() => {
+        .then((res) => {
           handleEdit(shelfName);
-          toast.success('Shelf name updated');
+          toast.success(res.data.message);
         })
         .catch((err) => {
           toast.error(err.response?.data?.message);
@@ -185,7 +185,9 @@ const Shelves = () => {
             searchKey="name"
           />
           <ButtonActionsBox>
-            <Button onClick={handleOpenModal}>Create shelf</Button>
+            <Button icon={<FaPlusCircle />} onClick={handleOpenModal}>
+              Create shelf
+            </Button>
           </ButtonActionsBox>
         </ActionsBox>
         {shelves.length === 0 || filteredShelves.length === 0 ? (

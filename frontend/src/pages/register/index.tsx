@@ -19,7 +19,7 @@ const Register = () => (
         <Feature>
           <H1>Explore a new world</H1>
           <Description>
-            Enter your personal details and start your journey with us :)
+            Enter your personal details and start your journey with us.
           </Description>
         </Feature>
       </Container>

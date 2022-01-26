@@ -91,7 +91,7 @@ export const ModalButtonDivider = styled.div`
 
 export const DashboardLayout = styled.div`
   display: flex;
-  height: calc(100vh - 60px);
+  height: calc(100vh - 55px);
 `;
 
 export const DashboardContentWrapper = styled.div`

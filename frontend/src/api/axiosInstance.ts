@@ -81,17 +81,12 @@ instance.interceptors.response.use(
 
     if (err.response?.status === 404) {
       toast.error(err.response?.data?.message);
-      return Promise.reject(err);
-    }
-    if (err.response?.status === 500) {
+    } else if (err.response?.status === 500) {
       toast.error('Internal server error');
-      return Promise.reject(err);
-    }
-    if (err?.message === 'Network Error') {
+    } else if (err?.message === 'Network Error') {
       toast.error('Network Error');
-      return Promise.reject(err);
-    }
-    return Promise.reject(err);
+    } else return Promise.reject(err);
+    return null;
   }
 );
 

@@ -4,12 +4,7 @@ import {
   GridContainer,
   LandinPageContainer,
 } from '../../components/layout/layout.styles';
-import {
-  H1,
-  Description,
-  AccentText,
-  Link,
-} from '../../components/text/text-styles';
+import { H1, Description, Link } from '../../components/text/text-styles';
 import { Routes } from '../../utils/enums/routes';
 import { Header } from '../../components';
 
@@ -35,7 +30,7 @@ const featuresInfo = [
   {
     id: 3,
     img: './assets/images/f.png',
-    text: 'Event-driven compute service that lets you run code for virtually any type of application or backend service without provisioning or managing servers',
+    text: 'Create event driven function and remotely execute them in the cloud',
     alt: 'lambda function',
   },
 ];
@@ -49,12 +44,12 @@ const Landing = () => (
         <Description>
           Event-driven compute service that lets you run code for virtually any
           type of application or backend service without provisioning or
-          managing servers
+          managing servers.
         </Description>
-        <AccentText>
+        <p>
           Start working more efficiently today,
-          <Link to={Routes.REGISTER}>Sign up to get started</Link>
-        </AccentText>
+          <Link to={Routes.REGISTER}> Sign up to get started.</Link>
+        </p>
       </LandinPageContainer>
       <LandinPageContainer>
         <GridContainer>
