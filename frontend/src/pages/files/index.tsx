@@ -104,8 +104,8 @@ const Files = () => {
     if (fileIds.length !== 0)
       fileServices
         .softDeleteFile(fileIds)
-        .then(() => {
-          toast.info('Files moved to trash');
+        .then((res) => {
+          toast.info(res.data.message);
           getData();
         })
         .catch((err) => {
@@ -115,8 +115,8 @@ const Files = () => {
     if (folderIds.length !== 0)
       folderService
         .softDeleteFolder(folderIds)
-        .then(() => {
-          toast.info('Folders moved to trash');
+        .then((res) => {
+          toast.info(res.data.message);
           getData();
         })
         .catch((err) => {
@@ -163,8 +163,8 @@ const Files = () => {
           link.click();
           link.remove();
         })
-        .catch(() => {
-          toast.error('Failed to download');
+        .catch((err) => {
+          toast.error(err.response?.data?.message);
         });
     } else {
       fileServices
@@ -178,8 +178,8 @@ const Files = () => {
           link.click();
           link.remove();
         })
-        .catch(() => {
-          toast.error('Failed to download');
+        .catch((err) => {
+          toast.error(err.response?.data?.message);
         });
     }
   };
@@ -219,9 +219,9 @@ const Files = () => {
           );
         fileServices
           .editFile({ fileId: selectedFile.id, fileName: newName })
-          .then(() => {
+          .then((res) => {
             handleEdit(newName + extension);
-            toast.success('File name updated');
+            toast.success(res.data.message);
           })
           .catch((err) => {
             toast.error(err.response?.data?.message);
@@ -229,9 +229,9 @@ const Files = () => {
       } else if (selectedFile?.folder) {
         folderService
           .editFolder({ folderId: selectedFile.id, folderName: newName })
-          .then(() => {
+          .then((res) => {
             handleEdit(newName);
-            toast.success('Folder name updated');
+            toast.success(res.data.message);
           })
           .catch((err) => {
             toast.error(err.response?.data?.message);

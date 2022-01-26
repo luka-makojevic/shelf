@@ -105,17 +105,17 @@ const Trash = () => {
     if (row.folder) {
       folderService
         .recoverFolderFromTrash([row.id])
-        .then(() => {
+        .then((res) => {
           getData();
-          toast.success('Folder recoverd from trash');
+          toast.success(res.data.message);
         })
         .catch((err) => toast.error(err));
     } else {
       fileServices
         .recoverFileFromTrash([row.id])
-        .then(() => {
+        .then((res) => {
           getData();
-          toast.success('File recoverd from trash');
+          toast.success(res.data.message);
         })
         .catch((err) => toast.error(err));
     }
@@ -138,9 +138,9 @@ const Trash = () => {
     if (fileIds.length > 0) {
       fileServices
         .hardDeleteFile(fileIds)
-        .then(() => {
+        .then((res) => {
           getData();
-          toast.success('Files successfully removed');
+          toast.success(res.data.message);
         })
         .catch((err) => {
           toast.error(err.response?.data?.message);
@@ -150,9 +150,9 @@ const Trash = () => {
     if (folderIds.length > 0) {
       folderService
         .hardDeleteFolder(folderIds)
-        .then(() => {
+        .then((res) => {
           getData();
-          toast.success('Folders successfully removed');
+          toast.success(res.data.message);
         })
         .catch((err) => {
           toast.error(err.response?.data?.message);

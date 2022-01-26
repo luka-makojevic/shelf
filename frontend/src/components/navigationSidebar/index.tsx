@@ -4,7 +4,6 @@ import {
   FaAngleDoubleRight,
   FaChartLine,
   FaList,
-  FaShare,
   FaTrash,
   FaUserFriends,
 } from 'react-icons/fa';
@@ -27,10 +26,7 @@ const links = [
     path: Routes.DASHBOARD,
     icon: <FaList />,
     rolesWithAccess: [Role.USER, Role.ADMIN, Role.MASTER_ADMIN],
-    childrenLinks: [
-      { name: 'Shared', icon: <FaShare />, path: Routes.SHARED_SHELVES },
-      { name: 'Trash', icon: <FaTrash />, path: Routes.TRASH },
-    ],
+    childrenLinks: [{ name: 'Trash', icon: <FaTrash />, path: Routes.TRASH }],
   },
   {
     name: 'Functions',

@@ -59,8 +59,8 @@ const FunctionModal = ({
       newData.eventId = 1;
       functionService
         .createPredefinedFunction(newData)
-        .then(() => {
-          toast.success('Function created');
+        .then((res) => {
+          toast.success(res.data.message);
           onCloseModal();
           onGetData();
         })
@@ -68,8 +68,8 @@ const FunctionModal = ({
     } else if (formData.function === 'log') {
       functionService
         .createPredefinedFunction(formData)
-        .then(() => {
-          toast.success('Function created');
+        .then((res) => {
+          toast.success(res.data.message);
           onCloseModal();
           onGetData();
         })
@@ -77,8 +77,8 @@ const FunctionModal = ({
     } else {
       functionService
         .createCustomfunction(formData)
-        .then(() => {
-          toast.success('Function created');
+        .then((res) => {
+          toast.success(res.data.message);
           onCloseModal();
           onGetData();
         })

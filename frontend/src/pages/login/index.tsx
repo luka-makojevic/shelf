@@ -18,7 +18,7 @@ const Login = () => (
         <Feature>
           <H1> Welcome back</H1>
           <Description>
-            To keep connected with us, please sign in with your personal info
+            To keep connected with us, please sign in with your personal info.
           </Description>
         </Feature>
       </Container>

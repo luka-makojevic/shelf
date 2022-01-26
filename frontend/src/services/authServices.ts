@@ -22,11 +22,7 @@ const microsoftLogin = (data: MicrosoftLoginData) =>
   instance.post(`${API_URL_ACCOUNT}/login/microsoft`, data);
 
 const logout = (data: LogoutData) =>
-  instance.post(`${API_URL_ACCOUNT}/auth/logout`, data, {
-    headers: {
-      Authorization: data.jwtToken,
-    },
-  });
+  instance.post(`${API_URL_ACCOUNT}/auth/logout`, data);
 
 export default {
   register,
