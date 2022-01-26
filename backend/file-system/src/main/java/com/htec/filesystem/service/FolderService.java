@@ -443,6 +443,9 @@ public class FolderService {
 
             deleteDummyFolders(folderIds);
 
+            downStreamFiles = downStreamFiles.stream()
+                    .filter(file -> file.getTrashVisible() == null || !file.getTrashVisible()).collect(Collectors.toList());
+
             downStreamFiles.forEach(fileEntity -> {
                 try {
                     fileRepository.delete(fileEntity);
