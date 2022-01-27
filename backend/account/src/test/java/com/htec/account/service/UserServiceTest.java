@@ -47,6 +47,11 @@ class UserServiceTest {
     EmailService emailService;
 
     @Mock
+    ShelfService shelfService;
+
+    @Mock FunctionService functionService;
+
+    @Mock
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Mock
