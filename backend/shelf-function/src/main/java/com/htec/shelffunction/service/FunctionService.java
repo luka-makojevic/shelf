@@ -186,17 +186,31 @@ public class FunctionService {
 
     public List<FunctionDTO> getAllFunctionsByUserId() {
 
-        List<Long> shelfIds = shelfService.getUsersShelfIds();
+        List<Long> shelfIds = shelfService.getUsersShelfIds(null);
 
         List<FunctionEntity> functionEntities = functionRepository.findAllByShelfIdIn(shelfIds);
 
         return FunctionMapper.INSTANCE.functionEntitiesToFunctionDtos(functionEntities);
     }
 
-    public void deleteFunction(Long functionId) {
+    public List<Long> getAllFunctionsByUserIdToDelete(Long userId) {
 
-        if (getAllFunctionsByUserId().isEmpty()) {
-            throw ExceptionSupplier.userNotAllowedToDeleteFunction.get();
+        List<Long> shelfIds = shelfService.getUsersShelfIds(userId);
+
+        return functionRepository.findAllByShelfIdIn(shelfIds).stream().map(FunctionEntity::getId).collect(Collectors.toList());
+    }
+
+    public void deleteFunction(Long functionId, Long userId) {
+
+        if (userId != null) {
+
+            if (getAllFunctionsByUserIdToDelete(userId).isEmpty()) {
+                throw ExceptionSupplier.userNotAllowedToDeleteFunction.get();
+            }
+        } else {
+            if (getAllFunctionsByUserId().isEmpty()) {
+                throw ExceptionSupplier.userNotAllowedToDeleteFunction.get();
+            }
         }
 
         FunctionEntity functionEntity = functionRepository.findById(functionId)

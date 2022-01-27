@@ -110,6 +110,13 @@ public class ShelfService {
         return ShelfItemMapper.INSTANCE.shelfEntitiesToShelfDTOs(entityShelves);
     }
 
+    public List<ShelfDTO> getAllShelvesByIdToDelete(Long userId) {
+
+        List<ShelfEntity> entityShelves = shelfRepository.findAllByUserId(userId);
+
+        return ShelfItemMapper.INSTANCE.shelfEntitiesToShelfDTOs(entityShelves);
+    }
+
     @Transactional
     public void hardDeleteShelf(Long shelfId, Long userId) {
 

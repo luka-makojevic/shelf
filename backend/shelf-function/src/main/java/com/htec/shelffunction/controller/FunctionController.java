@@ -55,6 +55,12 @@ public class FunctionController {
         return ResponseEntity.ok(functionService.getAllFunctionsByUserId());
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Long>> getAllFunctions(@AuthenticationUser AuthUser authUser, @PathVariable Long userId) {
+
+        return ResponseEntity.ok(functionService.getAllFunctionsByUserIdToDelete(userId));
+    }
+
     @GetMapping("/{shelfId}/{eventId}")
     public ResponseEntity<List<Long>> getAllFunctionIdsByShelfIdAndEventId(@PathVariable Long shelfId, @PathVariable Long eventId) {
 
@@ -64,7 +70,15 @@ public class FunctionController {
     @DeleteMapping("/{functionId}")
     public ResponseEntity<TextResponseMessage> deleteFunction(@AuthenticationUser AuthUser user, @PathVariable Long functionId) {
 
-        functionService.deleteFunction(functionId);
+        functionService.deleteFunction(functionId, null);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FUNCTION_DELETED, HttpStatus.OK.value()));
+    }
+
+    @DeleteMapping("/{functionId}/{userId}")
+    public ResponseEntity<TextResponseMessage> deleteFunction(@AuthenticationUser AuthUser user, @PathVariable Long functionId, @PathVariable Long userId) {
+
+        functionService.deleteFunction(functionId, userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage(FUNCTION_DELETED, HttpStatus.OK.value()));
     }

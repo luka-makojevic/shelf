@@ -1,8 +1,8 @@
-package com.htec.shelffunction.service;
+package com.htec.account.service;
 
-import com.htec.shelffunction.dto.ShelfDTO;
-import com.htec.shelffunction.filter.JwtStorageFilter;
-import com.htec.shelffunction.security.SecurityConstants;
+import com.htec.account.dto.ShelfDTO;
+import com.htec.account.filter.JwtStorageFilter;
+import com.htec.account.security.SecurityConstants;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -12,6 +12,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,18 +22,18 @@ public class ShelfService {
 
     private final String GET_SHELVES_BY_USER_ID_URL = "http://localhost:8082/shelf/";
     private final String GET_SHELVES_BY_ID = "http://localhost:8082/shelf/record/";
+    private final String DELETE_USER_SHELVES = "http://localhost:8082/shelf/";
     private final RestTemplate restTemplate;
 
     public ShelfService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
-    public List<Long> getUsersShelfIds(Long userId) {
+    public List<Long> getUsersShelfIds(Long userId, Boolean delete) {
 
         URI apiUrl;
 
-        if (userId != null) {
-
+        if (Boolean.TRUE.equals(delete)) {
             apiUrl = URI.create(GET_SHELVES_BY_USER_ID_URL + "user/" + userId);
         } else {
 
@@ -70,10 +71,25 @@ public class ShelfService {
     }
 
     private HttpEntity<Object> getObjectHttpEntity() {
+
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add(SecurityConstants.AUTHORIZATION_HEADER_STRING,
                 JwtStorageFilter.jwtThreadLocal.get());
 
         return new HttpEntity<>(headers);
+    }
+
+    public void deleteUsersShelves(Long shelfId, Long userId) {
+
+        URI apiUrl = URI.create(DELETE_USER_SHELVES + shelfId + "/" + userId);
+
+        HttpEntity<Object> request = getObjectHttpEntity();
+
+        restTemplate.exchange(
+                apiUrl,
+                HttpMethod.DELETE,
+                request,
+                Void.class
+        );
     }
 }

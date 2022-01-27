@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -39,7 +41,7 @@ public class AdminController {
 
     @DeleteMapping("/{id}")
     @ValidateRoles(roles = {Roles.SUPER_ADMIN})
-    public ResponseEntity<TextResponseMessage> deleteUserById(@AuthenticationUser AuthUser user, @PathVariable Long id) {
+    public ResponseEntity<TextResponseMessage> deleteUserById(@AuthenticationUser AuthUser user, @PathVariable Long id) throws IOException {
 
         userService.deleteUserById(id);
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("User deleted", HttpStatus.OK.value()));

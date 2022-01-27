@@ -24,6 +24,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Random;
@@ -121,7 +122,7 @@ class UserServiceTest {
     }
 
     @Test
-    void deleteUserById() {
+    void deleteUserById() throws IOException {
 
         user.setId(1L);
         user.setRole(new RoleEntity(3L));
