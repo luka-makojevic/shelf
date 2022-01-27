@@ -54,14 +54,14 @@ const Code = () => {
 
   const handleSave = () => {
     setIsSaveDisabled(true);
-    if (isExecuteDisabled) setIsExecuteDisabled(false);
-
+    
     functionService
       .saveFunction(Number(functionId), code)
       .then((res) => {
         toast.success(res.data?.message);
         setError('');
         setExecutionResult('');
+        setIsExecuteDisabled(false);
       })
       .catch((err) => {
         setError(err.response?.data?.message);
