@@ -19,11 +19,13 @@ import com.htec.account.repository.mysql.PasswordResetTokenRepository;
 import com.htec.account.repository.mysql.RoleRepository;
 import com.htec.account.repository.mysql.UserRepository;
 import com.htec.account.security.SecurityConstants;
+import static com.htec.account.util.PathConstants.*;
 import com.htec.account.util.TokenGenerator;
 import com.htec.account.validator.UserValidator;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -32,6 +34,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +53,8 @@ public class UserService {
     private final String emailPasswordResetTokenLink;
     private final RoleRepository roleRepository;
     private final InvalidJwtTokenRepository invalidJwtTokenRepository;
+    private final ShelfService shelfService;
+    private final FunctionService functionService;
 
     @Autowired
     public UserService(PasswordResetTokenRepository passwordResetTokenRepository,
@@ -58,7 +65,9 @@ public class UserService {
                        BCryptPasswordEncoder bCryptPasswordEncoder,
                        @Value("${emailPasswordResetTokenLink}") String emailPasswordResetTokenLink,
                        RoleRepository roleRepository,
-                       InvalidJwtTokenRepository invalidJwtTokenRepository) {
+                       InvalidJwtTokenRepository invalidJwtTokenRepository,
+                       ShelfService shelfService,
+                       FunctionService functionService) {
 
         this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.userRepository = userRepository;
@@ -69,6 +78,8 @@ public class UserService {
         this.emailPasswordResetTokenLink = emailPasswordResetTokenLink;
         this.roleRepository = roleRepository;
         this.invalidJwtTokenRepository = invalidJwtTokenRepository;
+        this.shelfService = shelfService;
+        this.functionService = functionService;
     }
 
     public UserDTO getUser(String email) {
@@ -114,13 +125,29 @@ public class UserService {
         return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
     }
 
-    public void deleteUserById(Long id) {
+    public void deleteUserById(Long id, Long loggedUser) throws IOException {
+
+        if (loggedUser.equals(id)) {
+            throw ExceptionSupplier.userCantDeleteHimself.get();
+        }
 
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(ExceptionSupplier.recordNotFoundWithId);
 
         if (user.getRole() != null) {
             if (!user.getRole().getId().equals(Roles.SUPER_ADMIN.getValue())) {
+
+                List<Long> usersFunctionIdsToDelete = functionService.getUsersFunctionByShelfIdToDelete(id);
+                for (Long userFunctionId : usersFunctionIdsToDelete) {
+                    functionService.deleteUsersFunctions(userFunctionId, id);
+                }
+
+                List<Long> usersShelfIdsToDelete = shelfService.getUsersShelfIds(id, true);
+                for (Long usersShelfId : usersShelfIdsToDelete) {
+                    shelfService.deleteUsersShelves(usersShelfId, id);
+                }
+
+                FileUtils.deleteDirectory(new File(HOME_PATH + USER_PATH + id));
                 userRepository.delete(user);
             }
         } else {

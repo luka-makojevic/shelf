@@ -50,6 +50,12 @@ public class ShelfController {
         return ResponseEntity.ok(shelfService.getAllShelvesById(authUser.getId()));
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<ShelfDTO>> getAllShelvesToDelete(@PathVariable Long userId, @AuthenticationUser AuthUser authUser) {
+
+        return ResponseEntity.ok(shelfService.getAllShelvesByIdToDelete(userId));
+    }
+
     @GetMapping("/record/{shelfId}")
     public ResponseEntity<ShelfDTO> getShelf(@AuthenticationUser AuthUser authUser,  @PathVariable Long shelfId) {
 
@@ -61,6 +67,15 @@ public class ShelfController {
                                                            @PathVariable Long shelfId) {
 
         shelfService.hardDeleteShelf(shelfId, authUser.getId());
+        return ResponseEntity.ok().body(new TextResponseMessage("Successfully deleted shelf.", HttpStatus.OK.value()));
+    }
+
+    @DeleteMapping("/{shelfId}/{userId}")
+    public ResponseEntity<TextResponseMessage> deleteShelf(@AuthenticationUser AuthUser authUser,
+                                                           @PathVariable Long shelfId,
+                                                           @PathVariable Long userId) {
+
+        shelfService.hardDeleteShelf(shelfId, userId);
         return ResponseEntity.ok().body(new TextResponseMessage("Successfully deleted shelf.", HttpStatus.OK.value()));
     }
 

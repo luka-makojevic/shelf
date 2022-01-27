@@ -24,6 +24,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Random;
@@ -44,6 +45,11 @@ class UserServiceTest {
 
     @Mock
     EmailService emailService;
+
+    @Mock
+    ShelfService shelfService;
+
+    @Mock FunctionService functionService;
 
     @Mock
     BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -121,7 +127,7 @@ class UserServiceTest {
     }
 
     @Test
-    void deleteUserById() {
+    void deleteUserById() throws IOException {
 
         user.setId(1L);
         user.setRole(new RoleEntity(3L));
@@ -133,7 +139,7 @@ class UserServiceTest {
             return Optional.of(userEntity);
         });
 
-        userService.deleteUserById(user.getId());
+        userService.deleteUserById(user.getId(), 2L);
 
         verify(userRepository, times(1)).delete(any());
 
@@ -152,7 +158,7 @@ class UserServiceTest {
         });
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
-            userService.deleteUserById(user.getId());
+            userService.deleteUserById(user.getId(), 2L);
         });
 
         verify(userRepository, times(0)).delete(any());
