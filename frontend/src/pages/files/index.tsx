@@ -179,6 +179,10 @@ const Files = () => {
           link.remove();
         })
         .catch((err) => {
+          if (err.response.request.responseType === 'blob') {
+            toast.error('There is no files to download');
+            return;
+          }
           toast.error(err.response?.data?.message);
         });
     }
