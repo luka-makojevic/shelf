@@ -139,7 +139,7 @@ class UserServiceTest {
             return Optional.of(userEntity);
         });
 
-        userService.deleteUserById(user.getId());
+        userService.deleteUserById(user.getId(), 2L);
 
         verify(userRepository, times(1)).delete(any());
 
@@ -158,7 +158,7 @@ class UserServiceTest {
         });
 
         ShelfException exception = Assertions.assertThrows(ShelfException.class, () -> {
-            userService.deleteUserById(user.getId());
+            userService.deleteUserById(user.getId(), 2L);
         });
 
         verify(userRepository, times(0)).delete(any());

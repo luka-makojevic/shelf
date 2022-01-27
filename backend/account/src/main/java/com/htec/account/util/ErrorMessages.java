@@ -9,6 +9,7 @@ public enum ErrorMessages {
     NO_RECORD_FOUND_WITH_EMAIL("Record with provided email is not found."),
     AUTHENTICATION_CREDENTIALS_NOT_VALID("Authentication credentials not valid."),
     USER_IS_NOT_LOGGED_IN("User is not logged in."),
+    USER_CAN_NOT_DELETE_HIMSELF("User can't delete himself."),
     COULD_NOT_UPDATE_RECORD("Could not update record."),
     COULD_NOT_DELETE_RECORD("Could not delete record."),
     EMAIL_ADDRESS_NOT_VERIFIED("Email address is not verified."),

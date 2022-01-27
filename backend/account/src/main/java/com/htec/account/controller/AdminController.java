@@ -43,7 +43,7 @@ public class AdminController {
     @ValidateRoles(roles = {Roles.SUPER_ADMIN})
     public ResponseEntity<TextResponseMessage> deleteUserById(@AuthenticationUser AuthUser user, @PathVariable Long id) throws IOException {
 
-        userService.deleteUserById(id);
+        userService.deleteUserById(id, user.getId());
         return ResponseEntity.status(HttpStatus.OK).body(new TextResponseMessage("User deleted", HttpStatus.OK.value()));
     }
 

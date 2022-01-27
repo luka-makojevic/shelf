@@ -125,7 +125,11 @@ public class UserService {
         return UserMapper.INSTANCE.userEntityToUserResponseModel(user);
     }
 
-    public void deleteUserById(Long id) throws IOException {
+    public void deleteUserById(Long id, Long loggedUser) throws IOException {
+
+        if (loggedUser.equals(id)) {
+            throw ExceptionSupplier.userCantDeleteHimself.get();
+        }
 
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(ExceptionSupplier.recordNotFoundWithId);

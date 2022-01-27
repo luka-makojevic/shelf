@@ -116,6 +116,13 @@ public class ExceptionSupplier {
             ErrorMessages.UNAUTHORIZED.getErrorMessage()
     );
 
+    public static final Supplier<ShelfException> userCantDeleteHimself = () -> new ShelfException(
+            ErrorMessages.USER_CAN_NOT_DELETE_HIMSELF.getErrorMessage(),
+            HttpStatus.FORBIDDEN.value(),
+            LocalDateTime.now().format(formatter),
+            ErrorMessages.FORBIDDEN.getErrorMessage()
+    );
+
     public static final Supplier<ShelfException> emailTokenExpired = () -> new ShelfException(
             ErrorMessages.TOKEN_EXPIRED.getErrorMessage(),
             HttpStatus.BAD_REQUEST.value(),
