@@ -4,13 +4,16 @@ import helpers.apiHelpers.BaseApiTest;
 import io.restassured.response.Response;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import java.sql.SQLException;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ApiFileSysTest extends BaseApiTest
 {
     public static String tokenGenerated;
@@ -28,7 +31,7 @@ public class ApiFileSysTest extends BaseApiTest
     }
 
     @Test
-    public void apiCreateShelfPTC()
+    public void _10apiCreateShelfPTC()
     {
         Response response = restFileSysRequests.setShelf("Shelf123", tokenGenerated);
 
@@ -37,7 +40,7 @@ public class ApiFileSysTest extends BaseApiTest
     }
 
     @Test
-    public void apiRenameShelf()
+    public void _11apiRenameShelf()
     {
         restFileSysRequests.setShelf("Shelfara123",tokenGenerated);
         Integer shelfId = restFileSysRequests.getShelfId(tokenGenerated);
@@ -52,19 +55,19 @@ public class ApiFileSysTest extends BaseApiTest
     }
 
     @Test
-    public void apiDeleteShelf()
+    public void _13apiDeleteShelf()
     {
         restFileSysRequests.setShelf("Shelfara123",tokenGenerated);
         Integer shelfId = restFileSysRequests.getShelfId(tokenGenerated);
 
         Response response = sendAuthorizedRequests.sendingDeleteReqForDeleteShelf(tokenGenerated, shelfId);
 
-        assertEquals("Successfully deleted shelves.", response.jsonPath().get("message").toString());
+        assertEquals("Successfully deleted shelf.", response.jsonPath().get("message").toString());
         assertEquals("200", response.jsonPath().get("status").toString());
     }
 
     @Test
-    public void apiCreateFolderfPTC()
+    public void _14apiCreateFolderfPTC()
     {
         restFileSysRequests.setShelf("Shelf123",tokenGenerated);
         restFileSysRequests.setFolder(tokenGenerated,"FolderName123");
@@ -78,7 +81,7 @@ public class ApiFileSysTest extends BaseApiTest
     }
 
     @Test
-    public void apiCantCreateFolderWithTheSameName()
+    public void _15apiCantCreateFolderWithTheSameName()
     {
         restFileSysRequests.setShelf("ShelfName123",tokenGenerated);
         restFileSysRequests.setFolder(tokenGenerated,"FolderName123");
@@ -98,7 +101,7 @@ public class ApiFileSysTest extends BaseApiTest
     }
 
     @Test
-    public void apiMoveFolderToTrash()
+    public void _16apiMoveFolderToTrash()
     {
         restFileSysRequests.setShelf("ShelfName123",tokenGenerated);
         restFileSysRequests.setFolder(tokenGenerated,"FolderName");
@@ -121,11 +124,11 @@ public class ApiFileSysTest extends BaseApiTest
 
         response = sendAuthorizedRequests.sendingPutReqToMoveFolderToTrash(tokenGenerated, list);
 
-        assertEquals("Folders moved to trash", response.jsonPath().get("message").toString());
+        assertEquals("Folder/s moved to trash", response.jsonPath().get("message").toString());
     }
 
     @Test
-    public void apiDeleteFolderFromTrash()
+    public void _17apiDeleteFolderFromTrash()
     {
         List<Long> list = restFileSysRequests.createFolderAndMoveItToTrash(tokenGenerated);
         Response response = sendAuthorizedRequests.sendingDeleteReqToDeleteFolderFromTrash(tokenGenerated, list);
@@ -135,17 +138,17 @@ public class ApiFileSysTest extends BaseApiTest
     }
 
     @Test
-    public void apiRecoverFolderFromTrash()
+    public void _18apiRecoverFolderFromTrash()
     {
         List<Long> list = restFileSysRequests.createFolderAndMoveItToTrash(tokenGenerated);
         Response response = sendAuthorizedRequests.sendingPutReqToRecoverFolderFromTrash(tokenGenerated, list);
 
-        assertEquals("Folders recovered from trash", response.jsonPath().get("message").toString());
+        assertEquals("Folder recovered from trash", response.jsonPath().get("message").toString());
         assertEquals("200", response.jsonPath().get("status").toString());
     }
 
     @Test
-    public void apiRenameFolder()
+    public void _19apiRenameFolder()
     {
         restFileSysRequests.setShelf("Shelfara123", tokenGenerated);
         restFileSysRequests.setFolder(tokenGenerated, "Fascikla");
@@ -163,12 +166,12 @@ public class ApiFileSysTest extends BaseApiTest
 
         response = sendAuthorizedRequests.sendingPutReqToRenameFolder(tokenGenerated, parsedJson);
 
-        assertEquals("File renamed", response.jsonPath().get("message").toString());
+        assertEquals("Folder renamed", response.jsonPath().get("message").toString());
         assertEquals("200", response.jsonPath().get("status").toString());
     }
 
     @Test
-    public void apiUploadFilefPTC()
+    public void _1apiUploadFilefPTC()
     {
         restFileSysRequests.setShelf("ShelfName123",tokenGenerated);
         restFileSysRequests.setFolder(tokenGenerated,"FolderName");
@@ -177,11 +180,11 @@ public class ApiFileSysTest extends BaseApiTest
         sendAuthorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
 
         Response response = sendAuthorizedRequests.sendingPostReqForUploadFile(tokenGenerated,file, fileSys.shelfId, 0);
-        assertEquals("File Uploaded", response.jsonPath().get("message").toString());
+        assertEquals("File/s Uploaded", response.jsonPath().get("message").toString());
     }
 
     @Test
-    public void apiUploadFilesfPTC()
+    public void _2apiUploadFilesfPTC()
     {
         restFileSysRequests.setShelf("ShelfName123",tokenGenerated);
         restFileSysRequests.setFolder(tokenGenerated,"FolderName");
@@ -190,7 +193,7 @@ public class ApiFileSysTest extends BaseApiTest
         sendAuthorizedRequests.sendingPostReqForCreateFolder(tokenGenerated,parsedJson);
 
         Response response = sendAuthorizedRequests.sendingPostReqForUploadFiles(tokenGenerated, files, fileSys.shelfId, 0);
-        assertEquals("File Uploaded", response.jsonPath().get("message").toString());
+        assertEquals("File/s Uploaded", response.jsonPath().get("message").toString());
     }
 
     @AfterClass

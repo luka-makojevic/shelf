@@ -21,7 +21,7 @@ public class LoginViaMicrosoft
         PageFactory.initElements(driver, this);
     }
 
-    @FindBy (xpath = "//button[contains(text(),'Sign in with Microsoft')]") WebElement signInWithMic;
+    @FindBy (xpath = "//*[contains(text(),'Sign in with Microsoft')]") WebElement signInWithMic;
     @FindBy(id = "i0116") WebElement email;
     @FindBy(xpath = "//input[@value='Next']") WebElement nextButton;
     @FindBy(xpath = "//input[@value='Sign in']") WebElement signInButton;
@@ -40,13 +40,11 @@ public class LoginViaMicrosoft
         String newHandle = null;
         String handle= null;
         while (it.hasNext()) {
-            while (it.hasNext()) {
                 handle = it.next().toString();
                 if (oldTab.contentEquals(handle)) {
                 } else {
                     newHandle = handle;
                 }
-            }
         }
 
         // Switch to the new tab
