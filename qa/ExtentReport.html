@@ -1,0 +1,4123 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title></title>
+<link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/extent-framework/extent-github-cdn@b00a2d0486596e73dd7326beacf352c639623a0e/commons/img/logo.png">
+<link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/extent-framework/extent-github-cdn@b00a2d0486596e73dd7326beacf352c639623a0e/commons/img/logo.png">
+<link href="https://cdn.jsdelivr.net/gh/extent-framework/extent-github-cdn@d6562a79075e061305ccfdb82f01e5e195e2d307/spark/css/spark-style.css" rel="stylesheet" />
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/extent-framework/extent-github-cdn@7cc78ce/spark/js/jsontree.js"></script>
+<style type="text/css"></style></head><body class="spa -report standard">
+  <div class="app">
+    <div class="layout">
+<div class="header navbar">
+<div class="vheader">
+<div class="nav-logo">
+<a href="#">
+<div class="logo" style="background-image: url('https://cdn.jsdelivr.net/gh/extent-framework/extent-github-cdn@b00a2d0486596e73dd7326beacf352c639623a0e/commons/img/logo.png')"></div>
+</a>
+</div>
+<ul class="nav-left">
+<li class="search-box">
+<a class="search-toggle" href="#">
+<i class="search-icon fa fa-search"></i>
+<i class="search-icon-close fa fa-close"></i>
+</a>
+</li>
+<li class="search-input"><input id="search-tests" class="form-control" type="text" placeholder="Search..."></li>
+</ul>
+<ul class="nav-right">
+<li class="m-r-10">
+<a href="#"><span class="badge badge-primary"></span></a>
+</li>
+<li class="m-r-10">
+<a href="#"><span class="badge badge-primary">Jan 28, 2022 03:52:58 PM</span></a>
+</li>
+</ul>
+</div>
+</div><div class="side-nav">
+<div class="side-nav-inner">
+<ul class="side-nav-menu">
+<li class="nav-item dropdown" onclick="toggleView('test-view')">
+<a id="nav-test" class="dropdown-toggle" href="#">
+<span class="ico"><i class="fa fa-list"></i></span>
+</a>
+</li>
+<li class="nav-item dropdown" onclick="toggleView('category-view')">
+<a id="nav-category" class="dropdown-toggle" href="#">
+<span class="ico"><i class="fa fa-tag"></i></span>
+</a>
+</li>
+<li class="nav-item dropdown" onclick="toggleView('device-view')">
+<a id="nav-device" class="dropdown-toggle" href="#">
+<span class="ico"><i class="fa fa-tablet"></i></span>
+</a>
+</li>
+<li class="nav-item dropdown" onclick="toggleView('dashboard-view')">
+<a id="nav-dashboard" class="dropdown-toggle" href="#">
+<span class="ico"><i class="fa fa-bar-chart"></i></span>
+</a>
+</li>
+</ul>
+</div>
+</div>      <div class="vcontainer">
+        <div class="main-content">
+<div class="test-wrapper row view test-view">
+  <div class="test-list">
+    <div class="test-list-tools">
+<ul class="tools pull-left">
+<li><a href="#"><span class="font-size-14">Tests</span></a></li>
+</ul>
+<ul class="tools text-right">
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-exclamation-circle"></i></a>
+<ul id="status-toggle" class="dropdown-menu dropdown-md p-v-0">
+<a class="dropdown-item" status="pass" href="#"><span>Pass</span><span class="status success"></span></a>
+<div class="dropdown-divider"></div>
+<a status="clear" class="dropdown-item" href="#"><span>Clear</span><span class="pull-right"><i class="fa fa-close"></i></span></a>
+</ul>
+</li>
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-tag"></i></a>
+<ul id="tag-toggle" class="dropdown-menu dropdown-md p-v-0">
+<a class="dropdown-item" href="#">DashboardTest</a><a class="dropdown-item" href="#">RegistrationTests</a><a class="dropdown-item" href="#">ApiFileSystemTest</a><a class="dropdown-item" href="#">LoginTest</a><a class="dropdown-item" href="#">ApiUserTest</a>
+</ul>
+</li>
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-tablet"></i></a>
+<ul id="device-toggle" class="dropdown-menu dropdown-md p-v-0">
+<a class="dropdown-item" href="#">Edge</a><a class="dropdown-item" href="#">Chrome</a><a class="dropdown-item" href="#">MozillaFirefox</a>
+</ul>
+</li>
+</ul>
+</div>    <div class="test-list-wrapper scrollable">
+      <ul class="test-list-item">
+        <li class="test-item"  status="pass" test-id="1"
+          author=""
+          tag="LoginTest"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should log in</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:018</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should log in</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:018</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=1</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">LoginTest</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is logged in
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="2"
+          author=""
+          tag="RegistrationTests"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should not register when email has more than 50 characters</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should not register when email has more than 50 characters</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=2</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">RegistrationTests</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is not registered when email has more than 50 characters
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="3"
+          author=""
+          tag="RegistrationTests"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should not register when email input box is blank</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should not register when email input box is blank</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=3</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">RegistrationTests</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is not registered when email input box is blank
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="4"
+          author=""
+          tag="RegistrationTests"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should not register with invalid password form</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should not register with invalid password form</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=4</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">RegistrationTests</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is not registered with invalid password form
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="5"
+          author=""
+          tag="RegistrationTests"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should not register when password has more than 50 characters</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should not register when password has more than 50 characters</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=5</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">RegistrationTests</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is not registered when password has more than 50 characters
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="6"
+          author=""
+          tag="RegistrationTests"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should not register when password has less than 8 characters</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should not register when password has less than 8 characters</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=6</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">RegistrationTests</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is not registered when password has less than 8 characters
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="7"
+          author=""
+          tag="RegistrationTests"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should not register when password input box is blank</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should not register when password input box is blank</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=7</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">RegistrationTests</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is not registered when password input box is blank
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="8"
+          author=""
+          tag="RegistrationTests"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should not register with invalid confirm password form</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should not register with invalid confirm password form</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=8</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">RegistrationTests</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is not registered with invalid confirm password form
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="9"
+          author=""
+          tag="RegistrationTests"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should not register when confirm password input box is blank</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should not register when confirm password input box is blank</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=9</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">RegistrationTests</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is not registered when confirm password input box is blank
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="10"
+          author=""
+          tag="RegistrationTests"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should not register when first name has more than 50 characters</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should not register when first name has more than 50 characters</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=10</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">RegistrationTests</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is not registered when first name has more than 50 characters
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="11"
+          author=""
+          tag="RegistrationTests"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should not register when first name input box is blank</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should not register when first name input box is blank</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=11</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">RegistrationTests</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is not registered when first name input box is blank
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="12"
+          author=""
+          tag="LoginTest"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should log in with microsoft</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should log in with microsoft</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=12</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">LoginTest</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is logged in with microsoft
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="13"
+          author=""
+          tag="RegistrationTests"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should not register when last name has more than 50 characters</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should not register when last name has more than 50 characters</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=13</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">RegistrationTests</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is not registered when last name has more than 50 characters
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="14"
+          author=""
+          tag="RegistrationTests"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should not register when last name input box is blank</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should not register when last name input box is blank</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=14</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">RegistrationTests</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is not registered when last name input box is blank
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="15"
+          author=""
+          tag="RegistrationTests"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">Password requirements popup should appear</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">Password requirements popup should appear</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=15</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">RegistrationTests</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Password requirements popup appears
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="16"
+          author=""
+          tag="RegistrationTests"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should not register when to check box is not selected</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:002</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should not register when to check box is not selected</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:002</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=16</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">RegistrationTests</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is not registered when to check box is not selected
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="17"
+          author=""
+          tag="RegistrationTests"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should redirect to terms and conditions page</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should redirect to terms and conditions page</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=17</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">RegistrationTests</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is redirected to terms and conditions page
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="18"
+          author=""
+          tag="RegistrationTests"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should redirect to login page</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should redirect to login page</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=18</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">RegistrationTests</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is redirected to login page
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="19"
+          author=""
+          tag="RegistrationTests"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should redirect to Home Page</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:002</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should redirect to Home Page</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:002</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=19</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">RegistrationTests</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is redirected to Home Page
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="20"
+          author=""
+          tag="RegistrationTests"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should register with valid credentials</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should register with valid credentials</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=20</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">RegistrationTests</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is registered with valid credentials
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="21"
+          author=""
+          tag="RegistrationTests"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should not register with already used email</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should not register with already used email</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=21</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">RegistrationTests</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is not registered with already used email
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="22"
+          author=""
+          tag="ApiFileSystemTest"
+          device="">
+          <div class="test-detail">
+            <p class="name">Api create shelf PTC</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">Api create shelf PTC</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=22</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">ApiFileSystemTest</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Shelf PTC is created
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Backend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="23"
+          author=""
+          tag="LoginTest"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should not log in with invalid email format</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should not log in with invalid email format</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=23</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">LoginTest</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is not logged in with invalid email format
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="24"
+          author=""
+          tag="ApiFileSystemTest"
+          device="">
+          <div class="test-detail">
+            <p class="name">Api rename shelf</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">Api rename shelf</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=24</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">ApiFileSystemTest</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Shelf is renamed
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Backend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="25"
+          author=""
+          tag="ApiFileSystemTest"
+          device="">
+          <div class="test-detail">
+            <p class="name">Api delete shelf</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">Api delete shelf</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=25</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">ApiFileSystemTest</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Shelf is deleted
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Backend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="26"
+          author=""
+          tag="ApiFileSystemTest"
+          device="">
+          <div class="test-detail">
+            <p class="name">Api create folder PTC</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">Api create folder PTC</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=26</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">ApiFileSystemTest</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Folder PTC is created
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Backend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="27"
+          author=""
+          tag="ApiFileSystemTest"
+          device="">
+          <div class="test-detail">
+            <p class="name">Api cant create folder with the same name</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">Api cant create folder with the same name</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=27</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">ApiFileSystemTest</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Folder with the same name is not created
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Backend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="28"
+          author=""
+          tag="ApiFileSystemTest"
+          device="">
+          <div class="test-detail">
+            <p class="name">Api move folder to trash</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">Api move folder to trash</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=28</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">ApiFileSystemTest</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Folder is moved to trash
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Backend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="29"
+          author=""
+          tag="ApiFileSystemTest"
+          device="">
+          <div class="test-detail">
+            <p class="name">Api delete folder from trash</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">Api delete folder from trash</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=29</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">ApiFileSystemTest</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Folder is deleted from trash
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Backend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="30"
+          author=""
+          tag="ApiFileSystemTest"
+          device="">
+          <div class="test-detail">
+            <p class="name">Api recover folder from trash</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">Api recover folder from trash</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=30</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">ApiFileSystemTest</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Folder is recovered from trash
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Backend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="31"
+          author=""
+          tag="ApiFileSystemTest"
+          device="">
+          <div class="test-detail">
+            <p class="name">Api rename folder</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">Api rename folder</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=31</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">ApiFileSystemTest</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Folder is renamed
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Backend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="32"
+          author=""
+          tag="ApiFileSystemTest"
+          device="">
+          <div class="test-detail">
+            <p class="name">Api upload file PTC</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:001</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">Api upload file PTC</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:001</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=32</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">ApiFileSystemTest</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          File PTC is uploaded
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Backend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="33"
+          author=""
+          tag="ApiFileSystemTest"
+          device="">
+          <div class="test-detail">
+            <p class="name">Api upload files PTC</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">Api upload files PTC</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=33</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">ApiFileSystemTest</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Files PTC is uploaded
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Backend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="34"
+          author=""
+          tag="LoginTest"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should not log in with invalid password</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should not log in with invalid password</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=34</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">LoginTest</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is not logged in with invalid password
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="35"
+          author=""
+          tag="ApiUserTest"
+          device="">
+          <div class="test-detail">
+            <p class="name">Api post user registered check</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">Api post user registered check</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=35</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">ApiUserTest</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User registered is checked
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Backend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="36"
+          author=""
+          tag="ApiUserTest"
+          device="">
+          <div class="test-detail">
+            <p class="name">Api post NTC user registered check</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">Api post NTC user registered check</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=36</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">ApiUserTest</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User registered is not checked
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Backend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="37"
+          author=""
+          tag="ApiUserTest"
+          device="">
+          <div class="test-detail">
+            <p class="name">Api post email verify token</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">Api post email verify token</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=37</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">ApiUserTest</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Email token is verified
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Backend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="38"
+          author=""
+          tag="ApiUserTest"
+          device="">
+          <div class="test-detail">
+            <p class="name">Api post user login check</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">Api post user login check</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=38</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">ApiUserTest</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User login is checked
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Backend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="39"
+          author=""
+          tag="ApiUserTest"
+          device="">
+          <div class="test-detail">
+            <p class="name">Api post invalid email login check</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">Api post invalid email login check</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=39</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">ApiUserTest</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Invalid email login is checked
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Backend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="40"
+          author=""
+          tag="ApiUserTest"
+          device="">
+          <div class="test-detail">
+            <p class="name">Api post invalid password login check</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">Api post invalid password login check</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=40</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">ApiUserTest</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Invalid password login is checked
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Backend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="41"
+          author=""
+          tag="ApiUserTest"
+          device="">
+          <div class="test-detail">
+            <p class="name">Api get user by id</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">Api get user by id</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=41</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">ApiUserTest</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User by id is got
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Backend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="42"
+          author=""
+          tag="ApiUserTest"
+          device="">
+          <div class="test-detail">
+            <p class="name">Api update user by id</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">Api update user by id</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=42</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">ApiUserTest</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is updated by id
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Backend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="43"
+          author=""
+          tag="DashboardTest"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should log out</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:001</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should log out</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:001</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=43</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">DashboardTest</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is logged out
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="44"
+          author=""
+          tag="DashboardTest"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should have created shelf</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:001</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should have created shelf</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:001</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=44</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">DashboardTest</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Shelf is created
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="45"
+          author=""
+          tag="LoginTest"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should not log in with blank email field</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should not log in with blank email field</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=45</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">LoginTest</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is not logged in with blank email field
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="46"
+          author=""
+          tag="DashboardTest"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should not create shelf that exists with the same name</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:001</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should not create shelf that exists with the same name</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:001</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=46</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">DashboardTest</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Shelf is not created with the same name
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="47"
+          author=""
+          tag="DashboardTest"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should delete created shelf</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:001</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should delete created shelf</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:001</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=47</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">DashboardTest</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Created shelf is deleted
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="48"
+          author=""
+          tag="LoginTest"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should not log in with blank password field</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should not log in with blank password field</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=48</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">LoginTest</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is not logged in with blank password field
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="49"
+          author=""
+          tag="LoginTest"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should redirect to registration page when clicks sign up button</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should redirect to registration page when clicks sign up button</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=49</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">LoginTest</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is redirected to registration page when clicks sign up button
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="50"
+          author=""
+          tag="LoginTest"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should redirect to forgot password page</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:001</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should redirect to forgot password page</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:001</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=50</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">LoginTest</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is redirected to forgot password page
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+        <li class="test-item"  status="pass" test-id="51"
+          author=""
+          tag="RegistrationTests"
+          device="Chrome Edge MozillaFirefox">
+          <div class="test-detail">
+            <p class="name">User should not register with invalid email form</p>
+            <p class="text-sm">
+              <span>3:52:59 PM</span> / <span>00:00:00:000</span>
+              <span class="badge pass-bg log float-right">Pass</span>
+            </p>
+          </div>
+          <div class="test-contents d-none">
+<div class="detail-head">
+<div class="p-v-10">
+<div class="info">
+<h5 class="test-status text-pass">User should not register with invalid email form</h5>
+<span class='badge badge-success'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-danger'>01.28.2022 3:52:59 PM</span>
+<span class='badge badge-default'>00:00:00:000</span>
+&middot; <span class='uri-anchor badge badge-default'>#test-id=51</span>
+<span class='badge badge-default pointer float-right ml-1 et'><i class="fa fa-chevron-down"></i></span>
+<span class='badge badge-default pointer float-right ct'><i class="fa fa-chevron-up"></i></span>
+</div>
+<div class="m-t-15"><span class="badge badge-pill badge-default">RegistrationTests</span>
+<span class="badge badge-pill badge-default">Chrome</span>
+<span class="badge badge-pill badge-default">Edge</span>
+<span class="badge badge-pill badge-default">MozillaFirefox</span></div>
+</div>
+</div><div class="detail-body mt-4">
+<table class="table table-sm">
+  <thead><tr><th class="status-col">Status</th><th class="timestamp-col">Timestamp</th><th class="details-col">Details</th></tr></thead>
+  <tbody>
+      <tr class="event-row">
+        <td><span class="badge log pass-bg">Pass</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          User is not registered with invalid email form
+        </td>
+      </tr>
+      <tr class="event-row">
+        <td><span class="badge log info-bg">Info</span></td>
+        <td>3:52:59 PM</td>
+        <td>
+          Frontend Tests
+        </td>
+      </tr>
+  </tbody>
+</table>
+</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+<div class="test-content scrollable">
+<div class="test-content-tools">
+<ul><li><a class="back-to-test" href="#"><i class="fa fa-arrow-left"></i></a></li></ul>
+</div>
+<div class="test-content-detail"><div class="detail-body"></div></div>
+</div></div>
+<div class="test-wrapper row view category-view attributes-view">
+<div class="test-list">
+<div class="test-list-tools">
+<ul class="tools pull-left"><li><a href=""><span class="font-size-14">Category</span></a></li></ul>
+<ul class="tools text-right"><li><a href="#"><span class="badge badge-primary">5</span></a></li></ul>
+</div>
+<div class="test-list-wrapper scrollable">
+<ul class="test-list-item">
+<li class="test-item">
+<div class="test-detail">
+<span class="meta">
+<span class='badge log pass-bg'>4</span>
+</span>
+<p class="name">DashboardTest</p>
+<p class="duration text-sm">4 tests</p>
+</div>
+<div class="test-contents d-none">
+<div class="info">
+<h4>DashboardTest</h4>
+<span status="pass" class='badge log pass-bg'>4 passed</span>
+</div>
+<table class='table table-sm mt-4'>
+<thead>
+<tr>
+<th class="status-col">Status</th>
+<th class="timestamp-col">Timestamp</th>
+<th>TestName</th>
+</tr>
+</thead>
+<tbody>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='43' id='43'>User should log out</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='44' id='44'>User should have created shelf</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='46' id='46'>User should not create shelf that exists with the same name</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='47' id='47'>User should delete created shelf</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li class="test-item">
+<div class="test-detail">
+<span class="meta">
+<span class='badge log pass-bg'>20</span>
+</span>
+<p class="name">RegistrationTests</p>
+<p class="duration text-sm">20 tests</p>
+</div>
+<div class="test-contents d-none">
+<div class="info">
+<h4>RegistrationTests</h4>
+<span status="pass" class='badge log pass-bg'>20 passed</span>
+</div>
+<table class='table table-sm mt-4'>
+<thead>
+<tr>
+<th class="status-col">Status</th>
+<th class="timestamp-col">Timestamp</th>
+<th>TestName</th>
+</tr>
+</thead>
+<tbody>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='2' id='2'>User should not register when email has more than 50 characters</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='3' id='3'>User should not register when email input box is blank</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='4' id='4'>User should not register with invalid password form</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='5' id='5'>User should not register when password has more than 50 characters</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='6' id='6'>User should not register when password has less than 8 characters</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='7' id='7'>User should not register when password input box is blank</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='8' id='8'>User should not register with invalid confirm password form</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='9' id='9'>User should not register when confirm password input box is blank</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='10' id='10'>User should not register when first name has more than 50 characters</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='11' id='11'>User should not register when first name input box is blank</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='13' id='13'>User should not register when last name has more than 50 characters</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='14' id='14'>User should not register when last name input box is blank</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='15' id='15'>Password requirements popup should appear</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='16' id='16'>User should not register when to check box is not selected</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='17' id='17'>User should redirect to terms and conditions page</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='18' id='18'>User should redirect to login page</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='19' id='19'>User should redirect to Home Page</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='20' id='20'>User should register with valid credentials</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='21' id='21'>User should not register with already used email</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='51' id='51'>User should not register with invalid email form</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li class="test-item">
+<div class="test-detail">
+<span class="meta">
+<span class='badge log pass-bg'>11</span>
+</span>
+<p class="name">ApiFileSystemTest</p>
+<p class="duration text-sm">11 tests</p>
+</div>
+<div class="test-contents d-none">
+<div class="info">
+<h4>ApiFileSystemTest</h4>
+<span status="pass" class='badge log pass-bg'>11 passed</span>
+</div>
+<table class='table table-sm mt-4'>
+<thead>
+<tr>
+<th class="status-col">Status</th>
+<th class="timestamp-col">Timestamp</th>
+<th>TestName</th>
+</tr>
+</thead>
+<tbody>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='22' id='22'>Api create shelf PTC</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='24' id='24'>Api rename shelf</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='25' id='25'>Api delete shelf</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='26' id='26'>Api create folder PTC</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='27' id='27'>Api cant create folder with the same name</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='28' id='28'>Api move folder to trash</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='29' id='29'>Api delete folder from trash</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='30' id='30'>Api recover folder from trash</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='31' id='31'>Api rename folder</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='32' id='32'>Api upload file PTC</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='33' id='33'>Api upload files PTC</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li class="test-item">
+<div class="test-detail">
+<span class="meta">
+<span class='badge log pass-bg'>8</span>
+</span>
+<p class="name">LoginTest</p>
+<p class="duration text-sm">8 tests</p>
+</div>
+<div class="test-contents d-none">
+<div class="info">
+<h4>LoginTest</h4>
+<span status="pass" class='badge log pass-bg'>8 passed</span>
+</div>
+<table class='table table-sm mt-4'>
+<thead>
+<tr>
+<th class="status-col">Status</th>
+<th class="timestamp-col">Timestamp</th>
+<th>TestName</th>
+</tr>
+</thead>
+<tbody>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='1' id='1'>User should log in</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='12' id='12'>User should log in with microsoft</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='23' id='23'>User should not log in with invalid email format</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='34' id='34'>User should not log in with invalid password</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='45' id='45'>User should not log in with blank email field</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='48' id='48'>User should not log in with blank password field</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='49' id='49'>User should redirect to registration page when clicks sign up button</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='50' id='50'>User should redirect to forgot password page</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li class="test-item">
+<div class="test-detail">
+<span class="meta">
+<span class='badge log pass-bg'>8</span>
+</span>
+<p class="name">ApiUserTest</p>
+<p class="duration text-sm">8 tests</p>
+</div>
+<div class="test-contents d-none">
+<div class="info">
+<h4>ApiUserTest</h4>
+<span status="pass" class='badge log pass-bg'>8 passed</span>
+</div>
+<table class='table table-sm mt-4'>
+<thead>
+<tr>
+<th class="status-col">Status</th>
+<th class="timestamp-col">Timestamp</th>
+<th>TestName</th>
+</tr>
+</thead>
+<tbody>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='35' id='35'>Api post user registered check</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='36' id='36'>Api post NTC user registered check</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='37' id='37'>Api post email verify token</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='38' id='38'>Api post user login check</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='39' id='39'>Api post invalid email login check</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='40' id='40'>Api post invalid password login check</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='41' id='41'>Api get user by id</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='42' id='42'>Api update user by id</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="test-content scrollable">
+<div class="test-content-detail">
+<div class="detail-body"></div>
+</div>
+</div>
+</div><div class="test-wrapper row view device-view attributes-view">
+<div class="test-list">
+<div class="test-list-tools">
+<ul class="tools pull-left"><li><a href=""><span class="font-size-14">Device</span></a></li></ul>
+<ul class="tools text-right"><li><a href="#"><span class="badge badge-primary">3</span></a></li></ul>
+</div>
+<div class="test-list-wrapper scrollable">
+<ul class="test-list-item">
+<li class="test-item">
+<div class="test-detail">
+<span class="meta">
+<span class='badge log pass-bg'>32</span>
+</span>
+<p class="name">Edge</p>
+<p class="duration text-sm">32 tests</p>
+</div>
+<div class="test-contents d-none">
+<div class="info">
+<h4>Edge</h4>
+<span status="pass" class='badge log pass-bg'>32 passed</span>
+</div>
+<table class='table table-sm mt-4'>
+<thead>
+<tr>
+<th class="status-col">Status</th>
+<th class="timestamp-col">Timestamp</th>
+<th>TestName</th>
+</tr>
+</thead>
+<tbody>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='1' id='1'>User should log in</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='2' id='2'>User should not register when email has more than 50 characters</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='3' id='3'>User should not register when email input box is blank</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='4' id='4'>User should not register with invalid password form</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='5' id='5'>User should not register when password has more than 50 characters</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='6' id='6'>User should not register when password has less than 8 characters</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='7' id='7'>User should not register when password input box is blank</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='8' id='8'>User should not register with invalid confirm password form</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='9' id='9'>User should not register when confirm password input box is blank</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='10' id='10'>User should not register when first name has more than 50 characters</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='11' id='11'>User should not register when first name input box is blank</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='12' id='12'>User should log in with microsoft</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='13' id='13'>User should not register when last name has more than 50 characters</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='14' id='14'>User should not register when last name input box is blank</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='15' id='15'>Password requirements popup should appear</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='16' id='16'>User should not register when to check box is not selected</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='17' id='17'>User should redirect to terms and conditions page</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='18' id='18'>User should redirect to login page</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='19' id='19'>User should redirect to Home Page</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='20' id='20'>User should register with valid credentials</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='21' id='21'>User should not register with already used email</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='23' id='23'>User should not log in with invalid email format</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='34' id='34'>User should not log in with invalid password</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='43' id='43'>User should log out</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='44' id='44'>User should have created shelf</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='45' id='45'>User should not log in with blank email field</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='46' id='46'>User should not create shelf that exists with the same name</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='47' id='47'>User should delete created shelf</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='48' id='48'>User should not log in with blank password field</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='49' id='49'>User should redirect to registration page when clicks sign up button</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='50' id='50'>User should redirect to forgot password page</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='51' id='51'>User should not register with invalid email form</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li class="test-item">
+<div class="test-detail">
+<span class="meta">
+<span class='badge log pass-bg'>32</span>
+</span>
+<p class="name">Chrome</p>
+<p class="duration text-sm">32 tests</p>
+</div>
+<div class="test-contents d-none">
+<div class="info">
+<h4>Chrome</h4>
+<span status="pass" class='badge log pass-bg'>32 passed</span>
+</div>
+<table class='table table-sm mt-4'>
+<thead>
+<tr>
+<th class="status-col">Status</th>
+<th class="timestamp-col">Timestamp</th>
+<th>TestName</th>
+</tr>
+</thead>
+<tbody>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='1' id='1'>User should log in</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='2' id='2'>User should not register when email has more than 50 characters</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='3' id='3'>User should not register when email input box is blank</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='4' id='4'>User should not register with invalid password form</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='5' id='5'>User should not register when password has more than 50 characters</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='6' id='6'>User should not register when password has less than 8 characters</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='7' id='7'>User should not register when password input box is blank</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='8' id='8'>User should not register with invalid confirm password form</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='9' id='9'>User should not register when confirm password input box is blank</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='10' id='10'>User should not register when first name has more than 50 characters</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='11' id='11'>User should not register when first name input box is blank</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='12' id='12'>User should log in with microsoft</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='13' id='13'>User should not register when last name has more than 50 characters</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='14' id='14'>User should not register when last name input box is blank</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='15' id='15'>Password requirements popup should appear</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='16' id='16'>User should not register when to check box is not selected</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='17' id='17'>User should redirect to terms and conditions page</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='18' id='18'>User should redirect to login page</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='19' id='19'>User should redirect to Home Page</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='20' id='20'>User should register with valid credentials</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='21' id='21'>User should not register with already used email</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='23' id='23'>User should not log in with invalid email format</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='34' id='34'>User should not log in with invalid password</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='43' id='43'>User should log out</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='44' id='44'>User should have created shelf</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='45' id='45'>User should not log in with blank email field</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='46' id='46'>User should not create shelf that exists with the same name</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='47' id='47'>User should delete created shelf</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='48' id='48'>User should not log in with blank password field</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='49' id='49'>User should redirect to registration page when clicks sign up button</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='50' id='50'>User should redirect to forgot password page</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='51' id='51'>User should not register with invalid email form</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li class="test-item">
+<div class="test-detail">
+<span class="meta">
+<span class='badge log pass-bg'>32</span>
+</span>
+<p class="name">MozillaFirefox</p>
+<p class="duration text-sm">32 tests</p>
+</div>
+<div class="test-contents d-none">
+<div class="info">
+<h4>MozillaFirefox</h4>
+<span status="pass" class='badge log pass-bg'>32 passed</span>
+</div>
+<table class='table table-sm mt-4'>
+<thead>
+<tr>
+<th class="status-col">Status</th>
+<th class="timestamp-col">Timestamp</th>
+<th>TestName</th>
+</tr>
+</thead>
+<tbody>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='1' id='1'>User should log in</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='2' id='2'>User should not register when email has more than 50 characters</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='3' id='3'>User should not register when email input box is blank</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='4' id='4'>User should not register with invalid password form</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='5' id='5'>User should not register when password has more than 50 characters</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='6' id='6'>User should not register when password has less than 8 characters</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='7' id='7'>User should not register when password input box is blank</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='8' id='8'>User should not register with invalid confirm password form</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='9' id='9'>User should not register when confirm password input box is blank</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='10' id='10'>User should not register when first name has more than 50 characters</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='11' id='11'>User should not register when first name input box is blank</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='12' id='12'>User should log in with microsoft</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='13' id='13'>User should not register when last name has more than 50 characters</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='14' id='14'>User should not register when last name input box is blank</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='15' id='15'>Password requirements popup should appear</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='16' id='16'>User should not register when to check box is not selected</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='17' id='17'>User should redirect to terms and conditions page</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='18' id='18'>User should redirect to login page</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='19' id='19'>User should redirect to Home Page</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='20' id='20'>User should register with valid credentials</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='21' id='21'>User should not register with already used email</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='23' id='23'>User should not log in with invalid email format</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='34' id='34'>User should not log in with invalid password</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='43' id='43'>User should log out</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='44' id='44'>User should have created shelf</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='45' id='45'>User should not log in with blank email field</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='46' id='46'>User should not create shelf that exists with the same name</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='47' id='47'>User should delete created shelf</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='48' id='48'>User should not log in with blank password field</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='49' id='49'>User should redirect to registration page when clicks sign up button</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='50' id='50'>User should redirect to forgot password page</a>
+</td>
+</tr>
+<tr class="tag-test-status" status="pass">
+<td><span class="badge log pass-bg">Pass</span></td>
+<td>15:52:59 PM</td>
+<td>
+<a href="#" class="linked" test-id='51' id='51'>User should not register with invalid email form</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="test-content scrollable">
+<div class="test-content-detail">
+<div class="detail-body"></div>
+</div>
+</div>
+</div><div class="container-fluid p-4 view dashboard-view">
+<div class="row">
+<div class="col-md-3">
+<div class="card"><div class="card-body">
+<p class="m-b-0">Started</p>
+<h3>Jan 28, 2022 03:52:58 PM</h3>
+</div></div>
+</div>
+<div class="col-md-3">
+<div class="card"><div class="card-body">
+<p class="m-b-0">Ended</p>
+<h3>Jan 28, 2022 03:52:59 PM</h3>
+</div></div>
+</div>
+<div class="col-md-3">
+<div class="card"><div class="card-body">
+<p class="m-b-0 text-pass">Tests Passed</p>
+<h3>51</h3>
+</div></div>
+</div>
+<div class="col-md-3">
+<div class="card"><div class="card-body">
+<p class="m-b-0 text-fail">Tests Failed</p>
+<h3>0</h3>
+</div></div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<div class="card">
+<div class="card-header">
+<h6 class="card-title">Tests</h6>
+</div>
+<div class="card-body">
+<div class="">
+<canvas id='parent-analysis' width='115' height='90'></canvas>
+</div>
+</div>
+<div class="card-footer">
+<div><small data-tooltip='100%'>
+<b>51</b> tests passed
+</small>
+</div>
+<div>
+<small data-tooltip='0%'><b>0</b> tests failed,
+<b>0</b> skipped, <b data-tooltip='0%'>0</b> others
+</small>
+</div>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="card">
+<div class="card-header">
+<h6 class="card-title">Log events</h6>
+</div>
+<div class="card-body">
+<div class="">
+<canvas id='events-analysis' width='115' height='90'></canvas>
+</div>
+</div>
+<div class="card-footer">
+<div><small data-tooltip='50%'><b>51</b> events passed</small></div>
+<div>
+<small data-tooltip='0%'><b>0</b> events failed,
+<b data-tooltip='%'>51</b> others
+</small>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="row"><div class="col-md-12">
+<div class="card"><div class="card-header"><p>Timeline</p></div>
+<div class="card-body pt-0"><div>
+<canvas id="timeline" height="120"></canvas>
+</div></div>
+</div>
+</div></div>
+<script>
+var timeline = {
+"User should log in":0.018,"User should not register when email has more than 50 characters":0,"User should not register when email input box is blank":0,"User should not register with invalid password form":0,"User should not register when password has more than 50 characters":0,"User should not register when password has less than 8 characters":0,"User should not register when password input box is blank":0,"User should not register with invalid confirm password form":0,"User should not register when confirm password input box is blank":0,"User should not register when first name has more than 50 characters":0,"User should not register when first name input box is blank":0,"User should log in with microsoft":0,"User should not register when last name has more than 50 characters":0,"User should not register when last name input box is blank":0,"Password requirements popup should appear":0,"User should not register when to check box is not selected":0.002,"User should redirect to terms and conditions page":0,"User should redirect to login page":0,"User should redirect to Home Page":0.002,"User should register with valid credentials":0,"User should not register with already used email":0,"Api create shelf PTC":0,"User should not log in with invalid email format":0,"Api rename shelf":0,"Api delete shelf":0,"Api create folder PTC":0,"Api cant create folder with the same name":0,"Api move folder to trash":0,"Api delete folder from trash":0,"Api recover folder from trash":0,"Api rename folder":0,"Api upload file PTC":0.001,"Api upload files PTC":0,"User should not log in with invalid password":0,"Api post user registered check":0,"Api post NTC user registered check":0,"Api post email verify token":0,"Api post user login check":0,"Api post invalid email login check":0,"Api post invalid password login check":0,"Api get user by id":0,"Api update user by id":0,"User should log out":0.001,"User should have created shelf":0.001,"User should not log in with blank email field":0,"User should not create shelf that exists with the same name":0.001,"User should delete created shelf":0.001,"User should not log in with blank password field":0,"User should redirect to registration page when clicks sign up button":0,"User should redirect to forgot password page":0.001,"User should not register with invalid email form":0
+};
+</script>
+<div class="row">
+<div class="col-lg-6 col-md-12 category-container">
+<div class="card">
+<div class="card-header"><p>Tags</p></div>
+<div class="card-body pb-0 pt-0"><table class="table table-sm table-bordered">
+<thead><tr class="bg-gray"><th>Name</th><th>Passed</th><th>Failed</th><th>Skipped</th><th>Others</th><th>Passed %</th></tr></thead><tbody>
+<tr>
+<td>DashboardTest</td>
+<td>4</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>RegistrationTests</td>
+<td>20</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>ApiFileSystemTest</td>
+<td>11</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>LoginTest</td>
+<td>8</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>ApiUserTest</td>
+<td>8</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<div class="col-lg-6 col-md-12 device-container">
+<div class="card">
+<div class="card-header"><p>Device</p></div>
+<div class="card-body pb-0 pt-0"><table class="table table-sm table-bordered">
+<thead><tr class="bg-gray"><th>Name</th><th>Passed</th><th>Failed</th><th>Skipped</th><th>Others</th><th>Passed %</th></tr></thead>
+<tbody>
+<tr>
+<td>Edge</td>
+<td>32</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>Chrome</td>
+<td>32</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>MozillaFirefox</td>
+<td>32</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>100%</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+</div>
+<script>
+var statusGroup = {
+parentCount: 5,
+passParent: 51,
+failParent: 0,
+warningParent: 0,
+skipParent: 0,
+childCount: 5,
+passChild: 0,
+failChild: 0,
+warningChild: 0,
+skipChild: 0,
+infoChild: 0,
+grandChildCount: 5,
+passGrandChild: 0,
+failGrandChild: 0,
+warningGrandChild: 0,
+skipGrandChild: 0,
+infoGrandChild: 0,
+eventsCount: 5,
+passEvents: 51,
+failEvents: 0,
+warningEvents: 0,
+skipEvents: 0,
+infoEvents: 51
+};
+</script>        </div>
+      </div>
+    </div>
+  </div>
+<script src="https://cdn.jsdelivr.net/gh/extent-framework/extent-github-cdn@d6562a79075e061305ccfdb82f01e5e195e2d307/spark/js/spark-script.js"></script>
+<script type="text/javascript"></script></body>
+</html>
