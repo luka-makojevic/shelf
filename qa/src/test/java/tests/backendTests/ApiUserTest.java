@@ -4,17 +4,21 @@ import helpers.apiHelpers.BaseApiTest;
 import helpers.dbHelpers.DbQueryHelpers;
 import io.restassured.response.Response;
 import org.junit.AfterClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
+
 import java.sql.*;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ApiUserTest extends BaseApiTest {
 
     @Test
-    public void apiPostUserRegisteredCheck() {
+    public void _2apiPostUserRegisteredCheck() {
         user.setValuesForValidUser(excelReader);
         String parsedJson = gson.toJson(user);
 
@@ -27,7 +31,7 @@ public class ApiUserTest extends BaseApiTest {
     }
 
     @Test
-    public void apiPostNTCUserRegisteredCheck() {
+    public void _1apiPostNTCUserRegisteredCheck() {
         // Loop through methods
         for (int i = 2; i <= excelReader.getLastRowNumberFromSheet("apiTest"); i++) {
             user.setValuesForInvalidUser(i, excelReader);
@@ -47,7 +51,7 @@ public class ApiUserTest extends BaseApiTest {
     }
 
     @Test
-    public void apiPostEmailVerifyToken() throws SQLException, ClassNotFoundException {
+    public void _3apiPostEmailVerifyToken() throws SQLException, ClassNotFoundException {
 
         user.setValuesForValidUser(excelReader);
         String parsedJson = gson.toJson(user);
@@ -69,7 +73,7 @@ public class ApiUserTest extends BaseApiTest {
     }
 
     @Test
-    public void apiPostUserLoginCheck() {
+    public void _6apiPostUserLoginCheck() {
         user.setValuesForValidUserToLogin(excelReader);
         String parsedJson = gson.toJson(user);
 
@@ -87,7 +91,7 @@ public class ApiUserTest extends BaseApiTest {
     }
 
     @Test
-    public void apiPostInvalidEmailLoginCheck() {
+    public void _4apiPostInvalidEmailLoginCheck() {
             user.setInvalidValuesForUserToLogin(2, 0, 2, 1, excelReader);
             String parsedJson = gson.toJson(user);
 
@@ -96,11 +100,11 @@ public class ApiUserTest extends BaseApiTest {
 
             //Assertions
             assertEquals("User not found.", response.jsonPath().get("message").toString());
-            assertEquals("400", response.jsonPath().get("status").toString());
+            assertEquals("404", response.jsonPath().get("status").toString());
     }
 
     @Test
-    public void apiPostInvalidPasswordLoginCheck() {
+    public void _5apiPostInvalidPasswordLoginCheck() {
         user.setInvalidValuesForUserToLogin(3, 0, 3, 1, excelReader);
         String parsedJson = gson.toJson(user);
 
@@ -113,7 +117,7 @@ public class ApiUserTest extends BaseApiTest {
     }
 
     @Test
-    public void apiGetUserById() {
+    public void _7apiGetUserById() {
         user.setValuesForValidUserToLogin(excelReader);
         String parsedJson = gson.toJson(user);
 
@@ -133,7 +137,7 @@ public class ApiUserTest extends BaseApiTest {
     }
 
     @Test
-    public void apiUpdateUserById() {
+    public void _8apiUpdateUserById() {
         user.setValuesForValidUserToLogin(excelReader);
         String parsedJson = gson.toJson(user);
 
