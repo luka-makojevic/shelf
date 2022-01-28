@@ -160,9 +160,6 @@ public class FileService {
                 FolderEntity folderEntity = folderRepository.findById(folderId)
                         .orElseThrow(ExceptionSupplier.noFolderWithGivenId);
 
-                dbPath = folderEntity.getPath() + pathSeparator + fileName;
-                localPath = userPath + folderEntity.getPath() + pathSeparator;
-
                 int fileCounter = 0;
                 if (fileRepository.findByNameAndParentFolderId(fileName, folderId).isPresent()) {
                     String newFileName = fileName;
@@ -182,6 +179,9 @@ public class FileService {
                     fileName = newFileName;
                 }
 
+                dbPath = folderEntity.getPath() + pathSeparator + fileName;
+                localPath = userPath + folderEntity.getPath() + pathSeparator;
+
             } else {
 
                 int fileCounter = 0;
@@ -190,7 +190,6 @@ public class FileService {
 
                     while (fileRepository.findByNameAndShelfIdAndParentFolderIdIsNull(newFileName, shelfId).isPresent()) {
 
-                        newFileName = fileName;
                         fileCounter++;
                         int extensionIndex = fileName.lastIndexOf('.');
                         if (extensionIndex != -1) {
