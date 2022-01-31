@@ -54,7 +54,7 @@ const Code = () => {
 
   const handleSave = () => {
     setIsSaveDisabled(true);
-    
+
     functionService
       .saveFunction(Number(functionId), code)
       .then((res) => {
@@ -120,7 +120,9 @@ const Code = () => {
             {error ? (
               <Error>{error}</Error>
             ) : (
-              <PlainText>{executionResult}</PlainText>
+              <PlainText>
+                {executionResult && JSON.stringify(executionResult)}
+              </PlainText>
             )}
           </FunctionResultWrapper>
         )}
